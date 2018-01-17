@@ -32,7 +32,8 @@ end
         CM.unit_translation = UnitTranslation('Specified',k_ERF,[],[],{});
         warning('TASBE:ColorModel','Warning: overriding units with specified k_ERF value of %d',k_ERF);
     else
-        CM.unit_translation = beads_to_ERF_model(CM,settings,CM.BeadFile, 2, path);
+        [UT CM] = beads_to_ERF_model(CM,settings,CM.BeadFile, 2, path);
+        CM.unit_translation = UT;
     end
     
     % Next, autofluorescence and compensation model

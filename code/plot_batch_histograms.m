@@ -7,8 +7,11 @@
 % package distribution's top directory.
 
 function plot_batch_histograms(results,sampleresults,outputsettings,linespecs,CM)
+% Elements of linespecs can either be LineSpecs, or ColorSpecs (e.g. three-element
+% 0..1 vectors representing RGB color values); currently, only single-letter 
+% color linespecs are properly handled.
 
-n_conditions = numel(sampleresults);
+n_conditions = size(sampleresults,1);
 n_colors = numel(linespecs);
 
 fprintf('Plotting histograms');
@@ -16,28 +19,42 @@ fprintf('Plotting histograms');
 % one bincount plot per condition
 maxcount = 1e1;
 for i=1:n_conditions
+    % TODO: this should really be using a standard number
     h = figure('PaperPosition',[1 1 5 3.66]);
     set(h,'visible','off');
-    replicates = sampleresults{i};
-    numReplicates = numel(replicates);
-    for j=1:numReplicates,
-        counts = replicates{j}.BinCounts;
-        bin_centers = results{i}.bincenters;
-        for k=1:n_colors
-            loglog(bin_centers,counts(:,k),linespecs{k}); hold on;
+    bin_centers = results{i}.bincenters;
+    for k=1:n_colors
+        replicates = sampleresults{i};
+        numReplicates = numel(replicates);
+        for j=1:numReplicates,
+            counts = replicates{j}.BinCounts;
+            ls = linespecs{k};
+            if(ischar(ls) && length(ls)==1 && length(findstr(ls, 'rgbcmykw')) == 1)
+                loglog(bin_centers,counts(:,k),ls); hold on;
+            else
+                loglog(bin_centers,counts(:,k),'Color', ls); hold on;
+            end
         end
         maxcount = max(maxcount,max(max(counts)));
     end
+    
+    
     for j=1:numReplicates,
         for k=1:n_colors
-            loglog([results{i}.means(k) results{i}.means(k)],[1 maxcount],[linespecs{k} '--']); hold on;
+            ls = linespecs{k};
+            if(ischar(ls) && length(ls)==1 && length(findstr(ls, 'rgbcmykw')) == 1)
+                loglog([results{i}.means(k) results{i}.means(k)],[1 maxcount],[ls '--']); hold on;
+            else
+                loglog([results{i}.means(k) results{i}.means(k)],[1 maxcount], 'Color', ls, 'LineStyle', '--'); hold on;
+            end
         end
     end
+    
     xlabel(getStandardUnits(CM)); ylabel('Count');
     ylim([1e0 10.^(ceil(log10(maxcount)))]);
     if(outputsettings.FixedInputAxis), xlim(outputsettings.FixedInputAxis); end;
     %ylim([0 maxcount*1.1]);
-    title([outputsettings.StemName ' ' results{i}.condition ' bin counts, by color']);
+    title([outputsettings.StemName ' ' clean_for_latex(results{i}.condition) ' bin counts, by color']);
     outputfig(h,[outputsettings.StemName '-' results{i}.condition '-bincounts'],outputsettings.Directory);
     fprintf('.');
 end;
