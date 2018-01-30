@@ -12,9 +12,17 @@ TASBE Flow Analytics is a flow cytometry analysis package.
 - Compensation for autofluorescence and spectral overlap
 - Distributed under a permissive free and open license
 
-**If you use TASBE Flow Analytics in your work, please cite the following publication:**
+**If you make use of the TASBE Flow Analytics package, please cite
+the following two publications:**
 
-- A Method for Fast, High-Precision Characterization of Synthetic Biology Devices, Jacob Beal, Ron Weiss, Fusun Yaman, Noah Davidsohn, and Aaron Adler, MIT CSAIL Tech Report 2012-008, April, 2012. http://hdl.handle.net/1721.1/69973
+* Jacob Beal, "Bridging the Gap: A Roadmap to Breaking the Biological
+  Design Barrier," Frontiers in Bioengineering and Biotechnology,
+  2:87. doi:10.3389/fbioe.2014.00087, January 2015.
+
+* Jacob Beal, Ron Weiss, Fusun Yaman, Noah Davidsohn, and Aaron Adler,
+  "A Method for Fast, High- Precision Characterization of Synthetic
+  Biology Devices," MIT CSAIL Tech Report 2012-008, April 2012. 
+  http://hdl.handle.net/1721.1/69973
 
 ## Installation
 
