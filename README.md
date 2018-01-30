@@ -12,6 +12,10 @@ TASBE Flow Analytics is a flow cytometry analysis package.
 - Compensation for autofluorescence and spectral overlap
 - Distributed under a permissive free and open license
 
+**If you use TASBE Flow Analytics in your work, please cite the following publication:**
+
+- A Method for Fast, High-Precision Characterization of Synthetic Biology Devices, Jacob Beal, Ron Weiss, Fusun Yaman, Noah Davidsohn, and Aaron Adler, MIT CSAIL Tech Report 2012-008, April, 2012. http://hdl.handle.net/1721.1/69973
+
 ## Installation
 
 - Using the shell (requires a Unix-like operating system such as GNU/Linux or Apple OSX):
