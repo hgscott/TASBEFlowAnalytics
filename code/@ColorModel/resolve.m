@@ -6,11 +6,7 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function CM=resolve(CM, path) % call after construction and configuration
-
-if (nargin < 2)
-    path = TASBEConfig.getexact('path', './');
-end
+function CM=resolve(CM) % call after construction and configuration
 
     % fill in channel descriptors from designated file (default = beadfile)
     if TASBEConfig.isSet('channel_template_file'), 
@@ -32,7 +28,7 @@ end
         CM.unit_translation = UnitTranslation('Specified',k_ERF,[],[],{});
         warning('TASBE:ColorModel','Warning: overriding units with specified k_ERF value of %d',k_ERF);
     else
-        [UT CM] = beads_to_ERF_model(CM,CM.BeadFile, 2, path);
+        [UT CM] = beads_to_ERF_model(CM,CM.BeadFile, 2);
         CM.unit_translation = UT;
     end
     
@@ -48,7 +44,7 @@ end
             end
         end
     else
-        CM.autofluorescence_model = computeAutoFluorescence(CM,path);
+        CM.autofluorescence_model = computeAutoFluorescence(CM);
     end
     if TASBEConfig.isSet('override_compensation')
         matrix = TASBEConfig.get('override_compensation');

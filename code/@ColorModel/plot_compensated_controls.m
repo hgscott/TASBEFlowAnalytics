@@ -40,7 +40,7 @@ for driven=1:n
         xlabel(sprintf('%s (%s a.u.)',getPrintName(CM.Channels{driven}),getName(CM.Channels{driven})));
         ylabel(sprintf('%s (%s a.u.)',getPrintName(CM.Channels{passive}),getName(CM.Channels{passive})));
         title('Compensated Positive Control');
-        path = TASBEConfig.getexact('path', './');
+        path = TASBEConfig.get('path');
         outputfig(h, sprintf('compensated-%s-vs-positive-%s',getPrintName(CM.Channels{passive}),getPrintName(CM.Channels{driven})), path);
     end
 end

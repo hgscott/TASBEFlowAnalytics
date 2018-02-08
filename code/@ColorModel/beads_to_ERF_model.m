@@ -1,4 +1,4 @@
-function [UT CM] = beads_to_ERF_model(CM, beadfile, makePlots, path)
+function [UT CM] = beads_to_ERF_model(CM, beadfile, makePlots)
 % BEADS_TO_ERF_MODEL: Computes a linear function for transforming FACS 
 % measurements on the ERF channel into ERFs, using a calibration run of
 % RCP-30-5A.
@@ -24,9 +24,8 @@ ERF_channel = CM.ERF_channel;
 if (nargin < 3)
     makePlots = CM.bead_plot;
 end
-if (nargin < 4)
-    path = TASBEConfig.getexact('path', './');
-end
+
+path = TASBEConfig.get('path');
 
 force_peak = TASBEConfig.getexact('force_first_bead_peak',[]);
 if ~isempty(force_peak)

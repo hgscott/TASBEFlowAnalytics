@@ -26,6 +26,7 @@ CFP_noise = CFP_noise_model.noisemin(c_index);
 
 bins = getBins(analysisParams);
 bin_centers = get_bin_centers(bins);
+bin_edges = get_bin_edges(bins);
 n_bins = numel(bin_centers);
 
 % compute population bulk statistics
@@ -48,7 +49,12 @@ for k=1:n_channels
     nonexpressing_set = nonexpressing_set & ~pos; % remove non-excluded set from non-expressing
     
     % compute bulk statistics
-    histograms(:,k) = hist(log10(data(pos,k)),log10(bin_centers));
+    if(is_octave())
+        tmp_hist = histc(log10(data(pos,k)),log10(bin_edges));
+        histograms(:,k) = tmp_hist(1:(end-1));
+    else
+        histograms(:,k) = histcounts(log10(data(pos,k)),log10(bin_edges));
+    end
     popmeans(k) = geomean(data(pos,k));
     popstds(k) = geostd(data(pos,k));
     poppeaks{k} = find_peaks(histograms(:,k)',bin_centers); % need to include peak detection params in analysisParams

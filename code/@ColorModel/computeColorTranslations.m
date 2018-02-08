@@ -57,7 +57,7 @@ function plot_translation_graph(CM,data,i,j,scale,means,stds,which)
     xlabel(sprintf('%s a.u.',getName(CM.Channels{i})));
     ylabel(sprintf('%s a.u.',getName(CM.Channels{j})));
     title('Color Translation Model');
-    path = TASBEConfig.getexact('path', './');
+    path = TASBEConfig.get('path');
     outputfig(h,sprintf('color-translation-%s-to-%s', getPrintName(CM.Channels{i}),getPrintName(CM.Channels{j})), path);
 end
 
