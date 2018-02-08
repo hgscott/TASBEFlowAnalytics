@@ -98,7 +98,7 @@ function fileHeader = buildDefaultHistFileHeader(channels)
     
     % Not elegant, but it gets the job done.
     for i=1:numChannels
-        channelName = getName(channels{i});
+        channelName = getPrintName(channels{i});
         invalidChars = '-|\s';  % Matlab does not like hypens or whitespace in variable names.
         matlabValidVariableNameChannelName = regexprep(channelName,invalidChars,'_');
         binHeaders{i} = ['BinCount_' matlabValidVariableNameChannelName];
