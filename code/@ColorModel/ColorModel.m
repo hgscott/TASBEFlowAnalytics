@@ -42,7 +42,7 @@ function CM = ColorModel(beadfile, blankfile, channels, colorfiles, pairfiles)
         CM.color_translation_model=[] ;% For converting other channels to ERF channel AU equiv
         CM.noise_model=[]             ;% For understanding the expected constitutive expression noise
         CM.filters={};                 % filters to remove problematic data (e.g. debris, time-contamination)
-        CM.standardUnits = 'not yet set';  % Should be the value from column E in BeadCatalog.xlsx
+        CM.standardUnits = 'not yet set';  % Should instead be the value from column E in BeadCatalog.xlsx
 
         CM.filters{1} = TimeFilter(); % add default quarter second data exclusion
         

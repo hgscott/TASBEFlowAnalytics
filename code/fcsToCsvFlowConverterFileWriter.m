@@ -26,22 +26,22 @@ function data = fcsToCsvFlowConverterFileWriter(CM, filename, with_AF, floor)
     % sanitize the channel names
     channels = getChannels(CM);
     sanitizedChannelName = cell(1, numel(channels));
-    
+
     for i=1:numel(channels)
         channelName = getName(channels{i});
         invalidChars = '-|\s';  % Matlab does not like hypens or whitespace in variable names.
         sanitizedChannelName{i} = regexprep(channelName,invalidChars,'_');
     end
-    
+
     % Use the channel names as the column labels
     columnLabels = strjoin(sanitizedChannelName, ',');
-    
+
     % Write column labels to file
     fprintf('Writing Point Cloud CSV file: %s\n', csvName);
     fid = fopen(csvName,'w');
     fprintf(fid, '%s\n', columnLabels);
     fclose(fid);
-    
+
     % Write the data to the file
     dlmwrite(csvName, data, '-append','precision','%.2f');
 end
