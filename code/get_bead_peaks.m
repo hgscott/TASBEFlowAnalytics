@@ -52,7 +52,7 @@ function returned = getBeadCatalog(forceReload)
     if nargin<1, forceReload=false; end;
     if isempty(catalog) || forceReload,
         % ISSUE-81: The cell range of the spreadsheet must be updated whenever BeadCatalog.xlsx is updated.
-        [nums txts combo] = xlsread([fileparts(mfilename('fullpath')) '/BeadCatalog.xlsx'], 1, 'A1:M95');
+        [nums txts combo] = xlsread([fileparts(mfilename('fullpath')) '/../BeadCatalog.xlsx'], 1, 'A1:M95');
         catalog = parseCatalog(combo);
     end
     returned = catalog;
