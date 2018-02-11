@@ -15,42 +15,46 @@ classdef TASBEConfig
             defaults = containers.Map();
             
             % Testing variables
-            doc.testing = struct();
+            s.testing = struct(); doc.testing = struct();
             doc.testing.about = 'Settings to disable features for testing purposes';
-            s.testing = struct();
             doc.testing.fakeFigureSaves = 'For testing purposes, do not actually save figures, only pretend to.';
             s.testing.fakeFigureSaves = 0;
             
             % Matlab GMdistribution
             
             % Generic flow data analysis
-            doc.flow = struct();
+            s.flow = struct(); doc.flow = struct();
             doc.flow.about = 'General settings for flow cytometry data analysis';
-            s.flow = struct();
-            s.flow.rangeMin = 0;                           % bin minimum (log10 scale)
-            s.flow.rangeMax = 7;                           % bin maximum (log10 scale)
-            s.flow.outputPointCloud = false;               % if true, output pointcloud for each calibrated read
-            s.flow.pointCloudPath = 'CSV/';                % location for pointcloud outputs
+            doc.flow.rangeMin = 'bin minimum (log10 scale)';
+            s.flow.rangeMin = 0;                           
+            doc.flow.rangeMax = 'bin maximum (log10 scale)';
+            s.flow.rangeMax = 7;
+            doc.flow.outputPointCloud = 'if true, output point-cloud for each calibrated read';
+            s.flow.outputPointCloud = false;
+            doc.flow.pointCloudPath = 'location for point-cloud outputs';
+            s.flow.pointCloudPath = 'CSV/';
 
             % generic plots
-            s.plotPath = 'plots/';          % where should any plot go?
-            s.visiblePlots = false;         % Should plots be visible, or just created?
-            s.graphPlotSize = [6 4];        % What size (in inches) should data graph figures be?
-            s.heatmapPlotSize = [5 5];      % What size (in inches) should scatter/heatmap figures be?
-            s.largeOutliers = false;        % Should outliers in heatmap figures be large, for output in small figures?
-            s.heatmapPlotType = 'image';    % Should contour plots be used instead of heatmap images?
+            s.plots = struct(); doc.plots = struct();
+            doc.plots.about = 'General settings for plotting figures';
+            s.plots.plotPath = 'plots/';          % where should any plot go?
+            s.plots.visiblePlots = false;         % Should plots be visible, or just created?
+            s.plots.graphPlotSize = [6 4];        % What size (in inches) should data graph figures be?
+            s.plots.heatmapPlotSize = [5 5];      % What size (in inches) should scatter/heatmap figures be?
+            s.plots.largeOutliers = false;        % Should outliers in heatmap figures be large, for output in small figures?
+            s.plots.heatmapPlotType = 'image';    % Should contour plots be used instead of heatmap images?
             
             % supporting plots, i.e., those supporting the transformation of raw data into processed data, like autofluorescence, compensation, units
             s.supporting = struct();
             s.supporting.plot = true;           % make plots as a side effect of computing color models, etc.
             s.supporting.visiblePlots = [];     % should supporting plots be visible, or just created?
-            defaults('supporting.visiblePlots') = 'visiblePlots';
+            defaults('supporting.visiblePlots') = 'plots.visiblePlots';
             s.supporting.plotPath = [];         % where should supporting plots go?
-            defaults('supporting.plotPath') = 'plotPath';
+            defaults('supporting.plotPath') = 'plots.plotPath';
             s.supporting.graphPlotSize = [];    % What size (in inches) should supporting data graph figures be?
-            defaults('supporting.graphPlotSize') = 'graphPlotSize';
+            defaults('supporting.graphPlotSize') = 'plots.graphPlotSize';
             s.supporting.heatmapPlotSize = [];  % What size (in inches) should supporting scatter/heatmap figures be?
-            defaults('supporting.heatmapPlotSize') = 'heatmapPlotSize';
+            defaults('supporting.heatmapPlotSize') = 'plots.heatmapPlotSize';
             
             % Gating
 %             s.gating = struct();
