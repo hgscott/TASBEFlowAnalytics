@@ -37,7 +37,7 @@ peak_threshold = CM.bead_peak_threshold;
 bin_min = CM.bead_min;
 bin_max = CM.bead_max;
 
-nameFC=getName(ERF_channel);
+erfChannelName=getName(ERF_channel);
 i_ERF = find(CM,ERF_channel);
 
 [PeakERFs,units,actualBatch] = get_bead_peaks(CM.bead_model,CM.bead_channel,CM.bead_batch);
@@ -66,15 +66,15 @@ n = (size(bin_edges,2)-1);
 bin_centers = bin_edges(1:n)*10.^(bin_increment/2);
 
 % option of segmenting ERF on a separate secondary channel
-segment_secondary = TASBEConfig.isSet('SecondaryBeadChannel');
+segment_secondary = TASBEConfig.isSet('beads.secondaryBeadChannel');
 if segment_secondary
-    segmentName = TASBEConfig.get('SecondaryBeadChannel');
+    segmentName = TASBEConfig.get('beads.secondaryBeadChannel');
 else
-    segmentName = nameFC;
+    segmentName = erfChannelName;
 end
 
 [fcsraw fcshdr fcsdat] = fca_readfcs(beadfile);
-bead_data = get_fcs_color(fcsdat,fcshdr,nameFC);
+bead_data = get_fcs_color(fcsdat,fcshdr,erfChannelName);
 segment_data = get_fcs_color(fcsdat,fcshdr,segmentName);
 
 TASBESession.succeed('TASBE:Beads','ObtainBeadData','Successfully read bead data');
@@ -171,6 +171,11 @@ for i=1:numel(CM.Channels),
         end
     end
     peak_sets{i} = alt_peak_means;
+    % replace the ERF channel peak-set if we're doing a secondary segmentation
+    if segment_secondary && strcmp(getName(CM.Channels{i}),erfChannelName);
+        peak_sets{i} = peak_means;
+    end
+
 
     % Make plots for all peaks, not just ERF
     if makePlots
@@ -191,7 +196,6 @@ for i=1:numel(CM.Channels),
         outputfig(h, sprintf('bead-calibration-%s',getPrintName(CM.Channels{i})),plotPath);
     end
 end
-
 
 % look for the best linear fit of log10(peak_means) vs. log10(PeakERFs)
 if(n_peaks>numQuantifiedPeaks)

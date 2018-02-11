@@ -62,8 +62,6 @@ CM=set_translation_channel_min(CM,[2,2,2]);
 
 TASBEConfig.set('path', '/tmp/plots');
 TASBEConfig.set('override_autofluorescence',[]);
-% When dealing with very strong fluorescence, use secondary channel to segment
-%settings = setSetting(settings,'SecondaryBeadChannel','PE-Texas_Red-A');
 CM = add_filter(CM,autogate);
 
 % Execute and save the model

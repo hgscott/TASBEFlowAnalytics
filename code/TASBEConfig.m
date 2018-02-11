@@ -118,6 +118,8 @@ classdef TASBEConfig
             doc.beads.about = 'Settings controlling the interpretation of color calibration beads';
             doc.beads.catalogFileName = 'Location of bead catalog file';
             s.beads.catalogFileName = [fileparts(mfilename('fullpath')) '/../BeadCatalog.xlsx'];
+            doc.beads.secondaryBeadChannel = 'For better distingishing low-a.u. ERF peaks: when set, segment ERF-channel peaks using the secondary channel instead of the ERF channel';
+            s.beads.secondaryBeadChannel = [];
 %             s.beads.peakThreshold = [];                     % Manual minimum threshold for peaks; set automatically if empty
 %             s.beads.rangeMin = 2;                           % bin minimum (log10 scale)
 %             s.beads.rangeMax = 7;                           % bin maximum (log10 scale)
@@ -138,7 +140,6 @@ classdef TASBEConfig
             defaults('beads.plotSize') = 'calibration.graphPlotSize';
             
             % TASBE Setting migration
-            s.SecondaryBeadChannel = '';            % Option to segment on a different channel, color
             s.channel_template_file = '';           % An example of this is CM.BeadFile
             s.override_units = [];                   % Also called k_ERF.  Is this a valid default?
             s.override_autofluorescence = [];        % Code that uses this wants a mean AF value.  Valid default?
@@ -146,7 +147,7 @@ classdef TASBEConfig
             s.override_translation = [];            % Used to create a ColorTranslationModel
             % TODO: fix this redundancy of path --> plotPath
             s.path = [];
-            defaults('path') = 'plotPath';
+            defaults('path') = 'plots.plotPath';
             
             % OutputSettings migration
             s.OS = struct();
@@ -156,7 +157,7 @@ classdef TASBEConfig
 
             % TODO: fix this redundancy to plotPath and point the OS to appropriate uncommented sub-preferences
             s.OS.Directory=[]; % Default is current directory (might be wrong for windows)
-            defaults('OS.Directory') = 'plotPath';
+            defaults('OS.Directory') = 'plots.plotPath';
             s.OS.FixedInducerAxis = [];      % fixed -> [min max]
             s.OS.FixedInputAxis =   [];      % fixed -> [min max]
             s.OS.FixedNormalizedInputAxis =   [];      % fixed -> [min max]
