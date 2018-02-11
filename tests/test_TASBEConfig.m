@@ -29,13 +29,13 @@ assert(TASBEConfig.get('foo.bar.baz.qux') == 3);
 assert(TASBEConfig.list.foo.bar.baz.qux == 3);
 
 try
-    TASBEConfig.getexact('supporting.plotPath');
+    TASBEConfig.getexact('calibration.plotPath');
     missingError = true;
 catch e  % error is expected
 end
 if missingError, error('Should have failed on missing preference'); end;
 
-assert(strcmp(TASBEConfig.get('supporting.plotPath'),'plots/'));
+assert(strcmp(TASBEConfig.get('calibration.plotPath'),'plots/'));
 
 assert(TASBEConfig.isSet('foo') == true);
 TASBEConfig.clear('foo');
