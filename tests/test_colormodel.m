@@ -45,7 +45,6 @@ colorpairfiles{1} = {channels{1}, channels{2}, channels{3}, [stem0312 'mkate_EBF
 colorpairfiles{2} = {channels{1}, channels{3}, channels{2}, [stem0312 'mkate_EBFP2_EYFP_P3.fcs']};
 
 CM = ColorModel(beadfile, blankfile, channels, colorfiles, colorpairfiles);
-CM=set_bead_plot(CM, 2); % 2 = detailed plots; 1 = minimal plot; 0 = no plot
 CM=set_translation_plot(CM, true);
 CM=set_noise_plot(CM, true);
 
@@ -127,7 +126,6 @@ colorfiles{1} = [stem0312 'mkate_P3.fcs'];
 colorpairfiles = {};
 
 CM = ColorModel(beadfile, blankfile, channels, colorfiles, colorpairfiles);
-CM=set_bead_plot(CM, 2); % 2 = detailed plots; 1 = minimal plot; 0 = no plot
 
 CM=set_bead_model(CM,'SpheroTech RCP-30-5A'); % Entry from BeadCatalog.xls matching your beads
 CM=set_bead_batch(CM,'Lot AA01, AA02, AA03, AA04, AB01, AB02, AC01, GAA01-R'); % Entry from BeadCatalog.xls containing your lot
@@ -185,7 +183,6 @@ channels{1} = setLineSpec(channels{1}, 'r');
 colorpairfiles = {};
 
 CM = ColorModel(beadfile, blankfile, channels, colorfiles, colorpairfiles);
-CM=set_bead_plot(CM, 2); % 2 = detailed plots; 1 = minimal plot; 0 = no plot
 
 CM=set_bead_model(CM,'SpheroTech RCP-30-5A'); % Entry from BeadCatalog.xls matching your beads
 CM=set_bead_batch(CM,'Lot AA01, AA02, AA03, AA04, AB01, AB02, AC01, GAA01-R'); % Entry from BeadCatalog.xls containing your lot

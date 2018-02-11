@@ -16,7 +16,7 @@ function CM=resolve(CM) % call after construction and configuration
     [fcsdat fcshdr] = fca_readfcs(template);
     % Remember channel descriptions, for later confirmation
     for i=1:numel(CM.Channels),
-        [ignored desc] = get_fcs_color(fcsdat,fcshdr,getName(CM.Channels{i}));
+        [~, desc] = get_fcs_color(fcsdat,fcshdr,getName(CM.Channels{i}));
         CM.Channels{i} = setDescription(CM.Channels{i},desc);
         % TODO: figure out how to add FSC and SSC channel descriptions (used by filters) for confirmation
     end
@@ -28,7 +28,7 @@ function CM=resolve(CM) % call after construction and configuration
         CM.unit_translation = UnitTranslation('Specified',k_ERF,[],[],{});
         warning('TASBE:ColorModel','Warning: overriding units with specified k_ERF value of %d',k_ERF);
     else
-        [UT CM] = beads_to_ERF_model(CM,CM.BeadFile, 2);
+        [UT, CM] = beads_to_ERF_model(CM,CM.BeadFile);
         CM.unit_translation = UT;
     end
     

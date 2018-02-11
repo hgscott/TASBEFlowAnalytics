@@ -53,7 +53,7 @@ classdef TASBEConfig
             % calibration plots, i.e., those supporting the transformation of raw data into processed data, like autofluorescence, compensation, units
             s.calibration = struct(); doc.calibration = struct();
             doc.calibration.about = 'General settings for calibration figures';
-            doc.calibration.plot = 'When true, make plots as a side effect of computing color models';
+            doc.calibration.plot = 'When true, make diagnostic plots while computing color models';
             s.calibration.plot = true;
             doc.calibration.visiblePlots = 'If true, calibration plots are visible; otherwise, they are hidden for later saving';
             s.calibration.visiblePlots = [];
@@ -114,16 +114,20 @@ classdef TASBEConfig
             defaults('compensation.plotSize') = 'calibration.heatmapPlotSize';
             
             % Beads
-            s.beads = struct();
-%             s.beads.catalogFileName = 'BeadCatalog.xls';    % Where is the catalog file?
+            s.beads = struct(); doc.beads = struct();
+            doc.beads.about = 'Settings controlling the interpretation of color calibration beads';
+            doc.beads.catalogFileName = 'Location of bead catalog file';
+            s.beads.catalogFileName = [fileparts(mfilename('fullpath')) '/../BeadCatalog.xlsx'];
 %             s.beads.peakThreshold = [];                     % Manual minimum threshold for peaks; set automatically if empty
 %             s.beads.rangeMin = 2;                           % bin minimum (log10 scale)
 %             s.beads.rangeMax = 7;                           % bin maximum (log10 scale)
 %             s.beads.binIncrement = 0.02;                    % resolution of binning
-%             s.beads.plot = [];                              % Should an autofluorescence plot be created?
-%             s.beads.forceFirstPeak = [];                    % If set to N, lowest observed peak is forced to be batch to Nth peak
-%             defaults('beads.plot') = 'calibration.plot';
-%             s.beads.visiblePlots = [];                      % should autofluorescence plot be visible, or just created?
+            doc.beads.forceFirstPeak = 'If set to N, lowest observed peak is forced to be interpreted as Nth peak';
+            s.beads.forceFirstPeak = [];
+            doc.beads.plot = 'When true, make diagnostic plots while computing bead unit calibration';
+            s.beads.plot = [];
+            defaults('beads.plot') = 'calibration.plot';
+%             s.beads.visiblePlots = [];                      % should bead plots be visible, or just created?
 %             defaults('beads.visiblePlots') = 'calibration.visiblePlots';
 %             s.beads.plotPath = [];                          % where should autofluorescence plot go?
 %             defaults('beads.plotPath') = 'calibration.plotPath';
@@ -140,7 +144,6 @@ classdef TASBEConfig
             % TODO: fix this redundancy of path --> plotPath
             s.path = [];
             defaults('path') = 'plotPath';
-            s.force_first_bead_peak = [];
             
             % OutputSettings migration
             s.OS = struct();

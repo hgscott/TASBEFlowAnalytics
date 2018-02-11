@@ -1,4 +1,4 @@
-function [UT CM] = beads_to_ERF_model(CM, beadfile, makePlots)
+function [UT CM] = beads_to_ERF_model(CM, beadfile)
 % BEADS_TO_ERF_MODEL: Computes a linear function for transforming FACS 
 % measurements on the ERF channel into ERFs, using a calibration run of
 % RCP-30-5A.
@@ -21,13 +21,11 @@ function [UT CM] = beads_to_ERF_model(CM, beadfile, makePlots)
 % package distribution's top directory.
 
 ERF_channel = CM.ERF_channel;
-if (nargin < 3)
-    makePlots = CM.bead_plot;
-end
+makePlots = TASBEConfig.get('beads.plot');
 
 path = TASBEConfig.get('path');
 
-force_peak = TASBEConfig.getexact('force_first_bead_peak',[]);
+force_peak = TASBEConfig.getexact('beads.forceFirstPeak',[]);
 if ~isempty(force_peak)
     TASBESession.warn('TASBE:Beads','ForcedPeak','Forcing interpretation of first detected peak as peak number %i',force_peak);
 end
@@ -173,7 +171,7 @@ for i=1:numel(CM.Channels),
     peak_sets{i} = alt_peak_means;
 
     % Make plots for all peaks, not just ERF
-    if makePlots >= 2
+    if makePlots
         graph_max = max(alt_range_bin_counts);
         h = figure('PaperPosition',[1 1 5 3.66]);
         set(h,'visible','off');
@@ -226,7 +224,7 @@ if(n_peaks>=2)
         [poly,S] = polyfit(log10(peak_means),log10(quantifiedPeakERFs(end-1:end)),1);
         fit_error = S.normr; model = poly; first_peak = numQuantifiedPeaks-1;
     end
-    if ~isempty(force_peak), first_peak = force_peak; end
+    if ~isempty(force_peak), first_peak = force_peak-peakOffset; end
     constrained_fit = mean(log10(quantifiedPeakERFs((1:n_peaks)+first_peak-1)) - log10(peak_means));
     cf_error = mean(10.^abs(log10((quantifiedPeakERFs((1:n_peaks)+first_peak-1)./peak_means) / 10.^constrained_fit)));
     % Final fit_error should be close to zero / 1-fold
@@ -241,7 +239,7 @@ elseif(n_peaks==1) % 1 peak
     TASBESession.warn('TASBE:Beads','PeakIdentification','Only one bead peak found, assuming brightest');
     TASBESession.skip('TASBE:Beads','PeakFitQuality','Fit quality irrelevant for single peak');
     fit_error = 0; first_peak = numQuantifiedPeaks;
-    if ~isempty(force_peak), first_peak = force_peak; end
+    if ~isempty(force_peak), first_peak = force_peak-peakOffset; end
     k_ERF = quantifiedPeakERFs(first_peak)/peak_means;
 else % n_peaks = 0
     TASBESession.warn('TASBE:Beads','PeakIdentification','Bead calibration failed: found no bead peaks; using single dummy peak');
@@ -283,7 +281,7 @@ end
 
 
 % Plot bead fit curve
-if makePlots>1
+if makePlots
     h = figure('PaperPosition',[1 1 5 3.66]);
     set(h,'visible','off');
     loglog(peak_means,quantifiedPeakERFs((1:n_peaks)+first_peak-1),'b*-'); hold on;
