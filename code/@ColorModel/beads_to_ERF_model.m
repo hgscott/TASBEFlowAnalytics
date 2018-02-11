@@ -260,7 +260,7 @@ if makePlots
     % Show identified peaks
     for i=1:n_peaks
         semilogx([segment_peak_means(i) segment_peak_means(i)],[0 graph_max],'r-');
-        text(peak_means(i),graph_max,sprintf('%i',i+first_peak-1),'VerticalAlignment','top');
+        text(segment_peak_means(i),graph_max,sprintf('%i',i+first_peak-1),'VerticalAlignment','top');
     end
     % show range where peaks were searched for
     plot(10.^[bin_min bin_min],[0 graph_max],'k:');
