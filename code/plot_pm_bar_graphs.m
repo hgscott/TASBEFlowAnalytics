@@ -23,7 +23,7 @@ csvfile = TASBEConfig.get('OS.csvFile');
 description = TASBEConfig.get('OS.Description');
 stemName = TASBEConfig.get('OS.StemName');
 deviceName = TASBEConfig.get('OS.DeviceName');
-directory = TASBEConfig.get('OS.Directory');
+directory = TASBEConfig.get('plots.plotPath');
 
 
 if plus_high

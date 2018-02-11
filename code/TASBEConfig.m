@@ -151,9 +151,6 @@ classdef TASBEConfig
             
             % TASBE Setting migration
             s.channel_template_file = '';           % An example of this is CM.BeadFile
-            % TODO: fix this redundancy of path --> plotPath
-            s.path = [];
-            defaults('path') = 'plots.plotPath';
             
             % OutputSettings migration
             s.OS = struct();
@@ -161,9 +158,6 @@ classdef TASBEConfig
             s.OS.DeviceName='';
             s.OS.Description='';
 
-            % TODO: fix this redundancy to plotPath and point the OS to appropriate uncommented sub-preferences
-            s.OS.Directory=[]; % Default is current directory (might be wrong for windows)
-            defaults('OS.Directory') = 'plots.plotPath';
             s.OS.FixedInducerAxis = [];      % fixed -> [min max]
             s.OS.FixedInputAxis =   [];      % fixed -> [min max]
             s.OS.FixedNormalizedInputAxis =   [];      % fixed -> [min max]

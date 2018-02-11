@@ -14,7 +14,7 @@ step = TASBEConfig.get('OS.PlotEveryN');
 ticks = TASBEConfig.get('OS.PlotTickMarks');
 stemName = TASBEConfig.get('OS.StemName');
 deviceName = TASBEConfig.get('OS.DeviceName');
-directory = TASBEConfig.get('OS.Directory');
+directory = TASBEConfig.get('plots.plotPath');
 
 AP = getAnalysisParameters(results);
 n_bins = get_n_bins(getBins(AP));

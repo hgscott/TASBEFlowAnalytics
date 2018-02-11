@@ -60,7 +60,7 @@ CM=set_ERF_channel_name(CM, 'FITC-A');
 % Ignore channel data for ith channel if below 10^[value(i)]
 CM=set_translation_channel_min(CM,[2,2,2]);
 
-TASBEConfig.set('path', '/tmp/plots');
+TASBEConfig.set('plots.plotPath', '/tmp/plots');
 CM = add_filter(CM,autogate);
 
 % Execute and save the model
@@ -135,7 +135,7 @@ CM=set_bead_min(CM, 1.8);
 CM=set_bead_peak_threshold(CM, 600);
 CM=set_ERF_channel_name(CM, 'PE-Tx-Red-YG-A');
 
-TASBEConfig.set('path', '/tmp/plots');
+TASBEConfig.set('plots.plotPath', '/tmp/plots');
 % Execute and save the model
 CM=resolve(CM);
 save('-V7','/tmp/CM120312.mat','CM');
@@ -192,7 +192,7 @@ CM=set_bead_min(CM, 1.8);
 CM=set_bead_peak_threshold(CM, 600);
 CM=set_ERF_channel_name(CM, 'PE-Tx-Red-YG-A');
 
-TASBEConfig.set('path', '/tmp/plots');
+TASBEConfig.set('plots.plotPath', '/tmp/plots');
 % Execute and save the model
 CM=resolve(CM);
 save('-V7','/tmp/CM120312.mat','CM');

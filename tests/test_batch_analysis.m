@@ -51,7 +51,7 @@ n_conditions = size(file_pairs,1);
 
 % Make output plots
 TASBEConfig.set('OS.StemName','LacI-CAGop');
-TASBEConfig.set('OS.Directory','/tmp/plots');
+TASBEConfig.set('plots.plotPath','/tmp/plots');
 TASBEConfig.set('OS.FixedInputAxis',[1e4 1e10]);
 plot_batch_histograms(results,sampleresults,{'b','y','r'},CM);
 

@@ -10,7 +10,7 @@ function plot_population_IO_characterization(results)
 
 ticks = TASBEConfig.get('OS.PlotTickMarks');
 stemName = TASBEConfig.get('OS.StemName');
-directory = TASBEConfig.get('OS.Directory');
+directory = TASBEConfig.get('plots.plotPath');
 deviceName = TASBEConfig.get('OS.DeviceName');
 
 AP = getAnalysisParameters(results);

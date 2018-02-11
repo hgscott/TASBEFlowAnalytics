@@ -13,8 +13,7 @@ function plot_sample_histograms(sampleresults)
 cfp_units = '';
 
 stemName = TASBEConfig.get('OS.StemName');
-directory = TASBEConfig.get('OS.Directory');
-fixedYAxis = ;
+directory = TASBEConfig.get('plots.plotPath');
 
 AP = sampleresults{1}.AnalysisParameters;
 channel_set = getChannelNames(AP);

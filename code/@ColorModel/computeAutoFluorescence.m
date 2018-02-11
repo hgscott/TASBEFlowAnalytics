@@ -8,7 +8,7 @@
 
 function autofluorescence_model=computeAutoFluorescence(CM)
 
-path = TASBEConfig.get('path');
+path = TASBEConfig.get('plots.plotPath');
 
 % Import data from FCS files
 [rawfcs fcshdr] = read_filtered_au(CM,CM.BlankFile);
