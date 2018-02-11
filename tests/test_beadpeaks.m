@@ -27,7 +27,6 @@ colorfiles{1} = [stem0312 'mkate_P3.fcs'];
 colorpairfiles = {};
 
 CM = ColorModel(beadfile, blankfile, channels, colorfiles, colorpairfiles);
-CM=set_bead_plot(CM, 2); % 2 = detailed plots; 1 = minimal plot; 0 = no plot
 
 CM=set_bead_model(CM,'SpheroTech RCP-30-5A'); % Entry from BeadCatalog.xls matching your beads
 CM=set_bead_batch(CM,'Lot AA01, AA02, AA03, AA04, AB01, AB02, AC01, GAA01-R'); % Entry from BeadCatalog.xls containing your lot
@@ -35,7 +34,7 @@ CM=set_bead_channel(CM,'PE-TR');
 
 CM=set_ERF_channel_name(CM, 'PE-Tx-Red-YG-A');
 
-TASBEConfig.set('path', '/tmp/plots');
+TASBEConfig.set('plots.plotPath', '/tmp/plots');
 
 
 function test_twopeaks
@@ -56,6 +55,23 @@ assertElementsAlmostEqual(UT.first_peak,    7);
 assertElementsAlmostEqual(UT.fit_error,     0.00,   'absolute', 0.002);
 assertElementsAlmostEqual(UT.peak_sets{1},  [855.4849 2.4685e+03], 'relative', 1e-2);
 
+function test_onepeak
+
+[CM] = setupRedPeakCM();
+% Ignore all bead data below 10^[bead_min] as being too "smeared" with noise
+CM=set_bead_min(CM, 3.1);
+CM=set_bead_peak_threshold(CM, 600);
+% Execute and save the model
+CM=resolve(CM);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Check results in CM:
+CMS = struct(CM);
+UT = struct(CMS.unit_translation);
+assertElementsAlmostEqual(UT.k_ERF,        68.971,  'relative', 1e-2);
+assertElementsAlmostEqual(UT.first_peak,    8);
+assertElementsAlmostEqual(UT.fit_error,     0.00,   'absolute', 0.002);
+assertElementsAlmostEqual(UT.peak_sets{1},  [2.4685e+03], 'relative', 1e-2);
 
 function test_toomanypeaks
 
@@ -111,7 +127,6 @@ colorfiles{1} = [];
 colorpairfiles = {};
 
 CM = ColorModel(beadfile, blankfile, channels, colorfiles, colorpairfiles);
-CM=set_bead_plot(CM, 2); % 2 = detailed plots; 1 = minimal plot; 0 = no plot
 
 CM=set_bead_model(CM,'SpheroTech URCP-38-2K'); % Entry from BeadCatalog.xls matching your beads
 CM=set_bead_batch(CM,'Lot AJ02'); % Entry from BeadCatalog.xls containing your lot
@@ -124,10 +139,10 @@ function test_rightpeaks
 
 [CM] = setupBV421CM();
 % Execute and save the model
-TASBEConfig.set('path', '/tmp/plots');
-TASBEConfig.set('override_autofluorescence',true);
+TASBEConfig.set('plots.plotPath', '/tmp/plots');
+TASBEConfig.set('calibration.overrideAutofluorescence',true);
 CM=resolve(CM);
-TASBEConfig.clear('override_autofluorescence');
+TASBEConfig.clear('calibration.overrideAutofluorescence');
 
 % Reset TASBEConfig to not contaminate other tests.
 
@@ -140,3 +155,79 @@ assertElementsAlmostEqual(UT.first_peak,    2);
 assertElementsAlmostEqual(UT.fit_error, 0.0363,   'absolute', 0.002);
 expected_peaks = 1e5 .* [0.0100    0.0689    0.2023    0.5471    1.5223];
 assertElementsAlmostEqual(UT.peak_sets{1},  expected_peaks, 'relative', 1e-2);
+
+
+function test_forcepeaks
+
+[CM] = setupRedPeakCM();
+% Ignore all bead data below 10^[bead_min] as being too "smeared" with noise
+CM=set_bead_min(CM, 2.7);
+CM=set_bead_peak_threshold(CM, 600);
+% Execute and save the model
+TASBEConfig.set('beads.forceFirstPeak',3);
+CM=resolve(CM);
+TASBEConfig.clear('beads.forceFirstPeak');
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Check results in CM:
+CMS = struct(CM);
+UT = struct(CMS.unit_translation);
+assertElementsAlmostEqual(UT.k_ERF,        0.8833,  'relative', 1e-2);
+assertElementsAlmostEqual(UT.first_peak,    3);
+assertElementsAlmostEqual(UT.fit_error,     0.00,   'absolute', 0.002);
+assertElementsAlmostEqual(UT.peak_sets{1},  [855.4849 2.4685e+03], 'relative', 1e-2);
+
+
+
+function [CM] = setupYellowPeakCM()
+
+stem0312 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_';
+
+beadfile = [stem0312 'Beads_P3.fcs'];
+blankfile = [stem0312 'blank_P3.fcs'];
+
+% Create one channel / colorfile pair for each color
+channels = {}; colorfiles = {};
+channels{1} = Channel('PE-Tx-Red-YG-A', 561, 610, 20);
+channels{1} = setPrintName(channels{1}, 'mKate');
+channels{1} = setLineSpec(channels{1}, 'r');
+colorfiles{1} = [stem0312 'mkate_P3.fcs'];
+
+channels{2} = Channel('FITC-A', 488, 515, 20);
+channels{2} = setPrintName(channels{2}, 'EYFP');
+channels{2} = setLineSpec(channels{2}, 'r');
+colorfiles{2} = [stem0312 'EYFP_P3.fcs'];
+
+% Multi-color controls are used for converting other colors into ERF units
+% Any channel without a control mapping it to ERF will be left in arbirary units.
+colorpairfiles = {};
+
+CM = ColorModel(beadfile, blankfile, channels, colorfiles, colorpairfiles);
+
+CM=set_bead_model(CM,'SpheroTech RCP-30-5A'); % Entry from BeadCatalog.xls matching your beads
+CM=set_bead_batch(CM,'Lot AA01, AA02, AA03, AA04, AB01, AB02, AC01, GAA01-R'); % Entry from BeadCatalog.xls containing your lot
+CM=set_bead_channel(CM,'FITC');
+CM=set_ERF_channel_name(CM, 'FITC-A');
+
+TASBEConfig.set('plots.plotPath', '/tmp/plots');
+
+function test_secondarypeaks
+
+[CM] = setupYellowPeakCM();
+% Ignore all bead data below 10^[bead_min] as being too "smeared" with noise
+CM=set_bead_min(CM, 2.7);
+CM=set_bead_peak_threshold(CM, 600);
+% Execute and save the model
+TASBEConfig.set('beads.secondaryBeadChannel','PE-Tx-Red-YG-A');
+CM=resolve(CM);
+TASBEConfig.clear('beads.secondaryBeadChannel');
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Check results in CM:
+CMS = struct(CM);
+UT = struct(CMS.unit_translation);
+assertElementsAlmostEqual(UT.k_ERF,        2.3166e+03,  'relative', 1e-2);
+assertElementsAlmostEqual(UT.first_peak,    7);
+assertElementsAlmostEqual(UT.fit_error,     0.00,   'absolute', 0.002);
+assertElementsAlmostEqual(UT.peak_sets{1},  [0.8555e+03    2.4685e+03], 'relative', 1e-2);
+assertElementsAlmostEqual(UT.peak_sets{2},  [53.6450  128.2913], 'relative', 1e-2);

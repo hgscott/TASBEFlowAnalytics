@@ -85,7 +85,7 @@ for i=1:numel(CM.Channels)
         xlabel(sprintf('%s %s',getName(CM.Channels{i}),getUnits(CM.Channels{i})));
         ylabel('k-fold noise');
         title(sprintf('Noise Model for %s',getName(CM.Channels{i})));
-        path = TASBEConfig.get('path');
+        path = TASBEConfig.get('plots.plotPath');
         outputfig(h,sprintf('noise-model-%s',getPrintName(CM.Channels{i})),path);
     end
 end

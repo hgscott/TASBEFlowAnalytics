@@ -14,7 +14,7 @@ hues = (1:n_inductions)/n_inductions;
 cfp_units = '';
 
 stemName = TASBEConfig.get('OS.StemName');
-directory = TASBEConfig.get('OS.Directory');
+directory = TASBEConfig.get('plots.plotPath');
 
 %%% Bin count plots:
 % Counts by CFP level:

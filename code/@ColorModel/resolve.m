@@ -16,25 +16,25 @@ function CM=resolve(CM) % call after construction and configuration
     [fcsdat fcshdr] = fca_readfcs(template);
     % Remember channel descriptions, for later confirmation
     for i=1:numel(CM.Channels),
-        [ignored desc] = get_fcs_color(fcsdat,fcshdr,getName(CM.Channels{i}));
+        [~, desc] = get_fcs_color(fcsdat,fcshdr,getName(CM.Channels{i}));
         CM.Channels{i} = setDescription(CM.Channels{i},desc);
         % TODO: figure out how to add FSC and SSC channel descriptions (used by filters) for confirmation
     end
     
     % build model
     % First, unit translation from beads
-    if TASBEConfig.isSet('override_units')
-        k_ERF = TASBEConfig.get('override_units');
+    if TASBEConfig.isSet('calibration.overrideUnits')
+        k_ERF = TASBEConfig.get('calibration.overrideUnits');
         CM.unit_translation = UnitTranslation('Specified',k_ERF,[],[],{});
         warning('TASBE:ColorModel','Warning: overriding units with specified k_ERF value of %d',k_ERF);
     else
-        [UT CM] = beads_to_ERF_model(CM,CM.BeadFile, 2);
+        [UT, CM] = beads_to_ERF_model(CM,CM.BeadFile);
         CM.unit_translation = UT;
     end
     
     % Next, autofluorescence and compensation model
-    if TASBEConfig.isSet('override_autofluorescence')
-        afmean = TASBEConfig.get('override_autofluorescence');
+    if TASBEConfig.isSet('calibration.overrideAutofluorescence')
+        afmean = TASBEConfig.get('calibration.overrideAutofluorescence');
         if numel(afmean)==1, afmean = afmean*ones(numel(CM.Channels),1); end;
         warning('TASBE:ColorModel','Warning: overriding autofluorescence model with specified values.');
         for i=1:numel(afmean),
@@ -46,8 +46,8 @@ function CM=resolve(CM) % call after construction and configuration
     else
         CM.autofluorescence_model = computeAutoFluorescence(CM);
     end
-    if TASBEConfig.isSet('override_compensation')
-        matrix = TASBEConfig.get('override_compensation');
+    if TASBEConfig.isSet('calibration.overrideCompensation')
+        matrix = TASBEConfig.get('calibration.overrideCompensation');
         warning('TASBE:ColorModel','Warning: overriding compensation model with specified values.');
         CM.compensation_model = LinearCompensationModel(matrix, zeros(size(matrix)));
     else
@@ -57,8 +57,8 @@ function CM=resolve(CM) % call after construction and configuration
     if CM.compensation_plot, plot_compensated_controls(CM); end;
     
     % finally, color translation model
-    if TASBEConfig.isSet('override_translation')
-        scales = TASBEConfig.get('override_translation');
+    if TASBEConfig.isSet('calibration.overrideTranslation')
+        scales = TASBEConfig.get('calibration.overrideTranslation');
         color_translation_model = ColorTranslationModel(CM.Channels,scales);
         for i=1:numel(CM.Channels),
             if(CM.Channels{i}==CM.ERF_channel) i_ERF = i; end;

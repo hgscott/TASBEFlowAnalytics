@@ -56,7 +56,7 @@ for i=1:n_conditions
     %ylim([0 maxcount*1.1]);
 
     title([TASBEConfig.get('OS.StemName') ' ' clean_for_latex(results{i}.condition) ' bin counts, by color']);
-    outputfig(h,[TASBEConfig.get('OS.StemName') '-' results{i}.condition '-bincounts'],TASBEConfig.get('OS.Directory'));
+    outputfig(h,[TASBEConfig.get('OS.StemName') '-' results{i}.condition '-bincounts'],TASBEConfig.get('plots.plotPath'));
 
     fprintf('.');
 end;

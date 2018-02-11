@@ -16,7 +16,6 @@ function CM = ColorModel(beadfile, blankfile, channels, colorfiles, pairfiles)
         %public settings
         CM.ERF_channel_name = 'FITC-A'; % Which channel are ERFs on?  Default is FITC-A
         CM.ERF_channel=[];
-        CM.bead_plot = 1  ;         % Should the bead calibration plot be produced?
         CM.bead_peak_threshold=[];  % If set, determines minimum for bead peaks
         CM.bead_min = 2 ;           % No signal be considered below 10^bead_min
         CM.bead_max = 6 ;           % No signal be considered above 10^bead_max

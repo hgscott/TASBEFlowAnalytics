@@ -12,7 +12,7 @@ step = TASBEConfig.get('OS.PlotEveryN');
 ticks = TASBEConfig.get('OS.PlotTickMarks');
 stemName = TASBEConfig.get('OS.StemName');
 deviceName = TASBEConfig.get('OS.DeviceName');
-directory = TASBEConfig.get('OS.Directory');
+directory = TASBEConfig.get('plots.plotPath');
 
 
 variable = getInducerLevelsToFiles(getExperiment(pm_results.PlusResults),1);
@@ -172,7 +172,7 @@ outputfig(h,[stemName,'-',deviceName,'-v-cfp'],directory);
 % if(OS.FixedInputAxis), xlim(OS.FixedInputAxis); end;
 % if(OS.FixedOutputAxis), ylim(OS.FixedOutputAxis); end;
 % title([OS.StemName,' marginal change in OFP vs. CFP']);
-% outputfig(h,[OS.StemName,'-',OS.DeviceName,'-marginal-ofp'],OS.Directory);
+% outputfig(h,[OS.StemName,'-',OS.DeviceName,'-marginal-ofp'],directory);
 % 
 
 % ratio plot
