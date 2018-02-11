@@ -8,16 +8,25 @@
 
 classdef TASBEConfig
     methods(Static,Hidden)
-        function [s, defaults] = init()
+        function [s, defaults, doc] = init()
             s = struct();
+            doc = struct();
+            doc.about = 'Configuration variables for TASBE Flow Analytics';
             defaults = containers.Map();
             
             % Testing variables
+            doc.testing = struct();
+            doc.testing.about = 'Settings to disable features for testing purposes';
+            s.testing = struct();
+            doc.testing.fakeFigureSaves = 'For testing purposes, do not actually save figures, only pretend to.';
             s.testing.fakeFigureSaves = 0;
             
             % Matlab GMdistribution
             
             % Generic flow data analysis
+            doc.flow = struct();
+            doc.flow.about = 'General settings for flow cytometry data analysis';
+            s.flow = struct();
             s.flow.rangeMin = 0;                           % bin minimum (log10 scale)
             s.flow.rangeMax = 7;                           % bin maximum (log10 scale)
             s.flow.outputPointCloud = false;               % if true, output pointcloud for each calibrated read
@@ -88,6 +97,23 @@ classdef TASBEConfig
             s.compensation.plotSize = [];               % What size (in inches) should compensation figure be?
             defaults('compensation.plotSize') = 'supporting.heatmapPlotSize';
             
+            % Beads
+            s.beads = struct();
+%             s.beads.catalogFileName = 'BeadCatalog.xls';    % Where is the catalog file?
+%             s.beads.peakThreshold = [];                     % Manual minimum threshold for peaks; set automatically if empty
+%             s.beads.rangeMin = 2;                           % bin minimum (log10 scale)
+%             s.beads.rangeMax = 7;                           % bin maximum (log10 scale)
+%             s.beads.binIncrement = 0.02;                    % resolution of binning
+%             s.beads.plot = [];                              % Should an autofluorescence plot be created?
+%             s.beads.forceFirstPeak = [];                    % If set to N, lowest observed peak is forced to be batch to Nth peak
+%             defaults('beads.plot') = 'supporting.plot';
+%             s.beads.visiblePlots = [];                      % should autofluorescence plot be visible, or just created?
+%             defaults('beads.visiblePlots') = 'supporting.visiblePlots';
+%             s.beads.plotPath = [];                          % where should autofluorescence plot go?
+%             defaults('beads.plotPath') = 'supporting.plotPath';
+%             s.beads.plotSize = [];                          % What size (in inches) should autofluorescence plot be?
+%             defaults('beads.plotSize') = 'supporting.graphPlotSize';
+            
             % TASBE Setting migration
             s.SecondaryBeadChannel = '';            % Option to segment on a different channel, color
             s.channel_template_file = '';           % An example of this is CM.BeadFile
@@ -126,23 +152,6 @@ classdef TASBEConfig
             s.OS.csvfile = []; % may be either an fid or a string
             
             
-            % Beads
-%             s.beads = struct();
-%             s.beads.catalogFileName = 'BeadCatalog.xls';    % Where is the catalog file?
-%             s.beads.peakThreshold = [];                     % Manual minimum threshold for peaks; set automatically if empty
-%             s.beads.rangeMin = 2;                           % bin minimum (log10 scale)
-%             s.beads.rangeMax = 7;                           % bin maximum (log10 scale)
-%             s.beads.binIncrement = 0.02;                    % resolution of binning
-%             s.beads.plot = [];                              % Should an autofluorescence plot be created?
-%             s.beads.forceFirstPeak = [];                    % If set to N, lowest observed peak is forced to be batch to Nth peak
-%             defaults('beads.plot') = 'supporting.plot';
-%             s.beads.visiblePlots = [];                      % should autofluorescence plot be visible, or just created?
-%             defaults('beads.visiblePlots') = 'supporting.visiblePlots';
-%             s.beads.plotPath = [];                          % where should autofluorescence plot go?
-%             defaults('beads.plotPath') = 'supporting.plotPath';
-%             s.beads.plotSize = [];                          % What size (in inches) should autofluorescence plot be?
-%             defaults('beads.plotSize') = 'supporting.graphPlotSize';
-            
             % Color translation
 %             s.colortranslation = struct();
 %             s.colortranslation.rangeMin = 3;                % bin minimum (log10 scale), universal minimum trim
@@ -160,26 +169,32 @@ classdef TASBEConfig
 %             defaults('colortranslation.plotSize') = 'supporting.heatmapPlotSize';
         end
         
-        function out = setget(key,value,force)
+        function [out, default, doc] = setget(key,value,force)
             persistent settings;
-            if isempty(settings), settings = TASBEConfig.init(); end;
+            persistent documentation;
+            persistent defaults;
+            if isempty(settings), [settings, defaults, documentation] = TASBEConfig.init(); end;
             
             % If there is no arguments, just return the whole thing for inspection
-            if nargin==0, out = settings; return; end
+            if nargin==0, out = settings; default = defaults; doc = documentation; return; end
             % if the key is '.reset', then reset
-            if strcmp(key,'.reset'), settings = TASBEConfig.init(); return; end; 
+            if strcmp(key,'.reset'), [settings, defaults, documentation] = TASBEConfig.init(); return; end; 
             if nargin<3, force = false; end
             
             keyseq = regexp(key, '\.', 'split');
             
             % nested access
-            nest = cell(size(keyseq));
-            nest{1} = settings;
+            nest = cell(size(keyseq)); docNest = nest; 
+            nest{1} = settings; docNest{1} = documentation;
             for i=1:(numel(keyseq)-1)
                 if ~ismember(keyseq{i},fieldnames(nest{i})) || ~isstruct(nest{i}.(keyseq{i}))
                     nest{i}.(keyseq{i}) = struct();
                 end
+                if ~ismember(keyseq{i},fieldnames(docNest{i})) || ~isstruct(docNest{i}.(keyseq{i}))
+                    docNest{i}.(keyseq{i}) = struct();
+                end
                 nest{i+1} = nest{i}.(keyseq{i});
+                docNest{i+1} = docNest{i}.(keyseq{i});
             end
             
             if ~isempty(value) || force
@@ -191,11 +206,19 @@ classdef TASBEConfig
                 settings = nest{1};
             end
             
+            % Finally, set outputs
             if ismember(keyseq{end},fieldnames(nest{end}))
                 out = nest{end}.(keyseq{end});
             else
                 out = [];
             end
+            if ismember(keyseq{end},fieldnames(docNest{end}))
+                doc = docNest{end}.(keyseq{end});
+            else
+                doc = 'No documentation available';
+            end
+            
+            if(defaults.isKey(key)), default = defaults(key); else default = 'no default'; end;
         end
     end
     
@@ -227,11 +250,11 @@ classdef TASBEConfig
                 end
             end
             error('Couldn''t get any preference in sequence: %s',[varargin{:}]);
-            
         end
+        
         function out = get(key)
             persistent defaults
-            if isempty(defaults), [ignored defaults] = TASBEConfig.init(); end;
+            if isempty(defaults), [~, defaults] = TASBEConfig.list(); end;
             
             current = key;
             while current
@@ -262,9 +285,30 @@ classdef TASBEConfig
         function reset()
             TASBEConfig.setget('.reset');
         end
+        function text = help(key)
+            if nargin==0
+                [val,def,doc] = TASBEConfig.list();
+                key = '';
+            else
+                [val,def,doc] = TASBEConfig.setget(key,[]);
+            end
+            
+            if(isstruct(val))
+                fieldnameset = fieldnames(val);
+                keydoc = '';
+                for i = 1:numel(fieldnameset),
+                    keydoc = [keydoc sprintf('\n  %s',fieldnameset{i})];
+                    if(isstruct(val.(fieldnameset{i}))), keydoc = [keydoc sprintf('    [family]')]; end;
+                end
+                try about = doc.about; catch e, about = 'No documentation available'; end;
+                text = sprintf('Configuration family: %s\n%s\nKeys: %s',key,about,keydoc);
+            else
+                text = sprintf('Configuration: %s\n%s\nDefaults to: %s\nCurrent value: %s\n',key,doc,def,val);
+            end
+        end
         
-        function out = list()
-            out = TASBEConfig.setget();
+        function [settings, defaults, documentation] = list()
+            [settings, defaults, documentation] = TASBEConfig.setget();
         end
     end
 end
