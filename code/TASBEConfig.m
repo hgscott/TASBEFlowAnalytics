@@ -53,6 +53,14 @@ classdef TASBEConfig
             % calibration plots, i.e., those supporting the transformation of raw data into processed data, like autofluorescence, compensation, units
             s.calibration = struct(); doc.calibration = struct();
             doc.calibration.about = 'General settings for calibration figures';
+            doc.calibration.overrideUnits = 'When set, force a.u. to ERF scaling value to this value';
+            s.calibration.overrideUnits = [];
+            doc.calibration.overrideAutofluorescence = 'When set, force autofluorescence to use this as mean AF';
+            s.calibration.overrideAutofluorescence = [];
+            doc.calibration.overrideCompensation = 'When set, use this matrix instead of computing a linear compensation model';
+            s.calibration.overrideCompensation = [];
+            doc.calibration.overrideTranslation = 'When set, use this matrix instead of computing a color translation model';
+            s.calibration.overrideTranslation = [];
             doc.calibration.plot = 'When true, make diagnostic plots while computing color models';
             s.calibration.plot = true;
             doc.calibration.visiblePlots = 'If true, calibration plots are visible; otherwise, they are hidden for later saving';
@@ -120,7 +128,9 @@ classdef TASBEConfig
             s.beads.catalogFileName = [fileparts(mfilename('fullpath')) '/../BeadCatalog.xlsx'];
             doc.beads.secondaryBeadChannel = 'For better distingishing low-a.u. ERF peaks: when set, segment ERF-channel peaks using the secondary channel instead of the ERF channel';
             s.beads.secondaryBeadChannel = [];
-%             s.beads.peakThreshold = [];                     % Manual minimum threshold for peaks; set automatically if empty
+% TODO: these (and other consolidations) from ColorModel need to wait for config checkpointing            
+%            doc.beads.peakThreshold = 'Manual minimum threshold for peaks; set automatically if empty';
+%            s.beads.peakThreshold = [];
 %             s.beads.rangeMin = 2;                           % bin minimum (log10 scale)
 %             s.beads.rangeMax = 7;                           % bin maximum (log10 scale)
 %             s.beads.binIncrement = 0.02;                    % resolution of binning
@@ -141,10 +151,6 @@ classdef TASBEConfig
             
             % TASBE Setting migration
             s.channel_template_file = '';           % An example of this is CM.BeadFile
-            s.override_units = [];                   % Also called k_ERF.  Is this a valid default?
-            s.override_autofluorescence = [];        % Code that uses this wants a mean AF value.  Valid default?
-            s.override_compensation = [];           % Matrix used to create a Linear Compensation Model
-            s.override_translation = [];            % Used to create a ColorTranslationModel
             % TODO: fix this redundancy of path --> plotPath
             s.path = [];
             defaults('path') = 'plots.plotPath';

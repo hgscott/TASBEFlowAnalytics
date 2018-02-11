@@ -61,7 +61,6 @@ CM=set_ERF_channel_name(CM, 'FITC-A');
 CM=set_translation_channel_min(CM,[2,2,2]);
 
 TASBEConfig.set('path', '/tmp/plots');
-TASBEConfig.set('override_autofluorescence',[]);
 CM = add_filter(CM,autogate);
 
 % Execute and save the model

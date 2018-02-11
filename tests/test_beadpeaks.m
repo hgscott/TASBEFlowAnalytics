@@ -140,9 +140,9 @@ function test_rightpeaks
 [CM] = setupBV421CM();
 % Execute and save the model
 TASBEConfig.set('plots.plotPath', '/tmp/plots');
-TASBEConfig.set('override_autofluorescence',true);
+TASBEConfig.set('calibration.overrideAutofluorescence',true);
 CM=resolve(CM);
-TASBEConfig.clear('override_autofluorescence');
+TASBEConfig.clear('calibration.overrideAutofluorescence');
 
 % Reset TASBEConfig to not contaminate other tests.
 
