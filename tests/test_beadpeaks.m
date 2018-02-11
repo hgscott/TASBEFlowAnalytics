@@ -34,7 +34,7 @@ CM=set_bead_channel(CM,'PE-TR');
 
 CM=set_ERF_channel_name(CM, 'PE-Tx-Red-YG-A');
 
-TASBEConfig.set('path', '/tmp/plots');
+TASBEConfig.set('plots.plotPath', '/tmp/plots');
 
 
 function test_twopeaks
@@ -122,7 +122,7 @@ function test_rightpeaks
 
 [CM] = setupBV421CM();
 % Execute and save the model
-TASBEConfig.set('path', '/tmp/plots');
+TASBEConfig.set('plots.plotPath', '/tmp/plots');
 TASBEConfig.set('override_autofluorescence',true);
 CM=resolve(CM);
 TASBEConfig.clear('override_autofluorescence');

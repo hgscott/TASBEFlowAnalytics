@@ -122,17 +122,20 @@ classdef TASBEConfig
 %             s.beads.rangeMin = 2;                           % bin minimum (log10 scale)
 %             s.beads.rangeMax = 7;                           % bin maximum (log10 scale)
 %             s.beads.binIncrement = 0.02;                    % resolution of binning
-            doc.beads.forceFirstPeak = 'If set to N, lowest observed peak is forced to be interpreted as Nth peak';
+            doc.beads.forceFirstPeak = 'If set to N, lowest observed bead peak is forced to be interpreted as Nth peak';
             s.beads.forceFirstPeak = [];
             doc.beads.plot = 'When true, make diagnostic plots while computing bead unit calibration';
             s.beads.plot = [];
             defaults('beads.plot') = 'calibration.plot';
-%             s.beads.visiblePlots = [];                      % should bead plots be visible, or just created?
-%             defaults('beads.visiblePlots') = 'calibration.visiblePlots';
-%             s.beads.plotPath = [];                          % where should autofluorescence plot go?
-%             defaults('beads.plotPath') = 'calibration.plotPath';
-%             s.beads.plotSize = [];                          % What size (in inches) should autofluorescence plot be?
-%             defaults('beads.plotSize') = 'calibration.graphPlotSize';
+            doc.beads.visiblePlots = 'If true, bead unit calibration plots are visible; otherwise, they are hidden for later saving';
+            s.beads.visiblePlots = [];
+            defaults('beads.visiblePlots') = 'calibration.visiblePlots';
+            doc.calibration.plotPath = 'Location for bead unit calibration plots';
+            s.beads.plotPath = [];
+            defaults('beads.plotPath') = 'calibration.plotPath';
+            doc.beads.graphPlotSize = 'Size (in inches) [X Y] for bead unit calibration figures';
+            s.beads.plotSize = [5 3.66];
+            defaults('beads.plotSize') = 'calibration.graphPlotSize';
             
             % TASBE Setting migration
             s.SecondaryBeadChannel = '';            % Option to segment on a different channel, color
