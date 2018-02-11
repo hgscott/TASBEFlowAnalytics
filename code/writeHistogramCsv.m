@@ -6,7 +6,8 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function histogramFile = writeHistogramCsv(channels, sampleIds, sampleresults, binCenters, baseName)
+function histogramFile = writeHistogramCsv(channels, sampleIds, sampleresults, binCenters)
+    baseName = sanitize_name(TASBEConfig.get('OS.StemName'));
 
     % First create the default output filename.
     histogramFile = [baseName '_histogramFile.csv'];

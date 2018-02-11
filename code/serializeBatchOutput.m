@@ -6,7 +6,7 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function [statisticsFile, histogramFile] = serializeBatchOutput(file_pairs, CM, AP, sampleresults, baseName)
+function [statisticsFile, histogramFile] = serializeBatchOutput(file_pairs, CM, AP, sampleresults)
 
     % Grab all the data in separate data structures. Then format for output
     % files.    
@@ -15,10 +15,10 @@ function [statisticsFile, histogramFile] = serializeBatchOutput(file_pairs, CM, 
     binCenters = get_bin_centers(getBins(AP));
     
     % Formats and writes the output to the Statistics file.
-    statisticsFile = writeStatisticsCsv(channels, sampleIds, sampleresults, baseName);
+    statisticsFile = writeStatisticsCsv(channels, sampleIds, sampleresults);
     
     % Formats and writes the output to the Histogram file.
-    histogramFile = writeHistogramCsv(channels, sampleIds, sampleresults, binCenters, baseName);
+    histogramFile = writeHistogramCsv(channels, sampleIds, sampleresults, binCenters);
 
 end
 
