@@ -215,7 +215,7 @@ if(n_peaks>=2)
           if S.normr <= fit_error, fit_error = S.normr; model = poly; first_peak=i+1; best_i = i; end;
         end
         % Warn if setting to anything less than the top peak, since top peak should usually be visible
-        fprintf('Bead peaks identified as %i to %i of %i\n',first_peak,first_peak+n_peaks-1,numQuantifiedPeaks);
+        fprintf('Bead peaks identified as %i to %i of %i\n',first_peak+peakOffset,first_peak+n_peaks-1+peakOffset,numQuantifiedPeaks+peakOffset);
         if best_i < (numQuantifiedPeaks-n_peaks) && n_peaks < 5,
             TASBESession.warn('TASBE:Beads','PeakIdentification','Few bead peaks and fit does not include highest: error likely');
         else
@@ -260,7 +260,7 @@ if makePlots
     % Show identified peaks
     for i=1:n_peaks
         semilogx([segment_peak_means(i) segment_peak_means(i)],[0 graph_max],'r-');
-        text(segment_peak_means(i),graph_max,sprintf('%i',i+first_peak-1),'VerticalAlignment','top');
+        text(segment_peak_means(i),graph_max,sprintf('%i',i+first_peak-1+peakOffset),'VerticalAlignment','top');
     end
     % show range where peaks were searched for
     plot(10.^[bin_min bin_min],[0 graph_max],'k:');
@@ -290,7 +290,7 @@ if makePlots>1
     %loglog([1 peak_means],[1 peak_means]*(10.^model(2)),'r+--');
     loglog([1 peak_means],[1 peak_means]*k_ERF,'go--');
     for i=1:n_peaks
-        text(peak_means(i),quantifiedPeakERFs(i+first_peak-1)*1.3,sprintf('%i',i+first_peak-1));
+        text(peak_means(i),quantifiedPeakERFs(i+first_peak-1)*1.3,sprintf('%i',i+first_peak-1+peakOffset));
     end
     xlabel([CM.bead_channel ' a.u.']); ylabel('Beads ERFs');
     title(sprintf('Peak identification for %s beads', CM.bead_model));
@@ -314,7 +314,7 @@ if makePlots
         for i=1:n_peaks
             semilogy([min(bead_data) max(bead_data)],log10([segment_peak_means(i) segment_peak_means(i)]),'r-');
             semilogy(peak_means(i),log10(segment_peak_means(i)),'k+');
-            text(peak_means(i),log10(segment_peak_means(i))+0.1,sprintf('%i',i+first_peak-1));
+            text(peak_means(i),log10(segment_peak_means(i))+0.1,sprintf('%i',i+first_peak-1+peakOffset));
         end
         xlabel([CM.bead_channel ' a.u.']); ylabel([segmentName ' a.u.']);
         title(sprintf('Peak identification for %s beads', CM.bead_model));
