@@ -39,7 +39,7 @@ for i=1:step:n_bins
     loglog(input_mean(i,which),output_mean(i,which).*output_std(i,which),':','Color',hsv2rgb([hues(i) 1 0.9]));
     loglog(input_mean(i,which),output_mean(i,which)./output_std(i,which),':','Color',hsv2rgb([hues(i) 1 0.9]));
 end;
-%if(outputSettings.FixedAxis), axis([1e2 1e10 1e2 1e10]); end;
+%if(TASBEConfig.get('OS.FixedAxis')), axis([1e2 1e10 1e2 1e10]); end;
 xlabel(['IFP ' in_units]); ylabel(['OFP ' out_units]);
 set(gca,'XScale','log'); set(gca,'YScale','log');
 if(TASBEConfig.isSet('OS.FixedInputAxis')), xlim(TASBEConfig.get('OS.FixedInputAxis')); end;
@@ -63,12 +63,12 @@ outputfig(h,[stemName,'-',deviceName,'-mean'],directory);
 %     loglog(input_mean(i,which),output_mean(i,which)./pe(i,which).*output_std(i,which),':','Color',hsv2rgb([hues(i) 1 0.9]));
 %     loglog(input_mean(i,which),output_mean(i,which)./pe(i,which)./output_std(i,which),':','Color',hsv2rgb([hues(i) 1 0.9]));
 % end;
-% %if(outputSettings.FixedAxis), axis([1e2 1e10 1e2 1e10]); end;
+% %if(TASBEConfig.get('OS.FixedAxis')), axis([1e2 1e10 1e2 1e10]); end;
 % set(gca,'XScale','log'); set(gca,'YScale','log');
 % xlabel(['IFP ' in_units]); ylabel(['OFP ' out_units '/plasmid']);
-% if(outputsettings.FixedNormalizedInputAxis), xlim(outputsettings.FixedNormalizedInputAxis); end;
-% if(outputsettings.FixedNormalizedOutputAxis), ylim(outputsettings.FixedNormalizedOutputAxis); end;
-% title(['Normalized ',outputsettings.DeviceName,' transfer curve, colored by plasmid count']);
-% outputfig(h,[outputsettings.StemName,'-',outputsettings.DeviceName,'-mean-norm'],outputsettings.Directory);
+% if(TASBEConfig.get('OS.FixedNormalizedInputAxis')), xlim(TASBEConfig.get('OS.FixedNormalizedInputAxis')); end;
+% if(TASBEConfig.get('OS.FixedNormalizedOutputAxis')), ylim(TASBEConfig.get('OS.FixedNormalizedOutputAxis')); end;
+% title(['Normalized ',TASBEConfig.get('OS.DeviceName'),' transfer curve, colored by plasmid count']);
+% outputfig(h,[TASBEConfig.get('OS.StemName'),'-',TASBEConfig.get('OS.DeviceName'),'-mean-norm'],TASBEConfig.get('OS.Directory'));
 
 end

@@ -126,5 +126,5 @@ outputfig(h, [stemName,'-active'],directory);
 % set(gca,'XScale','log'); set(gca,'YScale','log');
 % xlabel('Estimated Plasmid Count'); ylabel('Count');
 % ylim([1e0 10.^(ceil(log10(maxcount)))]);
-% title([outputsettings.StemName,' bin counts, colored by inducer level']);
-% outputfig(h,[outputsettings.StemName,'-plasmid-bincounts'],outputsettings.Directory);
+% title([TASBEConfig.get('OS.StemName'),' bin counts, colored by inducer level']);
+% outputfig(h,[TASBEConfig.get('OS.StemName'),'-plasmid-bincounts'],TASBEConfig.get('OS.Directory'));
