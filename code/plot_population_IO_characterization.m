@@ -34,7 +34,7 @@ for i=1:n_components
     loglog(10.^input_mean(i,:),10.^(output_mean(i,:)+output_std(i,:)),':','Color',hsv2rgb([hues(i) 1 0.9]));
     loglog(10.^input_mean(i,:),10.^(output_mean(i,:)-output_std(i,:)),':','Color',hsv2rgb([hues(i) 1 0.9]));
 end;
-%if(outputSettings.FixedAxis), axis([1e2 1e10 1e2 1e10]); end;
+%if(TASBEConfig.get('OS.FixedAxis')), axis([1e2 1e10 1e2 1e10]); end;
 xlabel(['IFP ' in_units]); ylabel(['OFP ' out_units]);
 set(gca,'XScale','log'); set(gca,'YScale','log');
 if(TASBEConfig.isSet('OS.FixedInputAxis')), xlim(TASBEConfig.get('OS.FixedInputAxis')); end;
