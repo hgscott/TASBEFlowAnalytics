@@ -7,7 +7,7 @@
 % package distribution's top directory.
 
 function histogramFile = writeHistogramCsv(channels, sampleIds, sampleresults, binCenters)
-    baseName = sanitize_name(TASBEConfig.get('OS.StemName'));
+    baseName = sanitize_name(TASBEConfig.get('OutputSettings.StemName'));
 
     % First create the default output filename.
     histogramFile = [baseName '_histogramFile.csv'];

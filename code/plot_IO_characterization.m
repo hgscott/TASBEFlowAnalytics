@@ -10,10 +10,10 @@ function plot_IO_characterization(results,in_channel,out_channel)
 if nargin<2, in_channel = 'input'; end;
 if nargin<3, out_channel = 'output'; end;
 
-step = TASBEConfig.get('OS.PlotEveryN');
-ticks = TASBEConfig.get('OS.PlotTickMarks');
-stemName = TASBEConfig.get('OS.StemName');
-deviceName = TASBEConfig.get('OS.DeviceName');
+step = TASBEConfig.get('OutputSettings.PlotEveryN');
+ticks = TASBEConfig.get('OutputSettings.PlotTickMarks');
+stemName = TASBEConfig.get('OutputSettings.StemName');
+deviceName = TASBEConfig.get('OutputSettings.DeviceName');
 directory = TASBEConfig.get('plots.plotPath');
 
 AP = getAnalysisParameters(results);
@@ -39,11 +39,11 @@ for i=1:step:n_bins
     loglog(input_mean(i,which),output_mean(i,which).*output_std(i,which),':','Color',hsv2rgb([hues(i) 1 0.9]));
     loglog(input_mean(i,which),output_mean(i,which)./output_std(i,which),':','Color',hsv2rgb([hues(i) 1 0.9]));
 end;
-%if(TASBEConfig.get('OS.FixedAxis')), axis([1e2 1e10 1e2 1e10]); end;
+%if(TASBEConfig.get('OutputSettings.FixedAxis')), axis([1e2 1e10 1e2 1e10]); end;
 xlabel(['IFP ' in_units]); ylabel(['OFP ' out_units]);
 set(gca,'XScale','log'); set(gca,'YScale','log');
-if(TASBEConfig.isSet('OS.FixedInputAxis')), xlim(TASBEConfig.get('OS.FixedInputAxis')); end;
-if(TASBEConfig.isSet('OS.FixedOutputAxis')), ylim(TASBEConfig.get('OS.FixedOutputAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedInputAxis')), xlim(TASBEConfig.get('OutputSettings.FixedInputAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedOutputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedOutputAxis')); end;
 title(['Raw ',stemName,' transfer curve, colored by constitutive bin']);
 outputfig(h,[stemName,'-',deviceName,'-mean'],directory);
 
@@ -63,12 +63,12 @@ outputfig(h,[stemName,'-',deviceName,'-mean'],directory);
 %     loglog(input_mean(i,which),output_mean(i,which)./pe(i,which).*output_std(i,which),':','Color',hsv2rgb([hues(i) 1 0.9]));
 %     loglog(input_mean(i,which),output_mean(i,which)./pe(i,which)./output_std(i,which),':','Color',hsv2rgb([hues(i) 1 0.9]));
 % end;
-% %if(TASBEConfig.get('OS.FixedAxis')), axis([1e2 1e10 1e2 1e10]); end;
+% %if(TASBEConfig.get('OutputSettings.FixedAxis')), axis([1e2 1e10 1e2 1e10]); end;
 % set(gca,'XScale','log'); set(gca,'YScale','log');
 % xlabel(['IFP ' in_units]); ylabel(['OFP ' out_units '/plasmid']);
-% if(TASBEConfig.get('OS.FixedNormalizedInputAxis')), xlim(TASBEConfig.get('OS.FixedNormalizedInputAxis')); end;
-% if(TASBEConfig.get('OS.FixedNormalizedOutputAxis')), ylim(TASBEConfig.get('OS.FixedNormalizedOutputAxis')); end;
-% title(['Normalized ',TASBEConfig.get('OS.DeviceName'),' transfer curve, colored by plasmid count']);
-% outputfig(h,[TASBEConfig.get('OS.StemName'),'-',TASBEConfig.get('OS.DeviceName'),'-mean-norm'],TASBEConfig.get('OS.Directory'));
+% if(TASBEConfig.get('OutputSettings.FixedNormalizedInputAxis')), xlim(TASBEConfig.get('OutputSettings.FixedNormalizedInputAxis')); end;
+% if(TASBEConfig.get('OutputSettings.FixedNormalizedOutputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedNormalizedOutputAxis')); end;
+% title(['Normalized ',TASBEConfig.get('OutputSettings.DeviceName'),' transfer curve, colored by plasmid count']);
+% outputfig(h,[TASBEConfig.get('OutputSettings.StemName'),'-',TASBEConfig.get('OutputSettings.DeviceName'),'-mean-norm'],TASBEConfig.get('OutputSettings.Directory'));
 
 end

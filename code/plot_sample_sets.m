@@ -14,12 +14,12 @@ batch_size = size(batch_description,1);
 
 fprintf('Outputting histograms');
 % get/set should be replaced by push/pop of output settings
-stemName = TASBEConfig.get('OS.StemName');
+stemName = TASBEConfig.get('OutputSettings.StemName');
 ERROR = [];
 try
     for i=1:batch_size,
         condition_name = batch_description{i,1};
-        TASBEConfig.set('OS.StemName', [stemName '-' condition_name]);
+        TASBEConfig.set('OutputSettings.StemName', [stemName '-' condition_name]);
         sampleresults = results{i,2};
         plot_sample_histograms(sampleresults);
         fprintf('.');
@@ -27,7 +27,7 @@ try
     fprintf('\n');
 catch ERROR
 end
-TASBEConfig.set('OS.StemName', stemName);
+TASBEConfig.set('OutputSettings.StemName', stemName);
 if ~isempty(ERROR)
     rethrow(ERROR);
 end
