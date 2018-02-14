@@ -26,6 +26,7 @@ function CM=resolve(CM) % call after construction and configuration
     if TASBEConfig.isSet('override_units')
         k_ERF = TASBEConfig.get('override_units');
         CM.unit_translation = UnitTranslation('Specified',k_ERF,[],[],{});
+        CM.standardUnits = 'arbitrary units';
         warning('TASBE:ColorModel','Warning: overriding units with specified k_ERF value of %d',k_ERF);
     else
         [UT CM] = beads_to_ERF_model(CM,CM.BeadFile, 2);
