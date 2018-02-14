@@ -54,3 +54,51 @@ try
 catch e  % error is expected
 end
 if missingError, error('Should have failed on missing preference'); end;
+
+%%%%
+% Now test checkpointing
+assert(TASBEConfig.isSet('foo') == false);
+[c, l] = TASBEConfig.checkpoints();
+assert(strcmp(c,'init') && numel(l)==1 && strcmp(l{1},'init'));
+
+TASBEConfig.checkpoint('one');
+TASBEConfig.set('foo',2);
+assert(TASBEConfig.get('foo')==2);
+[c, l] = TASBEConfig.checkpoints();
+assert(strcmp(c,'one') && numel(l)==2 && strcmp(l{1},'one') && strcmp(l{2},'init'));
+
+
+TASBEConfig.checkpoint('two');
+TASBEConfig.set('foo',3);
+assert(TASBEConfig.get('foo')==3);
+[c, l] = TASBEConfig.checkpoints();
+assert(strcmp(c,'two') && numel(l)==3 && strcmp(l{1},'two') && strcmp(l{2},'one') && strcmp(l{3},'init'));
+
+TASBEConfig.checkpoint('two');
+TASBEConfig.clear('foo');
+assert(TASBEConfig.isSet('foo')==false);
+[c, l] = TASBEConfig.checkpoints();
+assert(strcmp(c,'two') && numel(l)==3 && strcmp(l{1},'two') && strcmp(l{2},'one') && strcmp(l{3},'init'));
+
+TASBEConfig.checkpoint('two');
+assert(TASBEConfig.get('foo')==2);
+[c, l] = TASBEConfig.checkpoints();
+assert(strcmp(c,'two') && numel(l)==3 && strcmp(l{1},'two') && strcmp(l{2},'one') && strcmp(l{3},'init'));
+
+TASBEConfig.checkpoint('one');
+assert(TASBEConfig.isSet('foo')==false);
+[c, l] = TASBEConfig.checkpoints();
+assert(strcmp(c,'one') && numel(l)==2 && strcmp(l{1},'one') && strcmp(l{2},'init'));
+
+TASBEConfig.set('foo',5);
+assert(TASBEConfig.get('foo')==5);
+
+TASBEConfig.checkpoint('one');
+assert(TASBEConfig.isSet('foo')==false);
+[c, l] = TASBEConfig.checkpoints();
+assert(strcmp(c,'one') && numel(l)==2 && strcmp(l{1},'one') && strcmp(l{2},'init'));
+
+TASBEConfig.checkpoint('init');
+assert(TASBEConfig.isSet('foo')==false);
+[c, l] = TASBEConfig.checkpoints();
+assert(strcmp(c,'init') && numel(l)==1 && strcmp(l{1},'init'));
