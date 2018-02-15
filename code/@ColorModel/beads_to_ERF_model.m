@@ -249,6 +249,7 @@ else % n_peaks = 0
     k_ERF = 1;
     fit_error = Inf;
     first_peak = NaN;
+    CM.standardUnits = 'arbitrary units';
 end;
 
 % Plot fitted channel
