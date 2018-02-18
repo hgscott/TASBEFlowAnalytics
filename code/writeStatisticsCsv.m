@@ -7,7 +7,7 @@
 % package distribution's top directory.
 
 function statisticsFile = writeStatisticsCsv(channels, sampleIds, sampleresults)
-    baseName = sanitize_name(TASBEConfig.get('OS.StemName'));
+    baseName = sanitize_name(TASBEConfig.get('OutputSettings.StemName'));
 
     % First create the default output filename.
     statisticsFile = [baseName '_statisticsFile.csv'];

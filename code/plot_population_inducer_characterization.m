@@ -8,10 +8,10 @@
 
 function plot_population_inducer_characterization(results)
 
-ticks = TASBEConfig.get('OS.PlotTickMarks');
-stemName = TASBEConfig.get('OS.StemName');
+ticks = TASBEConfig.get('OutputSettings.PlotTickMarks');
+stemName = TASBEConfig.get('OutputSettings.StemName');
 directory = TASBEConfig.get('plots.plotPath');
-deviceName = TASBEConfig.get('OS.DeviceName');
+deviceName = TASBEConfig.get('OutputSettings.DeviceName');
 
 AP = getAnalysisParameters(results);
 n_components = getNumGaussianComponents(AP);
@@ -44,7 +44,7 @@ for i=1:n_components
 end;
 xlabel(['[',InducerName,']']); ylabel(['IFP ' in_units]);
 set(gca,'XScale','log'); set(gca,'YScale','log');
-if(TASBEConfig.isSet('OS.FixedInducerAxis')), xlim(TASBEConfig.get('OS.FixedInducerAxis')); end;
-if(TASBEConfig.isSet('OS.FixedInputAxis')), ylim(TASBEConfig.get('OS.FixedInputAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedInducerAxis')), xlim(TASBEConfig.get('OutputSettings.FixedInducerAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedInputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedInputAxis')); end;
 title(['Population ',deviceName,' transfer curve, colored by Gaussian component']);
 outputfig(h,[stemName,'-',deviceName,'-pop-mean'],directory);

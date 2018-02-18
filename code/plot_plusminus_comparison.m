@@ -8,10 +8,10 @@
 
 function plot_plusminus_comparison(pm_results)
 
-step = TASBEConfig.get('OS.PlotEveryN');
-ticks = TASBEConfig.get('OS.PlotTickMarks');
-stemName = TASBEConfig.get('OS.StemName');
-deviceName = TASBEConfig.get('OS.DeviceName');
+step = TASBEConfig.get('OutputSettings.PlotEveryN');
+ticks = TASBEConfig.get('OutputSettings.PlotTickMarks');
+stemName = TASBEConfig.get('OutputSettings.StemName');
+deviceName = TASBEConfig.get('OutputSettings.DeviceName');
 directory = TASBEConfig.get('plots.plotPath');
 
 
@@ -68,8 +68,8 @@ end;
 xlabel(['IFP ' in_units]); ylabel(['OFP ' out_units]);
 set(gca,'XScale','log'); set(gca,'YScale','log');
 legend(legendentries,'Location','Best');
-if(TASBEConfig.isSet('OS.FixedInputAxis')), xlim(TASBEConfig.get('OS.FixedInputAxis')); end;
-if(TASBEConfig.isSet('OS.FixedOutputAxis')), ylim(TASBEConfig.get('OS.FixedOutputAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedInputAxis')), xlim(TASBEConfig.get('OutputSettings.FixedInputAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedOutputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedOutputAxis')); end;
 title(['Raw ',stemName,' transfer curves']);
 outputfig(h,[stemName,'-',deviceName,'-mean'],directory);
 
@@ -92,8 +92,8 @@ end;
 xlabel(['IFP ' in_units]); ylabel(['OFP ' out_units ' / CFP ' cfp_units]);
 set(gca,'XScale','log'); set(gca,'YScale','log');
 legend(legendentries,'Location','Best');
-if(TASBEConfig.isSet('OS.FixedInputAxis')), xlim(TASBEConfig.get('OS.FixedInputAxis')); end;
-if(TASBEConfig.isSet('OS.FixedOutputAxis')), ylim(TASBEConfig.get('OS.FixedOutputAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedInputAxis')), xlim(TASBEConfig.get('OutputSettings.FixedInputAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedOutputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedOutputAxis')); end;
 title([stemName,' transfer curves normalized by CFP']);
 outputfig(h,[stemName,'-',deviceName,'-mean-norm'],directory);
 
@@ -115,8 +115,8 @@ end;
 xlabel(['CFP ' cfp_units]); ylabel(['IFP ' out_units]);
 set(gca,'XScale','log'); set(gca,'YScale','log');
 legend({pmlegendentries{:} 'Minus'},'Location','Best');
-if(TASBEConfig.isSet('OS.FixedInputAxis')), xlim(TASBEConfig.get('OS.FixedInputAxis')); end;
-if(TASBEConfig.isSet('OS.FixedOutputAxis')), ylim(TASBEConfig.get('OS.FixedOutputAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedInputAxis')), xlim(TASBEConfig.get('OutputSettings.FixedInputAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedOutputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedOutputAxis')); end;
 title([stemName,' IFP vs. CFP']);
 outputfig(h,[stemName,'-',deviceName,'-input-v-cfp'],directory);
 
@@ -139,8 +139,8 @@ end;
 xlabel(['CFP ' cfp_units]); ylabel(['OFP ' out_units]);
 set(gca,'XScale','log'); set(gca,'YScale','log');
 legend({pmlegendentries{:} 'Minus'},'Location','Best');
-if(TASBEConfig.isSet('OS.FixedInputAxis')), xlim(TASBEConfig.get('OS.FixedInputAxis')); end;
-if(TASBEConfig.isSet('OS.FixedOutputAxis')), ylim(TASBEConfig.get('OS.FixedOutputAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedInputAxis')), xlim(TASBEConfig.get('OutputSettings.FixedInputAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedOutputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedOutputAxis')); end;
 title([stemName,' OFP vs. CFP']);
 outputfig(h,[stemName,'-',deviceName,'-v-cfp'],directory);
 
@@ -185,8 +185,8 @@ end;
 xlabel(['CFP ' cfp_units]); ylabel('Fold Activation');
 set(gca,'XScale','log'); set(gca,'YScale','log');
 legend(legendentries,'Location','Best');
-if(TASBEConfig.isSet('OS.FixedInputAxis')), xlim(TASBEConfig.get('OS.FixedInputAxis')); end;
-if(TASBEConfig.isSet('OS.FixedOutputAxis')), ylim(TASBEConfig.get('OS.FixedOutputAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedInputAxis')), xlim(TASBEConfig.get('OutputSettings.FixedInputAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedOutputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedOutputAxis')); end;
 title(['+/- Ratios for ',stemName]);
 outputfig(h,[stemName,'-',deviceName,'-ratios'],directory);
 

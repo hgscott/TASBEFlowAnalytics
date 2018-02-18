@@ -16,13 +16,13 @@ if (nargin < 3 || isempty(plus_high)), plus_high = 1; end;
 if (nargin < 4 || isempty(count_threshold)), count_threshold = 100; end;
 if (nargin < 5 || isempty(low_threshold)), low_threshold = 1; end;
 
-figsize = TASBEConfig.get('OS.FigureSize');
+figsize = TASBEConfig.get('OutputSettings.FigureSize');
 if isempty(figsize), figsize = [1 1 6 4]; end;
 
-csvfile = TASBEConfig.get('OS.csvFile');
-description = TASBEConfig.get('OS.Description');
-stemName = TASBEConfig.get('OS.StemName');
-deviceName = TASBEConfig.get('OS.DeviceName');
+csvfile = TASBEConfig.get('OutputSettings.csvFile');
+description = TASBEConfig.get('OutputSettings.Description');
+stemName = TASBEConfig.get('OutputSettings.StemName');
+deviceName = TASBEConfig.get('OutputSettings.DeviceName');
 directory = TASBEConfig.get('plots.plotPath');
 
 

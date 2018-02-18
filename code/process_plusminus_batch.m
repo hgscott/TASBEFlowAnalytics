@@ -54,16 +54,16 @@ for i = 1:batch_size
     
     % dump bincounts files
     % get/set should be replaced by push/pop of output settings
-    stemName = TASBEConfig.getexact('OS.StemName',[]);
+    stemName = TASBEConfig.getexact('OutputSettings.StemName',[]);
     ERROR = [];
     try
-        TASBEConfig.set('OS.StemName', [condition_name '-plus']);
+        TASBEConfig.set('OutputSettings.StemName', [condition_name '-plus']);
         plot_bin_statistics(p_sampleresults);
-        TASBEConfig.set('OS.StemName', [condition_name '-minus']);
+        TASBEConfig.set('OutputSettings.StemName', [condition_name '-minus']);
         plot_bin_statistics(m_sampleresults);
     catch ERROR
     end
-    TASBEConfig.set('OS.StemName', stemName);
+    TASBEConfig.set('OutputSettings.StemName', stemName);
     if ~isempty(ERROR)
         rethrow(ERROR);
     end
