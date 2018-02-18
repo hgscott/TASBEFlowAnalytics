@@ -26,7 +26,10 @@ before_install:
     # get Octave 4,0
     - travis_retry sudo apt-get -y -qq install octave liboctave-dev
     # install Octave io package
-    - octave --no-gui --quiet --eval "pkg install -forge io"
+    # Forge is unreliable: trying to get directly instead:
+    # - octave --no-gui --quiet --eval "pkg install -forge io"
+    - wget -O io-2.4.10.tar.gz https://downloads.sourceforge.net/octave/io-2.4.10.tar.gz?download --no-check-certificate
+    - octave --no-gui --quiet --eval "pkg install io-2.4.10.tar.gz"
     # install MOxUnit
     - cd ..
     - rm -rf MOxUnit
