@@ -6,7 +6,7 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function statisticsFile = writeStatisticsCsv(channels, sampleIds, sampleresults)
+function statisticsFile = writeStatisticsCsv(channels, sampleIds, sampleresults, units)
     baseName = sanitize_name(TASBEConfig.get('OutputSettings.StemName'));
 
     % First create the default output filename.
@@ -32,7 +32,7 @@ function statisticsFile = writeStatisticsCsv(channels, sampleIds, sampleresults)
         end
     end
     
-    columnNames = buildDefaultStatsFileHeader(channels);
+    columnNames = buildDefaultStatsFileHeader(channels, units);
     numColumns = numel(columnNames);
     totalReplicates = sum(replicates);
     
@@ -94,7 +94,7 @@ function perSampleTable = formatDataPerSampleIndivdualColumns(channels, sampleId
     
 end
 
-function fileHeader = buildDefaultStatsFileHeader(channels)
+function fileHeader = buildDefaultStatsFileHeader(channels, units)
     % Default file header to match the default file format.
     numChannels = numel(channels);
     
@@ -104,7 +104,7 @@ function fileHeader = buildDefaultStatsFileHeader(channels)
     
     % Not elegant, but it gets the job done.
     for i=1:numChannels
-        channelName = getName(channels{i});
+        channelName = [getPrintName(channels{i}) '_' units];
         invalidChars = '-|\s';  % Matlab does not like hypens or whitespace in variable names.
         matlabValidVariableNameChannelName = regexprep(channelName,invalidChars,'_');
         binNames{i} = ['BinCount_' matlabValidVariableNameChannelName];

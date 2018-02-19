@@ -13,12 +13,12 @@ function [statisticsFile, histogramFile] = serializeBatchOutput(file_pairs, CM, 
     channels = getChannels(CM);
     sampleIds = file_pairs(:,1);
     binCenters = get_bin_centers(getBins(AP));
+    units = getStandardUnits(CM);
     
     % Formats and writes the output to the Statistics file.
-    statisticsFile = writeStatisticsCsv(channels, sampleIds, sampleresults);
+    statisticsFile = writeStatisticsCsv(channels, sampleIds, sampleresults, units);
     
     % Formats and writes the output to the Histogram file.
-    histogramFile = writeHistogramCsv(channels, sampleIds, sampleresults, binCenters);
-
+    histogramFile = writeHistogramCsv(channels, sampleIds, sampleresults, binCenters, units);
 end
 
