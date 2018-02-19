@@ -169,10 +169,10 @@ outputfig(h,[stemName,'-',deviceName,'-v-cfp'],directory);
 % xlabel(['CFP ' cfp_units]); ylabel(['OFP ' out_units ' / CFP ' cfp_units]);
 % set(gca,'XScale','log'); set(gca,'YScale','linear');
 % legend('Location','Best',pmlegendentries,'Minus');
-% if(OS.FixedInputAxis), xlim(OS.FixedInputAxis); end;
-% if(OS.FixedOutputAxis), ylim(OS.FixedOutputAxis); end;
-% title([OS.StemName,' marginal change in OFP vs. CFP']);
-% outputfig(h,[OS.StemName,'-',OS.DeviceName,'-marginal-ofp'],directory);
+% if(OutputSettings.FixedInputAxis), xlim(OutputSettings.FixedInputAxis); end;
+% if(OutputSettings.FixedOutputAxis), ylim(OutputSettings.FixedOutputAxis); end;
+% title([OutputSettings.StemName,' marginal change in OFP vs. CFP']);
+% outputfig(h,[OutputSettings.StemName,'-',OutputSettings.DeviceName,'-marginal-ofp'],directory);
 % 
 
 % ratio plot
