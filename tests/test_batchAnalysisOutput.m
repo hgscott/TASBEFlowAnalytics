@@ -1,4 +1,5 @@
 function test_suite = test_batchAnalysisOutput
+    TASBEConfig.checkpoint('test');
     try % assignment of 'localfunctions' is necessary in Matlab >= 2016
         test_functions=localfunctions();
     catch % no problem; early Matlab versions can use initTestSuite fine
@@ -37,10 +38,11 @@ file_pairs = {...
   'Dox 0.1/0.2',    {[stem1011 'B3_B03_P3.fcs'], [stem1011 'B4_B04_P3.fcs']}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
   'Dox 0.5/1.0',    {[stem1011 'B5_B05_P3.fcs'], [stem1011 'B6_B06_P3.fcs']};
   'Dox 2.0/5.0',    {[stem1011 'B7_B07_P3.fcs'], [stem1011 'B8_B08_P3.fcs']};
-  'Dox 10.0/20.0',   {[stem1011 'B9_B09_P3.fcs'], [stem1011 'B10_B10_P3.fcs']};
-  'Dox 50.0/100.0',   {[stem1011 'B11_B11_P3.fcs'], [stem1011 'B12_B12_P3.fcs']};
-  'Dox 200.0/500.0',  {[stem1011 'C1_C01_P3.fcs'], [stem1011 'C2_C02_P3.fcs']};
-  'Dox 1000.0/2000.0', {[stem1011 'C3_C03_P3.fcs'], [stem1011 'C4_C04_P3.fcs']};
+% Remove these to let it be faster:
+%  'Dox 10.0/20.0',   {[stem1011 'B9_B09_P3.fcs'], [stem1011 'B10_B10_P3.fcs']};
+%  'Dox 50.0/100.0',   {[stem1011 'B11_B11_P3.fcs'], [stem1011 'B12_B12_P3.fcs']};
+%  'Dox 200.0/500.0',  {[stem1011 'C1_C01_P3.fcs'], [stem1011 'C2_C02_P3.fcs']};
+%  'Dox 1000.0/2000.0', {[stem1011 'C3_C03_P3.fcs'], [stem1011 'C4_C04_P3.fcs']};
   };
 
 n_conditions = size(file_pairs,1);
@@ -59,7 +61,7 @@ save('/tmp/LacI-CAGop-batch.mat','AP','bins','file_pairs','results','sampleresul
 TASBEConfig.set('flow.outputPointCloud','false');
 
 % Test serializing the output
-[statisticsFile, histogramFile] = serializeBatchOutput(file_pairs, CM, AP, sampleresults, baseName);
+[statisticsFile, histogramFile] = serializeBatchOutput(file_pairs, CM, AP, sampleresults);
 
 % Read the files into matlab tables
 if (is_octave)
@@ -135,17 +137,19 @@ expected_stds = [...
     ];
 
 
-assertEqual(numel(sampleIDs), 7);
+assertEqual(numel(sampleIDs), 3);
+%assertEqual(numel(sampleIDs), 7);
 
 % spot-check names
 assertEqual(sampleIDs{1}, 'Dox 0.1/0.2');
-assertEqual(sampleIDs{7}, 'Dox 1000.0/2000.0');
+assertEqual(sampleIDs{3}, 'Dox 2.0/5.0');
+%assertEqual(sampleIDs{7}, 'Dox 1000.0/2000.0');
 
 % spot-check first five rows of binCounts
 assertElementsAlmostEqual(cell2mat(binCounts(1:5,:)), expected_bincounts, 'relative', 1e-2);
 
 % spot-check geo means and geo std devs.
-for i=1:7,
+for i=1:6, % was 7
     assertElementsAlmostEqual(cell2mat(geoMeans(i,:)), expected_means(i,:), 'relative', 1e-2);
     assertElementsAlmostEqual(cell2mat(geoStdDevs(i,:)), expected_stds(i,:),  'relative', 1e-2);
 end
