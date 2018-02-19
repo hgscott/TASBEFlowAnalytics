@@ -13,8 +13,8 @@ hues = (1:n_inductions)/n_inductions;
 
 cfp_units = '';
 
-stemName = TASBEConfig.get('OS.StemName');
-directory = TASBEConfig.get('OS.Directory');
+stemName = TASBEConfig.get('OutputSettings.StemName');
+directory = TASBEConfig.get('plots.plotPath');
 
 %%% Bin count plots:
 % Counts by CFP level:
@@ -68,8 +68,8 @@ for i=1:n_inductions
     end
 end;
 xlabel(['Constitutive ' cfp_units]); ylabel('Count');
-if(TASBEConfig.isSet('OS.FixedXAxis')), xlim(TASBEConfig.get('OS.FixedXAxis')); end;
-if(TASBEConfig.isSet('OS.FixedYAxis')), ylim(TASBEConfig.get('OS.FixedYAxis')); else ylim([1e0 10.^(ceil(log10(maxcount)))]); end;
+if(TASBEConfig.isSet('OutputSettings.FixedXAxis')), xlim(TASBEConfig.get('OutputSettings.FixedXAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedYAxis')), ylim(TASBEConfig.get('OutputSettings.FixedYAxis')); else ylim([1e0 10.^(ceil(log10(maxcount)))]); end;
 title([stemName,' bin counts, colored by inducer level']);
 outputfig(h,[stemName,'-bincounts'],directory);
 
@@ -126,5 +126,5 @@ outputfig(h, [stemName,'-active'],directory);
 % set(gca,'XScale','log'); set(gca,'YScale','log');
 % xlabel('Estimated Plasmid Count'); ylabel('Count');
 % ylim([1e0 10.^(ceil(log10(maxcount)))]);
-% title([TASBEConfig.get('OS.StemName'),' bin counts, colored by inducer level']);
-% outputfig(h,[TASBEConfig.get('OS.StemName'),'-plasmid-bincounts'],TASBEConfig.get('OS.Directory'));
+% title([TASBEConfig.get('OutputSettings.StemName'),' bin counts, colored by inducer level']);
+% outputfig(h,[TASBEConfig.get('OutputSettings.StemName'),'-plasmid-bincounts'],TASBEConfig.get('OutputSettings.Directory'));

@@ -6,7 +6,8 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function statisticsFile = writeStatisticsCsv(channels, sampleIds, sampleresults, baseName, units)
+function statisticsFile = writeStatisticsCsv(channels, sampleIds, sampleresults, units)
+    baseName = sanitize_name(TASBEConfig.get('OutputSettings.StemName'));
 
     % First create the default output filename.
     statisticsFile = [baseName '_statisticsFile.csv'];

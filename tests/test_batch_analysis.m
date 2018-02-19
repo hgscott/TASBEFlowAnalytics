@@ -1,4 +1,5 @@
 function test_suite = test_batch_analysis
+    TASBEConfig.checkpoint('test');
     try % assignment of 'localfunctions' is necessary in Matlab >= 2016
         test_functions=localfunctions();
     catch % no problem; early Matlab versions can use initTestSuite fine
@@ -50,9 +51,9 @@ n_conditions = size(file_pairs,1);
 [results, sampleresults] = per_color_constitutive_analysis(CM,file_pairs,{'EBFP2','EYFP','mKate'},AP);
 
 % Make output plots
-TASBEConfig.set('OS.StemName','LacI-CAGop');
-TASBEConfig.set('OS.Directory','/tmp/plots');
-TASBEConfig.set('OS.FixedInputAxis',[1e4 1e10]);
+TASBEConfig.set('OutputSettings.StemName','LacI-CAGop');
+TASBEConfig.set('plots.plotPath','/tmp/plots');
+TASBEConfig.set('OutputSettings.FixedInputAxis',[1e4 1e10]);
 plot_batch_histograms(results,sampleresults,{'b','y','r'},CM);
 
 save('/tmp/LacI-CAGop-batch.mat','AP','bins','file_pairs','results','sampleresults');

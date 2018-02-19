@@ -12,9 +12,8 @@ function plot_sample_histograms(sampleresults)
 
 cfp_units = '';
 
-stemName = TASBEConfig.get('OS.StemName');
-directory = TASBEConfig.get('OS.Directory');
-fixedYAxis = ;
+stemName = TASBEConfig.get('OutputSettings.StemName');
+directory = TASBEConfig.get('plots.plotPath');
 
 AP = sampleresults{1}.AnalysisParameters;
 channel_set = getChannelNames(AP);
@@ -69,7 +68,7 @@ for i=1:n_colors
     end
 end;
 xlabel(['Constitutive ' cfp_units]); ylabel('Count');
-if(TASBEConfig.isSet('OS.FixedXAxis')), xlim(TASBEConfig.get('OS.FixedXAxis')); end;
-if(TASBEConfig.isSet('OS.FixedYAxis')), ylim(TASBEConfig.get('OS.FixedYAxis')); else ylim([1e0 10.^(ceil(log10(maxcount)))]); end;
+if(TASBEConfig.isSet('OutputSettings.FixedXAxis')), xlim(TASBEConfig.get('OutputSettings.FixedXAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedYAxis')), ylim(TASBEConfig.get('OutputSettings.FixedYAxis')); else ylim([1e0 10.^(ceil(log10(maxcount)))]); end;
 title([stemName,' bin counts, colored by inducer level']);
 outputfig(h,[stemName,'-histogram'],directory);

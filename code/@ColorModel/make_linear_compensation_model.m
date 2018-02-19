@@ -76,6 +76,6 @@ if CM.compensation_plot
     xlabel(sprintf('%s (%s a.u.)',getPrintName(CM.Channels{driven}),getName(CM.Channels{driven})));
     ylabel(sprintf('%s (%s a.u.)',getPrintName(CM.Channels{passive}),getName(CM.Channels{passive})));
     title('Color Compensation Model');
-    path = TASBEConfig.get('path');
+    path = TASBEConfig.get('compensation.plotPath');
     outputfig(h, sprintf('color-compensation-%s-for-%s',getPrintName(CM.Channels{passive}),getPrintName(CM.Channels{driven})), path);
 end

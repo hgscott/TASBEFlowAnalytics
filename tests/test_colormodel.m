@@ -1,4 +1,5 @@
 function test_suite = test_colormodel
+    TASBEConfig.checkpoint('test');
     try % assignment of 'localfunctions' is necessary in Matlab >= 2016
         test_functions=localfunctions();
     catch % no problem; early Matlab versions can use initTestSuite fine
@@ -45,7 +46,6 @@ colorpairfiles{1} = {channels{1}, channels{2}, channels{3}, [stem0312 'mkate_EBF
 colorpairfiles{2} = {channels{1}, channels{3}, channels{2}, [stem0312 'mkate_EBFP2_EYFP_P3.fcs']};
 
 CM = ColorModel(beadfile, blankfile, channels, colorfiles, colorpairfiles);
-CM=set_bead_plot(CM, 2); % 2 = detailed plots; 1 = minimal plot; 0 = no plot
 CM=set_translation_plot(CM, true);
 CM=set_noise_plot(CM, true);
 
@@ -61,10 +61,7 @@ CM=set_ERF_channel_name(CM, 'FITC-A');
 % Ignore channel data for ith channel if below 10^[value(i)]
 CM=set_translation_channel_min(CM,[2,2,2]);
 
-TASBEConfig.set('path', '/tmp/plots');
-TASBEConfig.set('override_autofluorescence',[]);
-% When dealing with very strong fluorescence, use secondary channel to segment
-%settings = setSetting(settings,'SecondaryBeadChannel','PE-Texas_Red-A');
+TASBEConfig.set('plots.plotPath', '/tmp/plots');
 CM = add_filter(CM,autogate);
 
 % Execute and save the model
@@ -127,7 +124,6 @@ colorfiles{1} = [stem0312 'mkate_P3.fcs'];
 colorpairfiles = {};
 
 CM = ColorModel(beadfile, blankfile, channels, colorfiles, colorpairfiles);
-CM=set_bead_plot(CM, 2); % 2 = detailed plots; 1 = minimal plot; 0 = no plot
 
 CM=set_bead_model(CM,'SpheroTech RCP-30-5A'); % Entry from BeadCatalog.xls matching your beads
 CM=set_bead_batch(CM,'Lot AA01, AA02, AA03, AA04, AB01, AB02, AC01, GAA01-R'); % Entry from BeadCatalog.xls containing your lot
@@ -140,7 +136,7 @@ CM=set_bead_min(CM, 1.8);
 CM=set_bead_peak_threshold(CM, 600);
 CM=set_ERF_channel_name(CM, 'PE-Tx-Red-YG-A');
 
-TASBEConfig.set('path', '/tmp/plots');
+TASBEConfig.set('plots.plotPath', '/tmp/plots');
 % Execute and save the model
 CM=resolve(CM);
 save('-V7','/tmp/CM120312.mat','CM');
@@ -185,7 +181,6 @@ channels{1} = setLineSpec(channels{1}, 'r');
 colorpairfiles = {};
 
 CM = ColorModel(beadfile, blankfile, channels, colorfiles, colorpairfiles);
-CM=set_bead_plot(CM, 2); % 2 = detailed plots; 1 = minimal plot; 0 = no plot
 
 CM=set_bead_model(CM,'SpheroTech RCP-30-5A'); % Entry from BeadCatalog.xls matching your beads
 CM=set_bead_batch(CM,'Lot AA01, AA02, AA03, AA04, AB01, AB02, AC01, GAA01-R'); % Entry from BeadCatalog.xls containing your lot
@@ -198,7 +193,7 @@ CM=set_bead_min(CM, 1.8);
 CM=set_bead_peak_threshold(CM, 600);
 CM=set_ERF_channel_name(CM, 'PE-Tx-Red-YG-A');
 
-TASBEConfig.set('path', '/tmp/plots');
+TASBEConfig.set('plots.plotPath', '/tmp/plots');
 % Execute and save the model
 CM=resolve(CM);
 save('-V7','/tmp/CM120312.mat','CM');

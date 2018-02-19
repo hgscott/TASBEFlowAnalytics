@@ -52,20 +52,19 @@ for i = 1:batch_size
     pm_sampleresults{i,1} = p_sampleresults;
     pm_sampleresults{i,2} = m_sampleresults;
     
-    if nargin>3, % if supplied an output setting, dump bincounts files
-        % get/set should be replaced by push/pop of output settings
-        stemName = TASBEConfig.get('OS.StemName');
-        ERROR = [];
-        try
-            TASBEConfig.set('OS.StemName', [stemName condition_name '-plus']);
-            plot_bin_statistics(p_sampleresults);
-            TASBEConfig.set('OS.StemName', [stemName condition_name '-minus']);
-            plot_bin_statistics(m_sampleresults);
-        catch ERROR
-        end
-        TASBEConfig.set('OS.StemName', stemName);
-        if ~isempty(ERROR)
-            rethrow(ERROR);
-        end
+    % dump bincounts files
+    % get/set should be replaced by push/pop of output settings
+    stemName = TASBEConfig.getexact('OutputSettings.StemName',[]);
+    ERROR = [];
+    try
+        TASBEConfig.set('OutputSettings.StemName', [condition_name '-plus']);
+        plot_bin_statistics(p_sampleresults);
+        TASBEConfig.set('OutputSettings.StemName', [condition_name '-minus']);
+        plot_bin_statistics(m_sampleresults);
+    catch ERROR
+    end
+    TASBEConfig.set('OutputSettings.StemName', stemName);
+    if ~isempty(ERROR)
+        rethrow(ERROR);
     end
 end
