@@ -39,6 +39,7 @@ TASBEConfig.set('plots.plotPath', '/tmp/plots');
 
 
 function test_twopeaks
+TASBEConfig.checkpoint('test');
 
 [CM] = setupRedPeakCM();
 % Ignore all bead data below 10^[bead_min] as being too "smeared" with noise
@@ -50,13 +51,16 @@ CM=resolve(CM);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Check results in CM:
 CMS = struct(CM);
+assertTrue(strcmp(CMS.standardUnits,'MEPTR'));
 UT = struct(CMS.unit_translation);
 assertElementsAlmostEqual(UT.k_ERF,        64.5559,  'relative', 1e-2);
 assertElementsAlmostEqual(UT.first_peak,    7);
 assertElementsAlmostEqual(UT.fit_error,     0.00,   'absolute', 0.002);
 assertElementsAlmostEqual(UT.peak_sets{1},  [855.4849 2.4685e+03], 'relative', 1e-2);
 
+
 function test_onepeak
+TASBEConfig.checkpoint('test');
 
 [CM] = setupRedPeakCM();
 % Ignore all bead data below 10^[bead_min] as being too "smeared" with noise
@@ -68,13 +72,16 @@ CM=resolve(CM);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Check results in CM:
 CMS = struct(CM);
+assertTrue(strcmp(CMS.standardUnits,'MEPTR'));
 UT = struct(CMS.unit_translation);
 assertElementsAlmostEqual(UT.k_ERF,        68.971,  'relative', 1e-2);
 assertElementsAlmostEqual(UT.first_peak,    8);
 assertElementsAlmostEqual(UT.fit_error,     0.00,   'absolute', 0.002);
 assertElementsAlmostEqual(UT.peak_sets{1},  [2.4685e+03], 'relative', 1e-2);
 
+
 function test_toomanypeaks
+TASBEConfig.checkpoint('test');
 
 [CM] = setupRedPeakCM();
  % set threshold and min too low so that it should sweep up lots of noise, get too many peaks
@@ -86,6 +93,7 @@ CM=resolve(CM);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Check results in CM:
 CMS = struct(CM);
+assertTrue(strcmp(CMS.standardUnits,'MEPTR'));
 UT = struct(CMS.unit_translation);
 assertElementsAlmostEqual(UT.k_ERF,        11.2510,  'relative', 1e-2);
 assertElementsAlmostEqual(UT.first_peak,    2);
@@ -95,6 +103,7 @@ assertElementsAlmostEqual(UT.peak_sets{1},  expected_peaks, 'absolute', 1);
 
 
 function test_nopeaks
+TASBEConfig.checkpoint('test');
 
 [CM] = setupRedPeakCM();
 CM=set_bead_peak_threshold(CM, 1e7); % set too high to see anything
@@ -104,6 +113,7 @@ CM=resolve(CM);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Check results in CM:
 CMS = struct(CM);
+assertTrue(strcmp(CMS.standardUnits,'arbitrary units'));
 UT = struct(CMS.unit_translation);
 assertElementsAlmostEqual(UT.k_ERF,        1);
 assertElementsAlmostEqual(UT.first_peak,    NaN);
@@ -137,19 +147,20 @@ CM=set_ERF_channel_name(CM, 'VL1-A');
 
 
 function test_rightpeaks
+TASBEConfig.checkpoint('test');
 
 [CM] = setupBV421CM();
 % Execute and save the model
 TASBEConfig.set('plots.plotPath', '/tmp/plots');
 TASBEConfig.set('calibration.overrideAutofluorescence',true);
 CM=resolve(CM);
-TASBEConfig.clear('calibration.overrideAutofluorescence');
 
 % Reset TASBEConfig to not contaminate other tests.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Check results in CM:
 CMS = struct(CM);
+assertTrue(strcmp(CMS.standardUnits,'MEBV421'));
 UT = struct(CMS.unit_translation);
 assertElementsAlmostEqual(UT.k_ERF,       0.2966, 'relative', 1e-2);
 assertElementsAlmostEqual(UT.first_peak,    2);
@@ -159,6 +170,7 @@ assertElementsAlmostEqual(UT.peak_sets{1},  expected_peaks, 'relative', 1e-2);
 
 
 function test_forcepeaks
+TASBEConfig.checkpoint('test');
 
 [CM] = setupRedPeakCM();
 % Ignore all bead data below 10^[bead_min] as being too "smeared" with noise
@@ -167,11 +179,11 @@ CM=set_bead_peak_threshold(CM, 600);
 % Execute and save the model
 TASBEConfig.set('beads.forceFirstPeak',3);
 CM=resolve(CM);
-TASBEConfig.clear('beads.forceFirstPeak');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Check results in CM:
 CMS = struct(CM);
+assertTrue(strcmp(CMS.standardUnits,'MEPTR'));
 UT = struct(CMS.unit_translation);
 assertElementsAlmostEqual(UT.k_ERF,        0.8833,  'relative', 1e-2);
 assertElementsAlmostEqual(UT.first_peak,    3);
@@ -213,6 +225,7 @@ CM=set_ERF_channel_name(CM, 'FITC-A');
 TASBEConfig.set('plots.plotPath', '/tmp/plots');
 
 function test_secondarypeaks
+TASBEConfig.checkpoint('test');
 
 [CM] = setupYellowPeakCM();
 % Ignore all bead data below 10^[bead_min] as being too "smeared" with noise
@@ -226,6 +239,7 @@ TASBEConfig.clear('beads.secondaryBeadChannel');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Check results in CM:
 CMS = struct(CM);
+assertTrue(strcmp(CMS.standardUnits,'MEFL'));
 UT = struct(CMS.unit_translation);
 assertElementsAlmostEqual(UT.k_ERF,        2.3166e+03,  'relative', 1e-2);
 assertElementsAlmostEqual(UT.first_peak,    7);
