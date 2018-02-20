@@ -26,6 +26,9 @@ makePlots = TASBEConfig.get('beads.plot');
 visiblePlots = TASBEConfig.get('beads.visiblePlots');
 plotPath = TASBEConfig.get('beads.plotPath');
 plotSize = TASBEConfig.get('beads.plotSize');
+beadModel = TASBEConfig.get('beads.beadModel');
+beadChannel = TASBEConfig.get('beads.beadChannel');
+beadBatch = TASBEConfig.get('beads.beadBatch');
 
 force_peak = TASBEConfig.getexact('beads.forceFirstPeak',[]);
 if ~isempty(force_peak)
@@ -33,14 +36,16 @@ if ~isempty(force_peak)
 end
 
 
-peak_threshold = CM.bead_peak_threshold;
-bin_min = CM.bead_min;
-bin_max = CM.bead_max;
+peak_threshold = TASBEConfig.getexact('beads.peakThreshold',[]);
+bin_min = TASBEConfig.get('beads.rangeMin');
+bin_max = TASBEConfig.get('beads.rangeMax');
+bin_increment = TASBEConfig.get('beads.binIncrement');
+
 
 erfChannelName=getName(ERF_channel);
 i_ERF = find(CM,ERF_channel);
 
-[PeakERFs,units,actualBatch] = get_bead_peaks(CM.bead_model,CM.bead_channel,CM.bead_batch);
+[PeakERFs,units,actualBatch] = get_bead_peaks(beadModel,beadChannel,beadBatch);
 CM.standardUnits = units;
 
 % NOTE: Calculations are done against the QuantifiedPeaks not PeakERFs.
@@ -60,7 +65,6 @@ TASBESession.succeed('TASBE:Beads','ObtainBeadPeaks','Found specified bead model
 
 
 % identify peaks
-bin_increment = 0.02;
 bin_edges = 10.^(bin_min:bin_increment:bin_max);
 n = (size(bin_edges,2)-1);
 bin_centers = bin_edges(1:n)*10.^(bin_increment/2);
@@ -192,7 +196,7 @@ for i=1:numel(CM.Channels),
         plot(10.^[bin_max bin_max],[0 graph_max],'k:');
         text(10.^(bin_max),graph_max/2,'peak search max value','Rotation',90,'FontSize',7,'VerticalAlignment','bottom','FontAngle','italic');
         xlabel(sprintf('a.u. for %s channel',getPrintName(CM.Channels{i}))); ylabel('Beads');
-        title(sprintf('Peak identification for %s for %s beads',getPrintName(CM.Channels{i}), CM.bead_model));
+        title(sprintf('Peak identification for %s for %s beads',getPrintName(CM.Channels{i}), beadModel));
         outputfig(h, sprintf('bead-calibration-%s',getPrintName(CM.Channels{i})),plotPath);
     end
 end
@@ -274,14 +278,14 @@ if makePlots
     text(10.^(bin_max),graph_max/2,'peak search max value','Rotation',90,'FontSize',7,'VerticalAlignment','bottom','FontAngle','italic');
     plot(10.^[0 range_max],[peak_threshold(i_ERF) peak_threshold(i_ERF)],'k:');
     text(1,peak_threshold(i_ERF),'clutter threshold','FontSize',7,'HorizontalAlignment','left','VerticalAlignment','bottom','FontAngle','italic');
-    title(sprintf('Peak identification for %s beads', CM.bead_model));
+    title(sprintf('Peak identification for %s beads', beadModel));
     xlim(10.^[0 range_max]);
     ylabel('Beads');
     if segment_secondary
         xlabel([segmentName ' a.u.']); 
         outputfig(h,'bead-calibration-secondary',plotPath);
     else
-        xlabel([CM.bead_channel ' a.u.']); 
+        xlabel([beadChannel ' a.u.']); 
         outputfig(h,'bead-calibration',plotPath);
     end
 end
@@ -297,8 +301,8 @@ if makePlots
     for i=1:n_peaks
         text(peak_means(i),quantifiedPeakERFs(i+first_peak-1)*1.3,sprintf('%i',i+first_peak-1+peakOffset));
     end
-    xlabel([CM.bead_channel ' a.u.']); ylabel('Beads ERFs');
-    title(sprintf('Peak identification for %s beads', CM.bead_model));
+    xlabel([beadChannel ' a.u.']); ylabel('Beads ERFs');
+    title(sprintf('Peak identification for %s beads', beadModel));
     %legend('Location','NorthWest','Observed','Linear Fit','Constrained Fit');
     legend('Observed','Constrained Fit','Location','NorthWest');
     outputfig(h,'bead-fit-curve',plotPath);
@@ -321,13 +325,13 @@ if makePlots
             semilogy(peak_means(i),log10(segment_peak_means(i)),'k+');
             text(peak_means(i),log10(segment_peak_means(i))+0.1,sprintf('%i',i+first_peak-1+peakOffset));
         end
-        xlabel([CM.bead_channel ' a.u.']); ylabel([segmentName ' a.u.']);
-        title(sprintf('Peak identification for %s beads', CM.bead_model));
+        xlabel([beadChannel ' a.u.']); ylabel([segmentName ' a.u.']);
+        title(sprintf('Peak identification for %s beads', beadModel));
         outputfig(h,'bead-calibration',plotPath);
     end
 end
 
-UT = UnitTranslation([CM.bead_model ':' CM.bead_channel ':' CM.bead_batch],k_ERF, first_peak+peakOffset, fit_error, peak_sets);
+UT = UnitTranslation([beadModel ':' beadChannel ':' actualBatch],k_ERF, first_peak+peakOffset, fit_error, peak_sets);
 
 end
 

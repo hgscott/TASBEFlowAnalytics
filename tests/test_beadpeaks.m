@@ -29,9 +29,9 @@ colorpairfiles = {};
 
 CM = ColorModel(beadfile, blankfile, channels, colorfiles, colorpairfiles);
 
-CM=set_bead_model(CM,'SpheroTech RCP-30-5A'); % Entry from BeadCatalog.xls matching your beads
-CM=set_bead_batch(CM,'Lot AA01, AA02, AA03, AA04, AB01, AB02, AC01, GAA01-R'); % Entry from BeadCatalog.xls containing your lot
-CM=set_bead_channel(CM,'PE-TR');
+TASBEConfig.set('beads.beadModel','SpheroTech RCP-30-5A'); % Entry from BeadCatalog.xls matching your beads
+TASBEConfig.set('beads.beadBatch','Lot AA01, AA02, AA03, AA04, AB01, AB02, AC01, GAA01-R'); % Entry from BeadCatalog.xls containing your lot
+TASBEConfig.set('beads.beadChannel','PE-TR');
 
 CM=set_ERF_channel_name(CM, 'PE-Tx-Red-YG-A');
 
@@ -42,9 +42,9 @@ function test_twopeaks
 TASBEConfig.checkpoint('test');
 
 [CM] = setupRedPeakCM();
-% Ignore all bead data below 10^[bead_min] as being too "smeared" with noise
-CM=set_bead_min(CM, 2.7);
-CM=set_bead_peak_threshold(CM, 600);
+% Ignore all bead data below 10^rangeMin as being too "smeared" with noise
+TASBEConfig.set('beads.rangeMin', 2.7);
+TASBEConfig.set('beads.peakThreshold', 600);
 % Execute and save the model
 CM=resolve(CM);
 
@@ -63,9 +63,9 @@ function test_onepeak
 TASBEConfig.checkpoint('test');
 
 [CM] = setupRedPeakCM();
-% Ignore all bead data below 10^[bead_min] as being too "smeared" with noise
-CM=set_bead_min(CM, 3.1);
-CM=set_bead_peak_threshold(CM, 600);
+% Ignore all bead data below 10^rangeMin as being too "smeared" with noise
+TASBEConfig.set('beads.rangeMin', 3.1);
+TASBEConfig.set('beads.peakThreshold', 600);
 % Execute and save the model
 CM=resolve(CM);
 
@@ -85,8 +85,8 @@ TASBEConfig.checkpoint('test');
 
 [CM] = setupRedPeakCM();
  % set threshold and min too low so that it should sweep up lots of noise, get too many peaks
-CM=set_bead_min(CM, 1);
-CM=set_bead_peak_threshold(CM, 300);
+TASBEConfig.set('beads.rangeMin', 1);
+TASBEConfig.set('beads.peakThreshold', 300);
 % Execute and save the model
 CM=resolve(CM);
 
@@ -106,7 +106,7 @@ function test_nopeaks
 TASBEConfig.checkpoint('test');
 
 [CM] = setupRedPeakCM();
-CM=set_bead_peak_threshold(CM, 1e7); % set too high to see anything
+TASBEConfig.set('beads.peakThreshold', 1e7); % set too high to see anything
 % Execute and save the model
 CM=resolve(CM);
 
@@ -139,9 +139,9 @@ colorpairfiles = {};
 
 CM = ColorModel(beadfile, blankfile, channels, colorfiles, colorpairfiles);
 
-CM=set_bead_model(CM,'SpheroTech URCP-38-2K'); % Entry from BeadCatalog.xls matching your beads
-CM=set_bead_batch(CM,'Lot AJ02'); % Entry from BeadCatalog.xls containing your lot
-CM=set_bead_channel(CM,'BV421');
+TASBEConfig.set('beads.beadModel','SpheroTech URCP-38-2K'); % Entry from BeadCatalog.xls matching your beads
+TASBEConfig.set('beads.beadBatch','Lot AJ02'); % Entry from BeadCatalog.xls containing your lot
+TASBEConfig.set('beads.beadChannel','BV421');
 
 CM=set_ERF_channel_name(CM, 'VL1-A');
 
@@ -173,9 +173,9 @@ function test_forcepeaks
 TASBEConfig.checkpoint('test');
 
 [CM] = setupRedPeakCM();
-% Ignore all bead data below 10^[bead_min] as being too "smeared" with noise
-CM=set_bead_min(CM, 2.7);
-CM=set_bead_peak_threshold(CM, 600);
+% Ignore all bead data below 10^rangeMin as being too "smeared" with noise
+TASBEConfig.set('beads.rangeMin', 2.7);
+TASBEConfig.set('beads.peakThreshold', 600);
 % Execute and save the model
 TASBEConfig.set('beads.forceFirstPeak',3);
 CM=resolve(CM);
@@ -217,9 +217,9 @@ colorpairfiles = {};
 
 CM = ColorModel(beadfile, blankfile, channels, colorfiles, colorpairfiles);
 
-CM=set_bead_model(CM,'SpheroTech RCP-30-5A'); % Entry from BeadCatalog.xls matching your beads
-CM=set_bead_batch(CM,'Lot AA01, AA02, AA03, AA04, AB01, AB02, AC01, GAA01-R'); % Entry from BeadCatalog.xls containing your lot
-CM=set_bead_channel(CM,'FITC');
+TASBEConfig.set('beads.beadModel','SpheroTech RCP-30-5A'); % Entry from BeadCatalog.xls matching your beads
+TASBEConfig.set('beads.beadBatch','Lot AA01, AA02, AA03, AA04, AB01, AB02, AC01, GAA01-R'); % Entry from BeadCatalog.xls containing your lot
+TASBEConfig.set('beads.beadChannel','FITC');
 CM=set_ERF_channel_name(CM, 'FITC-A');
 
 TASBEConfig.set('plots.plotPath', '/tmp/plots');
@@ -228,9 +228,9 @@ function test_secondarypeaks
 TASBEConfig.checkpoint('test');
 
 [CM] = setupYellowPeakCM();
-% Ignore all bead data below 10^[bead_min] as being too "smeared" with noise
-CM=set_bead_min(CM, 2.7);
-CM=set_bead_peak_threshold(CM, 600);
+% Ignore all bead data below 10^rangeMin as being too "smeared" with noise
+TASBEConfig.set('beads.rangeMin', 2.7);
+TASBEConfig.set('beads.peakThreshold', 600);
 % Execute and save the model
 TASBEConfig.set('beads.secondaryBeadChannel','PE-Tx-Red-YG-A');
 CM=resolve(CM);

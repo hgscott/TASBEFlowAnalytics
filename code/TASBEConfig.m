@@ -128,12 +128,20 @@ classdef TASBEConfig
             s.beads.catalogFileName = [fileparts(mfilename('fullpath')) '/../BeadCatalog.xlsx'];
             doc.beads.secondaryBeadChannel = 'For better distingishing low-a.u. ERF peaks: when set, segment ERF-channel peaks using the secondary channel instead of the ERF channel';
             s.beads.secondaryBeadChannel = [];
-% TODO: these (and other consolidations) from ColorModel need to wait for config checkpointing            
-%            doc.beads.peakThreshold = 'Manual minimum threshold for peaks; set automatically if empty';
-%            s.beads.peakThreshold = [];
-%             s.beads.rangeMin = 2;                           % bin minimum (log10 scale)
-%             s.beads.rangeMax = 7;                           % bin maximum (log10 scale)
-%             s.beads.binIncrement = 0.02;                    % resolution of binning
+            doc.beads.peakThreshold = 'Manual minimum threshold for bead peaks; set automatically if empty';
+            s.beads.peakThreshold = [];
+            doc.beads.rangeMin = 'Minimum value considered for bead peaks (log scale: 10^rangeMin)';
+            s.beads.rangeMin = 2;
+            doc.beads.rangeMin = 'Maximum value considered for bead peaks (log scale: 10^rangeMax)';
+            s.beads.rangeMax = 7;
+            doc.beads.binIncrement = 'Resolution of histogram bins used for finding bead peaks';
+            s.beads.binIncrement = 0.02;
+            doc.beads.beadModel = 'Model of beads that are being used. Should match an option in BeadCatalog.xlsx';
+            s.beads.beadModel = 'SpheroTech RCP-30-5A';
+            doc.beads.beadChannel = 'Laser/filter channel being used, defaults to FITC (MEFL). Should match an option in BeadCatalog.xlsx';
+            s.beads.beadChannel = 'FITC';
+            doc.beads.beadBatch = 'Batch of beads that are being used. If set, should match an option in BeadCatalog.xlsx';
+            s.beads.beadBatch = [];
             doc.beads.forceFirstPeak = 'If set to N, lowest observed bead peak is forced to be interpreted as Nth peak';
             s.beads.forceFirstPeak = [];
             doc.beads.plot = 'When true, make diagnostic plots while computing bead unit calibration';
