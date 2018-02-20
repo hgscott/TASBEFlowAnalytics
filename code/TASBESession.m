@@ -10,7 +10,26 @@ classdef TASBESession
     methods(Static,Hidden)
         function out = access(mode,suite,entry)
             persistent log;
-            if isempty(log), log = {}; end;
+            if isempty(log), 
+                log = {}; 
+                % log initialization event
+                suiteentry.name = 'TASBE:Session-1';
+                suiteentry.contents = {};
+                log{end+1} = suiteentry;
+                event.name = 'Initialize';
+                event.classname = 'TASBE:Session';
+                try
+                    version = tasbe_version();
+                    event.message = sprintf('TASBE session logging enabled, release %i.%i.%s',version{1},version{2},version{3});
+                    event.type = 'success';
+                    log{end}.contents{end+1} = event;
+                catch e
+                    event.type = 'error';
+                    event.message = 'Could not determine release version';
+                    log{end}.contents{end+1} = event;
+                    throw e;
+                end
+            end;
             
             % If there is no arguments, just return the whole thing for inspection
             if nargin==0, out = log; return; end

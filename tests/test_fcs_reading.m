@@ -1,4 +1,5 @@
 function test_suite = test_fcs_reading
+    TASBEConfig.checkpoint('test');
     try % assignment of 'localfunctions' is necessary in Matlab >= 2016
         test_functions=localfunctions();
     catch % no problem; early Matlab versions can use initTestSuite fine
@@ -22,8 +23,8 @@ function test_fca_readfcs
     assert(all(size(data2) == [114929 NUM_CHANNELS]));
 
 function test_fcs_scatter
-    TASBEConfig.set('plotPath','/tmp');
+    TASBEConfig.set('plots.plotPath','/tmp');
     f2 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_Beads_P3.fcs';
     [data, h] = fcs_scatter(f2,'FITC-A','Pacific Blue-A',1,[],0);
     assert(all(size(data) == [114929 2]));
-    outputfig(h,'fcs_test',TASBEConfig.get('plotPath'));
+    outputfig(h,'fcs_test',TASBEConfig.get('plots.plotPath'));

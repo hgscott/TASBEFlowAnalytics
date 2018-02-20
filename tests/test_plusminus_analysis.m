@@ -1,4 +1,5 @@
 function test_suite = test_plusminus_analysis
+    TASBEConfig.checkpoint('test');
     try % assignment of 'localfunctions' is necessary in Matlab >= 2016
         test_functions=localfunctions();
     catch % no problem; early Matlab versions can use initTestSuite fine
@@ -50,14 +51,16 @@ batch_description = {...
  };
 
 % Execute the actual analysis
-OSbin = OutputSettings('',device_name,'','/tmp/plots/');
-results = process_plusminus_batch( CM, batch_description, AP, OSbin);
+TASBEConfig.set('OutputSettings.DeviceName',device_name);
+TASBEConfig.set('plots.plotPath','/tmp/plots');
+results = process_plusminus_batch( CM, batch_description, AP);
 
 % Make additional output plots
 for i=1:numel(results)
-    OS = OutputSettings(batch_description{i}{1},device_name,'','/tmp/plots/');
-    OS.PlotTickMarks = 1;
-    plot_plusminus_comparison(results{i},OS)
+    TASBEConfig.set('OutputSettings.StemName',batch_description{i}{1});
+    TASBEConfig.set('OutputSettings.DeviceName',device_name);
+    TASBEConfig.set('OutputSettings.PlotTickMarks',1);
+    plot_plusminus_comparison(results{i})
 end
 
 save('-V7','/tmp/LacI-CAGop-plus-minus.mat','batch_description','AP','results');

@@ -1,4 +1,4 @@
-function [b,b_err] = make_linear_compensation_model(CM, settings, filename, driven, passive)
+function [b,b_err] = make_linear_compensation_model(CM, filename, driven, passive)
 %MAKE_LINEAR COMPENSATION_MODEL: create a color compensation model from 
 %   FCS data under the assumption that interference is all linear bleed
 %   plus autofluorescence (an assumption that typically holds well):
@@ -76,6 +76,6 @@ if CM.compensation_plot
     xlabel(sprintf('%s (%s a.u.)',getPrintName(CM.Channels{driven}),getName(CM.Channels{driven})));
     ylabel(sprintf('%s (%s a.u.)',getPrintName(CM.Channels{passive}),getName(CM.Channels{passive})));
     title('Color Compensation Model');
-    path = getSetting(settings, 'path', './');
+    path = TASBEConfig.get('compensation.plotPath');
     outputfig(h, sprintf('color-compensation-%s-for-%s',getPrintName(CM.Channels{passive}),getPrintName(CM.Channels{driven})), path);
 end

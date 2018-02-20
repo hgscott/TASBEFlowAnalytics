@@ -1,4 +1,4 @@
-function plot_compensated_controls(CM,settings)
+function plot_compensated_controls(CM)
 
 % Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed 
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
@@ -40,7 +40,7 @@ for driven=1:n
         xlabel(sprintf('%s (%s a.u.)',getPrintName(CM.Channels{driven}),getName(CM.Channels{driven})));
         ylabel(sprintf('%s (%s a.u.)',getPrintName(CM.Channels{passive}),getName(CM.Channels{passive})));
         title('Compensated Positive Control');
-        path = getSetting(settings, 'path', './');
+        path = TASBEConfig.get('compensation.plotPath');
         outputfig(h, sprintf('compensated-%s-vs-positive-%s',getPrintName(CM.Channels{passive}),getPrintName(CM.Channels{driven})), path);
     end
 end

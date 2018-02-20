@@ -6,19 +6,19 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function [statisticsFile, histogramFile] = serializeBatchOutput(file_pairs, CM, AP, sampleresults, baseName)
+function [statisticsFile, histogramFile] = serializeBatchOutput(file_pairs, CM, AP, sampleresults)
 
     % Grab all the data in separate data structures. Then format for output
     % files.    
     channels = getChannels(CM);
     sampleIds = file_pairs(:,1);
     binCenters = get_bin_centers(getBins(AP));
+    units = getStandardUnits(CM);
     
     % Formats and writes the output to the Statistics file.
-    statisticsFile = writeStatisticsCsv(channels, sampleIds, sampleresults, baseName);
+    statisticsFile = writeStatisticsCsv(channels, sampleIds, sampleresults, units);
     
     % Formats and writes the output to the Histogram file.
-    histogramFile = writeHistogramCsv(channels, sampleIds, sampleresults, binCenters, baseName);
-
+    histogramFile = writeHistogramCsv(channels, sampleIds, sampleresults, binCenters, units);
 end
 

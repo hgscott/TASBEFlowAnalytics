@@ -6,10 +6,14 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function plot_plusminus_comparison(pm_results,outputsettings)
+function plot_plusminus_comparison(pm_results)
 
-step = outputsettings.PlotEveryN;
-ticks = outputsettings.PlotTickMarks;
+step = TASBEConfig.get('OutputSettings.PlotEveryN');
+ticks = TASBEConfig.get('OutputSettings.PlotTickMarks');
+stemName = TASBEConfig.get('OutputSettings.StemName');
+deviceName = TASBEConfig.get('OutputSettings.DeviceName');
+directory = TASBEConfig.get('plots.plotPath');
+
 
 variable = getInducerLevelsToFiles(getExperiment(pm_results.PlusResults),1);
 n_var = numel(variable);
@@ -64,10 +68,10 @@ end;
 xlabel(['IFP ' in_units]); ylabel(['OFP ' out_units]);
 set(gca,'XScale','log'); set(gca,'YScale','log');
 legend(legendentries,'Location','Best');
-if(outputsettings.FixedInputAxis), xlim(outputsettings.FixedInputAxis); end;
-if(outputsettings.FixedOutputAxis), ylim(outputsettings.FixedOutputAxis); end;
-title(['Raw ',outputsettings.StemName,' transfer curves']);
-outputfig(h,[outputsettings.StemName,'-',outputsettings.DeviceName,'-mean'],outputsettings.Directory);
+if(TASBEConfig.isSet('OutputSettings.FixedInputAxis')), xlim(TASBEConfig.get('OutputSettings.FixedInputAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedOutputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedOutputAxis')); end;
+title(['Raw ',stemName,' transfer curves']);
+outputfig(h,[stemName,'-',deviceName,'-mean'],directory);
 
 
 % normalized I/O plot
@@ -88,10 +92,10 @@ end;
 xlabel(['IFP ' in_units]); ylabel(['OFP ' out_units ' / CFP ' cfp_units]);
 set(gca,'XScale','log'); set(gca,'YScale','log');
 legend(legendentries,'Location','Best');
-if(outputsettings.FixedInputAxis), xlim(outputsettings.FixedInputAxis); end;
-if(outputsettings.FixedOutputAxis), ylim(outputsettings.FixedOutputAxis); end;
-title([outputsettings.StemName,' transfer curves normalized by CFP']);
-outputfig(h,[outputsettings.StemName,'-',outputsettings.DeviceName,'-mean-norm'],outputsettings.Directory);
+if(TASBEConfig.isSet('OutputSettings.FixedInputAxis')), xlim(TASBEConfig.get('OutputSettings.FixedInputAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedOutputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedOutputAxis')); end;
+title([stemName,' transfer curves normalized by CFP']);
+outputfig(h,[stemName,'-',deviceName,'-mean-norm'],directory);
 
 % IFP vs. CFP
 h = figure('PaperPosition',[1 1 5 3.66]);
@@ -111,10 +115,10 @@ end;
 xlabel(['CFP ' cfp_units]); ylabel(['IFP ' out_units]);
 set(gca,'XScale','log'); set(gca,'YScale','log');
 legend({pmlegendentries{:} 'Minus'},'Location','Best');
-if(outputsettings.FixedInputAxis), xlim(outputsettings.FixedInputAxis); end;
-if(outputsettings.FixedInputAxis), ylim(outputsettings.FixedInputAxis); end;
-title([outputsettings.StemName,' IFP vs. CFP']);
-outputfig(h,[outputsettings.StemName,'-',outputsettings.DeviceName,'-input-v-cfp'],outputsettings.Directory);
+if(TASBEConfig.isSet('OutputSettings.FixedInputAxis')), xlim(TASBEConfig.get('OutputSettings.FixedInputAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedOutputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedOutputAxis')); end;
+title([stemName,' IFP vs. CFP']);
+outputfig(h,[stemName,'-',deviceName,'-input-v-cfp'],directory);
 
 
 % OFP vs. CFP
@@ -135,10 +139,10 @@ end;
 xlabel(['CFP ' cfp_units]); ylabel(['OFP ' out_units]);
 set(gca,'XScale','log'); set(gca,'YScale','log');
 legend({pmlegendentries{:} 'Minus'},'Location','Best');
-if(outputsettings.FixedInputAxis), xlim(outputsettings.FixedInputAxis); end;
-if(outputsettings.FixedOutputAxis), ylim(outputsettings.FixedOutputAxis); end;
-title([outputsettings.StemName,' OFP vs. CFP']);
-outputfig(h,[outputsettings.StemName,'-',outputsettings.DeviceName,'-v-cfp'],outputsettings.Directory);
+if(TASBEConfig.isSet('OutputSettings.FixedInputAxis')), xlim(TASBEConfig.get('OutputSettings.FixedInputAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedOutputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedOutputAxis')); end;
+title([stemName,' OFP vs. CFP']);
+outputfig(h,[stemName,'-',deviceName,'-v-cfp'],directory);
 
 % % Relative change in OFP vs. CFP
 % Removed because it wasn't ever useful
@@ -165,10 +169,10 @@ outputfig(h,[outputsettings.StemName,'-',outputsettings.DeviceName,'-v-cfp'],out
 % xlabel(['CFP ' cfp_units]); ylabel(['OFP ' out_units ' / CFP ' cfp_units]);
 % set(gca,'XScale','log'); set(gca,'YScale','linear');
 % legend('Location','Best',pmlegendentries,'Minus');
-% if(outputsettings.FixedInputAxis), xlim(outputsettings.FixedInputAxis); end;
-% if(outputsettings.FixedOutputAxis), ylim(outputsettings.FixedOutputAxis); end;
-% title([outputsettings.StemName,' marginal change in OFP vs. CFP']);
-% outputfig(h,[outputsettings.StemName,'-',outputsettings.DeviceName,'-marginal-ofp'],outputsettings.Directory);
+% if(OutputSettings.FixedInputAxis), xlim(OutputSettings.FixedInputAxis); end;
+% if(OutputSettings.FixedOutputAxis), ylim(OutputSettings.FixedOutputAxis); end;
+% title([OutputSettings.StemName,' marginal change in OFP vs. CFP']);
+% outputfig(h,[OutputSettings.StemName,'-',OutputSettings.DeviceName,'-marginal-ofp'],directory);
 % 
 
 % ratio plot
@@ -181,25 +185,10 @@ end;
 xlabel(['CFP ' cfp_units]); ylabel('Fold Activation');
 set(gca,'XScale','log'); set(gca,'YScale','log');
 legend(legendentries,'Location','Best');
-if(outputsettings.FixedInputAxis), xlim(outputsettings.FixedInputAxis); end;
-if(outputsettings.FixedOutputAxis), ylim(outputsettings.FixedOutputAxis); end;
-title(['+/- Ratios for ',outputsettings.StemName]);
-outputfig(h,[outputsettings.StemName,'-',outputsettings.DeviceName,'-ratios'],outputsettings.Directory);
-
-% ratio plot
-h = figure('PaperPosition',[1 1 5 3.66]);
-set(h,'visible','off');
-for i=1:step:n_var
-    which = pm_results.Valid(:,i,1) & pm_results.Valid(:,i,2);
-    semilogx(bin_centers(which),pm_results.Ratios(which,i),'-','Color',hsv2rgb([hues(i) 1 0.9])); hold on;
-end;
-xlabel(['CFP ' cfp_units]); ylabel('Fold Activation');
-set(gca,'XScale','log'); set(gca,'YScale','log');
-legend(legendentries,'Location','Best');
-if(outputsettings.FixedInputAxis), xlim(outputsettings.FixedInputAxis); end;
-if(outputsettings.FixedOutputAxis), ylim(outputsettings.FixedOutputAxis); end;
-title(['+/- Ratios for ',outputsettings.StemName]);
-outputfig(h,[outputsettings.StemName,'-',outputsettings.DeviceName,'-ratios'],outputsettings.Directory);
+if(TASBEConfig.isSet('OutputSettings.FixedInputAxis')), xlim(TASBEConfig.get('OutputSettings.FixedInputAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedOutputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedOutputAxis')); end;
+title(['+/- Ratios for ',stemName]);
+outputfig(h,[stemName,'-',deviceName,'-ratios'],directory);
 
 % SNR plots
 if n_var == 1, 
@@ -219,8 +208,8 @@ end;
 xlabel(['CFP ' cfp_units]); ylabel('SNR (db)');
 set(gca,'XScale','log');
 legend({pmlegendentries{:} 'Input SNR'},'Location','Best');
-title([outputsettings.StemName,' SNR vs. CFP']);
-outputfig(h,[outputsettings.StemName,'-',outputsettings.DeviceName,'-SNR'],outputsettings.Directory);
+title([stemName,' SNR vs. CFP']);
+outputfig(h,[stemName,'-',deviceName,'-SNR'],directory);
 
 if n_var == 1, 
     pmlegendentries{1} = '\Delta SNR';
@@ -235,5 +224,5 @@ end;
 xlabel(['CFP ' cfp_units]); ylabel('\Delta SNR (db)');
 set(gca,'XScale','log');
 legend(pmlegendentries,'Location','Best');
-title([outputsettings.StemName,'\Delta SNR vs. CFP']);
-outputfig(h,[outputsettings.StemName,'-',outputsettings.DeviceName,'-dSNR'],outputsettings.Directory);
+title([stemName,'\Delta SNR vs. CFP']);
+outputfig(h,[stemName,'-',deviceName,'-dSNR'],directory);

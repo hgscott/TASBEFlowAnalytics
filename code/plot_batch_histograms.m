@@ -6,7 +6,7 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function plot_batch_histograms(results,sampleresults,outputsettings,linespecs,CM)
+function plot_batch_histograms(results,sampleresults,linespecs,CM)
 % Elements of linespecs can either be LineSpecs, or ColorSpecs (e.g. three-element
 % 0..1 vectors representing RGB color values); currently, only single-letter 
 % color linespecs are properly handled.
@@ -52,10 +52,12 @@ for i=1:n_conditions
     
     xlabel(getStandardUnits(CM)); ylabel('Count');
     ylim([1e0 10.^(ceil(log10(maxcount)))]);
-    if(outputsettings.FixedInputAxis), xlim(outputsettings.FixedInputAxis); end;
+    if(TASBEConfig.get('OutputSettings.FixedInputAxis')), xlim(TASBEConfig.get('OutputSettings.FixedInputAxis')); end;
     %ylim([0 maxcount*1.1]);
-    title([outputsettings.StemName ' ' clean_for_latex(results{i}.condition) ' bin counts, by color']);
-    outputfig(h,[outputsettings.StemName '-' results{i}.condition '-bincounts'],outputsettings.Directory);
+
+    title([TASBEConfig.get('OutputSettings.StemName') ' ' clean_for_latex(results{i}.condition) ' bin counts, by color']);
+    outputfig(h,[TASBEConfig.get('OutputSettings.StemName') '-' results{i}.condition '-bincounts'],TASBEConfig.get('plots.plotPath'));
+
     fprintf('.');
 end;
 fprintf('\n');

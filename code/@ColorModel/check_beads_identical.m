@@ -1,4 +1,4 @@
-function [ok ratios] = check_beads_identical(CM, settings, file, tolerance)
+function [ok ratios] = check_beads_identical(CM, file, tolerance)
 %  [ok ratios] = check_beads_identical(CM, file, tolerance)
 %  Loading 'file' as FCS data, tests whether the bead peaks found are
 %  within tolerance of the bead peaks for the color model.
@@ -16,7 +16,7 @@ function [ok ratios] = check_beads_identical(CM, settings, file, tolerance)
 % package distribution's top directory.
 
 if nargin < 4, tolerance = 0.05; end; % 5 percent tolerance by default
-alt_units = beads_to_ERF_model(CM, settings, file);
+alt_units = beads_to_ERF_model(CM, file);
 ok = true;
 ratios = zeros(size(CM.Channels));
 for i=1:numel(CM.Channels),

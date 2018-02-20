@@ -6,7 +6,8 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function histogramFile = writeHistogramCsv(channels, sampleIds, sampleresults, binCenters, baseName)
+function histogramFile = writeHistogramCsv(channels, sampleIds, sampleresults, binCenters, units)
+    baseName = sanitize_name(TASBEConfig.get('OutputSettings.StemName'));
 
     % First create the default output filename.
     histogramFile = [baseName '_histogramFile.csv'];
@@ -25,7 +26,7 @@ function histogramFile = writeHistogramCsv(channels, sampleIds, sampleresults, b
         end
     end
     
-    columnNames = buildDefaultHistFileHeader(channels);
+    columnNames = buildDefaultHistFileHeader(channels, units);
     numColumns = numel(columnNames);
     totalReplicates = sum(replicates);
     
@@ -91,14 +92,14 @@ function perSampleTable = formatDataPerSample(channels, sampleId, binCenters, co
     perSampleTable = [sampleIdPadded, num2cell(binCentersForAllReplicates), num2cell(binCounts)];
 end
 
-function fileHeader = buildDefaultHistFileHeader(channels)
+function fileHeader = buildDefaultHistFileHeader(channels, units)
     % Default file header to match the default file format.
     numChannels = numel(channels);
     binHeaders = cell(1,numChannels);
     
     % Not elegant, but it gets the job done.
     for i=1:numChannels
-        channelName = getName(channels{i});
+        channelName = [getPrintName(channels{i}) '_' units];
         invalidChars = '-|\s';  % Matlab does not like hypens or whitespace in variable names.
         matlabValidVariableNameChannelName = regexprep(channelName,invalidChars,'_');
         binHeaders{i} = ['BinCount_' matlabValidVariableNameChannelName];

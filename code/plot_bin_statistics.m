@@ -6,12 +6,15 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function plot_bin_statistics(sampleresults,outputsettings)
+function plot_bin_statistics(sampleresults)
 
 n_inductions = numel(sampleresults);
 hues = (1:n_inductions)/n_inductions;
 
 cfp_units = '';
+
+stemName = TASBEConfig.get('OutputSettings.StemName');
+directory = TASBEConfig.get('plots.plotPath');
 
 %%% Bin count plots:
 % Counts by CFP level:
@@ -65,10 +68,10 @@ for i=1:n_inductions
     end
 end;
 xlabel(['Constitutive ' cfp_units]); ylabel('Count');
-if(outputsettings.FixedXAxis), xlim(outputsettings.FixedXAxis); end;
-if(outputsettings.FixedYAxis), ylim(outputsettings.FixedYAxis); else ylim([1e0 10.^(ceil(log10(maxcount)))]); end;
-title([outputsettings.StemName,' bin counts, colored by inducer level']);
-outputfig(h,[outputsettings.StemName,'-bincounts'],outputsettings.Directory);
+if(TASBEConfig.isSet('OutputSettings.FixedXAxis')), xlim(TASBEConfig.get('OutputSettings.FixedXAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedYAxis')), ylim(TASBEConfig.get('OutputSettings.FixedYAxis')); else ylim([1e0 10.^(ceil(log10(maxcount)))]); end;
+title([stemName,' bin counts, colored by inducer level']);
+outputfig(h,[stemName,'-bincounts'],directory);
 
 % Fraction active per bin:
 h = figure('PaperPosition',[1 1 5 3.66]);
@@ -86,8 +89,8 @@ for i=1:n_inductions
 end;
 xlabel(['CFP ' cfp_units]); ylabel('Estimated Fraction Active');
 ylim([-0.05 1.05]);
-title([outputsettings.StemName,' estimated fraction of cells active, colored by inducer level']);
-outputfig(h, [outputsettings.StemName,'-active'],outputsettings.Directory);
+title([stemName,' estimated fraction of cells active, colored by inducer level']);
+outputfig(h, [stemName,'-active'],directory);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Plasmid system is disabled, due to uncertainty about correctness
@@ -123,5 +126,5 @@ outputfig(h, [outputsettings.StemName,'-active'],outputsettings.Directory);
 % set(gca,'XScale','log'); set(gca,'YScale','log');
 % xlabel('Estimated Plasmid Count'); ylabel('Count');
 % ylim([1e0 10.^(ceil(log10(maxcount)))]);
-% title([outputsettings.StemName,' bin counts, colored by inducer level']);
-% outputfig(h,[outputsettings.StemName,'-plasmid-bincounts'],outputsettings.Directory);
+% title([TASBEConfig.get('OutputSettings.StemName'),' bin counts, colored by inducer level']);
+% outputfig(h,[TASBEConfig.get('OutputSettings.StemName'),'-plasmid-bincounts'],TASBEConfig.get('OutputSettings.Directory'));

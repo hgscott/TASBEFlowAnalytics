@@ -6,7 +6,7 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function [colorTranslationModel CM] = computeColorTranslations(CM,settings)
+function [colorTranslationModel CM] = computeColorTranslations(CM)
 % COMPUTECOLORTRANSLATIONS generates a model to use for color
 % translation. The model relates pairs of colors to a fit. The
 % transformation is of the form Color_j = scales(i,j)*Color_i 
@@ -25,11 +25,11 @@ for i=1:numel(CM.ColorPairFiles)
     
     data = readfcs_compensated_au(CM,cp{4},false,true); % Leave out AF, use floor
     if(cX==cCtrl || cY==cCtrl),
-        [scales(cX,cY) CM] = compute_two_color_translation_scale(CM,data,cX,cY,settings);
-        [scales(cY,cX) CM] = compute_two_color_translation_scale(CM,data,cY,cX,settings);
+        [scales(cX,cY) CM] = compute_two_color_translation_scale(CM,data,cX,cY);
+        [scales(cY,cX) CM] = compute_two_color_translation_scale(CM,data,cY,cX);
     else
-        [scales(cX,cY) CM] = compute_translation_scale(CM,data,cX,cY,cCtrl,settings);
-        [scales(cY,cX) CM] = compute_translation_scale(CM,data,cY,cX,cCtrl,settings);
+        [scales(cX,cY) CM] = compute_translation_scale(CM,data,cX,cY,cCtrl);
+        [scales(cY,cX) CM] = compute_translation_scale(CM,data,cY,cX,cCtrl);
     end
     transerror = 10^(abs(log10(scales(cX,cY)*scales(cY,cX))));
     if(transerror > 1.05)
@@ -41,7 +41,7 @@ colorTranslationModel = ColorTranslationModel(CM.Channels,scales);
 
 end
 
-function plot_translation_graph(CM,data,i,j,settings,scale,means,stds,which)
+function plot_translation_graph(CM,data,i,j,scale,means,stds,which)
     h = figure('PaperPosition',[1 1 6 4]);
     set(h,'visible','off');
     %loglog(data(:,i),data(:,j),'b.','MarkerSize',1); hold on;
@@ -57,11 +57,11 @@ function plot_translation_graph(CM,data,i,j,settings,scale,means,stds,which)
     xlabel(sprintf('%s a.u.',getName(CM.Channels{i})));
     ylabel(sprintf('%s a.u.',getName(CM.Channels{j})));
     title('Color Translation Model');
-    path = getSetting(settings, 'path', './');
+    path = TASBEConfig.get('plots.plotPath');
     outputfig(h,sprintf('color-translation-%s-to-%s', getPrintName(CM.Channels{i}),getPrintName(CM.Channels{j})), path);
 end
 
-function [scale CM] = compute_translation_scale(CM,data,i,j,ctrl,settings)
+function [scale CM] = compute_translation_scale(CM,data,i,j,ctrl)
     % Average subpopulations, then find the ratio between them.
     bins = BinSequence(1.0,0.1,5.5,'log_bins'); % previously defaulted to 2.5
     % If minimums have been set, filter data to exclude any point that
@@ -87,7 +87,7 @@ function [scale CM] = compute_translation_scale(CM,data,i,j,ctrl,settings)
     if(CM.Channels{j}==CM.ERF_channel), CM.autofluorescence_model{i}=ERFize(AFMi,scale,k_ERF); end
 
     if CM.translation_plot
-        plot_translation_graph(CM,data,i,j,settings,scale,means,stds,which);
+        plot_translation_graph(CM,data,i,j,scale,means,stds,which);
     
 % Plots against control, if needed
 %         figure('PaperPosition',[1 1 6 4]);
@@ -106,7 +106,7 @@ function [scale CM] = compute_translation_scale(CM,data,i,j,ctrl,settings)
     end
 end
 
-function [scale CM] = compute_two_color_translation_scale(CM,data,i,j,settings)
+function [scale CM] = compute_two_color_translation_scale(CM,data,i,j)
     % Average subpopulations, then find the ratio between them.
     bins = BinSequence(1.0,0.1,5.5,'log_bins');% previously defaulted to 2.5
     % If minimums have been set, filter data to exclude any point that
@@ -137,7 +137,7 @@ function [scale CM] = compute_two_color_translation_scale(CM,data,i,j,settings)
     if(CM.Channels{j}==CM.ERF_channel), CM.autofluorescence_model{i}=ERFize(AFMi,scale,k_ERF); end
 
     if CM.translation_plot
-        plot_translation_graph(CM,data,i,j,settings,scale,means,stds,which);
+        plot_translation_graph(CM,data,i,j,scale,means,stds,which);
     
 % Plots against control, if needed
 %         figure('PaperPosition',[1 1 6 4]);

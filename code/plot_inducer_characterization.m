@@ -6,10 +6,13 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function plot_inducer_characterization(results,outputsettings)
+function plot_inducer_characterization(results)
 
-step = outputsettings.PlotEveryN;
-ticks = outputsettings.PlotTickMarks;
+step = TASBEConfig.get('OutputSettings.PlotEveryN');
+ticks = TASBEConfig.get('OutputSettings.PlotTickMarks');
+stemName = TASBEConfig.get('OutputSettings.StemName');
+deviceName = TASBEConfig.get('OutputSettings.DeviceName');
+directory = TASBEConfig.get('plots.plotPath');
 
 AP = getAnalysisParameters(results);
 n_bins = get_n_bins(getBins(AP));
@@ -44,10 +47,10 @@ for i=1:step:n_bins
 end;
 xlabel(['[',InducerName,']']); ylabel(['IFP ' in_units]);
 set(gca,'XScale','log'); set(gca,'YScale','log');
-if(outputsettings.FixedInducerAxis), xlim(outputsettings.FixedInducerAxis); end;
-if(outputsettings.FixedInputAxis), ylim(outputsettings.FixedInputAxis); end;
-title(['Raw ',outputsettings.DeviceName,' transfer curve, colored by constitutive bin (non-equivalent colors)']);
-outputfig(h,[outputsettings.StemName,'-',outputsettings.DeviceName,'-mean'],outputsettings.Directory);
+if(TASBEConfig.isSet('OutputSettings.FixedInducerAxis')), xlim(TASBEConfig.get('OutputSettings.FixedInducerAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedInputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedInputAxis')); end;
+title(['Raw ',deviceName,' transfer curve, colored by constitutive bin (non-equivalent colors)']);
+outputfig(h,[stemName,'-',deviceName,'-mean'],directory);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Plasmid system is disabled, due to uncertainty about correctness
@@ -67,7 +70,7 @@ outputfig(h,[outputsettings.StemName,'-',outputsettings.DeviceName,'-mean'],outp
 % end;
 % xlabel(['[',InducerName,']']); ylabel(['IFP ' in_units '/plasmid']);
 % set(gca,'XScale','log'); set(gca,'YScale','log');
-% if(outputsettings.FixedInducerAxis), xlim(outputsettings.FixedInducerAxis); end;
-% if(outputsettings.FixedNormalizedInputAxis), ylim(outputsettings.FixedNormalizedInputAxis); end;
-% title(['Normalized ',outputsettings.DeviceName,' transfer curve, colored by plasmid bin (non-equivalent colors)']);
-% outputfig(h,[outputsettings.StemName,'-',outputsettings.DeviceName,'-mean-norm'],outputsettings.Directory);
+% if(TASBEConfig.get('OutputSettings.FixedInducerAxis')), xlim(TASBEConfig.get('OutputSettings.FixedInducerAxis')); end;
+% if(TASBEConfig.get('OutputSettings.FixedNormalizedInputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedNormalizedInputAxis')); end;
+% title(['Normalized ',TASBEConfig.get('OutputSettings.DeviceName'),' transfer curve, colored by plasmid bin (non-equivalent colors)']);
+% outputfig(h,[TASBEConfig.get('OutputSettings.StemName'),'-',TASBEConfig.get('OutputSettings.DeviceName'),'-mean-norm'],TASBEConfig.get('OutputSettings.Directory'));

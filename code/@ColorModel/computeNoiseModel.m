@@ -6,7 +6,7 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function NM = computeNoiseModel(CM, settings)
+function NM = computeNoiseModel(CM)
 
 bins = BinSequence(3,0.1,9,'log_bins');
 
@@ -85,7 +85,7 @@ for i=1:numel(CM.Channels)
         xlabel(sprintf('%s %s',getName(CM.Channels{i}),getUnits(CM.Channels{i})));
         ylabel('k-fold noise');
         title(sprintf('Noise Model for %s',getName(CM.Channels{i})));
-	path = getSetting(settings, 'path', './');
+        path = TASBEConfig.get('plots.plotPath');
         outputfig(h,sprintf('noise-model-%s',getPrintName(CM.Channels{i})),path);
     end
 end

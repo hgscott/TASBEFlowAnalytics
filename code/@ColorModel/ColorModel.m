@@ -16,13 +16,6 @@ function CM = ColorModel(beadfile, blankfile, channels, colorfiles, pairfiles)
         %public settings
         CM.ERF_channel_name = 'FITC-A'; % Which channel are ERFs on?  Default is FITC-A
         CM.ERF_channel=[];
-        CM.bead_plot = 1  ;         % Should the bead calibration plot be produced?
-        CM.bead_peak_threshold=[];  % If set, determines minimum for bead peaks
-        CM.bead_min = 2 ;           % No signal be considered below 10^bead_min
-        CM.bead_max = 6 ;           % No signal be considered above 10^bead_max
-        CM.bead_model = 'SpheroTech RCP-30-5A';     % Which beads are being used? Should match an option in BeadCatalog.xlsx
-        CM.bead_channel = 'FITC';   % Defaults to FITC; should match an option in BeadCatalog.xlsx
-        CM.bead_batch = [];         % Empty unless designated; if designated, should match an option in BeadCatalog.xlsx
         CM.autofluorescence_plot = 1; % Should the autofluorescence calibration plots be produced?
         CM.compensation_plot = 1;   % Should the color compenation calibration plots be produced?
         CM.translation_plot = 1 ;   % Should the color translation calibration plots be produced?
@@ -42,7 +35,7 @@ function CM = ColorModel(beadfile, blankfile, channels, colorfiles, pairfiles)
         CM.color_translation_model=[] ;% For converting other channels to ERF channel AU equiv
         CM.noise_model=[]             ;% For understanding the expected constitutive expression noise
         CM.filters={};                 % filters to remove problematic data (e.g. debris, time-contamination)
-        CM.standardUnits = 'not yet set';  % Should be the value from column E in BeadCatalog.xlsx
+        CM.standardUnits = 'not yet set';  % Should instead be the value from column E in BeadCatalog.xlsx
 
         CM.filters{1} = TimeFilter(); % add default quarter second data exclusion
         

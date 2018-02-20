@@ -6,7 +6,7 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function plot_pm_bar_graphs(dataset,OS,plus_high,count_threshold,low_threshold)
+function plot_pm_bar_graphs(dataset,plus_high,count_threshold,low_threshold)
 % Given a dataset make of plus/minus results, plot two bar graphs giving the mean behaviors:
 % 1. single bar with ratios
 % 2. two bars, one with plus the other with minus
@@ -16,12 +16,21 @@ if (nargin < 3 || isempty(plus_high)), plus_high = 1; end;
 if (nargin < 4 || isempty(count_threshold)), count_threshold = 100; end;
 if (nargin < 5 || isempty(low_threshold)), low_threshold = 1; end;
 
+figsize = TASBEConfig.get('OutputSettings.FigureSize');
+if isempty(figsize), figsize = [1 1 6 4]; end;
+
+csvfile = TASBEConfig.get('OutputSettings.csvFile');
+description = TASBEConfig.get('OutputSettings.Description');
+stemName = TASBEConfig.get('OutputSettings.StemName');
+deviceName = TASBEConfig.get('OutputSettings.DeviceName');
+directory = TASBEConfig.get('plots.plotPath');
+
+
 if plus_high
     high = 1; low = 2; % for activation relations
 else
     high = 2; low = 1; % for repression relations
 end
-if isempty(OS.FigureSize), figsize = [1 1 6 4]; else figsize = OS.FigureSize; end;
 
 pm_high_use_fn = @(ins,counts,valid)(ins(:,:,1)>=low_threshold & ins(:,:,2)>=low_threshold & counts(:,:,1)>=count_threshold & counts(:,:,2)>=count_threshold & valid(:,:,1) & valid(:,:,2));
 
@@ -63,8 +72,8 @@ set(gca,'XTickLabel',{dataset{:,1}});
 set(gca,'YSCale','log');
 ylim([ymin ymax]); xlim([0 n_conditions]+0.5);
 ylabel('\pm Ratio of Means');
-title([OS.Description ' Ratios']);
-outputfig(h,[OS.StemName '-' OS.DeviceName '-' 'plusminus-ratios-bar'],OS.Directory);
+title([description ' Ratios']);
+outputfig(h,[stemName '-' deviceName '-' 'plusminus-ratios-bar'],directory);
 
 % Second, the absolutes plot
 ymin = 10.^(round((log10(min(min(plusminus-stdplusminus(:,:,1))))-margin)*10)/10);
@@ -76,15 +85,15 @@ set(gca,'XTickLabel',{dataset{:,1}});
 set(gca,'YSCale','log');
 ylim([ymin ymax]); xlim([0 n_conditions]+0.5);
 ylabel('Output ERF');
-title([OS.Description]);
-outputfig(h,[OS.StemName '-' OS.DeviceName '-' 'plusminus-bar'],OS.Directory);
+title([description]);
+outputfig(h,[stemName '-' deviceName '-' 'plusminus-bar'],directory);
 
-if ~isempty(OS.csvfile)
-    if isa(OS.csvfile,'char'), csvfid = fopen(OS.csvfile,'w+');
-    else csvfid = OS.csvfile;
+if ~isempty(csvfile)
+    if isa(csvfile,'char'), csvfid = fopen(csvfile,'w+');
+    else csvfid = csvfile;
     end
     
-    fprintf(csvfid,[OS.Description '\n']);
+    fprintf(csvfid,[description '\n']);
     fprintf(csvfid,'Condition,Plus Count,Minus Count,Plus Mean,-2 std.dev,+2 std.dev,Minus Mean,-2 std.dev,+2 std.dev\n');
     for i=1:size(dataset,1),
         fprintf(csvfid,'%s,%i,%i,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f\n',dataset{i,1}, ...

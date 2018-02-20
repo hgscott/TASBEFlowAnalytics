@@ -6,11 +6,14 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function plot_sample_histograms(sampleresults,outputsettings)
+function plot_sample_histograms(sampleresults)
 % This makes an overlapping plot of the histograms for all of the
 % different colors in a set of replicates
 
 cfp_units = '';
+
+stemName = TASBEConfig.get('OutputSettings.StemName');
+directory = TASBEConfig.get('plots.plotPath');
 
 AP = sampleresults{1}.AnalysisParameters;
 channel_set = getChannelNames(AP);
@@ -65,7 +68,7 @@ for i=1:n_colors
     end
 end;
 xlabel(['Constitutive ' cfp_units]); ylabel('Count');
-if(outputsettings.FixedXAxis), xlim(outputsettings.FixedXAxis); end;
-if(outputsettings.FixedYAxis), ylim(outputsettings.FixedYAxis); else ylim([1e0 10.^(ceil(log10(maxcount)))]); end;
-title([outputsettings.StemName,' bin counts, colored by inducer level']);
-outputfig(h,[outputsettings.StemName,'-histogram'],outputsettings.Directory);
+if(TASBEConfig.isSet('OutputSettings.FixedXAxis')), xlim(TASBEConfig.get('OutputSettings.FixedXAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedYAxis')), ylim(TASBEConfig.get('OutputSettings.FixedYAxis')); else ylim([1e0 10.^(ceil(log10(maxcount)))]); end;
+title([stemName,' bin counts, colored by inducer level']);
+outputfig(h,[stemName,'-histogram'],directory);

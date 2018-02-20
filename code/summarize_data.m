@@ -134,31 +134,14 @@ for i=1:n_conditions,
     
     % and now the k-component gaussian population statistics
     for j=1:n_components
-        if sum(valid(j,:))==0,
-            tmp_expt_popcmeans(j,i,:) = NaN;
-            tmp_expt_stdofpopcmeans(j,i,:) = NaN;
-            tmp_expt_popcstds(j,i,:) = NaN;
-            tmp_expt_stdofpopcstds(j,i,:) = NaN;
-            tmp_expt_popcweights(j,i,:) = NaN;
-            tmp_expt_stdofpopcweights(j,i,:) = NaN;
-        else if sum(valid(j,:))==1,
-                tmp_expt_popcmeans(j,i,:) = sample_popcmeans(j,:,valid(j,:));
-                tmp_expt_stdofpopcmeans(j,i,:) = 0;
-                tmp_expt_popcstds(j,i,:) = sample_popcstds(j,:,valid(j,:));
-                tmp_expt_stdofpopcstds(j,i,:) = 0;
-                tmp_expt_popcweights(j,i,:) = sample_popcweights(j,:,valid(j,:));
-                tmp_expt_stdofpopcweights(j,i,:) = 0;
-            else
-                for k=1:n_channels,
-                    tmp_expt_popcmeans(j,i,k) = geomean(sample_popcmeans(j,k,valid(j,:)));
-                    tmp_expt_stdofpopcmeans(j,i,k) = geostd(sample_popcmeans(j,k,valid(j,:)));
-                    tmp_expt_popcstds(j,i,k) = geomean(sample_popcstds(j,k,valid(j,:)));
-                    tmp_expt_stdofpopcstds(j,i,k) = geostd(sample_popcstds(j,k,valid(j,:)));
-                    tmp_expt_popcweights(j,i,k) = mean(sample_popcweights(j,k,valid(j,:)));
-                    tmp_expt_stdofpopcweights(j,i,k) = std(sample_popcweights(j,k,valid(j,:)));
+        for k=1:n_channels,
+            tmp_expt_popcmeans(j,i,k) = geomean(sample_popcmeans(j,k,:));
+            tmp_expt_stdofpopcmeans(j,i,k) = geostd(sample_popcmeans(j,k,:));
+            tmp_expt_popcstds(j,i,k) = geomean(sample_popcstds(j,k,:));
+            tmp_expt_stdofpopcstds(j,i,k) = geostd(sample_popcstds(j,k,:));
+            tmp_expt_popcweights(j,i,k) = mean(sample_popcweights(j,k,:));
+            tmp_expt_stdofpopcweights(j,i,k) = std(sample_popcweights(j,k,:));
 		end
-  	    end
-	end
     end	    
 end
 

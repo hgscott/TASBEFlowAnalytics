@@ -6,18 +6,28 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function plot_sample_sets(batch_description,results,OSbin)
+function plot_sample_sets(batch_description,results)
 
 %fprintf('Outputting CSV data...\n');
     %sample_set_to_csv();
 batch_size = size(batch_description,1);
 
 fprintf('Outputting histograms');
-for i=1:batch_size,
-    condition_name = batch_description{i,1};
-    OStmp = OSbin; OStmp.StemName = [OStmp.StemName '-' condition_name];
-    sampleresults = results{i,2};
-    plot_sample_histograms(sampleresults,OStmp);
-    fprintf('.');
+% get/set should be replaced by push/pop of output settings
+stemName = TASBEConfig.get('OutputSettings.StemName');
+ERROR = [];
+try
+    for i=1:batch_size,
+        condition_name = batch_description{i,1};
+        TASBEConfig.set('OutputSettings.StemName', [stemName '-' condition_name]);
+        sampleresults = results{i,2};
+        plot_sample_histograms(sampleresults);
+        fprintf('.');
+    end
+    fprintf('\n');
+catch ERROR
 end
-fprintf('\n');
+TASBEConfig.set('OutputSettings.StemName', stemName);
+if ~isempty(ERROR)
+    rethrow(ERROR);
+end

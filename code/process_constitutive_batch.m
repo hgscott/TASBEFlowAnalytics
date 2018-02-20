@@ -6,7 +6,7 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function results = process_constitutive_batch( colorModel, batch_description, analysisParams, OSbin)
+function results = process_constitutive_batch( colorModel, batch_description, analysisParams)
 % batch_description is a cell-array of: {condition_name, filenames}
 % results is a cell-array of {ExperimentResults, {SampleResults}}
 
@@ -33,9 +33,4 @@ for i = 1:batch_size
     sampleresults = process_data(colorModel,experiment,analysisParams);
     results{i,1} = summarize_data(colorModel,experiment,analysisParams,sampleresults);
     results{i,2} = sampleresults{1};
-    
-    if nargin>3, % if supplied an output setting, dump bincounts files
-        OStmp = OSbin; OStmp.StemName = [OStmp.StemName '-' condition_name];
-        plot_bin_statistics(sampleresults,OStmp);
-    end
 end

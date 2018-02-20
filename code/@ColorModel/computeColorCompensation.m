@@ -6,7 +6,7 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function compensation_model = computeColorCompensation(CM,settings)
+function compensation_model = computeColorCompensation(CM)
 % Produce an NxN matrix of linear compensation models
 % Row j, column i is the fraction of channel i that bleeds into channel j
 
@@ -18,7 +18,7 @@ for i=1:n
         % Don't need to test self
         if i==j, matrix(j,i) = 1; error(j,i) = 0; continue; end
         % Compute model
-        [b_ij, b_ij_err] = make_linear_compensation_model(CM, settings, CM.ColorFiles{i}, i, j);
+        [b_ij, b_ij_err] = make_linear_compensation_model(CM, CM.ColorFiles{i}, i, j);
         matrix(j,i) = b_ij; error(j,i) = b_ij_err;
     end
 end
