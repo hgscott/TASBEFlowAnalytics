@@ -49,12 +49,9 @@ for k=1:n_channels
     nonexpressing_set = nonexpressing_set & ~pos; % remove non-excluded set from non-expressing
     
     % compute bulk statistics
-    if(is_octave())
-        tmp_hist = histc(log10(data(pos,k)),log10(bin_edges));
-        histograms(:,k) = tmp_hist(1:(end-1));
-    else
-        histograms(:,k) = histcounts(log10(data(pos,k)),log10(bin_edges));
-    end
+    tmp_hist = histc(log10(data(pos,k)),log10(bin_edges)); % note: histcounts is better, but missing in octave & older Matlab
+    histograms(:,k) = tmp_hist(1:(end-1));
+    
     popmeans(k) = geomean(data(pos,k));
     popstds(k) = geostd(data(pos,k));
     poppeaks{k} = find_peaks(histograms(:,k)',bin_centers); % need to include peak detection params in analysisParams
