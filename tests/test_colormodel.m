@@ -53,7 +53,7 @@ TASBEConfig.set('beads.beadModel','SpheroTech RCP-30-5A'); % Entry from BeadCata
 TASBEConfig.set('beads.beadBatch','Lot AA01, AA02, AA03, AA04, AB01, AB02, AC01, GAA01-R'); % Entry from BeadCatalog.xls containing your lot
 
 % Ignore all bead data below 10^rangeMin as being too "smeared" with noise
-TASBEConfig.set('beads.beadMin', 2);
+TASBEConfig.set('beads.rangeMin', 2);
 % The peak threshold determines the minumum count per bin for something to
 % be considered part of a peak.  Set if automated threshold finds too many or few peaks
 %TASBEConfig.set('beads.peakThreshold', 200);
