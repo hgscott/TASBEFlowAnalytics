@@ -10,13 +10,21 @@ function [results sampleresults] = per_color_constitutive_analysis(colorModel,ba
 % The 'results' here is not a standard ExperimentResults, but a similar scratch structure
 
 warning('TASBE:UpdateNeeded','Need to update per_color_constitutive_analysis to use new samplestatistics');
+batch_size = size(batch_description,1);
+for i = 1:batch_size
+    condition_name = batch_description{i,1};
+    fileset = batch_description{i,2};
+    
+    experiment = Experiment(condition_name,'', {0,fileset});
+    data{i} = read_data(colorModel, experiment, AP);
+end
 
 % first do all the processing
 rawresults = cell(size(colors));
 for i=1:numel(colors),
     fprintf(['Processing for color ' colors{i} '...\n']);
     AP = setChannelLabels(AP,{'constitutive',channel_named(colorModel,colors{i})});
-    rawresults{i} = process_constitutive_batch( colorModel, batch_description, AP);
+    rawresults{i} = process_constitutive_batch( colorModel, batch_description, AP, data);
 end
 
 n_conditions = size(batch_description,1);

@@ -6,7 +6,7 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function sampleresults = process_data( colorModel, experiment, analysisParams)
+function sampleresults = process_data( colorModel, experiment, analysisParams, data)
 %PROCESS_DATA Process the data from the fcs files into useful arrays. Here
 %the structure of processed data mirrors that of the filenames in the
 %experiment. 
@@ -24,13 +24,7 @@ for i=1:n_conditions
     if (numberOfPerInducerFiles == 0), warning('TASBE:Analysis','An inducer level is missing a data file'); end;
     for j = 1:numberOfPerInducerFiles
         fileName = perInducerFiles{j};
-        % Read data and extract statistics
-        if TASBEConfig.get('flow.outputPointCloud')
-            data = fcsToCsvFlowConverterFileWriter(colorModel,fileName, getUseAutoFluorescence(analysisParams), true);
-        else
-            data = readfcs_compensated_ERF(colorModel, fileName, getUseAutoFluorescence(analysisParams), true);
-        end
-        
-        sampleresults{i}{j} = compute_sample_statistics(colorModel,experiment,fileName,analysisParams,data);
+        % Extract statistics        
+        sampleresults{i}{j} = compute_sample_statistics(colorModel,experiment,fileName,analysisParams,data{i}{j});
     end
 end
