@@ -29,8 +29,7 @@ function data = fcsToCsvFlowConverterFileWriter(CM, filename, with_AF, floor)
 
     for i=1:numel(channels)
         channelName = [getPrintName(channels{i}) '_' getStandardUnits(CM)];
-        invalidChars = '-|\s';  % Matlab does not like hypens or whitespace in variable names.
-        sanitizedChannelName{i} = regexprep(channelName,invalidChars,'_');
+        sanitizedChannelName{i} = sanitize_name(channelName);
     end
 
     % Use the channel names as the column labels
