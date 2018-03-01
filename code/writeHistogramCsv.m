@@ -7,10 +7,10 @@
 % package distribution's top directory.
 
 function histogramFile = writeHistogramCsv(channels, sampleIds, sampleresults, binCenters, units)
-    baseName = sanitize_name(TASBEConfig.get('OutputSettings.StemName'));
+    baseName = sanitize_filename(TASBEConfig.get('OutputSettings.StemName'));
 
     % First create the default output filename.
-    histogramFile = sanitize_name([baseName '_histogramFile.csv']);
+    histogramFile = [baseName '_histogramFile.csv'];
     
     numConditions = numel(sampleIds);
     replicates = zeros(numConditions, 1);
@@ -100,9 +100,7 @@ function fileHeader = buildDefaultHistFileHeader(channels, units)
     % Not elegant, but it gets the job done.
     for i=1:numChannels
         channelName = [getPrintName(channels{i}) '_' units];
-%         invalidChars = '-|\s';  % Matlab does not like hypens or whitespace in variable names.
-%         matlabValidVariableNameChannelName = regexprep(channelName,invalidChars,'_');
-        binHeaders{i} = sanitize_name(['BinCount_' channelName]);
+        binHeaders{i} = sanitizeColumnName(['BinCount_' channelName]);
     end
     
     % Don't separate with commas. We want all the column names in a cell

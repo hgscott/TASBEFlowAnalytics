@@ -7,10 +7,10 @@
 % package distribution's top directory.
 
 function statisticsFile = writeStatisticsCsv(channels, sampleIds, sampleresults, units)
-    baseName = sanitize_name(TASBEConfig.get('OutputSettings.StemName'));
+    baseName = sanitize_filename(TASBEConfig.get('OutputSettings.StemName'));
 
     % First create the default output filename.
-    statisticsFile = sanitize_name([baseName '_statisticsFile.csv']);
+    statisticsFile = [baseName '_statisticsFile.csv'];
     
     numConditions = numel(sampleIds);
     
@@ -104,10 +104,10 @@ function fileHeader = buildDefaultStatsFileHeader(channels, units)
     
     % Not elegant, but it gets the job done.
     for i=1:numChannels
-        channelName = [getPrintName(channels{i}) '_' units];
-        binNames{i} = sanitize_name(['BinCount_' channelName]);
-        meanNames{i} = sanitize_name(['GeoMean_' channelName]);
-        stdDevNames{i} = sanitize_name(['GeoStdDev_' channelName]);
+        channelName = sanitizeColumnName([getPrintName(channels{i}) '_' units]);
+        binNames{i} = ['BinCount_' channelName];
+        meanNames{i} = ['GeoMean_' channelName];
+        stdDevNames{i} = ['GeoStdDev_' channelName];
     end
     
     % Don't separate with commas. We want all the column names in a cell
