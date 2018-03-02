@@ -48,13 +48,13 @@ if nargin == 0
      end
 else
     if isempty(filename)
-        warning('FCS:Read','No file provided! Returning empty dataset.'); 
+        TASBESession.warn('FCS:Read','No file provided! Returning empty dataset.'); 
         fcsdat = []; fcshdr = []; fcsdatscaled = [];
         return;
     end
     filecheck = dir(filename);
     if size(filecheck,1) == 0
-        warning('FCS:Read',[filename,': The file does not exist! Returning empty dataset.']); 
+        TASBESession.warn('FCS:Read',[filename,': The file does not exist! Returning empty dataset.']); 
         fcsdat = []; fcshdr = []; fcsdatscaled = [];
         return;
     end
@@ -229,13 +229,13 @@ end
 % This appears to be triggered, with FACSdiva at least, when the FCS file is more than 100MB, which makes
 % the data stop position more than 8 characters and causes it to collide with the start field.   -JSB
 if FcsDataStartPos==0,
-    warning('FCS:BadDataStart','FCS file has invalid data start position; guessing based on header end');
+    TASBESession.warn('FCS:BadDataStart','FCS file has invalid data start position; guessing based on header end');
     FcsDataStartPos = FcsHeaderStopPos+6;
 end
 
 % optionally truncate events to avoid memory problems with extremely large FCS files -JSB
 if fcshdr.TotalEvents>clip_events,
-    warning('FCS:TooManyEvents','FCS file has more than %i events; truncating to avoid memory problems',clip_events);
+    TASBESession.warn('FCS:TooManyEvents','FCS file has more than %i events; truncating to avoid memory problems',clip_events);
     fcshdr.TotalEvents = clip_events;
 end
 

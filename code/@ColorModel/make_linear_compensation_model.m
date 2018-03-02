@@ -59,7 +59,7 @@ else
     b_err = 1; % no significant error
 end
 if b>0.1
-    warning('Model:Color','Spectral bleed from %s to %s more than 10%%: %0.3f',getPrintName(CM.Channels{driven}),getPrintName(CM.Channels{passive}),b);
+    TASBESession.warn('Model:Color','Spectral bleed from %s to %s more than 10%%: %0.3f',getPrintName(CM.Channels{driven}),getPrintName(CM.Channels{passive}),b);
 end
 
 % Optional plot

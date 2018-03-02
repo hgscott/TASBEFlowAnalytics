@@ -17,7 +17,7 @@ function data = fcsToCsvFlowConverterFileWriter(CM, filename, with_AF, floor)
     [filepath,name,ext] = fileparts(filename);
     path = TASBEConfig.get('flow.pointCloudPath');
     if ~isdir(path),
-        warning('TASBE:Utilities','Directory does not exist, attempting to create it: %s',path);
+        TASBESession.warn('TASBE:Utilities','Directory does not exist, attempting to create it: %s',path);
         mkdir(path);
     end
     

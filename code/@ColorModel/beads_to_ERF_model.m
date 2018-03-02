@@ -243,7 +243,7 @@ if(n_peaks>=2)
     else
         TASBESession.succeed('TASBE:Beads','PeakFitQuality','Bead fit quality acceptable: error = %.2d',cf_error);
     end;
-    %if(abs(model(1)-1)>0.05), warning('TASBE:Beads','Bead calibration probably incorrect: fit more than 5 percent off: slope = %.2d',model(1)); end;
+    %if(abs(model(1)-1)>0.05), TASBESession.warn('TASBE:Beads','Bead calibration probably incorrect: fit more than 5 percent off: slope = %.2d',model(1)); end;
     k_ERF = 10^constrained_fit;
 elseif(n_peaks==1) % 1 peak
     TASBESession.warn('TASBE:Beads','PeakIdentification','Only one bead peak found, assuming brightest');

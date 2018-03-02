@@ -19,7 +19,7 @@ for j=1:numel(fcshdr.par)
     end
 end
 if(~found), 
-    warning('Model:Time','Could not find Time channel'); 
+    TASBESession.warn('Model:Time','Could not find Time channel'); 
     data = rawfcs;
 else
     not_early = timechannel>TF.early_data_exclusion;

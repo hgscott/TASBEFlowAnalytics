@@ -22,7 +22,7 @@ for driven=1:n
         set(h,'visible','off');
         pos = data(:,driven)>1;
         if sum(pos)==0, 
-            warning('ColorModel:Compensation','Cannot compensate %s with %s',getPrintName(CM.Channels{driven}),getPrintName(CM.Channels{passive}));
+            TASBESession.warn('ColorModel:Compensation','Cannot compensate %s with %s',getPrintName(CM.Channels{driven}),getPrintName(CM.Channels{passive}));
             continue; 
         end;
         pmin = percentile(data(pos,passive),0.1); pmax = percentile(data(pos,passive),99.9);

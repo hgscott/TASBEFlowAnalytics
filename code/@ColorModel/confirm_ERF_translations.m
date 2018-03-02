@@ -16,7 +16,7 @@ function [ok CM] = confirm_ERF_translations(CM)
         if(i==fi) continue; end;
         if(isnan(scales(i,fi))), 
             ok = false;
-            warning('Model:Color','No pairwise translation for %s to %s; using pseudoERF',getPrintName(CM.Channels{i}),getPrintName(CM.ERF_channel));
+            TASBESession.warn('Model:Color','No pairwise translation for %s to %s; using pseudoERF',getPrintName(CM.Channels{i}),getPrintName(CM.ERF_channel));
             scales(i,fi) = 1;
             CM.Channels{i} = setIsPseudo(CM.Channels{i},1);
             
@@ -29,13 +29,13 @@ function [ok CM] = confirm_ERF_translations(CM)
     
     % if ERF channel is pseudo (e.g., becaus of missing beads), then make all channels pseudo
     if(isPseudo(CM.ERF_channel)),
-        warning('Model:Color','ERF channel is pseudo, so all other channels are pseudo as well');
+        TASBESession.warn('Model:Color','ERF channel is pseudo, so all other channels are pseudo as well');
         for i=1:numel(CM.Channels),
             CM.Channels{i} = setIsPseudo(CM.Channels{i},1);
         end
     end
     
     if ~ok,
-        warning('Model:Color','Not all channels can be translated to standard ERF units.');
+        TASBESession.warn('Model:Color','Not all channels can be translated to standard ERF units.');
         CM.color_translation_model = setScales(CM.color_translation_model,scales);
     end

@@ -34,7 +34,7 @@ function C = Channel(name, laser, filterC, filterW, pseudo)
         end
         % Warn if we're seeing unspecified channels
         if(C.Laser==0 || C.FilterCenter==0 || C.FilterWidth==0),
-            warning('Model:Color','Channel %s has unspecified laser and/or filter.  Unspecified channels may be confused together.',C.name);
+            TASBESession.warn('Model:Color','Channel %s has unspecified laser and/or filter.  Unspecified channels may be confused together.',C.name);
         end
     end
     

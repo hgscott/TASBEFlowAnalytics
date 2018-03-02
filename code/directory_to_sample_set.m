@@ -28,5 +28,5 @@ for i=1:numel(fileset),
     set{end,2} = { [directory '/' fileset(i).name] };
 end
 if numel(set)==0,
-    warn('Warning: no FCS files found in directory: %s',directory);
+    TASBESession.warn('TASBE:Utilities','Warning: no FCS files found in directory: %s',directory);
 end

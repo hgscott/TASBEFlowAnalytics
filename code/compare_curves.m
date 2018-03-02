@@ -34,4 +34,4 @@ for i=1:numel(both)
     loglog([in1(both(i)) in2(both(i))],[out1(both(i)) out2(both(i))],'r-'); hold on;
 end
 xlabel('Input ERF'); ylabel('Output ERF');
-warn('Not checking for pseudoERF');
+TASBESession.warn('TASBE:Utilities','Not checking for pseudoERF');

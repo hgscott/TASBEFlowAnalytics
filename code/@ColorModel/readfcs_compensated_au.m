@@ -19,13 +19,13 @@ function data = readfcs_compensated_au(CM,filename,with_AF,floor)
     for i=1:numel(CM.Channels),
         ok = ok & confirm_channel(CM.Channels{i},channel_desc{i});
     end
-    if(~ok), warning('TASBE:ReadFCS','File %s does not match color model',filename); end;
+    if(~ok), TASBESession.warn('TASBE:ReadFCS','File %s does not match color model',filename); end;
     
     % Check to make sure not too many negative values:
     for i=1:numel(CM.Channels)
         frac_neg = sum(rawdata(:,i)<0)/size(rawdata,1);
         if(frac_neg>0.60) % more than 60% subzero
-            warning('TASBE:NegativeFCS','More than 60%% of channel %s negative (%.1f%%) in ''%s''',getName(CM.Channels{i}),100*frac_neg,filename);
+            TASBESession.warn('TASBE:NegativeFCS','More than 60%% of channel %s negative (%.1f%%) in ''%s''',getName(CM.Channels{i}),100*frac_neg,filename);
         end
     end
 
