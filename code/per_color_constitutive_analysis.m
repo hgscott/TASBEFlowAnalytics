@@ -17,6 +17,9 @@ for i = 1:batch_size
     
     experiment = Experiment(condition_name,'', {0,fileset});
     data{i} = read_data(colorModel, experiment, AP);
+    
+    filenames = getInducerLevelsToFiles(experiment); % array of file names
+    writeFcsPointCloudCSV(colorModel, filenames, data{i});
 end
 
 % first do all the processing

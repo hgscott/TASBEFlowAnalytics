@@ -7,8 +7,7 @@
 % package distribution's top directory.
 
 function data = read_data( colorModel, experiment, analysisParams)
-%PROCESS_DATA Process the data from the fcs files into useful arrays. Here
-%the structure of processed data mirrors that of the filenames in the
+%Here the structure of processed data mirrors that of the filenames in the
 %experiment. 
 
 
@@ -25,10 +24,6 @@ for i=1:n_conditions
     for j = 1:numberOfPerInducerFiles
         fileName = perInducerFiles{j};
         % Read data and extract statistics
-        if TASBEConfig.get('flow.outputPointCloud')
-            data{i}{j} = fcsToCsvFlowConverterFileWriter(colorModel,fileName, getUseAutoFluorescence(analysisParams), true);
-        else
-            data{i}{j} = readfcs_compensated_ERF(colorModel, fileName, getUseAutoFluorescence(analysisParams), true);
-        end
+        data{i}{j} = readfcs_compensated_ERF(colorModel, fileName, getUseAutoFluorescence(analysisParams), true);
     end
 end

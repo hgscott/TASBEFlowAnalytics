@@ -6,7 +6,7 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function [pm_results pm_sampleresults] = process_plusminus_batch( colorModel, batch_description, analysisParams)
+function [pm_results pm_sampleresults] = process_plusminus_batch( colorModel, batch_description, analysisParams, data)
 % batch_description is a cell-array of: {condition_name, inducer_name, plus_level_file_pairs, minus_level_file_pairs}
 % pm_results is a cell-array of PlusMinusResults
 
@@ -27,6 +27,7 @@ for i=1:batch_size
     end
 end
 
+
 pm_results = cell(batch_size,1);
 pm_sampleresults = cell(batch_size,2);
 for i = 1:batch_size
@@ -37,14 +38,16 @@ for i = 1:batch_size
     
     experiment_name = [condition_name ': ' inducer_name ' +'];
     p_experiment = Experiment(experiment_name,{inducer_name}, p_level_file_pairs);
+    data{i} = read_data(colorModel, p_experiment, analysisParams);
     fprintf(['Starting analysis of ' experiment_name '...\n']);
-    p_sampleresults = process_data(colorModel,p_experiment,analysisParams);
+    p_sampleresults = process_data(colorModel,p_experiment,analysisParams, data{i});
     p_results = summarize_data(colorModel,p_experiment,analysisParams,p_sampleresults);
     
     experiment_name = [condition_name ': ' inducer_name ' -'];
     m_experiment = Experiment(experiment_name,{inducer_name}, m_level_file_pairs);
+    data{i} = read_data(colorModel, m_experiment, analysisParams);
     fprintf(['Starting analysis of ' experiment_name '...\n']);
-    m_sampleresults = process_data(colorModel,m_experiment,analysisParams);
+    m_sampleresults = process_data(colorModel,m_experiment,analysisParams, data{i});
     m_results = summarize_data(colorModel,m_experiment,analysisParams,m_sampleresults);
     
     fprintf(['Computing comparison for ' condition_name '...\n']);
