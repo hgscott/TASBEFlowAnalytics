@@ -112,6 +112,6 @@ function fileHeader = buildDefaultStatsFileHeader(channels, units)
     
     % Don't separate with commas. We want all the column names in a cell
     % array so we can pass them to a table.
-    fileHeader = {'ID', binNames{:}, meanNames{:}, stdDevNames{:}};
+    fileHeader = {'Id', binNames{:}, meanNames{:}, stdDevNames{:}};
 end
 

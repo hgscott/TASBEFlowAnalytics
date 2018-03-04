@@ -105,5 +105,5 @@ function fileHeader = buildDefaultHistFileHeader(channels, units)
     
     % Don't separate with commas. We want all the column names in a cell
     % array so we can pass them to a table.
-    fileHeader = {'ID', 'BinCenters', binHeaders{:}};
+    fileHeader = {'Id', 'BinCenters', binHeaders{:}};
 end
