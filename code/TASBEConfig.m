@@ -404,12 +404,12 @@ classdef TASBEConfig
         
         % Transform all non-default settings into a JSON object
         function string = to_json()
-            string = savejson(TASBEConfig.list());
+            string = savejson('',TASBEConfig.list());
         end
         
         function load_from_json(string)
             json_object = loadjson(string);
-            TASBEConfig.set_config_from_object('', json_object.root);
+            TASBEConfig.set_config_from_object('', json_object);
         end
         
         function set_config_from_object(prefix, struct)

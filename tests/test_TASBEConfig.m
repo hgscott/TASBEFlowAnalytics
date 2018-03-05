@@ -126,6 +126,40 @@ for i=1:numel(targets),
     end
     assert(found);
 end
-    
-    
-    
+
+
+
+function test_config_read
+
+TASBEConfig.checkpoint('test');
+
+% set up some scratch values
+TASBEConfig.set('foo.bar',1);
+TASBEConfig.set('foo.baz',2);
+TASBEConfig.set('foo.qux',3);
+TASBEConfig.set('bar.qux','quux');
+TASBEConfig.set('baz','qux');
+TASBEConfig.set('another',7);
+
+% save the old values to JSON
+old = TASBEConfig.to_json();
+
+% load JSON to replace some of the scratch values
+json = '{ "foo": { "bar": 4, "qux": 5 }, "bar": {"qux": 6}, "baz":"replaced"}';
+TASBEConfig.load_from_json(json);
+% confirm replacements
+assertEqual(TASBEConfig.get('foo.bar'),4);
+assertEqual(TASBEConfig.get('foo.baz'),2);
+assertEqual(TASBEConfig.get('foo.qux'),5);
+assertEqual(TASBEConfig.get('bar.qux'),6);
+assertEqual(TASBEConfig.get('baz'),'replaced');
+assertEqual(TASBEConfig.get('another'),7);
+
+% reload old values from JSON and confirm:
+TASBEConfig.load_from_json(old);
+assertEqual(TASBEConfig.get('foo.bar'),1);
+assertEqual(TASBEConfig.get('foo.baz'),2);
+assertEqual(TASBEConfig.get('foo.qux'),3);
+assertEqual(TASBEConfig.get('bar.qux'),'quux');
+assertEqual(TASBEConfig.get('baz'),'qux');
+assertEqual(TASBEConfig.get('another'),7);
