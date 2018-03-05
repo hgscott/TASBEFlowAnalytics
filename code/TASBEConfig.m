@@ -403,24 +403,23 @@ classdef TASBEConfig
         end
         
         % Transform all non-default settings into a JSON object
-        function string = to_json() 
-            settings = TASBEConfig.list();
-            fieldpairs = TASBEConfig.struct_to_json_fields('', settings);
-            string = cellpairs_to_json(fieldpairs);
+        function string = to_json()
+            string = savejson(TASBEConfig.list());
         end
         
-        function fieldpairs = struct_to_json_fields(prefix, struct)
-            fieldpairs = {};
+        function load_from_json(string)
+            json_object = loadjson(string);
+            TASBEConfig.set_config_from_object('', json_object.root);
+        end
+        
+        function set_config_from_object(prefix, struct)
             fields = fieldnames(struct);
             for i=1:numel(fields);
                 value = struct.(fields{i});
-                if(isstruct(value)), % serialize substructure
-                    subpairs = TASBEConfig.struct_to_json_fields([prefix fields{i} '.'], value);
-                    fieldpairs = [fieldpairs; subpairs];
-                elseif isempty(value)
-                    % continue: don't serialize fields that aren't set
-                else % add the new pair
-                    fieldpairs = [fieldpairs; {[prefix fields{i}] value}];
+                if(isstruct(value)), % set with substructure
+                    TASBEConfig.set_config_from_object([prefix fields{i} '.'], value);
+                else % set this value
+                    TASBEConfig.set([prefix fields{i}], value);
                 end
             end
         end
