@@ -403,43 +403,26 @@ classdef TASBEConfig
         end
         
         % Transform all non-default settings into a JSON object
-        % refactor this all out into use of maps to/from JSON
-%         function string = to_json() 
-%             settings = TASBEConfig.list();
-%             fieldstring = TASBEConfig.struct_to_json_fields('', settings);
-%             trimmed = fieldstring(1:(end-3)); % trim off last ', \n'
-%             string = sprintf('{\n%s\n}',trimmed);
-%         end
-%         
-%         function string = struct_to_json_fields(prefix, struct)
-%             string = '';
-%             fields = fieldnames(struct);
-%             for i=1:numel(fields);
-%                 val = struct.(fields{i});
-%                 if(isstruct(val)), 
-%                     string = [string TASBEConfig.struct_to_json_fields([prefix fields{i} '.'], val)];
-%                 elseif isempty(val)
-%                     % continue
-%                 elseif islogical(val) %  boolean
-%                     if val, lvalue = 'true'; else lvalue = 'false'; end;
-%                     string = [string sprintf('"%s%s" : %s, \n',prefix,fields{i},lvalue)];
-%                 elseif isnumeric(val) % float
-%                     if(numel(val)==1),
-%                         string = [string sprintf('"%s%s" : %d, \n',prefix,fields{i},val)];
-%                     else
-%                         % TODO: figure out what to do for multi-dimensional arrays, if we have any
-%                         % Dammit, have to deal with infinities also
-%                         
-%                         valstr = '';
-%                         for j=1:numel(val), valstr = sprintf('%s%s, ',valstr,num2str(val(j))); end;
-%                         string = [string sprintf('"%s%s" : [%s], \n',prefix,fields{i},valstr(1:(end-2)))];
-%                     end
-%                 elseif isstr(val) % string
-%                     string = [string sprintf('"%s%s" : "%s", \n',prefix,fields{i},val)];
-%                 else
-%                     error('Don''t know how to serialize value of %s%s to JSON',prefix,fields{i});
-%                 end
-%             end
-%         end
+        function string = to_json() 
+            settings = TASBEConfig.list();
+            fieldpairs = TASBEConfig.struct_to_json_fields('', settings);
+            string = cellpairs_to_json(fieldpairs);
+        end
+        
+        function fieldpairs = struct_to_json_fields(prefix, struct)
+            fieldpairs = {};
+            fields = fieldnames(struct);
+            for i=1:numel(fields);
+                value = struct.(fields{i});
+                if(isstruct(value)), % serialize substructure
+                    subpairs = TASBEConfig.struct_to_json_fields([prefix fields{i} '.'], value);
+                    fieldpairs = [fieldpairs; subpairs];
+                elseif isempty(value)
+                    % continue: don't serialize fields that aren't set
+                else % add the new pair
+                    fieldpairs = [fieldpairs; {[prefix fields{i}] value}];
+                end
+            end
+        end
     end
 end
