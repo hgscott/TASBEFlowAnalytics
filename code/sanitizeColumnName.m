@@ -6,10 +6,11 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function sanitized = sanitize_name(name)
-% remove all non-"word" characters from a name (e.g., a filename)
+function sanitized = sanitizeColumnName(columnName)
+% Matlab does not like hypens or whitespace in variable names
 
-sanitized = regexprep(name,'[^\w+\-*]','');
-if numel(sanitized) < numel(name)
-    warning('TASBE:SanitizeName','Name "%s" contains unsafe characters: abbreviated to "%s"',name,sanitized);
+invalidChars = '-*|\s*';
+replacement = '_';
+sanitized = regexprep(columnName,invalidChars,replacement);
 end
+

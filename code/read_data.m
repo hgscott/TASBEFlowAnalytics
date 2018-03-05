@@ -6,9 +6,8 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function sampleresults = process_data( colorModel, experiment, analysisParams, data)
-%PROCESS_DATA Process the data from the fcs files into useful arrays. Here
-%the structure of processed data mirrors that of the filenames in the
+function data = read_data( colorModel, experiment, analysisParams)
+%Here the structure of processed data mirrors that of the filenames in the
 %experiment. 
 
 
@@ -17,14 +16,14 @@ n_conditions = numel(filenames);
 
 % Process each file for each condition in turn, computing results
 % incrementally
-sampleresults = cell(size(filenames));
+data = cell(size(filenames));
 for i=1:n_conditions
     perInducerFiles = filenames{i};
     numberOfPerInducerFiles = numel(perInducerFiles);
     if (numberOfPerInducerFiles == 0), warning('TASBE:Analysis','An inducer level is missing a data file'); end;
     for j = 1:numberOfPerInducerFiles
         fileName = perInducerFiles{j};
-        % Extract statistics        
-        sampleresults{i}{j} = compute_sample_statistics(colorModel,experiment,fileName,analysisParams,data{i}{j});
+        % Read data and extract statistics
+        data{i}{j} = readfcs_compensated_ERF(colorModel, fileName, getUseAutoFluorescence(analysisParams), true);
     end
 end
