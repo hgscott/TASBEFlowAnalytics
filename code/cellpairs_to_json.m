@@ -6,7 +6,7 @@
 % exception, as described in the file LICENSE in the BBN Flow Cytometry
 % package distribution's top directory.
 
-% cellpairs is a 
+% cellpairs is a cell array of {{name, value}, ...}
 function string = cellpairs_to_json(cellpairs)
 % must be an Nx2 array of cells
 assert(size(cellpairs,1)==0 || size(cellpairs,2) == 2);

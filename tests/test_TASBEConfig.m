@@ -103,3 +103,29 @@ TASBEConfig.checkpoint('test');
 assert(TASBEConfig.isSet('foo')==false);
 [c, l] = TASBEConfig.checkpoints();
 assert(strcmp(c,'test') && numel(l)==2 && strcmp(l{1},'test') && strcmp(l{2},'init'));
+
+
+function test_config_serialization
+
+output = TASBEConfig.to_json();
+splitout = strsplit(output,'\n');
+
+targets = {
+    '  "calibration.plot" : true,';
+    '  "beads.beadChannel" : "FITC",';
+    };
+
+for i=1:numel(targets),
+    found = false;
+    for j=1:numel(splitout)
+        if(strcmp(splitout{j},targets{i})), 
+            %fprintf('Found target: %s\n',targets{i});
+            found = true; 
+            break; 
+        end;
+    end
+    assert(found);
+end
+    
+    
+    
