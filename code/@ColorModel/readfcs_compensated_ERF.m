@@ -20,3 +20,11 @@ function data = readfcs_compensated_ERF(CM,filename,with_AF,floor)
     k_ERF= getK_ERF(CM.unit_translation);
     data = ERF_channel_data*k_ERF;
     
+    % optional discarding of filtered data (e.g., poorly transfected cells)
+    for i=1:numel(CM.postfilters)
+        data = applyFilter(CM.postfilters{i},CM.Channels,data);
+    end
+    % make sure we didn't throw away huge amounts...
+    if numel(data)<numel(audata)*0.1 % Threshold: at least 10% retained
+        warning('Model:Discard','ERF (post)filters may be discarding too much data: only %d%% retained in %s',numel(data)/numel(audata)*100,filename);
+    end

@@ -34,10 +34,12 @@ function CM = ColorModel(beadfile, blankfile, channels, colorfiles, pairfiles)
         CM.compensation_model=[]     ; % For compensating for spectral overlap
         CM.color_translation_model=[] ;% For converting other channels to ERF channel AU equiv
         CM.noise_model=[]             ;% For understanding the expected constitutive expression noise
-        CM.filters={};                 % filters to remove problematic data (e.g. debris, time-contamination)
+        CM.prefilters={};             % filters to remove problematic data in a.u. (e.g. debris, time-contamination)
+        CM.postfilters={};            % filters to remove problematic data in ERF (e.g. poorly transfected cells)
         CM.standardUnits = 'not yet set';  % Should instead be the value from column E in BeadCatalog.xlsx
 
-        CM.filters{1} = TimeFilter(); % add default quarter second data exclusion
+        % The time filter is not necessarily trustworthy, since units and scales are uncertain
+        %CM.filters{1} = TimeFilter(); % add default quarter second data exclusion
         
         if nargin == 0
             channels{1} = Channel();
