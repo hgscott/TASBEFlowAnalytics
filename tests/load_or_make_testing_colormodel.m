@@ -1,11 +1,13 @@
+function CM = load_or_make_testing_colormodel()
+
 if exist('CM120312.mat','file')
-    load('CM120312.mat');
+    CM = load('CM120312.mat');
     return;
 end
 
 %%%%%%%%%%%%%%%%
 % if it doesn't already exist, make it:
-TASBEConfig.set('plots.plotPath',[tempdir 'plots'])
+TASBEConfig.set('plots.plotPath',[tempdir 'plots']);
 
 stem0312 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_';
 

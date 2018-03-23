@@ -11,7 +11,7 @@ function test_batchAnalysisEndtoend
 TASBEConfig.set('flow.outputPointCloud','true');
 TASBEConfig.set('flow.pointCloudPath','/tmp/CSV/');
 
-load_or_make_testing_colormodel();
+CM = load_or_make_testing_colormodel();
 stem1011 = '../TASBEFlowAnalytics-Tutorial/example_assay/LacI-CAGop_';
 
 % set up metadata

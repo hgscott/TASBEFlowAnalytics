@@ -8,7 +8,7 @@ function test_suite = test_plusminus_analysis
 
 function test_plusminus_analysis_endtoend
 
-load_or_make_testing_colormodel();
+CM = load_or_make_testing_colormodel();
 
 % set up metadata
 experimentName = 'LacI Transfer Curve';
