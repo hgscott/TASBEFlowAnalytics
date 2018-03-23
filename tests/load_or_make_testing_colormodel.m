@@ -1,7 +1,7 @@
 function CM = load_or_make_testing_colormodel()
 
 if exist('CM120312.mat','file')
-    CM = load('CM120312.mat');
+    load('CM120312.mat');
     return;
 end
 
