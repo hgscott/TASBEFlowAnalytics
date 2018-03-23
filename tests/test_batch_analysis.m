@@ -8,7 +8,7 @@ function test_suite = test_batch_analysis
 
 function test_batch_analysis_endtoend
 
-load('../TASBEFlowAnalytics-Tutorial/template_colormodel/CM120312.mat');
+CM = load_or_make_testing_colormodel();
 stem1011 = '../TASBEFlowAnalytics-Tutorial/example_assay/LacI-CAGop_';
 
 % set up metadata
