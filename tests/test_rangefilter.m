@@ -77,7 +77,7 @@ assert(all(Dnew(:,3) == [3 6 24 27 30]'));
 
 % test application as part of a color model:
 RF = RangeFilter('FITC-A',[10 inf]);
-load('../TASBEFlowAnalytics-Tutorial/template_colormodel/CM120312.mat');
+load_or_make_testing_colormodel();
 rawdat = read_filtered_au(CM,blankfile);
 CM = add_prefilter(CM,RF);
 filtdat = read_filtered_au(CM,blankfile);
@@ -88,7 +88,7 @@ assert(min(rawdat(:,10))<0);
 assert(min(filtdat(:,10))<0);
 
 RF = RangeFilter('FITC-A',[1e5 inf]);
-load('../TASBEFlowAnalytics-Tutorial/template_colormodel/CM120312.mat');
+load_or_make_testing_colormodel();
 rawdat = readfcs_compensated_ERF(CM,blankfile,false,true);
 CM = add_postfilter(CM,RF);
 filtdat = readfcs_compensated_ERF(CM,blankfile,false,true);
