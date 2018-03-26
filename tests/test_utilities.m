@@ -17,3 +17,4 @@ assertEqual(isolated_points([1 2 NaN NaN 5 6]), logical([0 0 0 0 0 0]));
 assertEqual(isolated_points([NaN 2 NaN 4 NaN]), logical([0 1 0 1 0]));
 assertEqual(isolated_points([1 NaN 3 -4 5],1), logical([1 0 1 0 1]));
 assertEqual(isolated_points([1 Inf 3 -Inf 5]), logical([1 0 1 0 1]));
+assertEqual(isolated_points([1 NaN 3 4 5]'), logical([1 0 0 0 0]));
