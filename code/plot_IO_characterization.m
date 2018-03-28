@@ -36,6 +36,10 @@ for i=1:step:n_bins
     if ticks
         loglog(input_mean(i,which),output_mean(i,which),'+','Color',hsv2rgb([hues(i) 1 0.9]));
     end
+    % plot isolated points
+    isolated = isolated_points(input_mean(i,:),1) | isolated_points(output_mean(i,:),1);
+    loglog(input_mean(i,which & isolated),output_mean(i,which & isolated),'+','Color',hsv2rgb([hues(i) 1 0.9])); hold on;
+    % plot standard deviations
     loglog(input_mean(i,which),output_mean(i,which).*output_std(i,which),':','Color',hsv2rgb([hues(i) 1 0.9]));
     loglog(input_mean(i,which),output_mean(i,which)./output_std(i,which),':','Color',hsv2rgb([hues(i) 1 0.9]));
 end;
