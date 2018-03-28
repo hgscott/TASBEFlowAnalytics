@@ -29,10 +29,13 @@ for i=1:n_conditions
         for j=1:numReplicates,
             counts = replicates{j}.BinCounts;
             ls = linespecs{k};
+            isolates = isolated_points(counts(:,k),1);
             if(ischar(ls) && length(ls)==1 && length(findstr(ls, 'rgbcmykw')) == 1)
                 loglog(bin_centers,counts(:,k),ls); hold on;
+                loglog(bin_centers(isolates),counts(isolates,k),['+' ls]); % add isolated points with markers
             else
                 loglog(bin_centers,counts(:,k),'Color', ls); hold on;
+                loglog(bin_centers(isolates),counts(isolates,k),'+','Color',ls); % add isolated points with markers
             end
         end
         maxcount = max(maxcount,max(max(counts)));

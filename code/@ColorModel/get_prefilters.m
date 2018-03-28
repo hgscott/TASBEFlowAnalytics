@@ -6,6 +6,6 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function filters = get_filters(CM)
-   filters  = CM.filters; 
+function filters = get_prefilters(CM)
+   filters  = CM.prefilters; 
    

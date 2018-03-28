@@ -52,6 +52,7 @@ for i=1:n_colors
                 e = nanLoc - 1 + start - 1;
             end
             loglog(bin_centers(start:e),counts(start:e),[color '-']); hold on;
+            if(start == e), loglog(bin_centers(start),counts(start),[color '+']); hold on; end; % make sure isolated points show
             start = max(start+1, e+1);
         end
         % loglog(get_bin_centers(bins),counts,'-','Color',hsv2rgb([hues(i) 1 0.9])); hold on;

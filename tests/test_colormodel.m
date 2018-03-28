@@ -62,7 +62,7 @@ CM=set_ERF_channel_name(CM, 'FITC-A');
 CM=set_translation_channel_min(CM,[2,2,2]);
 
 TASBEConfig.set('plots.plotPath', '/tmp/plots');
-CM = add_filter(CM,autogate);
+CM = add_prefilter(CM,autogate);
 
 % Execute and save the model
 CM=resolve(CM);

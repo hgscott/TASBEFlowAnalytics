@@ -180,7 +180,7 @@ h = figure('PaperPosition',[1 1 5 3.66]);
 set(h,'visible','off');
 for i=1:step:n_var
     which = pm_results.Valid(:,i,1) & pm_results.Valid(:,i,2);
-    semilogx(bin_centers(which),pm_results.Ratios(which,i),'-','Color',hsv2rgb([hues(i) 1 0.9])); hold on;
+    semilogx(bin_centers(which),pm_results.Ratios(which,i),[ptick '-'],'Color',hsv2rgb([hues(i) 1 0.9])); hold on;
 end;
 xlabel(['CFP ' clean_for_latex(cfp_units)]); ylabel('Fold Activation');
 set(gca,'XScale','log'); set(gca,'YScale','log');
