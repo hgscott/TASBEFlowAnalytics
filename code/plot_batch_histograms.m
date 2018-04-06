@@ -54,7 +54,7 @@ for i=1:n_conditions
     end
     
     xlabel(clean_for_latex(getStandardUnits(CM))); ylabel('Count');
-    if(TASBEConfig.get('OutputSettings.FixedBinningAxis')), xlim(TASBEConfig.get('OutputSettings.FixedBinningAxis')); end;
+    if(TASBEConfig.isSet('OutputSettings.FixedBinningAxis')), xlim(TASBEConfig.get('OutputSettings.FixedBinningAxis')); end;
     if(TASBEConfig.isSet('OutputSettings.FixedHistogramAxis')), ylim(TASBEConfig.get('OutputSettings.FixedHistogramAxis')); else ylim([1e0 10.^(ceil(log10(maxcount)))]); end;
 
     title([TASBEConfig.get('OutputSettings.StemName') ' ' clean_for_latex(results{i}.condition) ' bin counts, by color']);
