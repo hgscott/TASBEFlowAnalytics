@@ -1,4 +1,4 @@
-function test_suite = test_batch_analysis
+function test_suite = test_transfercurve_analysis
     TASBEConfig.checkpoint('test');
     try % assignment of 'localfunctions' is necessary in Matlab >= 2016
         test_functions=localfunctions();

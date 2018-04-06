@@ -161,18 +161,32 @@ classdef TASBEConfig
             s.channel_template_file = '';           % An example of this is CM.BeadFile
             
             % OutputSettings migration
+            doc.OutputSettings = struct();
+            doc.OutputSettings.about = 'Settings controlling batch plotting';
             s.OutputSettings = struct();
             s.OutputSettings.StemName='';
             s.OutputSettings.DeviceName='';
             s.OutputSettings.Description='';
 
             s.OutputSettings.FixedInducerAxis = [];      % fixed -> [min max]
-            s.OutputSettings.FixedInputAxis =   [];      % fixed -> [min max]
-            s.OutputSettings.FixedNormalizedInputAxis =   [];      % fixed -> [min max]
-            s.OutputSettings.FixedOutputAxis =  [];      % fixed -> [min max]
-            s.OutputSettings.FixedNormalizedOutputAxis =  [];      % fixed -> [min max]
-            s.OutputSettings.FixedXAxis = [];             % fixed -> [min max]
-            s.OutputSettings.FixedYAxis = [];             % fixed -> [min max]
+            doc.OutputSettings.FixedHistogramAxis = 'Set to fix limit [min max] of histogram count plot axis';
+            s.OutputSettings.FixedHistogramAxis = [];
+            doc.OutputSettings.FixedBinningAxis = 'Set to fix limit [min max] of binning variable plot axis';
+            s.OutputSettings.FixedBinningAxis = [];
+            doc.OutputSettings.FixedInputAxis = 'Set to fix limit [min max] of normalized output plot axis';
+            s.OutputSettings.FixedInputAxis =   [];
+            doc.OutputSettings.FixedNormalizedInputAxis = 'Set to fix limit [min max] of normalized input plot axis';
+            s.OutputSettings.FixedNormalizedInputAxis =   [];
+            doc.OutputSettings.FixedOutputAxis = 'Set to fix limit [min max] of output plot axis';
+            s.OutputSettings.FixedOutputAxis =  [];
+            doc.OutputSettings.FixedNormalizedOutputAxis = 'Set to fix limit [min max] of normalized output plot axis';
+            s.OutputSettings.FixedNormalizedOutputAxis =  [];
+            doc.OutputSettings.FixedRatioAxis = 'Set to fix limit [min max] of ratio plot axis';
+            s.OutputSettings.FixedRatioAxis =   [];
+            doc.OutputSettings.FixedSNRAxis = 'Set to fix limit [min max] of signal-to-noise ratio plot axis';
+            s.OutputSettings.FixedSNRAxis =   [];
+            doc.OutputSettings.FixedDeltaSNRAxis = 'Set to fix limit [min max] of delta signal-to-noise ratio plot axis';
+            s.OutputSettings.FixedDeltaSNRAxis =   [];
             s.OutputSettings.ColorPlots = true;
             s.OutputSettings.PlotPopulation = true;
             s.OutputSettings.PlotNormalized = true;
@@ -386,9 +400,20 @@ classdef TASBEConfig
             if(isstruct(val))
                 fieldnameset = fieldnames(val);
                 keydoc = '';
+                maxname = max(cellfun(@numel,fieldnameset));
                 for i = 1:numel(fieldnameset),
                     keydoc = [keydoc sprintf('\n  %s',fieldnameset{i})];
-                    if(isstruct(val.(fieldnameset{i}))), keydoc = [keydoc sprintf('    [family]')]; end;
+                    if(isstruct(val.(fieldnameset{i}))), 
+                        keydoc = [keydoc sprintf('\t\t[family]')]; 
+                    else
+                        try 
+                            about = doc.(fieldnameset{i}); 
+                            spacer = repmat(' ',1, 4 + maxname - numel(fieldnameset{i}));
+                            keydoc = [keydoc sprintf('%s%s',spacer,about)];
+                        catch e, 
+                            % leave it as was, without documentation
+                        end;
+                    end;
                 end
                 try about = doc.about; catch e, about = 'No documentation available'; end;
                 text = sprintf('Configuration family: %s\n%s\nKeys: %s',key,about,keydoc);

@@ -6,7 +6,7 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function [pm_results pm_sampleresults] = process_plusminus_batch( colorModel, batch_description, analysisParams, data)
+function [pm_results, pm_sampleresults] = process_plusminus_batch( colorModel, batch_description, analysisParams, data)
 % batch_description is a cell-array of: {condition_name, inducer_name, plus_level_file_pairs, minus_level_file_pairs}
 % pm_results is a cell-array of PlusMinusResults
 
