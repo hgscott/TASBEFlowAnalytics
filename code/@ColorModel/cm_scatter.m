@@ -28,7 +28,7 @@ yc = data(:,find(CM,ychan));
 if nargin >= 6 && density
     h = figure('PaperPosition',[1 1 5 5]);
     if ~visible, set(h,'visible','off'); end;
-    pos = xc>=1e7 & yc>=1;
+    pos = xc>=1 & yc>=1;
     if nargin < 7, range = []; end;
     if density > 1, type = 'contour'; else type = 'image'; end
     smoothhist2D(log10([xc(pos) yc(pos)]),10,[200, 200],[],type,range,largeoutliers);
