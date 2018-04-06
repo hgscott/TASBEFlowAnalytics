@@ -167,10 +167,14 @@ classdef TASBEConfig
             s.OutputSettings.Description='';
 
             s.OutputSettings.FixedInducerAxis = [];      % fixed -> [min max]
+            s.OutputSettings.FixedConstitutiveAxis = [];      % fixed -> [min max]
             s.OutputSettings.FixedInputAxis =   [];      % fixed -> [min max]
             s.OutputSettings.FixedNormalizedInputAxis =   [];      % fixed -> [min max]
             s.OutputSettings.FixedOutputAxis =  [];      % fixed -> [min max]
             s.OutputSettings.FixedNormalizedOutputAxis =  [];      % fixed -> [min max]
+            s.OutputSettings.FixedRatioAxis =   [];      % fixed -> [min max]
+            s.OutputSettings.FixedSNRAxis =   [];      % fixed -> [min max]
+            s.OutputSettings.FixedDeltaSNRAxis =   [];      % fixed -> [min max]
             s.OutputSettings.FixedXAxis = [];             % fixed -> [min max]
             s.OutputSettings.FixedYAxis = [];             % fixed -> [min max]
             s.OutputSettings.ColorPlots = true;
