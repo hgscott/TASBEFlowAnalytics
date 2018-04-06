@@ -1,7 +1,7 @@
 function CM = load_or_make_testing_colormodel()
 
-if exist('CM120312.mat','file')
-    load('CM120312.mat');
+if exist([tempdir 'CM120312.mat'],'file')
+    load([tempdir 'CM120312.mat']);
     return;
 end
 
@@ -80,4 +80,4 @@ CM = add_prefilter(CM,autogate);
 
 % Execute and save the model
 CM=resolve(CM);
-save('-V7','CM120312.mat','CM');
+save('-V7',[tempdir 'CM120312.mat'],'CM');
