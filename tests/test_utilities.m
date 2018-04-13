@@ -30,3 +30,10 @@ expectedNames = {'FSC-A', 'FSC-H', 'FSC-W', 'SSC-A', 'SSC-H', 'SSC-W',...
     'Pacific Blue-A', 'AmCyan-A', 'Time'};
 
 assertEqual(names,expectedNames);
+
+function test_limitPrecision
+
+assertEqual(limitPrecision(123456.789, 3), 123000);
+assertEqual(limitPrecision(123456.789, 5), 123460);
+assertEqual(limitPrecision(0.00012345, 2), 0.00012);
+assertEqual(limitPrecision([0.123 456 78.9],1), [0.1 500 80]);

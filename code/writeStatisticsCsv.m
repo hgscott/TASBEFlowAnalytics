@@ -27,8 +27,8 @@ function statisticsFile = writeStatisticsCsv(channels, sampleIds, sampleresults,
         geoStdDev{i} = cell(1,replicates(i));
         for j=1:replicates(i)
             totalCounts{i}{j} = sum(sampleresults{i}{j}.BinCounts);
-            geoMeans{i}{j} = sampleresults{i}{j}.Means;
-            geoStdDev{i}{j} = sampleresults{i}{j}.StandardDevs;
+            geoMeans{i}{j} = limitPrecision(sampleresults{i}{j}.Means,4);
+            geoStdDev{i}{j} = limitPrecision(sampleresults{i}{j}.StandardDevs,4);
         end
     end
     
