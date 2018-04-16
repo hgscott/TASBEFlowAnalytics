@@ -158,6 +158,33 @@ result_expected_stds = [...
     5.5331      4.3324      8.3937
     ];
 
+% Blue, Yellow, Red
+result_expected1_gmm_means = [...
+    4.2543    4.6200    4.6817
+    4.2543    5.9921    6.0832
+    ];
+result_expected1_gmm_stds = [...
+    0.0692    0.0783    0.0900
+    0.0692    0.3112    0.5154
+    ];
+result_expected1_gmm_weights = [...
+    0.5000    0.4195    0.3215
+    0.5000    0.5805    0.6785
+    ];
+
+result_expected14_gmm_means = [...
+    4.3427    4.6252    4.7382
+    5.6856    5.5610    6.2619
+    ];
+result_expected14_gmm_stds = [...
+    0.0904    0.0804    0.1034
+    0.2825    0.2650    0.5099
+    ];
+result_expected14_gmm_weights = [...
+    0.3486    0.4211    0.2456
+    0.6514    0.5789    0.7544
+    ];
+    
 assertEqual(numel(results), 14);
 
 % spot-check name, bincenter, bin-count
@@ -173,3 +200,9 @@ for i=1:14,
     assertElementsAlmostEqual(results{i}.stds,  result_expected_stds(i,:),  'relative', 1e-2);
 end
 
+assertElementsAlmostEqual(results{1}.gmm_means,  result_expected1_gmm_means,  'relative', 1e-2);
+assertElementsAlmostEqual(results{1}.gmm_stds,  result_expected1_gmm_stds,  'relative', 1e-2);
+assertElementsAlmostEqual(results{1}.gmm_weights,  result_expected1_gmm_weights,  'relative', 1e-2);
+assertElementsAlmostEqual(results{14}.gmm_means,  result_expected14_gmm_means,  'relative', 1e-2);
+assertElementsAlmostEqual(results{14}.gmm_stds,  result_expected14_gmm_stds,  'relative', 1e-2);
+assertElementsAlmostEqual(results{14}.gmm_weights,  result_expected14_gmm_weights,  'relative', 1e-2);
