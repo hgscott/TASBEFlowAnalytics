@@ -161,7 +161,7 @@ assertEqual(sampleIDs{3}, 'Dox 2.0/5.0');
 %assertEqual(sampleIDs{7}, 'Dox 1000.0/2000.0');
 
 % spot-check first five rows of binCounts
-assertElementsAlmostEqual(cell2mat(binCounts(1:5,:)), expected_bincounts, 'relative', 1e-2);
+assertElementsAlmostEqual(cell2mat(binCounts(1:5,:)), expected_bincounts, 'relative', 2e-2);
 
 % spot-check geo means and geo std devs.
 for i=1:6, % was 7
