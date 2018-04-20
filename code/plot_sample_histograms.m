@@ -69,7 +69,7 @@ for i=1:n_colors
     end
 end;
 xlabel(['Constitutive ' clean_for_latex(cfp_units)]); ylabel('Count');
-if(TASBEConfig.isSet('OutputSettings.FixedXAxis')), xlim(TASBEConfig.get('OutputSettings.FixedXAxis')); end;
-if(TASBEConfig.isSet('OutputSettings.FixedYAxis')), ylim(TASBEConfig.get('OutputSettings.FixedYAxis')); else ylim([1e0 10.^(ceil(log10(maxcount)))]); end;
+if(TASBEConfig.isSet('OutputSettings.FixedBinningAxis')), xlim(TASBEConfig.get('OutputSettings.FixedBinningAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedHistogramAxis')), ylim(TASBEConfig.get('OutputSettings.FixedHistogramAxis')); else ylim([1e0 10.^(ceil(log10(maxcount)))]); end;
 title([clean_for_latex(stemName),' bin counts, colored by inducer level']);
 outputfig(h,[clean_for_latex(stemName),'-histogram'],directory);

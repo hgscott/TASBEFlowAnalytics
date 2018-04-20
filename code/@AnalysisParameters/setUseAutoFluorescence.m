@@ -6,5 +6,5 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function AP=setUseAutofluorescence(AP,v)
+function AP=setUseAutoFluorescence(AP,v)
     AP.use_autofluorescence=v;

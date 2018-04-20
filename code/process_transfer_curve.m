@@ -6,15 +6,10 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function AF = sample_autofluorescence(CM,n_samples,truncate,channels)
+function [results, sampleresults] = process_transfer_curve( colorModel, experiment, analysisParams)
 
-n_channels = numel(getChannels(CM));
+data = read_data( colorModel, experiment, analysisParams);
 
-if nargin<3, truncate = 0; end;
-if nargin<4, channels = 1:n_channels; end;
+sampleresults = process_data(colorModel,experiment,analysisParams, data);
 
-AF = zeros(n_samples,numel(channels));
-for i=1:numel(channels),
-    AFM = get_autofluorescence_model(CM,channels(i));
-    AF(:,i) = sample_autofluorescence(AFM,n_samples,truncate);
-end
+results = summarize_data(colorModel,experiment,analysisParams,sampleresults);
