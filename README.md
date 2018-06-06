@@ -45,6 +45,11 @@ the following two publications:**
     addpath(genpath(pwd));
     savepath;
     ```
+  - For Matlab:
+    - Input code above into the command window
+    - Run ``tasbe_set_path.m`` located outside of the ``TASBEFlowAnalyics/code`` directory
+    - Open up selected matlab file to run (i.e. tutorials)
+    - Run file and select ``Change Folder`` if prompted
 
 ## Usage
 
