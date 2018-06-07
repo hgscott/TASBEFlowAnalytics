@@ -242,7 +242,7 @@ if(n_peaks>=2)
         TASBESession.warn('TASBE:Beads','PeakFitQuality','Bead calibration may be incorrect: fit more than 5 percent off: error = %.2d',cf_error); 
     else
         TASBESession.succeed('TASBE:Beads','PeakFitQuality','Bead fit quality acceptable: error = %.2d',cf_error);
-    end;
+    end
     %if(abs(model(1)-1)>0.05), warning('TASBE:Beads','Bead calibration probably incorrect: fit more than 5 percent off: slope = %.2d',model(1)); end;
     k_ERF = 10^constrained_fit;
 elseif(n_peaks==1) % 1 peak
@@ -258,7 +258,7 @@ else % n_peaks = 0
     fit_error = Inf;
     first_peak = NaN;
     CM.standardUnits = 'arbitrary units';
-end;
+end
 
 % Plot fitted channel
 if makePlots
