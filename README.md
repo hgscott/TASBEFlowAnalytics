@@ -39,12 +39,16 @@ the following two publications:**
   - Download the package from [GitHub](https://github.com/TASBE/TASBEFlowAnalyics)
   - Start Matlab or Octave
   - Go to the ``TASBEFlowAnalyics/code`` directory
-  - Add and save the set of paths:
+  - Add and save the set of paths into the command window:
   
       ```
     addpath(genpath(pwd));
     savepath;
     ```
+  - Run ``tasbe_set_path.m`` located outside of the ``TASBEFlowAnalyics/code`` directory
+  - Open up selected matlab file to run (i.e. tutorials)
+  - Run file and select ``Change Folder`` if prompted
+  - **Optional:** install [MOxUnit](https://github.com/MOxUnit/MOxUnit) to run the test files
 
 ## Usage
 
