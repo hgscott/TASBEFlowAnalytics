@@ -48,6 +48,7 @@ the following two publications:**
   - Run ``tasbe_set_path.m`` located outside of the ``TASBEFlowAnalyics/code`` directory
   - Open up selected matlab file to run (i.e. tutorials)
   - Run file and select ``Change Folder`` if prompted
+  - Optional: install [MOxUnit](https://github.com/MOxUnit/MOxUnit) to run the test files
 
 ## Usage
 
