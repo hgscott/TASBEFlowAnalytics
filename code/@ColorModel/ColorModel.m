@@ -21,7 +21,7 @@ function CM = ColorModel(beadfile, blankfile, channels, colorfiles, pairfiles)
         CM.translation_plot = 1 ;   % Should the color translation calibration plots be produced?
         CM.translation_channel_min = [];    % If set, all data below 10.^min(channel_id) is excluded from computation
         CM.translation_channel_min_samples = 100;    % Minimum number of samples in a bin to consider it for translation
-        CM.noise_plot = 1 ;         % Should the noise model plots be produced?
+        CM.noise_plot = 0 ;         % Noise model plots not produced by default
         CM.dequantize = 0 ;         % Should small randomness be added to fuzz low bins? 
         
         % other fields
