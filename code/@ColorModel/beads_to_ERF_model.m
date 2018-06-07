@@ -197,7 +197,7 @@ for i=1:numel(CM.Channels),
         text(10.^(bin_max),graph_max/2,'peak search max value','Rotation',90,'FontSize',7,'VerticalAlignment','bottom','FontAngle','italic');
         xlabel(sprintf('a.u. for %s channel',clean_for_latex(getPrintName(CM.Channels{i})))); ylabel('Beads');
         title(sprintf('Peak identification for %s for %s beads',clean_for_latex(getPrintName(CM.Channels{i})), beadModel));
-        outputfig(h, sprintf('bead-calibration-%s',clean_for_latex(getPrintName(CM.Channels{i}))),plotPath);
+        outputfig(h, sprintf('bead-peak-identification-%s',clean_for_latex(getPrintName(CM.Channels{i}))),plotPath);
     end
 end
 
@@ -283,10 +283,10 @@ if makePlots
     ylabel('Beads');
     if segment_secondary
         xlabel([clean_for_latex(segmentName) ' a.u.']); 
-        outputfig(h,'bead-calibration-secondary',plotPath);
+        outputfig(h,'bead-peak-identification-secondary',plotPath);
     else
         xlabel([clean_for_latex(beadChannel) ' a.u.']); 
-        outputfig(h,'bead-calibration',plotPath);
+        outputfig(h,'bead-peak-identification',plotPath);
     end
 end
 
@@ -327,7 +327,7 @@ if makePlots
         end
         xlabel(clean_for_latex([beadChannel ' a.u.'])); ylabel(clean_for_latex([segmentName ' a.u.']));
         title(sprintf('Peak identification for %s beads', beadModel));
-        outputfig(h,'bead-calibration',plotPath);
+        outputfig(h,'bead-peak-identification',plotPath);
     end
 end
 
