@@ -11,6 +11,12 @@ function [results, sampleresults] = per_color_constitutive_analysis(colorModel,b
 
 warning('TASBE:UpdateNeeded','Need to update per_color_constitutive_analysis to use new samplestatistics');
 batch_size = size(batch_description,1);
+
+% check to make sure batch_file has the correct dimensions
+if size(batch_description, 2) > 2
+    error('Batch analysis invoked with extra cells. May have accidentally turned replicates into an extra layer of cells. Make sure batch_file is a n X 2 matrix.');
+end
+
 for i = 1:batch_size
     condition_name = batch_description{i,1};
     fileset = batch_description{i,2};
