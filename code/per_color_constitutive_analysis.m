@@ -14,7 +14,7 @@ batch_size = size(batch_description,1);
 
 % check to make sure batch_file has the correct dimensions
 if size(batch_description, 2) > 2
-    error('Batch analysis invoked with extra cells. May have accidentally turned replicates into an extra layer of cells. Make sure batch_file is a n X 2 matrix.');
+    TASBESession.error('Batch analysis invoked with extra cells. May have accidentally turned replicates into an extra layer of cells. Make sure batch_file is a n X 2 matrix.');
 end
 
 for i = 1:batch_size
