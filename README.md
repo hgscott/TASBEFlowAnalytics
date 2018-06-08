@@ -29,7 +29,7 @@ the following two publications:**
 - Using the shell (requires a Unix-like operating system such as GNU/Linux or Apple OSX):
 
     ```bash
-    git clone https://github.com/TASBE/TASBEFlowAnalyics.git
+    git clone https://github.com/TASBE/TASBEFlowAnalytics.git
     cd TASBEFlowAnalyics
     make install
     ```
