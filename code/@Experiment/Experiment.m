@@ -29,6 +29,10 @@
             E.ProteinName =[]; 
             E.Construct =[];
             
+            % check to make sure InducerLevelsToFiles has the correct dimensions
+            if size(InducerLevelsToFiles, 2) > 2
+                TASBESession.error('Experiment', 'DimensionMismatch', 'Transfer Curve analysis invoked with extra cells. May have accidentally turned replicates into an extra layer of cells. Make sure InducerLevelsToFiles is a n X 2 matrix.');
+            end
         
             if nargin > 0
                 E.ExperimentName = Name;
