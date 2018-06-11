@@ -38,7 +38,7 @@
             E=class(E,'Experiment');
             
             % check to make sure InducerLevelsToFiles has the correct dimensions
-            if size(E.InducerLevelsToFiles, 2) ~= 2
+            if size(E.InducerLevelsToFiles, 2) ~= 2 && size(E.InducerLevelsToFiles, 2) ~= 0
                 TASBESession.error('Experiment', 'DimensionMismatch', 'Transfer Curve analysis invoked with extra cells. May have accidentally turned replicates into an extra layer of cells. Make sure InducerLevelsToFiles is a n X 2 matrix.');
             end  
            
