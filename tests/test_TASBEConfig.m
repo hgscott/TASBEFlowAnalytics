@@ -36,7 +36,7 @@ catch e  % error is expected
 end
 if missingError, error('Should have failed on missing preference'); end;
 
-display(TASBEConfig.get('calibration.plotPath'));
+TASBEConfig.set('plots.plotPath','plots/');
 assert(strcmp(TASBEConfig.get('calibration.plotPath'),'plots/'));
 
 assert(TASBEConfig.isSet('foo') == true);
