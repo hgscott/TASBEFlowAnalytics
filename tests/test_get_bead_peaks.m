@@ -18,6 +18,7 @@ no_channel = '';
 
 correct_batch1 = 'Lot AA';
 correct_batch2 = 'AG01';
+correct_batch3 = 'Lot AA01, AA02, AA03, AA04, AB01, AB02, AC01, GAA01-R';
 incorrect_batch = 'AP02';
 vague_batch = 'Lot AD';
 no_batch = '';
@@ -28,10 +29,12 @@ obtained_peaks1 = get_bead_peaks(correct_model, correct_channel, correct_batch1)
 expected_peaks2 = [72, 646, 1705, 4828, 15995, 47602, 135873, 273002];
 obtained_peaks2 = round(get_bead_peaks(correct_model, correct_channel, correct_batch2));
 obtained_peaks3 = get_bead_peaks(correct_model, correct_channel, no_batch);
+obtained_peaks4 = get_bead_peaks(correct_model, correct_channel, correct_batch3);
 
 assertElementsAlmostEqual(expected_peaks1, obtained_peaks1);
 assertElementsAlmostEqual(expected_peaks2, obtained_peaks2);
 assertElementsAlmostEqual(expected_peaks1, obtained_peaks3);
+assertElementsAlmostEqual(expected_peaks1, obtained_peaks4);
 
 % test incorrect model inputs
 assertError(@()get_bead_peaks(incorrect_model, correct_channel, correct_batch1), 'get_bead_peaks:NoModel', 'No error was raised.');

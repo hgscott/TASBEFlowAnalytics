@@ -22,7 +22,7 @@ function [peaks units batch] = get_bead_peaks(model,channel,batch)
         modelEntry = catalog{i};
         if strcmp(model,modelEntry{1})
             % search for a matching bead batch, if specified (e.g., 'Lot AG01')
-            num_batch_conflicts = 0;
+            num_batch_matches = 0;
             matched_batchEntry = modelEntry{2};
             for j=2:numel(modelEntry)
                 batchEntry = modelEntry{j};
@@ -46,12 +46,12 @@ function [peaks units batch] = get_bead_peaks(model,channel,batch)
                     TASBESession.error('get_bead_peaks', 'NoChannel', 'Unable to find bead catalog channel entry for model %s, batch %s, channel %s',model,batch,channel);
                 
                 elseif strfind(batchEntry{1}, batch2)
-                    num_batch_conflicts = num_batch_conflicts + 1;
+                    num_batch_matches = num_batch_matches + 1;
                     matched_batchEntry = batchEntry;
                 end
             end
             
-            if num_batch_conflicts == 1
+            if num_batch_matches == 1
                 % search for a matching channel, e.g., laser = 488, filter = 530/30
                 % Example input: 'FITC'
                 % laser/filter must match precisely; beyond that there is no requirement
@@ -70,7 +70,7 @@ function [peaks units batch] = get_bead_peaks(model,channel,batch)
                 if isempty(batch), batch = 'unspecified'; end; % put in a scratch name for an omitted batch name
                 TASBESession.error('get_bead_peaks', 'NoChannel', 'Unable to find bead catalog channel entry for model %s, batch %s, channel %s',model,batch,channel);
             
-            elseif num_batch_conflicts > 1
+            elseif num_batch_matches > 1
                 TASBESession.error('get_bead_peaks', 'VagueInput', 'Input bead catalog batch entry for model %s, batch %s is too vague. Reference BeadCatalog.xlsx for batch entry options.',model,batch);
             
             else
