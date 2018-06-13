@@ -1,7 +1,7 @@
 # TASBE Flow Analytics
 [![Build Status](https://travis-ci.org/TASBE/TASBEFlowAnalytics.svg?branch=master)](https://travis-ci.org/TASBE/TASBEFlowAnalytics)
 
-TASBE Flow Analytics is a flow cytometry analysis package.
+TASBE Flow Analytics is a flow cytometry analysis package. For manual materials, reference the [TASBE Tutorials](https://github.com/TASBE/TASBEFlowAnalytics-tutorial).
 
 ## Features
 
