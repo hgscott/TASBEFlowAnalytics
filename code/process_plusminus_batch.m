@@ -12,6 +12,24 @@ function [pm_results, pm_sampleresults] = process_plusminus_batch( colorModel, b
 
 batch_size = numel(batch_description);
 
+% check to make sure batch_description has the correct dimensions
+category_size = size(batch_description, 1);
+if category_size ~= 2
+    TASBESession.error('process_plusminus_batch', 'CategoryDimensionMismatch', 'Plus Minus analysis invoked with incorrect number of categories. Make sure batch_description is a n X 2 matrix with two categories (lows and highs).');
+end
+
+for i=1:category_size
+    section_size = numel(batch_description{i});
+    if section_size ~= 4
+        TASBESession.error('process_plusminus_batch', 'SetDimensionMismatch', 'Plus Minus analysis invoked with incorrect number of sets. Make sure batch_description is a n X 2 matrix with four sets (last two sets are plus and minus conditions).');
+    end
+    for j=3:section_size
+        if size(batch_description{i}{j}, 2) ~= 2
+            TASBESession.error('process_plusminus_batch', 'ColumnDimensionMismatch', 'Plus Minus analysis invoked with incorrect number of columns. Make sure batch_description is a n X 2 matrix.');
+        end
+    end
+end
+
 % verify that all files exist
 % Begin by scanning to make sure all expected files are present
 fprintf('Confirming files are present...\n');
@@ -26,7 +44,6 @@ for i=1:batch_size
         end
     end
 end
-
 
 pm_results = cell(batch_size,1);
 pm_sampleresults = cell(batch_size,2);
