@@ -194,7 +194,7 @@ for i=1:numel(CM.Channels),
     
     % Running some initial tests on the peak statistics to generate some
     % warnings:
-    
+    if alt_n_peaks > 0
     % Check to see if peaks in ascending order and whether an extra peak of
     % combined beads is identified
     if ~issorted(alt_peak_maximas)
@@ -209,10 +209,10 @@ for i=1:numel(CM.Channels),
     end
     % Check to see if a deceptive peak very close to rangeMin was
     % identified
-    if alt_n_peaks > 0
-        if abs(10^bin_min - alt_peak_means(1)) < 50
-            TASBESession.warn('TASBE:Beads','PeakIdentification','First peak very close to rangeMin. May need to increase rangeMin or peakThreshold for %s.',clean_for_latex(getPrintName(CM.Channels{i})));
-        end
+    
+    if abs(10^bin_min - alt_peak_means(1)) < 50
+        TASBESession.warn('TASBE:Beads','PeakIdentification','First peak very close to rangeMin. May need to increase rangeMin or peakThreshold for %s.',clean_for_latex(getPrintName(CM.Channels{i})));
+    end
     end
 
     % Make plots for all peaks, not just ERF
