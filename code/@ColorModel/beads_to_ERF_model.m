@@ -262,12 +262,12 @@ if(n_peaks>=2)
         % Warn if setting to anything less than the top peak, since top peak should usually be visible
         fprintf('Bead peaks identified as %i to %i of %i\n',first_peak+peakOffset,first_peak+n_peaks-1+peakOffset,numQuantifiedPeaks+peakOffset);
         if best_i < (numQuantifiedPeaks-n_peaks) && n_peaks < 5,
-            TASBESession.warn('TASBE:Beads','PeakIdentification','Few bead peaks and fit does not include highest: error likely for %s.',clean_for_latex(getPrintName(CM.Channels{i})));
+            TASBESession.warn('TASBE:Beads','PeakIdentification','Few bead peaks and fit does not include highest: error likely');
         else
-            TASBESession.succeed('TASBE:Beads','PeakIdentification','Matched multiple peaks in reasonable range for %s.',clean_for_latex(getPrintName(CM.Channels{i})));
+            TASBESession.succeed('TASBE:Beads','PeakIdentification','Matched multiple peaks in reasonable range');
         end
     else % 2 peaks
-        TASBESession.warn('TASBE:Beads','PeakIdentification','Only two bead peaks found, assuming brightest two for %s.',clean_for_latex(getPrintName(CM.Channels{i})));
+        TASBESession.warn('TASBE:Beads','PeakIdentification','Only two bead peaks found, assuming brightest two');
         [poly,S] = polyfit(log10(peak_means),log10(quantifiedPeakERFs(end-1:end)),1);
         fit_error = S.normr; model = poly; first_peak = numQuantifiedPeaks-1;
     end
@@ -279,23 +279,23 @@ if(n_peaks>=2)
         TASBESession.warn('TASBE:Beads','PeakFitQuality','Bead calibration may be incorrect: fit more than 5 percent off: error = %.2d',cf_error); 
     else
         TASBESession.succeed('TASBE:Beads','PeakFitQuality','Bead fit quality acceptable: error = %.2d',cf_error);
-    end
+    end;
     %if(abs(model(1)-1)>0.05), warning('TASBE:Beads','Bead calibration probably incorrect: fit more than 5 percent off: slope = %.2d',model(1)); end;
     k_ERF = 10^constrained_fit;
 elseif(n_peaks==1) % 1 peak
-    TASBESession.warn('TASBE:Beads','PeakIdentification','Only one bead peak found, assuming brightest for %s.',clean_for_latex(getPrintName(CM.Channels{i})));
+    TASBESession.warn('TASBE:Beads','PeakIdentification','Only one bead peak found, assuming brightest');
     TASBESession.skip('TASBE:Beads','PeakFitQuality','Fit quality irrelevant for single peak');
     fit_error = 0; first_peak = numQuantifiedPeaks;
     if ~isempty(force_peak), first_peak = force_peak-peakOffset; end
     k_ERF = quantifiedPeakERFs(first_peak)/peak_means;
 else % n_peaks = 0
-    TASBESession.warn('TASBE:Beads','PeakIdentification','Bead calibration failed: found no bead peaks; using single dummy peak for %s.',clean_for_latex(getPrintName(CM.Channels{i})));
+    TASBESession.warn('TASBE:Beads','PeakIdentification','Bead calibration failed: found no bead peaks; using single dummy peak');
     TASBESession.skip('TASBE:Beads','PeakFitQuality','Fit quality irrelevant for single peak');
     k_ERF = 1;
     fit_error = Inf;
     first_peak = NaN;
     CM.standardUnits = 'arbitrary units';
-end
+end;
 
 % Plot fitted channel
 if makePlots
