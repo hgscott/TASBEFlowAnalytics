@@ -153,17 +153,25 @@ for i=1:numel(CM.Channels),
 
     % identify peaks
     alt_n_peaks = 0;
-    alt_peak_means = [];
+    alt_peak_means = []; % x-value of peaks
     alt_peak_counts = [];
+    alt_peak_starts = []; % starting points of peaks
+    alt_peak_ends = []; % ending points of peaks
+    alt_peak_maximas = []; % y-value of peaks
     in_peak = 0;
+    peak_max = 0; % used to find y-value of peak
     for j=1:n
         if in_peak==0 % outside a peak: look for start
-            if(alt_bin_counts(j) >= peak_threshold(i))
+            if(alt_bin_counts(j) >= peak_threshold(i)) % found a start of a peak
                 alt_peak_min = bin_edges(j);
                 in_peak=1;
+                peak_max = alt_bin_counts(j);
             end
         else % inside a peak: look for end
-            if(alt_bin_counts(j) < peak_threshold(i))
+            if peak_max < alt_bin_counts(j)
+                peak_max = alt_bin_counts(j);
+            end
+            if(alt_bin_counts(j) < peak_threshold(i)) % found the end of the peak
                 alt_peak_max = bin_edges(j);
                 in_peak=0;
                 % compute peak statistics
@@ -171,6 +179,10 @@ for i=1:numel(CM.Channels),
                 which = alt_bead_data(:)>alt_peak_min & alt_bead_data(:)<=alt_peak_max;
                 alt_peak_means(alt_n_peaks) = mean(alt_bead_data(which)); % arithmetic q. beads only have measurement noise
                 alt_peak_counts(alt_n_peaks) = sum(which);
+                alt_peak_starts(alt_n_peaks) = alt_peak_min;
+                alt_peak_ends(alt_n_peaks) = alt_peak_max;
+                alt_peak_maximas(alt_n_peaks) = peak_max;
+                peak_max = 0;
             end
         end
     end
@@ -179,7 +191,29 @@ for i=1:numel(CM.Channels),
     if segment_secondary && strcmp(getName(CM.Channels{i}),erfChannelName);
         peak_sets{i} = peak_means;
     end
-
+    
+    % Running some initial tests on the peak statistics to generate some
+    % warnings:
+    
+    % Check to see if peaks in ascending order and whether an extra peak of
+    % combined beads is identified
+    if ~issorted(alt_peak_maximas)
+        TASBESession.warn('TASBE:Beads','PeakIdentification','Peaks are not in ascending order. May need to adjust rangeMin or rangeMax for %s.',clean_for_latex(getPrintName(CM.Channels{i})));
+        if alt_peak_maximas(alt_n_peaks) < max(alt_peak_maximas) %if the last peak is lower than the maximum peak
+            TASBESession.warn('TASBE:Beads','PeakIdentification','Last peak may consist of beads stuck together. May need to adjust rangeMax or peakThresholdfor %s.',clean_for_latex(getPrintName(CM.Channels{i})));
+        end
+    end
+    % Check to make sure that the true peak was properly identified
+    if max(alt_range_bin_counts) > max(alt_peak_maximas)
+        TASBESession.warn('TASBE:Beads','PeakIdentification','Did not detect highest peak for %s.',clean_for_latex(getPrintName(CM.Channels{i})));
+    end
+    % Check to see if a deceptive peak very close to rangeMin was
+    % identified
+    if alt_n_peaks > 0
+        if abs(10^bin_min - alt_peak_means(1)) < 50
+            TASBESession.warn('TASBE:Beads','PeakIdentification','First peak very close to rangeMin. May need to increase rangeMin or peakThreshold for %s.',clean_for_latex(getPrintName(CM.Channels{i})));
+        end
+    end
 
     % Make plots for all peaks, not just ERF
     if makePlots
@@ -189,6 +223,9 @@ for i=1:numel(CM.Channels),
         semilogx(range_bin_centers,alt_range_bin_counts,'b-'); hold on;
         for j=1:alt_n_peaks
             semilogx([alt_peak_means(j) alt_peak_means(j)],[0 graph_max],'r-');
+            % input the two dashed start and end lines for each peak
+            semilogx([alt_peak_starts(j) alt_peak_starts(j)],[0 graph_max],'r:');
+            semilogx([alt_peak_ends(j) alt_peak_ends(j)],[0 graph_max],'r:');
         end
         % show range where peaks were searched for
         plot(10.^[bin_min bin_min],[0 graph_max],'k:');
@@ -225,12 +262,12 @@ if(n_peaks>=2)
         % Warn if setting to anything less than the top peak, since top peak should usually be visible
         fprintf('Bead peaks identified as %i to %i of %i\n',first_peak+peakOffset,first_peak+n_peaks-1+peakOffset,numQuantifiedPeaks+peakOffset);
         if best_i < (numQuantifiedPeaks-n_peaks) && n_peaks < 5,
-            TASBESession.warn('TASBE:Beads','PeakIdentification','Few bead peaks and fit does not include highest: error likely');
+            TASBESession.warn('TASBE:Beads','PeakIdentification','Few bead peaks and fit does not include highest: error likely for %s.',clean_for_latex(getPrintName(CM.Channels{i})));
         else
-            TASBESession.succeed('TASBE:Beads','PeakIdentification','Matched multiple peaks in reasonable range');
+            TASBESession.succeed('TASBE:Beads','PeakIdentification','Matched multiple peaks in reasonable range for %s.',clean_for_latex(getPrintName(CM.Channels{i})));
         end
     else % 2 peaks
-        TASBESession.warn('TASBE:Beads','PeakIdentification','Only two bead peaks found, assuming brightest two');
+        TASBESession.warn('TASBE:Beads','PeakIdentification','Only two bead peaks found, assuming brightest two for %s.',clean_for_latex(getPrintName(CM.Channels{i})));
         [poly,S] = polyfit(log10(peak_means),log10(quantifiedPeakERFs(end-1:end)),1);
         fit_error = S.normr; model = poly; first_peak = numQuantifiedPeaks-1;
     end
@@ -246,13 +283,13 @@ if(n_peaks>=2)
     %if(abs(model(1)-1)>0.05), warning('TASBE:Beads','Bead calibration probably incorrect: fit more than 5 percent off: slope = %.2d',model(1)); end;
     k_ERF = 10^constrained_fit;
 elseif(n_peaks==1) % 1 peak
-    TASBESession.warn('TASBE:Beads','PeakIdentification','Only one bead peak found, assuming brightest');
+    TASBESession.warn('TASBE:Beads','PeakIdentification','Only one bead peak found, assuming brightest for %s.',clean_for_latex(getPrintName(CM.Channels{i})));
     TASBESession.skip('TASBE:Beads','PeakFitQuality','Fit quality irrelevant for single peak');
     fit_error = 0; first_peak = numQuantifiedPeaks;
     if ~isempty(force_peak), first_peak = force_peak-peakOffset; end
     k_ERF = quantifiedPeakERFs(first_peak)/peak_means;
 else % n_peaks = 0
-    TASBESession.warn('TASBE:Beads','PeakIdentification','Bead calibration failed: found no bead peaks; using single dummy peak');
+    TASBESession.warn('TASBE:Beads','PeakIdentification','Bead calibration failed: found no bead peaks; using single dummy peak for %s.',clean_for_latex(getPrintName(CM.Channels{i})));
     TASBESession.skip('TASBE:Beads','PeakFitQuality','Fit quality irrelevant for single peak');
     k_ERF = 1;
     fit_error = Inf;
