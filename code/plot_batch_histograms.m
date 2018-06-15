@@ -6,10 +6,19 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function plot_batch_histograms(results,sampleresults,linespecs,CM)
+function plot_batch_histograms(results,sampleresults,CM,linespecs)
 % Elements of linespecs can either be LineSpecs, or ColorSpecs (e.g. three-element
 % 0..1 vectors representing RGB color values); currently, only single-letter 
 % color linespecs are properly handled.
+
+if (~exist('linespecs', 'var'))
+    % Build linespecs from CM
+    channels = getChannels(CM);
+    linespecs = {1, numel(channels)};
+    for i=1:numel(channels)
+        linespecs{i} = getLineSpec(channels{i});
+    end
+end
 
 n_conditions = size(sampleresults,1);
 n_colors = numel(linespecs);

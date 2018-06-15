@@ -54,7 +54,12 @@ n_conditions = size(file_pairs,1);
 TASBEConfig.set('OutputSettings.StemName','LacI-CAGop');
 TASBEConfig.set('plots.plotPath','/tmp/plots');
 TASBEConfig.set('OutputSettings.FixedInputAxis',[1e4 1e10]);
-plot_batch_histograms(results,sampleresults,{'b','y','r'},CM);
+plot_batch_histograms(results,sampleresults,CM,{'b','y','r'});
+
+% Make output plots without linespecs
+TASBEConfig.set('plots.plotPath','/tmp/plots2');
+TASBEConfig.set('OutputSettings.FixedInputAxis',[1e4 1e10]);
+plot_batch_histograms(results,sampleresults,CM);
 
 save('/tmp/LacI-CAGop-batch.mat','AP','bins','file_pairs','results','sampleresults');
 
