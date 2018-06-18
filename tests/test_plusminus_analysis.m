@@ -56,10 +56,12 @@ results = process_plusminus_batch( CM, batch_description, AP);
 
 % Make additional output plots
 for i=1:numel(results)
-    TASBEConfig.set('OutputSettings.StemName',batch_description{i}{1});
-    TASBEConfig.set('OutputSettings.DeviceName',device_name);
-    TASBEConfig.set('OutputSettings.PlotTickMarks',1);
-    plot_plusminus_comparison(results{i})
+    for j=1:numel(results{i})
+        TASBEConfig.set('OutputSettings.StemName',batch_description{i}{j});
+        TASBEConfig.set('OutputSettings.DeviceName',device_name);
+        TASBEConfig.set('OutputSettings.PlotTickMarks',1);
+        plot_plusminus_comparison(results{i}{j})
+    end
 end
 
 save('-V7','/tmp/LacI-CAGop-plus-minus.mat','batch_description','AP','results');
@@ -178,13 +180,13 @@ expected_OutSNR2 = [...
 
 
 assertEqual(numel(results),2);
-assertElementsAlmostEqual(results{1}.MeanRatio, [0.9764; 0.8880],   'relative', 0.01);
-assertElementsAlmostEqual(results{1}.Ratios, expected_ratios1,      'relative', 0.01);
-assertElementsAlmostEqual(results{1}.InputSNR, expected_InSNR1,     'relative', 0.1);
-assertElementsAlmostEqual(results{1}.OutputSNR, expected_OutSNR1,   'relative', 0.1);
+assertElementsAlmostEqual(results{1}{1}.MeanRatio, [0.9764; 0.8880],   'relative', 0.01);
+assertElementsAlmostEqual(results{1}{1}.Ratios, expected_ratios1,      'relative', 0.01);
+assertElementsAlmostEqual(results{1}{1}.InputSNR, expected_InSNR1,     'relative', 0.1);
+assertElementsAlmostEqual(results{1}{1}.OutputSNR, expected_OutSNR1,   'relative', 0.1);
 
-assertElementsAlmostEqual(results{2}.MeanRatio, [0.2379; 0.1786],   'relative', 0.01);
-assertElementsAlmostEqual(results{2}.Ratios, expected_ratios2,      'relative', 0.01);
-assertElementsAlmostEqual(results{2}.InputSNR, expected_InSNR2,     'relative', 0.1);
-assertElementsAlmostEqual(results{2}.OutputSNR, expected_OutSNR2,   'relative', 0.1);
+assertElementsAlmostEqual(results{2}{1}.MeanRatio, [0.2379; 0.1786],   'relative', 0.01);
+assertElementsAlmostEqual(results{2}{1}.Ratios, expected_ratios2,      'relative', 0.01);
+assertElementsAlmostEqual(results{2}{1}.InputSNR, expected_InSNR2,     'relative', 0.1);
+assertElementsAlmostEqual(results{2}{1}.OutputSNR, expected_OutSNR2,   'relative', 0.1);
 

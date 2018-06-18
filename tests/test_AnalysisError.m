@@ -205,7 +205,43 @@ bad_file_pairs_pm3 = {...
    20,   {[stem1011 'B10_B10_P3.fcs']}}};
  };
 
+% Can become good if batch_names specified:
 bad_file_pairs_pm4 = {...
+ {'Lows';'BaseDox';
+  % First set is the matching "plus" conditions
+  {0.1,  {[stem1011 'B9_B09_P3.fcs']}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
+   0.2,  {[stem1011 'B10_B10_P3.fcs']}};
+  % extra set
+  {0.1,  {[stem1011 'B9_B09_P3.fcs']};
+   0.2,  {[stem1011 'B10_B10_P3.fcs']}};
+  % Second set is the matching "minus" conditions 
+  {0.1,  {[stem1011 'B3_B03_P3.fcs']};
+   0.2,  {[stem1011 'B4_B04_P3.fcs']}}};
+ {'Highs';'BaseDox';
+  {10,   {[stem1011 'C3_C03_P3.fcs']};
+   20,   {[stem1011 'C4_C04_P3.fcs']}};
+  {0.1,  {[stem1011 'B9_B09_P3.fcs']};
+   0.2,  {[stem1011 'B10_B10_P3.fcs']}};
+  {10,   {[stem1011 'B9_B09_P3.fcs']};
+   20,   {[stem1011 'B10_B10_P3.fcs']}}};
+ };
+
+good_file_pairs_pm1 = {...
+ {'Lows';'BaseDox';
+  % First set is the matching "plus" conditions
+  {0.1,  {[stem1011 'B9_B09_P3.fcs']}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
+   0.2,  {[stem1011 'B10_B10_P3.fcs']}};
+  % Second set is the matching "minus" conditions 
+  {0.1,  {[stem1011 'B3_B03_P3.fcs']};
+   0.2,  {[stem1011 'B4_B04_P3.fcs']}}};
+ {'Highs';'BaseDox';
+  {10,   {[stem1011 'C3_C03_P3.fcs']};
+   20,   {[stem1011 'C4_C04_P3.fcs']}};
+  {10,   {[stem1011 'B9_B09_P3.fcs']};
+   20,   {[stem1011 'B10_B10_P3.fcs']}}};
+ };
+
+good_file_pairs_pm2 = {...
  {'Lows';'BaseDox';
   % First set is the matching "plus" conditions
   {0.1,  {[stem1011 'B9_B09_P3.fcs']}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
@@ -225,10 +261,14 @@ bad_file_pairs_pm4 = {...
    20,   {[stem1011 'B10_B10_P3.fcs']}}};
  };
 
-good_file_pairs_pm = {...
+% Good if batch_names contains three elements
+good_file_pairs_pm3 = {...
  {'Lows';'BaseDox';
   % First set is the matching "plus" conditions
   {0.1,  {[stem1011 'B9_B09_P3.fcs']}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
+   0.2,  {[stem1011 'B10_B10_P3.fcs']}};
+  % extra set
+  {0.1,  {[stem1011 'B9_B09_P3.fcs']};
    0.2,  {[stem1011 'B10_B10_P3.fcs']}};
   % Second set is the matching "minus" conditions 
   {0.1,  {[stem1011 'B3_B03_P3.fcs']};
@@ -236,6 +276,8 @@ good_file_pairs_pm = {...
  {'Highs';'BaseDox';
   {10,   {[stem1011 'C3_C03_P3.fcs']};
    20,   {[stem1011 'C4_C04_P3.fcs']}};
+  {0.1,  {[stem1011 'B9_B09_P3.fcs']};
+   0.2,  {[stem1011 'B10_B10_P3.fcs']}};
   {10,   {[stem1011 'B9_B09_P3.fcs']};
    20,   {[stem1011 'B10_B10_P3.fcs']}}};
  };
@@ -244,4 +286,4 @@ good_file_pairs_pm = {...
 assertError(@()process_plusminus_batch( CM, bad_file_pairs_pm1, AP), 'process_plusminus_batch:ColumnDimensionMismatch', 'No error was raised.');
 assertError(@()process_plusminus_batch( CM, bad_file_pairs_pm2, AP), 'process_plusminus_batch:ColumnDimensionMismatch', 'No error was raised.');
 assertError(@()process_plusminus_batch( CM, bad_file_pairs_pm3, AP), 'process_plusminus_batch:SetDimensionMismatch', 'No error was raised.');
-assertError(@()process_plusminus_batch( CM, bad_file_pairs_pm4, AP), 'process_plusminus_batch:CategoryDimensionMismatch', 'No error was raised.');
+assertError(@()process_plusminus_batch( CM, bad_file_pairs_pm4, AP), 'process_plusminus_batch:SetDimensionMismatch', 'No error was raised.');
