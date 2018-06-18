@@ -194,23 +194,23 @@ for i=1:numel(CM.Channels)
     
     % Running some initial tests on the peak statistics to generate some
     % warnings, either run only on channel used for ERF conversion or on all channels (determined by channelEquivalence):
-    if alt_n_peaks > 0 && ((TASBEConfig.get('beads.channelEquivalence') && i == i_ERF) || ~TASBEConfig.get('beads.channelEquivalence'))
+    if alt_n_peaks > 0 && ((TASBEConfig.get('beads.validateAllChannels') && i == i_ERF) || ~TASBEConfig.get('beads.validateAllChannels'))
         % Check to see if peaks in ascending order and whether an extra peak of
         % combined beads is identified
         if ~issorted(alt_peak_maximas)
-            TASBESession.warn('TASBE:Beads','PeakIdentification','Peaks are not in ascending order. May need to adjust rangeMin or rangeMax for %s.',clean_for_latex(getPrintName(CM.Channels{i})));
+            TASBESession.warn('TASBE:Beads','PeaksNotAscending','Peaks are not in ascending order. May need to adjust rangeMin or rangeMax for %s.',clean_for_latex(getPrintName(CM.Channels{i})));
             if alt_peak_maximas(alt_n_peaks) < max(alt_peak_maximas) %if the last peak is lower than the maximum peak
-                TASBESession.warn('TASBE:Beads','PeakIdentification','Last peak may consist of beads stuck together. May need to adjust rangeMax or peakThresholdfor %s.',clean_for_latex(getPrintName(CM.Channels{i})));
+                TASBESession.warn('TASBE:Beads','PotentialBeadClump','Last peak may consist of beads stuck together. May need to adjust rangeMax or peakThresholdfor %s.',clean_for_latex(getPrintName(CM.Channels{i})));
             end
         end
         % Check to make sure that the true peak was properly identified
         if max(alt_range_bin_counts) > max(alt_peak_maximas)
-            TASBESession.warn('TASBE:Beads','PeakIdentification','Did not detect highest peak for %s.',clean_for_latex(getPrintName(CM.Channels{i})));
+            TASBESession.warn('TASBE:Beads','HighestPeakUndetected','Did not detect highest peak for %s.',clean_for_latex(getPrintName(CM.Channels{i})));
         end
         % Check to see if a deceptive peak very close to rangeMin was
         % identified
         if abs(bin_min - log10(alt_peak_means(1))) < 0.05
-            TASBESession.warn('TASBE:Beads','PeakIdentification','First peak very close to rangeMin. May need to increase rangeMin or peakThreshold for %s.',clean_for_latex(getPrintName(CM.Channels{i})));
+            TASBESession.warn('TASBE:Beads','QuestionableFirstPeak','First peak very close to rangeMin. May need to increase rangeMin or peakThreshold for %s.',clean_for_latex(getPrintName(CM.Channels{i})));
         end
     end
 
