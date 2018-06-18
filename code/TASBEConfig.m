@@ -156,6 +156,8 @@ classdef TASBEConfig
             doc.beads.graphPlotSize = 'Size (in inches) [X Y] for bead unit calibration figures';
             s.beads.plotSize = [5 3.66];
             defaults('beads.plotSize') = 'calibration.graphPlotSize';
+            doc.beads.channelEquivalence = 'If true, channels are assumed to be nicely equivalent.';
+            s.beads.channelEquivalence = false;
             
             % TASBE Setting migration
             s.channel_template_file = '';           % An example of this is CM.BeadFile

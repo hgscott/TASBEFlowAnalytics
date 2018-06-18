@@ -138,7 +138,7 @@ end
 
 % Gather the peaks from all the channels
 peak_sets = cell(numel(CM.Channels),1);
-for i=1:numel(CM.Channels),
+for i=1:numel(CM.Channels)
     alt_bead_data = get_fcs_color(fcsdat,fcshdr,getName(CM.Channels{i}));
     alt_bin_counts = zeros(size(bin_centers));
     for j=1:n
@@ -193,8 +193,8 @@ for i=1:numel(CM.Channels),
     end
     
     % Running some initial tests on the peak statistics to generate some
-    % warnings:
-    if alt_n_peaks > 0
+    % warnings, either run only on channel used for ERF conversion or on all channels (determined by channelEquivalence):
+    if alt_n_peaks > 0 && ((TASBEConfig.get('beads.channelEquivalence') && i == i_ERF) || ~TASBEConfig.get('beads.channelEquivalence'))
         % Check to see if peaks in ascending order and whether an extra peak of
         % combined beads is identified
         if ~issorted(alt_peak_maximas)
@@ -209,8 +209,7 @@ for i=1:numel(CM.Channels),
         end
         % Check to see if a deceptive peak very close to rangeMin was
         % identified
-
-        if abs(10^bin_min - alt_peak_means(1)) < 50
+        if abs(bin_min - log10(alt_peak_means(1))) < 0.05
             TASBESession.warn('TASBE:Beads','PeakIdentification','First peak very close to rangeMin. May need to increase rangeMin or peakThreshold for %s.',clean_for_latex(getPrintName(CM.Channels{i})));
         end
     end
