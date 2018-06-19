@@ -161,14 +161,14 @@ AP=setUseAutoFluorescence(AP,false');
 % This analysis supports two variables: a +/- variable and a "tuning" variable
 stem1011 = '../TASBEFlowAnalytics-Tutorial/example_assay/LacI-CAGop_';
 bad_file_pairs_pm1 = {...
- {'Lows';'BaseDox';
+ {'Lows';'BaseDox';{'+', '-'};
   % First set is the matching "plus" conditions
   {0.1,  {[stem1011 'B9_B09_P3.fcs']}, [stem1011 'B9_B09_P3.fcs']; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
    0.2,  {[stem1011 'B10_B10_P3.fcs']}, [stem1011 'B9_B09_P3.fcs']};
   % Second set is the matching "minus" conditions 
   {0.1,  {[stem1011 'B3_B03_P3.fcs']}, [stem1011 'B9_B09_P3.fcs'];
    0.2,  {[stem1011 'B4_B04_P3.fcs']}, [stem1011 'B9_B09_P3.fcs']}};
- {'Highs';'BaseDox';
+ {'Highs';'BaseDox';{'+', '-'};
   {10,   {[stem1011 'C3_C03_P3.fcs']}, [stem1011 'B9_B09_P3.fcs'];
    20,   {[stem1011 'C4_C04_P3.fcs']}, [stem1011 'B9_B09_P3.fcs']};
   {10,   {[stem1011 'B9_B09_P3.fcs']}, [stem1011 'B9_B09_P3.fcs'];
@@ -176,14 +176,14 @@ bad_file_pairs_pm1 = {...
  };
 
 bad_file_pairs_pm2 = {...
- {'Lows';'BaseDox';
+ {'Lows';'BaseDox';{'+', '-'};
   % First set is the matching "plus" conditions
   {{[stem1011 'B9_B09_P3.fcs']}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
    {[stem1011 'B10_B10_P3.fcs']}};
   % Second set is the matching "minus" conditions 
   {{[stem1011 'B3_B03_P3.fcs']};
    {[stem1011 'B4_B04_P3.fcs']}}};
- {'Highs';'BaseDox'; 
+ {'Highs';'BaseDox';{'+', '-'};
   {{[stem1011 'C3_C03_P3.fcs']};
    {[stem1011 'C4_C04_P3.fcs']}};
   {{[stem1011 'B9_B09_P3.fcs']};
@@ -191,23 +191,23 @@ bad_file_pairs_pm2 = {...
  };
 
 bad_file_pairs_pm3 = {...
- {'Lows';'BaseDox'; 'Extra';
+ {'Lows';'BaseDox';{'+', '-'};'Extra';
   % First set is the matching "plus" conditions
   {0.1,  {[stem1011 'B9_B09_P3.fcs']}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
    0.2,  {[stem1011 'B10_B10_P3.fcs']}};
   % Second set is the matching "minus" conditions 
   {0.1,  {[stem1011 'B3_B03_P3.fcs']};
    0.2,  {[stem1011 'B4_B04_P3.fcs']}}};
- {'Highs';'BaseDox'; 'Extra';
+ {'Highs';'BaseDox';{'+', '-'};'Extra';
   {10,   {[stem1011 'C3_C03_P3.fcs']};
    20,   {[stem1011 'C4_C04_P3.fcs']}};
   {10,   {[stem1011 'B9_B09_P3.fcs']};
    20,   {[stem1011 'B10_B10_P3.fcs']}}};
  };
 
-% Can become good if batch_names specified:
+% Can become good if batch_names match:
 bad_file_pairs_pm4 = {...
- {'Lows';'BaseDox';
+ {'Lows';'BaseDox';{'+', '-'};
   % First set is the matching "plus" conditions
   {0.1,  {[stem1011 'B9_B09_P3.fcs']}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
    0.2,  {[stem1011 'B10_B10_P3.fcs']}};
@@ -217,7 +217,7 @@ bad_file_pairs_pm4 = {...
   % Second set is the matching "minus" conditions 
   {0.1,  {[stem1011 'B3_B03_P3.fcs']};
    0.2,  {[stem1011 'B4_B04_P3.fcs']}}};
- {'Highs';'BaseDox';
+ {'Highs';'BaseDox';{'+', '-'};
   {10,   {[stem1011 'C3_C03_P3.fcs']};
    20,   {[stem1011 'C4_C04_P3.fcs']}};
   {0.1,  {[stem1011 'B9_B09_P3.fcs']};
@@ -227,14 +227,14 @@ bad_file_pairs_pm4 = {...
  };
 
 good_file_pairs_pm1 = {...
- {'Lows';'BaseDox';
+ {'Lows';'BaseDox';{'+', '-'};
   % First set is the matching "plus" conditions
   {0.1,  {[stem1011 'B9_B09_P3.fcs']}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
    0.2,  {[stem1011 'B10_B10_P3.fcs']}};
   % Second set is the matching "minus" conditions 
   {0.1,  {[stem1011 'B3_B03_P3.fcs']};
    0.2,  {[stem1011 'B4_B04_P3.fcs']}}};
- {'Highs';'BaseDox';
+ {'Highs';'BaseDox';{'+', '-'};
   {10,   {[stem1011 'C3_C03_P3.fcs']};
    20,   {[stem1011 'C4_C04_P3.fcs']}};
   {10,   {[stem1011 'B9_B09_P3.fcs']};
@@ -242,19 +242,19 @@ good_file_pairs_pm1 = {...
  };
 
 good_file_pairs_pm2 = {...
- {'Lows';'BaseDox';
+ {'Lows';'BaseDox';{'+', '-'};
   % First set is the matching "plus" conditions
   {0.1,  {[stem1011 'B9_B09_P3.fcs']}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
    0.2,  {[stem1011 'B10_B10_P3.fcs']}};
   % Second set is the matching "minus" conditions 
   {0.1,  {[stem1011 'B3_B03_P3.fcs']};
    0.2,  {[stem1011 'B4_B04_P3.fcs']}}};
- {'Highs';'BaseDox';
+ {'Highs';'BaseDox';{'+', '-'};
   {10,   {[stem1011 'C3_C03_P3.fcs']};
    20,   {[stem1011 'C4_C04_P3.fcs']}};
   {10,   {[stem1011 'B9_B09_P3.fcs']};
    20,   {[stem1011 'B10_B10_P3.fcs']}}};
- {'Extra';'BaseDox';
+ {'Extra';'BaseDox';{'+', '-'};
   {10,   {[stem1011 'C3_C03_P3.fcs']};
    20,   {[stem1011 'C4_C04_P3.fcs']}};
   {10,   {[stem1011 'B9_B09_P3.fcs']};
@@ -263,7 +263,7 @@ good_file_pairs_pm2 = {...
 
 % Good if batch_names contains three elements
 good_file_pairs_pm3 = {...
- {'Lows';'BaseDox';
+ {'Lows';'BaseDox';{'+', '-', 'extra'};
   % First set is the matching "plus" conditions
   {0.1,  {[stem1011 'B9_B09_P3.fcs']}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
    0.2,  {[stem1011 'B10_B10_P3.fcs']}};
@@ -273,7 +273,7 @@ good_file_pairs_pm3 = {...
   % Second set is the matching "minus" conditions 
   {0.1,  {[stem1011 'B3_B03_P3.fcs']};
    0.2,  {[stem1011 'B4_B04_P3.fcs']}}};
- {'Highs';'BaseDox';
+ {'Highs';'BaseDox';{'+', '-', 'extra'};
   {10,   {[stem1011 'C3_C03_P3.fcs']};
    20,   {[stem1011 'C4_C04_P3.fcs']}};
   {0.1,  {[stem1011 'B9_B09_P3.fcs']};
