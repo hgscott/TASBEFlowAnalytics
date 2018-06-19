@@ -18,10 +18,11 @@ set(gca,'XMinorTick','off')
 
 mintick = floor(log10(start));
 maxtick = floor(log10(xrange(2)));
+zerotick = floor(log10(xrange(1)));
 
 xtick = zeros((maxtick-mintick+1)*9,1);
 for i=mintick:maxtick
-    xtick(i*9+(1:9)) = (1:9)*10^i;
+    xtick((i-zerotick)*9+(1:9)) = (1:9)*10^i;
 end
 xtick = [zero; xtick(xtick>=start&xtick<=xrange(2))];
 
