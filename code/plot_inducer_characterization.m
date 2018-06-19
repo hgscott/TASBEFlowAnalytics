@@ -25,11 +25,14 @@ warning('TASBE:Plots','Assuming only a single inducer exists');
 InducerName = getInducerName(getExperiment(results),1);
 inducer_levels = getInducerLevelsToFiles(getExperiment(results),1);
 which = inducer_levels==0;
-if isempty(inducer_levels(inducer_levels>0)),
-    inducer_levels(which) = 1;
-else
-    inducer_levels(which) = min(inducer_levels(inducer_levels>0))/10;
-end
+% Find the smallest and smallest non-zero values from inducer_levels
+min_non_zero = min(inducer_levels(inducer_levels>0));
+min_value = min(inducer_levels);
+% if isempty(inducer_levels(inducer_levels>0)),
+%     inducer_levels(which) = 1;
+% else
+%     inducer_levels(which) = min(inducer_levels(inducer_levels>0))/10;
+% end
 fa = getFractionActive(results);
 
 %%%% Inducer plots
@@ -54,6 +57,10 @@ set(gca,'XScale','log'); set(gca,'YScale','log');
 if(TASBEConfig.isSet('OutputSettings.FixedInducerAxis')), xlim(TASBEConfig.get('OutputSettings.FixedInducerAxis')); end;
 if(TASBEConfig.isSet('OutputSettings.FixedInputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedInputAxis')); end;
 title(['Raw ',clean_for_latex(deviceName),' transfer curve, colored by constitutive bin (non-equivalent colors)']);
+% Edit ticks on plot to include 0 if the smallest value is less than or equal to 0
+if min_value <= 0
+    ZeroOnLog(0,min_non_zero);
+end
 outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-mean'],directory);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
