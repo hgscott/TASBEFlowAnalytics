@@ -35,14 +35,14 @@ AP=setUseAutoFluorescence(AP,false');
 % This analysis supports two variables: a +/- variable and a "tuning" variable
 stem1011 = '../TASBEFlowAnalytics-Tutorial/example_assay/LacI-CAGop_';
 batch_description = {...
- {'Lows';'BaseDox';
+ {'Lows';'BaseDox';{'+', '-'};
   % First set is the matching "plus" conditions
   {0.1,  {[stem1011 'B9_B09_P3.fcs']}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
    0.2,  {[stem1011 'B10_B10_P3.fcs']}};
   % Second set is the matching "minus" conditions 
   {0.1,  {[stem1011 'B3_B03_P3.fcs']};
    0.2,  {[stem1011 'B4_B04_P3.fcs']}}};
- {'Highs';'BaseDox';
+ {'Highs';'BaseDox';{'+', '-'};
   {10,   {[stem1011 'C3_C03_P3.fcs']};
    20,   {[stem1011 'C4_C04_P3.fcs']}};
   {10,   {[stem1011 'B9_B09_P3.fcs']};
@@ -56,10 +56,12 @@ results = process_plusminus_batch( CM, batch_description, AP);
 
 % Make additional output plots
 for i=1:numel(results)
-    TASBEConfig.set('OutputSettings.StemName',batch_description{i}{1});
-    TASBEConfig.set('OutputSettings.DeviceName',device_name);
-    TASBEConfig.set('OutputSettings.PlotTickMarks',1);
-    plot_plusminus_comparison(results{i})
+    for j=1:numel(results{i})
+        TASBEConfig.set('OutputSettings.StemName',batch_description{i}{j});
+        TASBEConfig.set('OutputSettings.DeviceName',device_name);
+        TASBEConfig.set('OutputSettings.PlotTickMarks',1);
+        plot_plusminus_comparison(results{i}{j})
+    end
 end
 
 save('-V7','/tmp/LacI-CAGop-plus-minus.mat','batch_description','AP','results');
@@ -178,13 +180,13 @@ expected_OutSNR2 = [...
 
 
 assertEqual(numel(results),2);
-assertElementsAlmostEqual(results{1}.MeanRatio, [0.9764; 0.8880],   'relative', 0.01);
-assertElementsAlmostEqual(results{1}.Ratios, expected_ratios1,      'relative', 0.01);
-assertElementsAlmostEqual(results{1}.InputSNR, expected_InSNR1,     'relative', 0.1);
-assertElementsAlmostEqual(results{1}.OutputSNR, expected_OutSNR1,   'relative', 0.1);
+assertElementsAlmostEqual(results{1}{1}.MeanRatio, [0.9764; 0.8880],   'relative', 0.01);
+assertElementsAlmostEqual(results{1}{1}.Ratios, expected_ratios1,      'relative', 0.01);
+assertElementsAlmostEqual(results{1}{1}.InputSNR, expected_InSNR1,     'relative', 0.1);
+assertElementsAlmostEqual(results{1}{1}.OutputSNR, expected_OutSNR1,   'relative', 0.1);
 
-assertElementsAlmostEqual(results{2}.MeanRatio, [0.2379; 0.1786],   'relative', 0.01);
-assertElementsAlmostEqual(results{2}.Ratios, expected_ratios2,      'relative', 0.01);
-assertElementsAlmostEqual(results{2}.InputSNR, expected_InSNR2,     'relative', 0.1);
-assertElementsAlmostEqual(results{2}.OutputSNR, expected_OutSNR2,   'relative', 0.1);
+assertElementsAlmostEqual(results{2}{1}.MeanRatio, [0.2379; 0.1786],   'relative', 0.01);
+assertElementsAlmostEqual(results{2}{1}.Ratios, expected_ratios2,      'relative', 0.01);
+assertElementsAlmostEqual(results{2}{1}.InputSNR, expected_InSNR2,     'relative', 0.1);
+assertElementsAlmostEqual(results{2}{1}.OutputSNR, expected_OutSNR2,   'relative', 0.1);
 
