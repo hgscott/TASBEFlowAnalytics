@@ -193,7 +193,7 @@ for i=1:numel(CM.Channels)
     end
     
     % Running some initial tests on the peak statistics to generate some
-    % warnings, either run only on channel used for ERF conversion or on all channels (determined by channelEquivalence):
+    % warnings, either run only on channel used for ERF conversion or on all channels (determined by validateAllChannels):
     if alt_n_peaks > 0 && ((TASBEConfig.get('beads.validateAllChannels') && i == i_ERF) || ~TASBEConfig.get('beads.validateAllChannels'))
         % Check to see if peaks in ascending order and whether an extra peak of
         % combined beads is identified
