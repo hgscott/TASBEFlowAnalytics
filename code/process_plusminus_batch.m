@@ -33,7 +33,7 @@ end
 fprintf('Confirming files are present...\n');
 for i=1:batch_size
     batch_names_size = numel(batch_description{i}{3});
-    level_file_pairs = {batch_names_size};
+    level_file_pairs = cell(batch_names_size);
     for j=1:batch_names_size
         level_file_pairs{j} = batch_description{i}{j+3};
     end
