@@ -196,6 +196,12 @@ classdef TASBEConfig
             s.OutputSettings.FigureSize = [];
             s.OutputSettings.csvfile = []; % may be either an fid or a string
             
+            % Plusminus preferences
+            s.plusminus = struct(); 
+            doc.plusminus = struct();
+            doc.plusminus.about = 'Settings controlling plusminus plotting preferences';
+            doc.plusminus.plotError = 'If true, plots error envelopes in plusminus comparison graphs';
+            s.plusminus.plotError = false;
             
             % Color translation
 %             s.colortranslation = struct();
