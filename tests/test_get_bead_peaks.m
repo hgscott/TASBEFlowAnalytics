@@ -36,16 +36,16 @@ assertElementsAlmostEqual(expected_peaks1, obtained_peaks3);
 assertElementsAlmostEqual(expected_peaks1, obtained_peaks4);
 
 % test incorrect model inputs
-% assertError(@()get_bead_peaks(incorrect_model, correct_channel, correct_batch1), 'get_bead_peaks:NoModel', 'No error was raised.');
-% assertError(@()get_bead_peaks(no_model, correct_channel, correct_batch1), 'get_bead_peaks:NoModel', 'No error was raised.');
-% 
-% % test incorrect channel inputs
-% assertError(@()get_bead_peaks(correct_model, incorrect_channel, correct_batch1), 'get_bead_peaks:NoChannel', 'No error was raised.');
-% assertError(@()get_bead_peaks(correct_model, no_channel, correct_batch1), 'get_bead_peaks:NoChannel', 'No error was raised.');
-% 
-% % test incorrect batch inputs
-% assertError(@()get_bead_peaks(correct_model, correct_channel, incorrect_batch), 'get_bead_peaks:NoBatch', 'No error was raised.');
-% assertError(@()get_bead_peaks(correct_model, correct_channel, vague_batch), 'get_bead_peaks:VagueInput', 'No error was raised.');
+assertExceptionThrown(@()get_bead_peaks(incorrect_model, correct_channel, correct_batch1), 'get_bead_peaks:NoModel', 'No error was raised.');
+assertExceptionThrown(@()get_bead_peaks(no_model, correct_channel, correct_batch1), 'get_bead_peaks:NoModel', 'No error was raised.');
+
+% test incorrect channel inputs
+assertExceptionThrown(@()get_bead_peaks(correct_model, incorrect_channel, correct_batch1), 'get_bead_peaks:NoChannel', 'No error was raised.');
+assertExceptionThrown(@()get_bead_peaks(correct_model, no_channel, correct_batch1), 'get_bead_peaks:NoChannel', 'No error was raised.');
+
+% test incorrect batch inputs
+assertExceptionThrown(@()get_bead_peaks(correct_model, correct_channel, incorrect_batch), 'get_bead_peaks:NoBatch', 'No error was raised.');
+assertExceptionThrown(@()get_bead_peaks(correct_model, correct_channel, vague_batch), 'get_bead_peaks:VagueInput', 'No error was raised.');
 
 %%%%%%%
 % An all-combinations test with URCP-38-2K

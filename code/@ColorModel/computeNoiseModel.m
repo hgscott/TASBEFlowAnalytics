@@ -54,13 +54,13 @@ for i=1:numel(CM.Channels)
         if(sum(which)>0)
             minset(n_files) = min(localstds(which,target));
         else
-            warning('Model:Noise','Color mapping file "%s" has no significant fluorescent subpopulations',cp{4});
+            TASBESession.warn('TASBE:NoiseModel','NotEnoughData','Color mapping file "%s" has no significant fluorescent subpopulations',cp{4});
             minset(n_files) = 0;
         end
     end
     
     if n_files == 0,
-        warning('Model:Noise','Cannot compute noise model for %s: no color mapping files available',getName(CM.Channels{i}));
+        TASBESession.warn('TASBE:NoiseModel','NoColorMappings','Cannot compute noise model for %s: no color mapping files available',getName(CM.Channels{i}));
         continue;
     end
     

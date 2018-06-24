@@ -31,7 +31,7 @@ function writeIndividualPointCloud(CM, filename, data)
     [filepath,name,ext] = fileparts(filename);
     path = TASBEConfig.get('flow.pointCloudPath');
     if ~isdir(path),
-        warning('TASBE:Utilities','Directory does not exist, attempting to create it: %s',path);
+        TASBESession.notify('TASBE:Utilities','MakeDirectory','Directory does not exist, attempting to create it: %s',path);
         mkdir(path);
     end
     

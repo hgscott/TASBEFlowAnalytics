@@ -7,7 +7,7 @@
 % package distribution's top directory.
 
 function data = readfcs_compensated_au(CM,filename,with_AF,floor)
-    if(CM.initialized<0.5), error('Cannot read a.u.: ColorModel not yet resolved'); end; % ensure initted
+    if(CM.initialized<0.5), TASBESession.error('TASBE:ReadFCS','Unresolved','Cannot read a.u.: ColorModel not yet resolved'); end; % ensure initted
 
     % Acquire initial data, discarding likely contaminated portions
     [rawfcs fcshdr] = read_filtered_au(CM,filename);
@@ -19,13 +19,13 @@ function data = readfcs_compensated_au(CM,filename,with_AF,floor)
     for i=1:numel(CM.Channels),
         ok = ok & confirm_channel(CM.Channels{i},channel_desc{i});
     end
-    if(~ok), warning('TASBE:ReadFCS','File %s does not match color model',filename); end;
+    if(~ok), TASBESession.warn('TASBE:ReadFCS','ColorModelMismatch','File %s does not match color model',filename); end;
     
     % Check to make sure not too many negative values:
     for i=1:numel(CM.Channels)
         frac_neg = sum(rawdata(:,i)<0)/size(rawdata,1);
         if(frac_neg>0.60) % more than 60% subzero
-            warning('TASBE:NegativeFCS','More than 60%% of channel %s negative (%.1f%%) in ''%s''',getName(CM.Channels{i}),100*frac_neg,filename);
+            TASBESession.warn('TASBE:ReadFCS','MajorityNegativeData','More than 60%% of channel %s negative (%.1f%%) in ''%s''',getName(CM.Channels{i}),100*frac_neg,filename);
         end
     end
 

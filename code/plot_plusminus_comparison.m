@@ -33,7 +33,7 @@ for i=1:step:n_var
     if numel(which)>0 && sum(which)>0
         legendentries{end+1} = entrystr; % not pre-allocated because we don't know how many are valid
     else
-        warning('PlotPlusMinus:EmptyResults','No active results for %s: not enough data or bad component fit',entrystr);
+        TASBESession.warn('TASBE:Plots','EmptyResults','No active results for %s: not enough data or bad component fit',entrystr);
     end
 end;
 
