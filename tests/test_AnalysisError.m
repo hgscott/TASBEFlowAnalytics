@@ -6,7 +6,7 @@ function test_suite = test_AnalysisError
     end
     initTestSuite;
 
-function test_AnalysisEndtoend
+function test_AnalysisCellCountErrors
 % testing the extra cells issue for batch analysis, transfer curve
 % analysis, and plus minus analysis
 
@@ -70,8 +70,8 @@ good_file_pairs_batch = {...
 
 
 % Execute the actual analysis to see if an error gets thrown
-assertError(@()per_color_constitutive_analysis(CM,bad_file_pairs_batch1,{'EBFP2','EYFP','mKate'},AP), 'per_color_constitutive_analysis:DimensionMismatch', 'No error was raised.');
-assertError(@()per_color_constitutive_analysis(CM,bad_file_pairs_batch2,{'EBFP2','EYFP','mKate'},AP), 'per_color_constitutive_analysis:DimensionMismatch', 'No error was raised.');
+assertExceptionThrown(@()per_color_constitutive_analysis(CM,bad_file_pairs_batch1,{'EBFP2','EYFP','mKate'},AP), 'TASBE:Analysis:DimensionMismatch', 'No error was raised.');
+assertExceptionThrown(@()per_color_constitutive_analysis(CM,bad_file_pairs_batch2,{'EBFP2','EYFP','mKate'},AP), 'TASBE:Analysis:DimensionMismatch', 'No error was raised.');
 
 % TRANSFER CURVE ANALYSIS
 CM = load_or_make_testing_colormodel();
@@ -130,8 +130,8 @@ good_file_pairs_tc = {...
   };
 
 % Execute the actual analysis to see if an error gets thrown
-assertError(@()Experiment(experimentName,{inducer_name}, bad_file_pairs_tc1), 'Experiment:DimensionMismatch', 'No error was raised.');
-assertError(@()Experiment(experimentName,{inducer_name}, bad_file_pairs_tc2), 'Experiment:DimensionMismatch', 'No error was raised.');
+assertExceptionThrown(@()Experiment(experimentName,{inducer_name}, bad_file_pairs_tc1), 'Experiment:DimensionMismatch', 'No error was raised.');
+assertExceptionThrown(@()Experiment(experimentName,{inducer_name}, bad_file_pairs_tc2), 'Experiment:DimensionMismatch', 'No error was raised.');
 
 % PLUS MINUS ANALYSIS
 CM = load_or_make_testing_colormodel();
@@ -283,7 +283,7 @@ good_file_pairs_pm3 = {...
  };
 
 % Execute the actual analysis to see if an error gets thrown
-assertError(@()process_plusminus_batch( CM, bad_file_pairs_pm1, AP), 'process_plusminus_batch:ColumnDimensionMismatch', 'No error was raised.');
-assertError(@()process_plusminus_batch( CM, bad_file_pairs_pm2, AP), 'process_plusminus_batch:ColumnDimensionMismatch', 'No error was raised.');
-assertError(@()process_plusminus_batch( CM, bad_file_pairs_pm3, AP), 'process_plusminus_batch:SetDimensionMismatch', 'No error was raised.');
-assertError(@()process_plusminus_batch( CM, bad_file_pairs_pm4, AP), 'process_plusminus_batch:SetDimensionMismatch', 'No error was raised.');
+assertExceptionThrown(@()process_plusminus_batch( CM, bad_file_pairs_pm1, AP), 'process_plusminus_batch:ColumnDimensionMismatch', 'No error was raised.');
+assertExceptionThrown(@()process_plusminus_batch( CM, bad_file_pairs_pm2, AP), 'process_plusminus_batch:ColumnDimensionMismatch', 'No error was raised.');
+assertExceptionThrown(@()process_plusminus_batch( CM, bad_file_pairs_pm3, AP), 'process_plusminus_batch:SetDimensionMismatch', 'No error was raised.');
+assertExceptionThrown(@()process_plusminus_batch( CM, bad_file_pairs_pm4, AP), 'process_plusminus_batch:SetDimensionMismatch', 'No error was raised.');
