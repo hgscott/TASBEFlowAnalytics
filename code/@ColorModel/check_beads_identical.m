@@ -23,7 +23,7 @@ for i=1:numel(CM.Channels),
     peaks = get_peak(CM.unit_translation, i);
     alt_peaks = get_peak(alt_units, i);
     if(numel(peaks) ~= numel(alt_peaks)),
-        TASBESession.warn('Model:Beads','Number of peaks does not match on channel %s: %d vs. %d',getPrintName(CM.Channels{i}),numel(peaks),numel(alt_peaks));
+        TASBESession.warn('TASBE:CompareBeads','PeakNumberMismatch','Number of peaks does not match on channel %s: %d vs. %d',getPrintName(CM.Channels{i}),numel(peaks),numel(alt_peaks));
         ok=false;
         ratios(i) = NaN;
     else
@@ -32,7 +32,7 @@ for i=1:numel(CM.Channels),
             ratio = alt_peaks(j)/peaks(j);
             ratioset(j) = ratio;
             if (10^abs(log10(ratio)) - 1) > tolerance
-                TASBESession.warn('Model:Beads','Peak %d does not match on channel %s: ratio %f',j,getPrintName(CM.Channels{i}),ratio);
+                TASBESession.warn('TASBE:CompareBeads','PeakValueMismatch','Peak %d does not match on channel %s: ratio %f',j,getPrintName(CM.Channels{i}),ratio);
                 ok=false;
             end
         end

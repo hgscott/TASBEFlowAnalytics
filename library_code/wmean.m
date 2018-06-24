@@ -37,7 +37,7 @@ end
 
 % Check that there is at least one non-zero weight.
 if (all(w(:)==0))
-    TASBESession.warn('TASBE:WeightedMean','At least one weight must be non-zero.');
+    TASBESession.warn('TASBE:WeightedMean','ZeroWeights','At least one weight must be non-zero.');
     y = nan;
     return;
 end

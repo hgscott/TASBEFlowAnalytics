@@ -36,7 +36,7 @@ end
 % minima = find(bin_counts(2:(end-1)) <= bin_counts(1:(end-2)) & bin_counts(2:(end-1)) < bin_counts(3:end));
 
 if(numel(maxima) == 0), 
-    TASBESession.warn('TASBE:FindPeaks','Problematic distribution: no peaks found in histogram'); 
+    TASBESession.warn('TASBE:FindPeaks','NoPeaksFound','Problematic distribution: no peaks found in histogram'); 
     maxima(1) = 1; bin_counts(1) = NaN;% put in fake data
 end;
 if(abs(numel(maxima)-numel(minima))>1), error('Internal error: impossible distribution of %i maxima and %i minima',numel(maxima),numel(minima)); end;

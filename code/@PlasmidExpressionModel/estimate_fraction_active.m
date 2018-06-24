@@ -9,7 +9,7 @@
 function active = estimate_fraction_active(PEM,ERFs)
     active = zeros(size(ERFs));
     if numel(PEM.fraction_active)<2
-        TASBESession.warn('TASBE:Analysis','Cannot compute fraction active: distribution did not fit bimodal gaussian');
+        TASBESession.warn('TASBE:PEM','NotBimodalGaussian','Cannot compute fraction active: distribution did not fit bimodal gaussian');
         return
     end
     for i=1:numel(ERFs)

@@ -11,5 +11,5 @@ function sanitized = sanitize_filename(name)
 
 sanitized = regexprep(name,'[^\w+\-*]','');
 if numel(sanitized) < numel(name)
-    TASBESession.warn('TASBE:SanitizeFilename','Name "%s" contains unsafe characters: abbreviated to "%s"',name,sanitized);
+    TASBESession.notify('TASBE:SanitizeFilename','UnsafeCharacters','Name "%s" contains unsafe characters: abbreviated to "%s"',name,sanitized);
 end

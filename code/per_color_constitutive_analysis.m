@@ -9,12 +9,12 @@
 function [results, sampleresults] = per_color_constitutive_analysis(colorModel,batch_description,colors,AP)
 % The 'results' here is not a standard ExperimentResults, but a similar scratch structure
 
-TASBESession.warn('TASBE:UpdateNeeded','Need to update per_color_constitutive_analysis to use new samplestatistics');
+TASBESession.warn('TASBE:BatchAnalysis','UpdateNeeded','Need to update per_color_constitutive_analysis to use new samplestatistics');
 batch_size = size(batch_description,1);
 
 % check to make sure batch_file has the correct dimensions
 if size(batch_description, 2) ~= 2
-    TASBESession.error('per_color_constitutive_analysis', 'DimensionMismatch', 'Batch analysis invoked with incorrect number of columns. Make sure batch_file is a n X 2 matrix.');
+    TASBESession.error('per_color_constitutive_analysis', 'TASBE:DimensionMismatch', 'Batch analysis invoked with incorrect number of columns. Make sure batch_file is a n X 2 matrix.');
 end
 
 for i = 1:batch_size

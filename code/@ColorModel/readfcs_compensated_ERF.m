@@ -7,7 +7,7 @@
 % package distribution's top directory.
 
 function data = readfcs_compensated_ERF(CM,filename,with_AF,floor)
-    if(CM.initialized<1), error('Cannot read ERF: ColorModel not yet resolved'); end; % ensure initted
+    if(CM.initialized<1), TASBESession.error('TASBE:ReadFCS','Unresolved','Cannot read ERF: ColorModel not yet resolved'); end; % ensure initted
     
     % Read to arbitrary units
     audata = readfcs_compensated_au(CM,filename,with_AF,floor);
@@ -26,5 +26,5 @@ function data = readfcs_compensated_ERF(CM,filename,with_AF,floor)
     end
     % make sure we didn't throw away huge amounts...
     if numel(data)<numel(audata)*0.1 % Threshold: at least 10% retained
-        warning('Model:Discard','ERF (post)filters may be discarding too much data: only %d%% retained in %s',numel(data)/numel(audata)*100,filename);
+        TASBESession.warn('TASBE:ReadFCS','TooMuchDataDiscarded','ERF (post)filters may be discarding too much data: only %d%% retained in %s',numel(data)/numel(audata)*100,filename);
     end

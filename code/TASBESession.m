@@ -110,6 +110,15 @@ classdef TASBESession
             out = TASBESession.access('insert',classname,event);
         end
         
+        function out = notify(classname,name,message,varargin)
+            event.name = name;
+            event.classname = classname;
+            event.type = 'success';
+            event.message = sprintf(message,varargin{:});
+            out = TASBESession.access('insert',classname,event);
+            fprintf(['Note: ' event.message]);
+        end
+        
         function reset()
             TASBESession.access('reset');
         end

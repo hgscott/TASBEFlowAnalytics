@@ -33,7 +33,7 @@ for i=1:numel(CM.ColorPairFiles)
     end
     transerror = 10^(abs(log10(scales(cX,cY)*scales(cY,cX))));
     if(transerror > 1.05)
-        TASBESession.warn('Model:Color','Translation from %s to %s not invertible (round trip error = %.2f)',getPrintName(cp{1}),getPrintName(cp{2}),transerror);
+        TASBESession.warn('TASBE:ColorTranslation','NotInvertible','Translation from %s to %s not invertible (round trip error = %.2f)',getPrintName(cp{1}),getPrintName(cp{2}),transerror);
     end
 end
 
