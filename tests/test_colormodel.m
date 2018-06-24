@@ -177,10 +177,10 @@ for i=3:numel(log{end}.contents{3}),
         break;
     end
 end
-assertEqual(log{end}.contents{3}.name, 'PeaksNotAscending');
-assertEqual(log{end}.contents{4}.name, 'HighestPeakUndetected');
-assertEqual(log{end}.contents{5}.name, 'QuestionableFirstPeak');
-assertEqual(log{end}.contents{7}.name, 'PotentialBeadClump');
+assertEqual(log{end}.contents{3+skips}.name, 'PeaksNotAscending');
+assertEqual(log{end}.contents{4+skips}.name, 'HighestPeakUndetected');
+assertEqual(log{end}.contents{5+skips}.name, 'QuestionableFirstPeak');
+assertEqual(log{end}.contents{7+skips}.name, 'PotentialBeadClump');
 
 
 
