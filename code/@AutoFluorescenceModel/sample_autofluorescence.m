@@ -1,4 +1,4 @@
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed 
+% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed
@@ -6,6 +6,12 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function filters = get_filters(CM)
-   filters  = CM.filters; 
-   
+function AF = sample_autofluorescence(AFM,n_samples,truncate)
+
+if nargin<3, truncate = 0; end;
+
+AF = getMeanERF(AFM) + getStdERF(AFM)*randn(n_samples,1);
+
+if truncate
+    AF(AF<=1) = 1;
+end

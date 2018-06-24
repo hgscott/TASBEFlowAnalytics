@@ -6,7 +6,7 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function results = analyze_sample_sets( colorModel, batch_description, analysisParams)
+function results = analyze_sample_sets( colorModel, batch_description, analysisParams, data)
 % batch_description is a n x 2cell-array of: {condition_name, filenames}
 % results is a cell-array of {ExperimentResults, {SampleResults}}
 
@@ -30,7 +30,7 @@ for i = 1:batch_size
     
     experiment = Experiment(condition_name,'', {0,fileset});
     fprintf(['Analyzing ' condition_name '...\n']);
-    sampleresults = process_data(colorModel,experiment,analysisParams);
+    sampleresults = process_data(colorModel,experiment,analysisParams, data{i});
     results{i,1} = summarize_data(colorModel,experiment,analysisParams,sampleresults);
     results{i,2} = sampleresults{1};
 end

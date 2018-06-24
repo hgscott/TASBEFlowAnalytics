@@ -11,14 +11,10 @@ function AF = sample_autofluorescence(CM,n_samples,truncate,channels)
 n_channels = numel(getChannels(CM));
 
 if nargin<3, truncate = 0; end;
-if nargin<4 channels = 1:n_channels; end;
+if nargin<4, channels = 1:n_channels; end;
 
 AF = zeros(n_samples,numel(channels));
 for i=1:numel(channels),
     AFM = get_autofluorescence_model(CM,channels(i));
-    AF(:,i) = getMeanERF(AFM) + getStdERF(AFM)*randn(n_samples,1);
-end
-
-if truncate
-    AF(AF<=1) = 1;
+    AF(:,i) = sample_autofluorescence(AFM,n_samples,truncate);
 end

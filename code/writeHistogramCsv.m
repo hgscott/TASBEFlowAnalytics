@@ -37,7 +37,7 @@ function histogramFile = writeHistogramCsv(channels, sampleIds, sampleresults, b
     for i=1:numConditions
         startingRow = endingRow + 1;
         endingRow = startingRow + replicates(i)*numBinsPerChannel - 1;
-        histTable(startingRow:endingRow,1:numColumns) = formatDataPerSample(channels, sampleIds{i}, binCenters, binCounts{i});
+        histTable(startingRow:endingRow,1:numColumns) = formatDataPerSample(channels, sampleIds{i}, limitPrecision(binCenters,4), binCounts{i});
     end
     
     % Needed to add column names when I created the tables due to conflicts
@@ -105,5 +105,5 @@ function fileHeader = buildDefaultHistFileHeader(channels, units)
     
     % Don't separate with commas. We want all the column names in a cell
     % array so we can pass them to a table.
-    fileHeader = {'ID', 'BinCenters', binHeaders{:}};
+    fileHeader = {'Id', 'BinCenters', binHeaders{:}};
 end

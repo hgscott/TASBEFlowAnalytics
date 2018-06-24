@@ -8,7 +8,7 @@ function test_suite = test_batch_analysis
 
 function test_batch_analysis_endtoend
 
-load('../TASBEFlowAnalytics-Tutorial/template_colormodel/CM120312.mat');
+CM = load_or_make_testing_colormodel();
 stem1011 = '../TASBEFlowAnalytics-Tutorial/example_assay/LacI-CAGop_';
 
 % set up metadata
@@ -54,7 +54,7 @@ n_conditions = size(file_pairs,1);
 TASBEConfig.set('OutputSettings.StemName','LacI-CAGop');
 TASBEConfig.set('plots.plotPath','/tmp/plots');
 TASBEConfig.set('OutputSettings.FixedInputAxis',[1e4 1e10]);
-plot_batch_histograms(results,sampleresults,{'b','y','r'},CM);
+plot_batch_histograms(results,sampleresults,CM,{'b','g','r'});
 
 save('/tmp/LacI-CAGop-batch.mat','AP','bins','file_pairs','results','sampleresults');
 
@@ -62,46 +62,46 @@ save('/tmp/LacI-CAGop-batch.mat','AP','bins','file_pairs','results','sampleresul
 % Check results in results:
 
 result1_expected_bincounts = [...
-        6792        2206        1382;
-        8014        2724        2695;
-        8765        3321        2634;
-        8559        4632        2631;
-        7615        4618        3737;
-        6321        5588        4704;
-        3924        5932        5298;
-        1814        6286        5431;
-         510        5735        5794;
-         124        4266        4746;
-           0        3097        4161;
-           0        2283        3252;
-           0        2339        2923;
-           0        2543        3276;
-           0        2844        3593;
-           0        3388        4010;
-           0        3756        4006;
-           0        4026        3973;
-           0        4245        4138;
-           0        4434        4182;
-           0        4500        4182;
-           0        4286        4097;
-           0        4005        3880;
-           0        3629        3823;
-           0        3242        3681;
-           0        2737        3505;
-           0        2202        3228;
-           0        1728        3040;
-           0        1405        2597;
-           0         989        2384;
-           0         768        1921;
-           0         493        1621;
-           0         390        1339;
-           0         214         989;
-           0         150         802;
-           0         101         632;
-           0           0         420;
-           0           0         269;
+        6806        2178        1373;
+        8017        2753        2706;
+        8782        3323        2637;
+        8558        4640        2623;
+        7617        4624        3739;
+        6343        5595        4714;
+        3931        5937        5304;
+        1817        6282        5434;
+         511        5747        5801;
+         124        4272        4683;
+           0        3097        4012;
+           0        2284        3469;
+           0        2340        2917;
+           0        2545        3200;
+           0        2845        3612;
+           0        3390        3985;
+           0        3755        4034;
+           0        4031        3985;
+           0        4246        4135;
+           0        4436        4179;
+           0        4502        4199;
+           0        4289        4095;
+           0        4007        3890;
+           0        3630        3817;
+           0        3244        3685;
+           0        2738        3509;
+           0        2203        3248;
+           0        1731        3032;
+           0        1406        2598;
+           0         989        2401;
+           0         769        1920;
+           0         493        1626;
+           0         391        1353;
+           0         214         995;
+           0         150         808;
+           0         101         634;
+           0           0         428;
+           0           0         272;
            0           0         176;
-           0           0         121;
+           0           0         122;
            0           0           0;
            0           0           0;
            0           0           0;
@@ -125,39 +125,66 @@ result1_expected_bincounts = [...
            ];
        
 result_expected_means = 1e5 * [...
-    0.2213    2.4800    4.0710
-    0.2209    2.4616    4.0412
-    0.2201    2.5476    4.1967
-    0.2192    2.5526    4.2694
-    0.2202    2.4836    4.2491
-    0.2231    2.4599    4.2389
-    0.2245    2.5201    4.1942
-    0.2474    2.5473    4.3616
-    0.3723    2.3949    4.5641
-    0.4764    2.2965    4.6751
-    0.6809    2.0817    4.6095
-    1.0763    1.7331    5.6210
-    1.5787    1.5278    6.6428
-    1.9343    1.4047    7.4223
+    0.2213      2.4796      4.0832
+    0.2217      2.4605      4.0592
+    0.2201      2.5462      4.2334
+    0.2192      2.5524      4.2831
+    0.2202      2.4833      4.2658
+    0.2230      2.4613      4.2593
+    0.2246      2.5221      4.2116
+    0.2488      2.5455      4.3739
+    0.3723      2.3947      4.5774
+    0.4764      2.2973      4.6921
+    0.6808      2.0812      4.6243
+    1.0768      1.7335      5.6471
+    1.5798      1.5283      6.6706
+    1.9350      1.4045      7.4507
     ];
 
 result_expected_stds = [...
-    1.5962    6.7130    8.0132
-    1.5880    6.7764    8.0448
-    1.5852    6.7717    7.9832
-    1.5882    6.8049    8.0720
-    1.5874    6.6735    7.9756
-    1.6029    6.7155    8.1864
-    1.6348    6.6808    7.9787
-    1.8582    6.6884    8.1892
-    2.9436    6.3747    8.2777
-    3.5229    6.0781    8.3190
-    4.3920    5.7806    8.1339
-    5.1732    5.2044    8.6436
-    5.5498    4.6336    8.4909
-    5.5327    4.3326    8.3846
+    1.5964      6.7127      8.0237
+    1.5955      6.7718      8.0481
+    1.5855      6.7734      8.0462
+    1.5881      6.8054      8.0832
+    1.5876      6.6713      7.9815
+    1.6027      6.7166      8.1935
+    1.6348      6.6764      7.9794
+    1.8831      6.6863      8.2016
+    2.9448      6.3741      8.2915
+    3.5238      6.0771      8.3279
+    4.3923      5.7805      8.1472
+    5.1748      5.2045      8.6548
+    5.5516      4.6337      8.5021
+    5.5331      4.3324      8.3937
     ];
 
+% Blue, Yellow, Red
+result_expected1_gmm_means = [...
+    4.2543    4.6200    4.6817
+    4.2543    5.9921    6.0832
+    ];
+result_expected1_gmm_stds = [...
+    0.0692    0.0783    0.0900
+    0.0692    0.3112    0.5154
+    ];
+result_expected1_gmm_weights = [...
+    0.5000    0.4195    0.3215
+    0.5000    0.5805    0.6785
+    ];
+
+result_expected14_gmm_means = [...
+    4.3427    4.6252    4.7382
+    5.6856    5.5610    6.2619
+    ];
+result_expected14_gmm_stds = [...
+    0.0904    0.0804    0.1034
+    0.2825    0.2650    0.5099
+    ];
+result_expected14_gmm_weights = [...
+    0.3486    0.4211    0.2456
+    0.6514    0.5789    0.7544
+    ];
+    
 assertEqual(numel(results), 14);
 
 % spot-check name, bincenter, bin-count
@@ -173,3 +200,9 @@ for i=1:14,
     assertElementsAlmostEqual(results{i}.stds,  result_expected_stds(i,:),  'relative', 1e-2);
 end
 
+assertElementsAlmostEqual(results{1}.gmm_means,  result_expected1_gmm_means,  'relative', 1e-2);
+assertElementsAlmostEqual(results{1}.gmm_stds,  result_expected1_gmm_stds,  'relative', 1e-2);
+assertElementsAlmostEqual(results{1}.gmm_weights,  result_expected1_gmm_weights,  'relative', 1e-2);
+assertElementsAlmostEqual(results{14}.gmm_means,  result_expected14_gmm_means,  'relative', 1e-2);
+assertElementsAlmostEqual(results{14}.gmm_stds,  result_expected14_gmm_stds,  'relative', 1e-2);
+assertElementsAlmostEqual(results{14}.gmm_weights,  result_expected14_gmm_weights,  'relative', 1e-2);

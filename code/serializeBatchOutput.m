@@ -16,7 +16,7 @@ function [statisticsFile, histogramFile] = serializeBatchOutput(file_pairs, CM, 
     units = getStandardUnits(CM);
     
     % Formats and writes the output to the Statistics file.
-    statisticsFile = writeStatisticsCsv(channels, sampleIds, sampleresults, units);
+    statisticsFile = writeStatisticsCsv(CM, channels, sampleIds, sampleresults, units);
     
     % Formats and writes the output to the Histogram file.
     histogramFile = writeHistogramCsv(channels, sampleIds, sampleresults, binCenters, units);

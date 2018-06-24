@@ -21,7 +21,7 @@ function CM = ColorModel(beadfile, blankfile, channels, colorfiles, pairfiles)
         CM.translation_plot = 1 ;   % Should the color translation calibration plots be produced?
         CM.translation_channel_min = [];    % If set, all data below 10.^min(channel_id) is excluded from computation
         CM.translation_channel_min_samples = 100;    % Minimum number of samples in a bin to consider it for translation
-        CM.noise_plot = 1 ;         % Should the noise model plots be produced?
+        CM.noise_plot = 0 ;         % Noise model plots not produced by default
         CM.dequantize = 0 ;         % Should small randomness be added to fuzz low bins? 
         
         % other fields
@@ -34,10 +34,12 @@ function CM = ColorModel(beadfile, blankfile, channels, colorfiles, pairfiles)
         CM.compensation_model=[]     ; % For compensating for spectral overlap
         CM.color_translation_model=[] ;% For converting other channels to ERF channel AU equiv
         CM.noise_model=[]             ;% For understanding the expected constitutive expression noise
-        CM.filters={};                 % filters to remove problematic data (e.g. debris, time-contamination)
+        CM.prefilters={};             % filters to remove problematic data in a.u. (e.g. debris, time-contamination)
+        CM.postfilters={};            % filters to remove problematic data in ERF (e.g. poorly transfected cells)
         CM.standardUnits = 'not yet set';  % Should instead be the value from column E in BeadCatalog.xlsx
 
-        CM.filters{1} = TimeFilter(); % add default quarter second data exclusion
+        % The time filter is not necessarily trustworthy, since units and scales are uncertain
+        %CM.filters{1} = TimeFilter(); % add default quarter second data exclusion
         
         if nargin == 0
             channels{1} = Channel();

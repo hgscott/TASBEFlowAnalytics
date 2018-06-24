@@ -156,23 +156,39 @@ classdef TASBEConfig
             doc.beads.graphPlotSize = 'Size (in inches) [X Y] for bead unit calibration figures';
             s.beads.plotSize = [5 3.66];
             defaults('beads.plotSize') = 'calibration.graphPlotSize';
+            doc.beads.validateAllChannels = 'If true, check all channels for likely bead problems; otherwise, check only ERF channel';
+            s.beads.validateAllChannels = false;
             
             % TASBE Setting migration
             s.channel_template_file = '';           % An example of this is CM.BeadFile
             
             % OutputSettings migration
+            doc.OutputSettings = struct();
+            doc.OutputSettings.about = 'Settings controlling batch plotting';
             s.OutputSettings = struct();
             s.OutputSettings.StemName='';
             s.OutputSettings.DeviceName='';
             s.OutputSettings.Description='';
 
             s.OutputSettings.FixedInducerAxis = [];      % fixed -> [min max]
-            s.OutputSettings.FixedInputAxis =   [];      % fixed -> [min max]
-            s.OutputSettings.FixedNormalizedInputAxis =   [];      % fixed -> [min max]
-            s.OutputSettings.FixedOutputAxis =  [];      % fixed -> [min max]
-            s.OutputSettings.FixedNormalizedOutputAxis =  [];      % fixed -> [min max]
-            s.OutputSettings.FixedXAxis = [];             % fixed -> [min max]
-            s.OutputSettings.FixedYAxis = [];             % fixed -> [min max]
+            doc.OutputSettings.FixedHistogramAxis = 'Set to fix limit [min max] of histogram count plot axis';
+            s.OutputSettings.FixedHistogramAxis = [];
+            doc.OutputSettings.FixedBinningAxis = 'Set to fix limit [min max] of binning variable plot axis';
+            s.OutputSettings.FixedBinningAxis = [];
+            doc.OutputSettings.FixedInputAxis = 'Set to fix limit [min max] of normalized output plot axis';
+            s.OutputSettings.FixedInputAxis =   [];
+            doc.OutputSettings.FixedNormalizedInputAxis = 'Set to fix limit [min max] of normalized input plot axis';
+            s.OutputSettings.FixedNormalizedInputAxis =   [];
+            doc.OutputSettings.FixedOutputAxis = 'Set to fix limit [min max] of output plot axis';
+            s.OutputSettings.FixedOutputAxis =  [];
+            doc.OutputSettings.FixedNormalizedOutputAxis = 'Set to fix limit [min max] of normalized output plot axis';
+            s.OutputSettings.FixedNormalizedOutputAxis =  [];
+            doc.OutputSettings.FixedRatioAxis = 'Set to fix limit [min max] of ratio plot axis';
+            s.OutputSettings.FixedRatioAxis =   [];
+            doc.OutputSettings.FixedSNRAxis = 'Set to fix limit [min max] of signal-to-noise ratio plot axis';
+            s.OutputSettings.FixedSNRAxis =   [];
+            doc.OutputSettings.FixedDeltaSNRAxis = 'Set to fix limit [min max] of delta signal-to-noise ratio plot axis';
+            s.OutputSettings.FixedDeltaSNRAxis =   [];
             s.OutputSettings.ColorPlots = true;
             s.OutputSettings.PlotPopulation = true;
             s.OutputSettings.PlotNormalized = true;
@@ -386,9 +402,20 @@ classdef TASBEConfig
             if(isstruct(val))
                 fieldnameset = fieldnames(val);
                 keydoc = '';
+                maxname = max(cellfun(@numel,fieldnameset));
                 for i = 1:numel(fieldnameset),
                     keydoc = [keydoc sprintf('\n  %s',fieldnameset{i})];
-                    if(isstruct(val.(fieldnameset{i}))), keydoc = [keydoc sprintf('    [family]')]; end;
+                    if(isstruct(val.(fieldnameset{i}))), 
+                        keydoc = [keydoc sprintf('\t\t[family]')]; 
+                    else
+                        try 
+                            about = doc.(fieldnameset{i}); 
+                            spacer = repmat(' ',1, 4 + maxname - numel(fieldnameset{i}));
+                            keydoc = [keydoc sprintf('%s%s',spacer,about)];
+                        catch e, 
+                            % leave it as was, without documentation
+                        end;
+                    end;
                 end
                 try about = doc.about; catch e, about = 'No documentation available'; end;
                 text = sprintf('Configuration family: %s\n%s\nKeys: %s',key,about,keydoc);
@@ -403,43 +430,25 @@ classdef TASBEConfig
         end
         
         % Transform all non-default settings into a JSON object
-        % refactor this all out into use of maps to/from JSON
-%         function string = to_json() 
-%             settings = TASBEConfig.list();
-%             fieldstring = TASBEConfig.struct_to_json_fields('', settings);
-%             trimmed = fieldstring(1:(end-3)); % trim off last ', \n'
-%             string = sprintf('{\n%s\n}',trimmed);
-%         end
-%         
-%         function string = struct_to_json_fields(prefix, struct)
-%             string = '';
-%             fields = fieldnames(struct);
-%             for i=1:numel(fields);
-%                 val = struct.(fields{i});
-%                 if(isstruct(val)), 
-%                     string = [string TASBEConfig.struct_to_json_fields([prefix fields{i} '.'], val)];
-%                 elseif isempty(val)
-%                     % continue
-%                 elseif islogical(val) %  boolean
-%                     if val, lvalue = 'true'; else lvalue = 'false'; end;
-%                     string = [string sprintf('"%s%s" : %s, \n',prefix,fields{i},lvalue)];
-%                 elseif isnumeric(val) % float
-%                     if(numel(val)==1),
-%                         string = [string sprintf('"%s%s" : %d, \n',prefix,fields{i},val)];
-%                     else
-%                         % TODO: figure out what to do for multi-dimensional arrays, if we have any
-%                         % Dammit, have to deal with infinities also
-%                         
-%                         valstr = '';
-%                         for j=1:numel(val), valstr = sprintf('%s%s, ',valstr,num2str(val(j))); end;
-%                         string = [string sprintf('"%s%s" : [%s], \n',prefix,fields{i},valstr(1:(end-2)))];
-%                     end
-%                 elseif isstr(val) % string
-%                     string = [string sprintf('"%s%s" : "%s", \n',prefix,fields{i},val)];
-%                 else
-%                     error('Don''t know how to serialize value of %s%s to JSON',prefix,fields{i});
-%                 end
-%             end
-%         end
+        function string = to_json()
+            string = savejson('',TASBEConfig.list());
+        end
+        
+        function load_from_json(string)
+            json_object = loadjson(string);
+            TASBEConfig.set_config_from_object('', json_object);
+        end
+        
+        function set_config_from_object(prefix, struct)
+            fields = fieldnames(struct);
+            for i=1:numel(fields);
+                value = struct.(fields{i});
+                if(isstruct(value)), % set with substructure
+                    TASBEConfig.set_config_from_object([prefix fields{i} '.'], value);
+                else % set this value
+                    TASBEConfig.set([prefix fields{i}], value);
+                end
+            end
+        end
     end
 end

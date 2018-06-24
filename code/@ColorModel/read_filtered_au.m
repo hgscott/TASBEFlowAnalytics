@@ -15,12 +15,12 @@ function [data fcshdr] = read_filtered_au(CM,filename)
 
     data = rawfcs;
     % optional discarding of filtered data (e.g., debris, time contamination)
-    for i=1:numel(CM.filters)
-        data = applyFilter(CM.filters{i},fcshdr,data);
+    for i=1:numel(CM.prefilters)
+        data = applyFilter(CM.prefilters{i},fcshdr,data);
     end
     % make sure we didn't throw away huge amounts...
     if numel(data)<numel(rawfcs)*0.1 % Threshold: at least 10% retained
-        TASBESession.warn('Model:Discard','Filters may be discarding too much data: only %d%% retained in %s',numel(data)/numel(rawfcs)*100,filename);
+        TASBESession.warn('Model:Discard','a.u. (pre)filters may be discarding too much data: only %d%% retained in %s',numel(data)/numel(rawfcs)*100,filename);
     end
     
     % if requested to dequantize, add a random value in [-0.5, 0.5]

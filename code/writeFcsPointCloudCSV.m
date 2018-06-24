@@ -9,10 +9,24 @@
 % Call readfsc_compensated_MEFL to convert the data. Write the data to a
 % CSV file and return the data.  This will overwrite any existing data.
 
-function data = fcsToCsvFlowConverterFileWriter(CM, filename, with_AF, floor)
-    % process the file to obtain point cloud
-    data = readfcs_compensated_ERF(CM, filename, with_AF, floor);
-    
+function writeFcsPointCloudCSV(CM, filenames, data)
+    if TASBEConfig.get('flow.outputPointCloud')
+        n_conditions = numel(filenames);
+
+        % Write each file for each condition
+        for i=1:n_conditions
+            perInducerFiles = filenames{i};
+            numberOfPerInducerFiles = numel(perInducerFiles);
+            for j = 1:numberOfPerInducerFiles
+                fileName = perInducerFiles{j};
+                % Write data
+                writeIndividualPointCloud(CM, fileName, data{i}{j});
+            end
+        end
+    end
+end
+
+function writeIndividualPointCloud(CM, filename, data)
     % create output filename for cloud
     [filepath,name,ext] = fileparts(filename);
     path = TASBEConfig.get('flow.pointCloudPath');
@@ -44,4 +58,3 @@ function data = fcsToCsvFlowConverterFileWriter(CM, filename, with_AF, floor)
     % Write the data to the file
     dlmwrite(csvName, data, '-append','precision','%.2f');
 end
-

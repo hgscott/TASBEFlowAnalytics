@@ -93,7 +93,7 @@ xlabel(['IFP ' clean_for_latex(in_units)]); ylabel(['OFP ' clean_for_latex(out_u
 set(gca,'XScale','log'); set(gca,'YScale','log');
 legend(clean_for_latex(legendentries),'Location','Best');
 if(TASBEConfig.isSet('OutputSettings.FixedInputAxis')), xlim(TASBEConfig.get('OutputSettings.FixedInputAxis')); end;
-if(TASBEConfig.isSet('OutputSettings.FixedOutputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedOutputAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedNormalizedOutputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedNormalizedOutputAxis')); end;
 title([clean_for_latex(stemName),' transfer curves normalized by CFP']);
 outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-mean-norm'],directory);
 
@@ -115,8 +115,8 @@ end;
 xlabel(['CFP ' clean_for_latex(cfp_units)]); ylabel(['IFP ' clean_for_latex(out_units)]);
 set(gca,'XScale','log'); set(gca,'YScale','log');
 legend(clean_for_latex({pmlegendentries{:} 'Minus'}),'Location','Best');
-if(TASBEConfig.isSet('OutputSettings.FixedInputAxis')), xlim(TASBEConfig.get('OutputSettings.FixedInputAxis')); end;
-if(TASBEConfig.isSet('OutputSettings.FixedOutputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedOutputAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedBinningAxis')), xlim(TASBEConfig.get('OutputSettings.FixedBinningAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedInputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedInputAxis')); end;
 title([clean_for_latex(stemName),' IFP vs. CFP']);
 outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-input-v-cfp'],directory);
 
@@ -139,7 +139,7 @@ end;
 xlabel(['CFP ' clean_for_latex(cfp_units)]); ylabel(['OFP ' clean_for_latex(out_units)]);
 set(gca,'XScale','log'); set(gca,'YScale','log');
 legend(clean_for_latex({pmlegendentries{:} 'Minus'}),'Location','Best');
-if(TASBEConfig.isSet('OutputSettings.FixedInputAxis')), xlim(TASBEConfig.get('OutputSettings.FixedInputAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedBinningAxis')), xlim(TASBEConfig.get('OutputSettings.FixedBinningAxis')); end;
 if(TASBEConfig.isSet('OutputSettings.FixedOutputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedOutputAxis')); end;
 title([clean_for_latex(stemName),' OFP vs. CFP']);
 outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-v-cfp'],directory);
@@ -180,13 +180,13 @@ h = figure('PaperPosition',[1 1 5 3.66]);
 set(h,'visible','off');
 for i=1:step:n_var
     which = pm_results.Valid(:,i,1) & pm_results.Valid(:,i,2);
-    semilogx(bin_centers(which),pm_results.Ratios(which,i),'-','Color',hsv2rgb([hues(i) 1 0.9])); hold on;
+    semilogx(bin_centers(which),pm_results.Ratios(which,i),[ptick '-'],'Color',hsv2rgb([hues(i) 1 0.9])); hold on;
 end;
 xlabel(['CFP ' clean_for_latex(cfp_units)]); ylabel('Fold Activation');
 set(gca,'XScale','log'); set(gca,'YScale','log');
 legend(clean_for_latex(legendentries),'Location','Best');
-if(TASBEConfig.isSet('OutputSettings.FixedInputAxis')), xlim(TASBEConfig.get('OutputSettings.FixedInputAxis')); end;
-if(TASBEConfig.isSet('OutputSettings.FixedOutputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedOutputAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedBinningAxis')), xlim(TASBEConfig.get('OutputSettings.FixedBinningAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedRatioAxis')), ylim(TASBEConfig.get('OutputSettings.FixedRatioAxis')); end;
 title(['+/- Ratios for ',clean_for_latex(stemName)]);
 outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-ratios'],directory);
 
@@ -208,6 +208,8 @@ end;
 xlabel(['CFP ' clean_for_latex(cfp_units)]); ylabel('SNR (db)');
 set(gca,'XScale','log');
 legend(clean_for_latex({pmlegendentries{:} 'Input SNR'}),'Location','Best');
+if(TASBEConfig.isSet('OutputSettings.FixedBinningAxis')), xlim(TASBEConfig.get('OutputSettings.FixedBinningAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedSNRAxis')), ylim(TASBEConfig.get('OutputSettings.FixedSNRAxis')); end;
 title([clean_for_latex(stemName),' SNR vs. CFP']);
 outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-SNR'],directory);
 
@@ -224,5 +226,7 @@ end;
 xlabel(['CFP ' clean_for_latex(cfp_units)]); ylabel('\Delta SNR (db)');
 set(gca,'XScale','log');
 legend(clean_for_latex(pmlegendentries),'Location','Best');
+if(TASBEConfig.isSet('OutputSettings.FixedBinningAxis')), xlim(TASBEConfig.get('OutputSettings.FixedBinningAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedDeltaSNRAxis')), ylim(TASBEConfig.get('OutputSettings.FixedDeltaSNRAxis')); end;
 title([clean_for_latex(stemName),'\Delta SNR vs. CFP']);
 outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-dSNR'],directory);

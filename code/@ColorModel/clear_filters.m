@@ -7,4 +7,5 @@
 % package distribution's top directory.
 
 function CM=clear_filters(CM)
-   CM.filters = {}; 
+   CM = clear_prefilters(CM); 
+   CM = clear_postfilters(CM); 

@@ -35,7 +35,7 @@ llh = llh(2:t);
 if converged
     %fprintf('Converged in %d steps.\n',t-1);
 else
-    fprintf('Not converged in %d steps.\n',maxiter);
+    TASBESession.warn('GMM:Fit','PoorGMMFit','Poor fit for Gaussian mixture model: fitting algorithm did not converge in %d steps.\n',maxiter);
 end
 
 function R = initialization(X, init)

@@ -11,7 +11,7 @@ function test_batchAnalysisEndtoend
 TASBEConfig.set('flow.outputPointCloud','true');
 TASBEConfig.set('flow.pointCloudPath','/tmp/CSV/');
 
-load('../TASBEFlowAnalytics-Tutorial/template_colormodel/CM120312.mat');
+CM = load_or_make_testing_colormodel();
 stem1011 = '../TASBEFlowAnalytics-Tutorial/example_assay/LacI-CAGop_';
 
 % set up metadata
@@ -54,7 +54,12 @@ n_conditions = size(file_pairs,1);
 TASBEConfig.set('OutputSettings.StemName','LacI-CAGop');
 TASBEConfig.set('plots.plotPath','/tmp/plots');
 TASBEConfig.set('OutputSettings.FixedInputAxis',[1e4 1e10]);
-plot_batch_histograms(results,sampleresults,{'b','y','r'},CM);
+plot_batch_histograms(results,sampleresults,CM,{'b','y','r'});
+
+% Make output plots without linespecs
+TASBEConfig.set('plots.plotPath','/tmp/plots2');
+TASBEConfig.set('OutputSettings.FixedInputAxis',[1e4 1e10]);
+plot_batch_histograms(results,sampleresults,CM);
 
 save('/tmp/LacI-CAGop-batch.mat','AP','bins','file_pairs','results','sampleresults');
 
@@ -79,6 +84,10 @@ end
 % Split the stats table
 geoMeans = statsCell(:,5:7);
 geoStdDevs = statsCell(:,8:10);
+gmmMeans = statsCell(:,11:16);
+gmmStds = statsCell(:,17:22);
+gmmWeights = statsCell(:,23:28);
+
 
 % Split the hist table
 binCounts = histCell(:,3:5);
@@ -136,6 +145,17 @@ expected_stds = [...
     5.5773    4.3900    8.4391
     ];
 
+expected_gmm_means = 10.^[...
+    4.2543    4.2543    4.6200    5.9921    4.6817    6.0832; % row 1
+    ];
+
+expected_gmm_stds = 10.^[...
+    0.0692    0.0692    0.0783    0.3112    0.0900    0.5154; % row 1
+    ];
+
+expected_gmm_weights = [...
+    0.5000    0.5000    0.4195    0.5805    0.3215    0.6785; % row 1
+    ];
 
 assertEqual(numel(sampleIDs), 3);
 %assertEqual(numel(sampleIDs), 7);
@@ -146,13 +166,18 @@ assertEqual(sampleIDs{3}, 'Dox 2.0/5.0');
 %assertEqual(sampleIDs{7}, 'Dox 1000.0/2000.0');
 
 % spot-check first five rows of binCounts
-assertElementsAlmostEqual(cell2mat(binCounts(1:5,:)), expected_bincounts, 'relative', 1e-2);
+assertElementsAlmostEqual(cell2mat(binCounts(1:5,:)), expected_bincounts, 'relative', 2e-2);
 
 % spot-check geo means and geo std devs.
 for i=1:6, % was 7
     assertElementsAlmostEqual(cell2mat(geoMeans(i,:)), expected_means(i,:), 'relative', 1e-2);
     assertElementsAlmostEqual(cell2mat(geoStdDevs(i,:)), expected_stds(i,:),  'relative', 1e-2);
 end
+
+% spot check Gaussian Mixture Model materials:
+assertElementsAlmostEqual(cell2mat(gmmMeans(1,:)), expected_gmm_means, 'relative', 1e-2);
+assertElementsAlmostEqual(cell2mat(gmmStds(1,:)), expected_gmm_stds, 'relative', 1e-2);
+assertElementsAlmostEqual(cell2mat(gmmWeights(1,:)), expected_gmm_weights, 'relative', 1e-2);
 
 % Check the first five rows of the first point cloud file
 expected_pointCloud = [...
