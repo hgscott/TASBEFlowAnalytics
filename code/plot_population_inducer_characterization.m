@@ -24,9 +24,13 @@ warning('TASBE:Plots','Assuming only a single inducer exists');
 InducerName = getInducerName(getExperiment(results),1);
 inducer_levels = getInducerLevelsToFiles(getExperiment(results),1);
 which = inducer_levels==0;
-% Find the smallest and smallest non-zero values from inducer_levels
+% Find the smallest non-zero values, max_value and thresholds from inducer_levels
 min_non_zero = min(inducer_levels(inducer_levels>0));
-min_value = min(inducer_levels);
+max_value = max(inducer_levels);
+higher_threshold = log10(min_non_zero)-1; % stands for start in ZeroOnLog function
+lower_threshold = higher_threshold -1; % stands for zero in ZeroOnLog function
+% set the zero values to the lower_threshold
+inducer_levels(which) = 10^lower_threshold;
 
 %%%% Inducer plots
 % Plain inducer plot:
@@ -45,8 +49,7 @@ set(gca,'XScale','log'); set(gca,'YScale','log');
 if(TASBEConfig.isSet('OutputSettings.FixedInducerAxis')), xlim(TASBEConfig.get('OutputSettings.FixedInducerAxis')); end;
 if(TASBEConfig.isSet('OutputSettings.FixedInputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedInputAxis')); end;
 title(['Population ',clean_for_latex(deviceName),' transfer curve, colored by Gaussian component']);
-% Edit ticks on plot to include 0 if the smallest value is less than or equal to 0
-if min_value <= 0
-    ZeroOnLogX(min_non_zero/10,min_non_zero);
-end
+% Edit ticks on plot to include 0 
+xlim([10^lower_threshold max_value]); % set limit of x-axis to match with zero and start positions
+ZeroOnLog(10^lower_threshold,0.5*10^higher_threshold); % call ZeroOnLog with thresholds (0.5 is for scaling of '\\')
 outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-pop-mean'],directory);
