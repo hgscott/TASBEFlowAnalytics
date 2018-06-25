@@ -22,7 +22,7 @@ n_comparisons = numel(all_pm_results);
 % or color)
 ref_marker_types = {'o', '*', '.', 'x'};
 by_n_var = 0; % state variable
-if n_var >= n_comparisons+1
+if n_var > n_comparisons+1
     hues = (1:n_var)./n_var;
     marker_types = ref_marker_types(1:n_comparisons+1);
     by_n_var = 1;
@@ -71,6 +71,7 @@ comlegendentries = legendentries(1:end-1);
 h = figure('PaperPosition',[1 1 5 3.66]);
 set(h,'visible','off');
 lines = [];
+add_lines = true;
 for i=1:numel(all_pm_results)
     pm_results = all_pm_results{i};
     % Plot the results for each batch_name and level
@@ -92,8 +93,9 @@ for i=1:numel(all_pm_results)
         % Determines which type of lines should be in the legend
         if j == 1 || i == 1 
             lines(end+1) = line;
-            if i == numel(all_pm_results)
+            if i == numel(all_pm_results) && add_lines
                 lines(end+1) = line2;
+                add_lines = false;
             end
         end
 
@@ -135,6 +137,7 @@ outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-all-mea
 h = figure('PaperPosition',[1 1 5 3.66]);
 set(h,'visible','off');
 lines = [];
+add_lines = true;
 for i=1:numel(all_pm_results)
     pm_results = all_pm_results{i};
     % Plot the results for each batch_name and level
@@ -156,8 +159,9 @@ for i=1:numel(all_pm_results)
         % Determines which type of lines should be in the legend
         if j == 1 || i == 1 
             lines(end+1) = line;
-            if i == numel(all_pm_results)
+            if i == numel(all_pm_results) && add_lines
                 lines(end+1) = line2;
+                add_lines = false;
             end
         end
 
@@ -198,6 +202,7 @@ outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-all-mea
 h = figure('PaperPosition',[1 1 5 3.66]);
 set(h,'visible','off');
 lines = [];
+add_lines = true;
 for i=1:numel(all_pm_results)
     pm_results = all_pm_results{i};
     % Plot the results for each batch_name and level
@@ -219,8 +224,9 @@ for i=1:numel(all_pm_results)
         % Determines which type of lines should be in the legend
         if j == 1 || i == 1 
             lines(end+1) = line;
-            if i == numel(all_pm_results)
+            if i == numel(all_pm_results) && add_lines
                 lines(end+1) = line2;
+                add_lines = false;
             end
         end
 
@@ -262,6 +268,7 @@ outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-all-inp
 h = figure('PaperPosition',[1 1 5 3.66]);
 set(h,'visible','off');
 lines = [];
+add_lines = true;
 for i=1:numel(all_pm_results)
     pm_results = all_pm_results{i};
     % Plot the results for each batch_name and level
@@ -283,8 +290,9 @@ for i=1:numel(all_pm_results)
         % Determines which type of lines should be in the legend
         if j == 1 || i == 1 
             lines(end+1) = line;
-            if i == numel(all_pm_results)
+            if i == numel(all_pm_results) && add_lines
                 lines(end+1) = line2;
+                add_lines = false;
             end
         end
 
@@ -454,5 +462,5 @@ set(gca,'XScale','log');
 legend(lines, clean_for_latex(comlegendentries),'Location','Best');
 if(TASBEConfig.isSet('OutputSettings.FixedBinningAxis')), xlim(TASBEConfig.get('OutputSettings.FixedBinningAxis')); end
 if(TASBEConfig.isSet('OutputSettings.FixedDeltaSNRAxis')), ylim(TASBEConfig.get('OutputSettings.FixedDeltaSNRAxis')); end
-title(['All ' clean_for_latex(stemName),'\Delta SNR vs. CFP']);
+title(['All ' clean_for_latex(stemName),' \Delta SNR vs. CFP']);
 outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-all-dSNR'],directory);
