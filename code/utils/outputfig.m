@@ -15,13 +15,14 @@ if nargin < 3, path = './'; end; % Note: frontslash works for both Windows and M
 if path(numel(path)) ~= '/', path(numel(path)+1) = '/'; end; % ensure path ends in slash
 
 if TASBEConfig.get('testing.fakeFigureSaves'), 
-    warning('TASBE:outputfig:TestMode','Test mode: not actually saving figure %s/%s',path,name);
+    % Do not convert to TASBESession: this warning should not be visible in logs, else affects testing observables
+    warning('TASBE:TestMode','Test mode: not actually saving figure %s/%s',path,name);
     return;
 end;
 
 % If directory doesn't exist, try to create it
 if ~isdir(path),
-    warning('TASBE:outputfig:MakeDirectory','Directory does not exist, attempting to create it: %s',path);
+    TASBESession.notify('TASBE:OutputFig','MakeDirectory','Directory does not exist, attempting to create it: %s',path);
     mkdir(path);
 end
 

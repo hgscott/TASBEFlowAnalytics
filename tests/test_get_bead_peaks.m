@@ -7,7 +7,6 @@ function test_suite = test_get_bead_peaks
     initTestSuite;
     
 function test_beadPeaksEndtoend
-
 correct_model = 'SpheroTech RCP-30-5A';
 incorrect_model = 'Unknown';
 no_model = '';
@@ -37,13 +36,32 @@ assertElementsAlmostEqual(expected_peaks1, obtained_peaks3);
 assertElementsAlmostEqual(expected_peaks1, obtained_peaks4);
 
 % test incorrect model inputs
-assertError(@()get_bead_peaks(incorrect_model, correct_channel, correct_batch1), 'get_bead_peaks:NoModel', 'No error was raised.');
-assertError(@()get_bead_peaks(no_model, correct_channel, correct_batch1), 'get_bead_peaks:NoModel', 'No error was raised.');
+assertExceptionThrown(@()get_bead_peaks(incorrect_model, correct_channel, correct_batch1), 'get_bead_peaks:NoModel', 'No error was raised.');
+assertExceptionThrown(@()get_bead_peaks(no_model, correct_channel, correct_batch1), 'get_bead_peaks:NoModel', 'No error was raised.');
 
 % test incorrect channel inputs
-assertError(@()get_bead_peaks(correct_model, incorrect_channel, correct_batch1), 'get_bead_peaks:NoChannel', 'No error was raised.');
-assertError(@()get_bead_peaks(correct_model, no_channel, correct_batch1), 'get_bead_peaks:NoChannel', 'No error was raised.');
+assertExceptionThrown(@()get_bead_peaks(correct_model, incorrect_channel, correct_batch1), 'get_bead_peaks:NoChannel', 'No error was raised.');
+assertExceptionThrown(@()get_bead_peaks(correct_model, no_channel, correct_batch1), 'get_bead_peaks:NoChannel', 'No error was raised.');
 
 % test incorrect batch inputs
-assertError(@()get_bead_peaks(correct_model, correct_channel, incorrect_batch), 'get_bead_peaks:NoBatch', 'No error was raised.');
-assertError(@()get_bead_peaks(correct_model, correct_channel, vague_batch), 'get_bead_peaks:VagueInput', 'No error was raised.');
+assertExceptionThrown(@()get_bead_peaks(correct_model, correct_channel, incorrect_batch), 'get_bead_peaks:NoBatch', 'No error was raised.');
+assertExceptionThrown(@()get_bead_peaks(correct_model, correct_channel, vague_batch), 'get_bead_peaks:VagueInput', 'No error was raised.');
+
+%%%%%%%
+% An all-combinations test with URCP-38-2K
+correct_model2 = 'SpheroTech URCP-38-2K';
+correct_batch4 = 'Lot AJ02';
+correct_batch5 = 'Lot AJ03';
+correct_batch6 = 'AJ02';
+correct_batch7 = 'AJ03';
+
+expected_peaks4567 = [190	3868	33701	97304	251992	485706];
+obtained_peaks4 = get_bead_peaks(correct_model2, correct_channel, correct_batch4);
+obtained_peaks5 = get_bead_peaks(correct_model2, correct_channel, correct_batch5);
+obtained_peaks6 = get_bead_peaks(correct_model2, correct_channel, correct_batch6);
+obtained_peaks7 = get_bead_peaks(correct_model2, correct_channel, correct_batch7);
+
+assertElementsAlmostEqual(expected_peaks4567, obtained_peaks4,'relative',1e-2);
+assertElementsAlmostEqual(expected_peaks4567, obtained_peaks5,'relative',1e-2);
+assertElementsAlmostEqual(expected_peaks4567, obtained_peaks6,'relative',1e-2);
+assertElementsAlmostEqual(expected_peaks4567, obtained_peaks7,'relative',1e-2);

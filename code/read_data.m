@@ -20,7 +20,7 @@ data = cell(size(filenames));
 for i=1:n_conditions
     perInducerFiles = filenames{i};
     numberOfPerInducerFiles = numel(perInducerFiles);
-    if (numberOfPerInducerFiles == 0), warning('TASBE:Analysis','An inducer level is missing a data file'); end;
+    if (numberOfPerInducerFiles == 0), TASBESession.warn('TASBE:Analysis','MissingDataFile','An inducer level is missing a data file'); end;
     for j = 1:numberOfPerInducerFiles
         fileName = perInducerFiles{j};
         % Read data and extract statistics

@@ -20,7 +20,7 @@ hues = (1:n_components)./n_components;
 [input_mean input_std] = get_channel_population_results(results,'input');
 in_units = getChannelUnits(AP,'input');
 
-warning('TASBE:Plots','Assuming only a single inducer exists');
+TASBESession.warn('TASBE:Plots','SingleInducerOnly','Assuming only a single inducer exists');
 InducerName = getInducerName(getExperiment(results),1);
 inducer_levels = getInducerLevelsToFiles(getExperiment(results),1);
 which = inducer_levels==0;

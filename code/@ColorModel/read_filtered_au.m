@@ -10,7 +10,7 @@ function [data fcshdr] = read_filtered_au(CM,filename)
     % Get read FCS file and select channels of interest
     [fcsunscaled fcshdr rawfcs] = fca_readfcs(filename);
     if (isempty(fcshdr))
-        error('Could not process FACS file %s', filename);
+        TASBESession.error('TASBE:ReadFCS','CannotReadFile','Could not process FACS file %s', filename);
     end;
 
     data = rawfcs;
@@ -20,7 +20,7 @@ function [data fcshdr] = read_filtered_au(CM,filename)
     end
     % make sure we didn't throw away huge amounts...
     if numel(data)<numel(rawfcs)*0.1 % Threshold: at least 10% retained
-        warning('Model:Discard','a.u. (pre)filters may be discarding too much data: only %d%% retained in %s',numel(data)/numel(rawfcs)*100,filename);
+        TASBESession.warn('TASBE:ReadFCS','TooMuchDataDiscarded','a.u. (pre)filters may be discarding too much data: only %d%% retained in %s',numel(data)/numel(rawfcs)*100,filename);
     end
     
     % if requested to dequantize, add a random value in [-0.5, 0.5]
