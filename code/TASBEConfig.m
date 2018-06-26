@@ -107,17 +107,26 @@ classdef TASBEConfig
 %             defaults('autofluorescence.plotSize') = 'calibration.graphPlotSize';
             
             % Spectral bleed compensation
-            s.compensation = struct();
+            s.compensation = struct();doc.compensation = struct();
+            doc.compensation.about = 'General settings for spectral bleed compensation plots';
+            doc.compensation.minimumDrivenLevel = 'Uniformly ignores all less than this level of a.u.';
             s.compensation.minimumDrivenLevel = 1e2;    % uniformly ignore all less than this level of a.u. 
+            doc.compensation.maximumDrivenLevel = 'Uniformly ignores all greater than this level of a.u.';
             s.compensation.maximumDrivenLevel = Inf;     % uniformly ignore all greater than this level of a.u. 
+            doc.compensation.minimumBinCount = 'Ignores bins with less than this many elements';
             s.compensation.minimumBinCount = 10;        % ignore bins with less than this many elements
+            doc.compensation.highBleedWarning = 'Warns about high bleed at this level';
             s.compensation.highBleedWarning = 0.1;      % Warn about high bleed at this level
+            doc.compensation.plot = 'Determines whether compensation plots should be created?';
             s.compensation.plot = [];                   % Should compensation plots be created?
             defaults('compensation.plot') = 'calibration.plot';
+            doc.compensation.visiblePlots = 'If true, compensation plots are visible; otherwise, they are hidden for later saving';
             s.compensation.visiblePlots = [];           % should compensation plot be visible, or just created?
             defaults('compensation.visiblePlots') = 'calibration.visiblePlots';
+            doc.compensation.plotPath = 'Default location for compensation plots';
             s.compensation.plotPath = [];               % where should compensation plot go?
             defaults('compensation.plotPath') = 'calibration.plotPath';
+            doc.compensation.plotSize = 'Default size (in inches) [X Y] for compensation figures';
             s.compensation.plotSize = [];               % What size (in inches) should compensation figure be?
             defaults('compensation.plotSize') = 'calibration.heatmapPlotSize';
             
@@ -132,7 +141,7 @@ classdef TASBEConfig
             s.beads.peakThreshold = [];
             doc.beads.rangeMin = 'Minimum value considered for bead peaks (log scale: 10^rangeMin)';
             s.beads.rangeMin = 2;
-            doc.beads.rangeMin = 'Maximum value considered for bead peaks (log scale: 10^rangeMax)';
+            doc.beads.rangeMax = 'Maximum value considered for bead peaks (log scale: 10^rangeMax)';
             s.beads.rangeMax = 7;
             doc.beads.binIncrement = 'Resolution of histogram bins used for finding bead peaks';
             s.beads.binIncrement = 0.02;
@@ -150,26 +159,34 @@ classdef TASBEConfig
             doc.beads.visiblePlots = 'If true, bead unit calibration plots are visible; otherwise, they are hidden for later saving';
             s.beads.visiblePlots = [];
             defaults('beads.visiblePlots') = 'calibration.visiblePlots';
-            doc.calibration.plotPath = 'Location for bead unit calibration plots';
+            doc.beads.plotPath = 'Location for bead unit calibration plots';
             s.beads.plotPath = [];
             defaults('beads.plotPath') = 'calibration.plotPath';
-            doc.beads.graphPlotSize = 'Size (in inches) [X Y] for bead unit calibration figures';
+            doc.beads.plotSize = 'Size (in inches) [X Y] for bead unit calibration figures';
             s.beads.plotSize = [5 3.66];
             defaults('beads.plotSize') = 'calibration.graphPlotSize';
             doc.beads.validateAllChannels = 'If true, check all channels for likely bead problems; otherwise, check only ERF channel';
             s.beads.validateAllChannels = false;
             
             % TASBE Setting migration
-            s.channel_template_file = '';           % An example of this is CM.BeadFile
+            doc.channel_template_file = struct();
+            doc.channel_template_file.about = 'Settings controlling TASBE Setting migration';
+            s.channel_template_file = struct();
+            doc.channel_template_file.channel_template_file = 'TASBE setting migration';
+            s.channel_template_file.channel_template_file = '';           % An example of this is CM.BeadFile
             
             % OutputSettings migration
             doc.OutputSettings = struct();
             doc.OutputSettings.about = 'Settings controlling batch plotting';
             s.OutputSettings = struct();
+            doc.OutputSettings.StemName = '';
             s.OutputSettings.StemName='';
+            doc.OutputSettings.DeviceName = '';
             s.OutputSettings.DeviceName='';
+            doc.OutputSettings.Description = '';
             s.OutputSettings.Description='';
-
+            
+            doc.OutputSettings.FixedInducerAxis = 'Set to fix limit [min max] of inducer count plot axis';
             s.OutputSettings.FixedInducerAxis = [];      % fixed -> [min max]
             doc.OutputSettings.FixedHistogramAxis = 'Set to fix limit [min max] of histogram count plot axis';
             s.OutputSettings.FixedHistogramAxis = [];
@@ -189,15 +206,22 @@ classdef TASBEConfig
             s.OutputSettings.FixedSNRAxis =   [];
             doc.OutputSettings.FixedDeltaSNRAxis = 'Set to fix limit [min max] of delta signal-to-noise ratio plot axis';
             s.OutputSettings.FixedDeltaSNRAxis =   [];
+            doc.OutputSettings.ColorPlots = 'If true, color plots created';
             s.OutputSettings.ColorPlots = true;
+            doc.OutputSettings.PlotPopulation = 'If true, population plots created';
             s.OutputSettings.PlotPopulation = true;
+            doc.OutputSettings.PlotNormalized = 'If true, normalized plots created';
             s.OutputSettings.PlotNormalized = true;
+            doc.OutputSettings.PlotNonnormalized = 'If true, nonnormalizaed plots created';
             s.OutputSettings.PlotNonnormalized = true;
+            doc.OutputSettings.PlotEveryN = 'If true, plots every N';
             s.OutputSettings.PlotEveryN = 1;
+            doc.OutputSettings.PlotTickMarks = 'If true, displays tick marks';
             s.OutputSettings.PlotTickMarks = false;
+            doc.OutputSettings.FigureSize = 'Size (in inches) [X Y] for figures';
             s.OutputSettings.FigureSize = [];
+            doc.OutputSettings.csvfile = 'May be either an fid or a string';
             s.OutputSettings.csvfile = []; % may be either an fid or a string
-            
             
             % Color translation
 %             s.colortranslation = struct();
