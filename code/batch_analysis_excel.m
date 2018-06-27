@@ -9,6 +9,7 @@ TASBEConfig.checkpoint('init');
 
 % Read in Excel for information, Cytometer sheet
 [num3,txt3,raw3] = xlsread('C:/Users/coverney/Documents/SynBio/Template/Template1.xlsx', 'Cytometer', 'A1:H22');
+
 plotPath = cell2mat(raw(24,2));
 if ~isnan(plotPath)
     TASBEConfig.set('plots.plotPath', char(plotPath));
@@ -21,7 +22,7 @@ if ~isnan(CM_file)
     load(char(CM_file));
 else
     TASBESession.warn('make_color_model', 'MissingPreference', 'Missing CM filename in "Samples" sheet. Will generate Color Model');
-    CM = make_color_model_excel(); % Currently does not work because the function is not in the right place
+    CM = make_color_model_excel();
 end
 
 % set up metadata
@@ -39,12 +40,30 @@ else
     bins = BinSequence(cell2mat(raw(24,11)),cell2mat(raw(24,12)),cell2mat(raw(24,13)),'log_bins');
 end
 
-% Designate which channels have which roles TODO: COMBINE WITH TEMPLATE
-input = channel_named(CM, 'BFP');
-output = channel_named(CM, 'GFP');
-constitutive = channel_named(CM, 'mRuby');
-AP = AnalysisParameters(bins,{'input',input; 'output',output; 'constitutive' constitutive});
+% Designate which channels have which roles
+ref_channels = {'constitutive', 'input', 'output'};
+outputs = {};
+for i=9:16
+    print_name = cell2mat(raw3(i,2));
+    if ~isnan(print_name)
+        channel_type = char(cell2mat(raw3(i,4)));
+        for j=1:numel(ref_channels)
+            if strcmpi(ref_channels{j}, channel_type)
+                outputs{j} = channel_named(CM, char(print_name));
+            end
+        end
+    else
+        break
+    end
+end
 
+if numel(outputs) == 3
+    AP = AnalysisParameters(bins,{'input',outputs{2}; 'output',outputs{3}; 'constitutive',outputs{1}});
+else
+    TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing constitutive, input, output in "Cytometer" sheet');
+    AP = AnalysisParameters(bins,{});
+end
+    
 % Ignore any bins with less than valid count as noise
 if ~isnan(cell2mat(raw(24,7)))
     AP=setMinValidCount(AP,cell2mat(raw(24,7)));
@@ -72,7 +91,6 @@ else
     TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing min fraction active in "Samples" sheet');
 end
 
-%TODO: ADD CHECKS ON SAMPLE INFORMATION
 stem = '../FCS/';
 sample_names = {};
 file_names = {};
@@ -95,9 +113,18 @@ file_pairs(:,2) = file_names;
 
 n_conditions = size(file_pairs,1);
 
-% TODO: get list of channels from template
 % Execute the actual analysis
-[results, sampleresults] = per_color_constitutive_analysis(CM,file_pairs,{'GFP','BFP', 'mRuby'},AP);
+channel_names = {};
+for i=9:16
+    print_name = cell2mat(raw3(i,2));
+    if ~isnan(print_name)
+        channel_names{end+1} = char(print_name);
+    else
+        break
+    end
+end
+
+[results, sampleresults] = per_color_constitutive_analysis(CM,file_pairs,channel_names,AP);
 
 % Make output plots
 if ~isnan(cell2mat(raw(24,4)))
@@ -113,7 +140,6 @@ if ~isnan(cell2mat(raw(24,5)))
 else
     TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing fixed input axis in "Samples" sheet');
 end
-
 
 plot_batch_histograms(results,sampleresults,CM);
 

@@ -85,7 +85,7 @@ function [CM] = make_color_model_excel()
         blank_file = char(cell2mat(raw(6,7)));
         all_file = char(cell2mat(raw(19,7)));
     end
-
+    
     % Autodetect gating with an N-dimensional gaussian-mixture-model
     AGP = AutogateParameters();
     autogate = GMMGating([stem blank_file],AGP,'plots');
