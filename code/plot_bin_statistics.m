@@ -87,7 +87,9 @@ for i=1:n_var
     end
 end
 xlabel(['Constitutive ' clean_for_latex(cfp_units)]); ylabel('Count');
-legend(lines, legendentries2,'Location','Best');
+if TASBEConfig.get('histogram.displayLegend')
+    legend(lines, legendentries2,'Location','Best');
+end
 if(TASBEConfig.isSet('OutputSettings.FixedBinningAxis')), xlim(TASBEConfig.get('OutputSettings.FixedBinningAxis')); end
 if(TASBEConfig.isSet('OutputSettings.FixedHistogramAxis')), ylim(TASBEConfig.get('OutputSettings.FixedHistogramAxis')); else ylim([1e0 10.^(ceil(log10(maxcount)))]); end
 title([clean_for_latex(stemName),' bin counts, colored by inducer level']);
@@ -114,7 +116,9 @@ for i=1:n_var
     end
 end
 xlabel(['CFP ' clean_for_latex(cfp_units)]); ylabel('Estimated Fraction Active');
-legend(lines, legendentries,'Location','Best');
+if TASBEConfig.get('histogram.displayLegend')
+    legend(lines, legendentries,'Location','Best');
+end
 if(TASBEConfig.isSet('OutputSettings.FixedBinningAxis')), xlim(TASBEConfig.get('OutputSettings.FixedBinningAxis')); end
 ylim([-0.05 1.05]);
 title([clean_for_latex(stemName),' estimated fraction of cells active, colored by inducer level']);

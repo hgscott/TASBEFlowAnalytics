@@ -205,6 +205,13 @@ classdef TASBEConfig
             doc.plusminus.plotError = 'If true, plots error envelopes in plusminus comparison graphs';
             s.plusminus.plotError = false;
             
+            % Histogram preferences
+            s.histogram = struct(); 
+            doc.histogram = struct();
+            doc.histogram.about = 'Settings controlling histogram plotting preferences';
+            doc.histogram.displayLegend = 'If true, displays legend in bin statistics graphs';
+            s.histogram.displayLegend = true;
+            
             % Color translation
 %             s.colortranslation = struct();
 %             s.colortranslation.rangeMin = 3;                % bin minimum (log10 scale), universal minimum trim
