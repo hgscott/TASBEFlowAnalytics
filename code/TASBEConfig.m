@@ -33,6 +33,9 @@ classdef TASBEConfig
             s.flow.outputPointCloud = false;
             doc.flow.pointCloudPath = 'location for point-cloud outputs';
             s.flow.pointCloudPath = 'CSV/';
+            % TASBE Setting migration
+            doc.flow.channel_template_file = 'TASBE setting migration';
+            s.flow.channel_template_file = '';     
 
             % generic plots
             s.plots = struct(); doc.plots = struct();
@@ -167,13 +170,6 @@ classdef TASBEConfig
             defaults('beads.plotSize') = 'calibration.graphPlotSize';
             doc.beads.validateAllChannels = 'If true, check all channels for likely bead problems; otherwise, check only ERF channel';
             s.beads.validateAllChannels = false;
-            
-            % TASBE Setting migration
-            doc.channel_template_file = struct();
-            doc.channel_template_file.about = 'Settings controlling TASBE Setting migration';
-            s.channel_template_file = struct();
-            doc.channel_template_file.channel_template_file = 'TASBE setting migration';
-            s.channel_template_file.channel_template_file = '';           % An example of this is CM.BeadFile
             
             % OutputSettings migration
             doc.OutputSettings = struct();
