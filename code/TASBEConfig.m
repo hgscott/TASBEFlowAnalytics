@@ -223,6 +223,13 @@ classdef TASBEConfig
             doc.OutputSettings.csvfile = 'May be either an fid or a string';
             s.OutputSettings.csvfile = []; % may be either an fid or a string
             
+            % Plusminus preferences
+            s.plusminus = struct(); 
+            doc.plusminus = struct();
+            doc.plusminus.about = 'Settings controlling plusminus plotting preferences';
+            doc.plusminus.plotError = 'If true, plots error envelopes in plusminus comparison graphs';
+            s.plusminus.plotError = false;
+            
             % Color translation
 %             s.colortranslation = struct();
 %             s.colortranslation.rangeMin = 3;                % bin minimum (log10 scale), universal minimum trim
