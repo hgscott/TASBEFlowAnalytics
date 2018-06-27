@@ -212,7 +212,7 @@ classdef TASBEConfig
             s.OutputSettings.PlotPopulation = true;
             doc.OutputSettings.PlotNormalized = 'If true, normalized plots created';
             s.OutputSettings.PlotNormalized = true;
-            doc.OutputSettings.PlotNonnormalized = 'If true, nonnormalizaed plots created';
+            doc.OutputSettings.PlotNonnormalized = 'If true, nonnormalized plots created';
             s.OutputSettings.PlotNonnormalized = true;
             doc.OutputSettings.PlotEveryN = 'If true, plots every N';
             s.OutputSettings.PlotEveryN = 1;
@@ -220,8 +220,8 @@ classdef TASBEConfig
             s.OutputSettings.PlotTickMarks = false;
             doc.OutputSettings.FigureSize = 'Size (in inches) [X Y] for figures';
             s.OutputSettings.FigureSize = [];
-            doc.OutputSettings.csvfile = 'May be either an fid or a string';
-            s.OutputSettings.csvfile = []; % may be either an fid or a string
+            doc.OutputSettings.csvfile = 'May be either a fid (file identifier) or a string';
+            s.OutputSettings.csvfile = []; 
             
             % Color translation
 %             s.colortranslation = struct();
