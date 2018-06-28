@@ -188,7 +188,7 @@ classdef TASBEConfig
             s.OutputSettings.FixedHistogramAxis = [];
             doc.OutputSettings.FixedBinningAxis = 'Set to fix limit [min max] of binning variable plot axis';
             s.OutputSettings.FixedBinningAxis = [];
-            doc.OutputSettings.FixedInputAxis = 'Set to fix limit [min max] of normalized output plot axis';
+            doc.OutputSettings.FixedInputAxis = 'Set to fix limit [min max] of normalized input plot axis';
             s.OutputSettings.FixedInputAxis =   [];
             doc.OutputSettings.FixedNormalizedInputAxis = 'Set to fix limit [min max] of normalized input plot axis';
             s.OutputSettings.FixedNormalizedInputAxis =   [];
