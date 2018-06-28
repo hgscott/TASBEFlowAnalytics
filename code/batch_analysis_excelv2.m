@@ -2,13 +2,13 @@
 % Each color is analyzed independently
 TASBEConfig.checkpoint('init');
 % Read in Excel for information, Samples sheet
-[num,txt,raw] = xlsread('C:/Users/coverney/Documents/SynBio/Template/Templatev2.xlsx', 'Samples', 'A1:O24');
+[num,txt,raw] = xlsread('C:/Users/coverney/Documents/SynBio/Template/batch_template.xlsx', 'Samples', 'A1:O24');
 
 % Read in Excel for information, Experiment sheet
-[num2,txt2,raw2] = xlsread('C:/Users/coverney/Documents/SynBio/Template/Templatev2.xlsx', 'Experiment', 'A1:T36');
+[num2,txt2,raw2] = xlsread('C:/Users/coverney/Documents/SynBio/Template/batch_template.xlsx', 'Experiment', 'A1:T36');
 
 % Read in Excel for information, Cytometer sheet
-[num3,txt3,raw3] = xlsread('C:/Users/coverney/Documents/SynBio/Template/Templatev2.xlsx', 'Cytometer', 'A1:H22');
+[num3,txt3,raw3] = xlsread('C:/Users/coverney/Documents/SynBio/Template/batch_template.xlsx', 'Cytometer', 'A1:H22');
 
 plotPath = cell2mat(raw(24,2));
 if ~isnan(plotPath)
@@ -17,8 +17,8 @@ else
     TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing plotPath in "Samples" sheet');
 end
 
-if ~isnan(cell2mat(raw2(13,9)))
-    stem = char(cell2mat(raw2(13,9)));
+if ~isnan(cell2mat(raw2(13,10)))
+    stem = char(cell2mat(raw2(13,10)));
 else
     TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing data directory stem in "Experiment" sheet');
     stem = '';
@@ -29,7 +29,7 @@ if ~isnan(cell2mat(raw(24,3)))
     CM_file = char(cell2mat(raw(24,3)));
 else
     %CM = make_color_model_excel();
-    CM_file = char(cell2mat(raw3(22,4)));
+    CM_file = char(cell2mat(raw3(22,3)));
 end
 load(CM_file);
 
@@ -42,10 +42,10 @@ end
 
 % Configure the analysis
 % Analyze on a histogram of 10^[first] to 10^[third] ERF, with bins every 10^[second]
-if isnan(cell2mat(raw(24,10))) | isnan(cell2mat(raw(24,11))) | isnan(cell2mat(raw(24,12)))
+if isnan(cell2mat(raw(24,9))) | isnan(cell2mat(raw(24,10))) | isnan(cell2mat(raw(24,11)))
     TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing Bin Sequence information in "Samples" sheet');
 else
-    bins = BinSequence(cell2mat(raw(24,10)),cell2mat(raw(24,11)),cell2mat(raw(24,12)),'log_bins');
+    bins = BinSequence(cell2mat(raw(24,9)),(1/cell2mat(raw(24,10))),cell2mat(raw(24,11)),'log_bins');
 end
 
 % Designate which channels have which roles
@@ -79,22 +79,22 @@ else
     TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing min valid count in "Samples" sheet');
 end
 
-% Ignore any raw fluorescence values less than this threshold as too contaminated by instrument noise
-if ~isnan(cell2mat(raw(24,7)))
-    AP=setPemDropThreshold(AP,cell2mat(raw(24,7)));
-else
-    TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing pem drop threshold in "Samples" sheet');
-end
+% % Ignore any raw fluorescence values less than this threshold as too contaminated by instrument noise
+% if ~isnan(cell2mat(raw(24,7)))
+%     AP=setPemDropThreshold(AP,cell2mat(raw(24,7)));
+% else
+%     TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing pem drop threshold in "Samples" sheet');
+% end
 
 % Add autofluorescence back in after removing for compensation?
-if ~isnan(cell2mat(raw(24,8)))
-    AP=setUseAutoFluorescence(AP,cell2mat(raw(24,8)));
+if ~isnan(cell2mat(raw(24,7)))
+    AP=setUseAutoFluorescence(AP,cell2mat(raw(24,7)));
 else
     TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing use auto fluorescence in "Samples" sheet');
 end
 
-if ~isnan(cell2mat(raw(24,9)))
-    AP=setMinFractionActive(AP,cell2mat(raw(24,9)));
+if ~isnan(cell2mat(raw(24,8)))
+    AP=setMinFractionActive(AP,cell2mat(raw(24,8)));
 else
     TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing min fraction active in "Samples" sheet');
 end

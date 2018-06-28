@@ -4,14 +4,14 @@ function [CM] = make_color_model_excelv2()
     
     % TODO: CHANGE TEMPLATE FILENAME ONCE TEMPLATE IN SAME FOLDER
     % Read in Excel for information, cytometer sheet
-    [~,~,raw] = xlsread('C:/Users/coverney/Documents/SynBio/Template/Templatev2.xlsx', 'Cytometer', 'A1:H22');
+    [~,~,raw] = xlsread('C:/Users/coverney/Documents/SynBio/Template/batch_template.xlsx', 'Cytometer', 'A1:H22');
     % Read in Excel for information, Experiment sheet
-    [~,~,raw2] = xlsread('C:/Users/coverney/Documents/SynBio/Template/Templatev2.xlsx', 'Experiment', 'A1:I20');
+    [~,~,raw2] = xlsread('C:/Users/coverney/Documents/SynBio/Template/batch_template.xlsx', 'Experiment', 'A1:J20');
     % Read in Excel for information, Samples sheet
-    [~,~,raw3] = xlsread('C:/Users/coverney/Documents/SynBio/Template/Templatev2.xlsx', 'Samples', 'A1:O18');
+    [~,~,raw3] = xlsread('C:/Users/coverney/Documents/SynBio/Template/batch_template.xlsx', 'Samples', 'A1:O18');
     
-    if ~isnan(cell2mat(raw2(13,9)))
-        stem = char(cell2mat(raw2(13,9)));
+    if ~isnan(cell2mat(raw2(13,10)))
+        stem = char(cell2mat(raw2(13,10)));
     else
         TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing data directory stem in "Experiment" sheet');
         stem = '';
@@ -205,8 +205,8 @@ function [CM] = make_color_model_excelv2()
 %     end
 
     % Ignore channel data for ith channel if below 10^[value(i)]
-    if ~isnan(cell2mat(raw(19,4)))
-        trans_channel_min = strsplit(char(cell2mat(raw(19,4))), ',');
+    if ~isnan(cell2mat(raw(19,3)))
+        trans_channel_min = strsplit(char(cell2mat(raw(19,3))), ',');
         CM = set_translation_channel_min(CM,[str2double(trans_channel_min{1}),str2double(trans_channel_min{2}),str2double(trans_channel_min{3})]);
     else
         TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing translation channel min X,Y,Z in "Cytometer" sheet');
@@ -215,8 +215,8 @@ function [CM] = make_color_model_excelv2()
     % Execute and save the model
     CM = resolve(CM);
     display(getStandardUnits(CM));
-    if ~isnan(cell2mat(raw(22,4)))
-        save('-V7',char(cell2mat(raw(22,4))),'CM');
+    if ~isnan(cell2mat(raw(22,3)))
+        save('-V7',char(cell2mat(raw(22,3))),'CM');
     else
         save('-V7','CM_no_name','CM');
         TASBESession.warn('make_color_model', 'MissingPreference', 'Missing CM file name in "Cytometer" sheet');
