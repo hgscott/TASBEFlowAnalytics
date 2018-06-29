@@ -9,9 +9,9 @@
 function channel = getChannel(AP, name)
     channel_id = find(strcmp(AP.ChannelLabels(:,1),name));
     if(numel(channel_id)>1)
-        error('Analysis specifies multiple "%s" channels',name);
+        TASBESession.error('TASBE:ColorModel','DuplicateChannels','Analysis specifies multiple "%s" channels',name);
     end
     if(numel(channel_id)==0)
-        error('Analysis does not specify a "%s" channel',name);
+        TASBESession.error('TASBE:ColorModel','MissingChannel','Analysis does not specify a "%s" channel',name);
     end
     channel = AP.ChannelLabels{channel_id,2};

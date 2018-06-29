@@ -13,6 +13,6 @@ function index = find(CM, channel)
             index = i; found = true; break;
         end;
     end;
-    if(~found), error('Unable to find channel %s',getName(channel)); end;
+    if(~found), TASBESession.error('TASBE:ColorModel','MissingChannel','Unable to find channel %s',getName(channel)); end;
 
         

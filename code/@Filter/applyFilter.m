@@ -12,4 +12,4 @@ function gated = applyFilter(F,fcshdr,rawfcs)
 % rawfcs is the data to be filtered
 % gated is the replacement for rawfcs
 
-error('Attempted to invoke abstract filter method');
+TASBESEssion.error('TASBE:Filter','AbstractFilterInvoked','Attempted to invoke abstract filter method');
