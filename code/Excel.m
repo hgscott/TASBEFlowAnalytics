@@ -3,6 +3,7 @@ classdef Excel
         coordinates = {...
                 {'experimentName', {1, 4, 1}}
                 {'stem', {1, 13, 10}}
+                {'filename_template', {1, 13, 5}}
                 {'beads.beadModel', {2, 3, 2}}
                 {'plots.plotPath', {{2, 22, 1}, {3, 24, 2}}}
                 {'beads.beadBatch', {2, 3, 1}}
