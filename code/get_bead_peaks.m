@@ -45,7 +45,7 @@ function [peaks units batch] = get_bead_peaks(model,channel,batch)
                         end
                     end
                     if isempty(batch), batch = 'unspecified'; end; % put in a scratch name for an omitted batch name
-                    TASBESession.error('get_bead_peaks', 'NoChannel', 'Unable to find bead catalog channel entry for model %s, batch %s, channel %s',model,batch,channel);
+                    TASBESession.error('TASBE:BeadCatalog', 'NoChannel', 'Unable to find bead catalog channel entry for model %s, batch %s, channel %s',model,batch,channel);
                 
                 elseif strfind(batchEntry{1}, batch2)
                     num_batch_matches = num_batch_matches + 1;
@@ -70,17 +70,17 @@ function [peaks units batch] = get_bead_peaks(model,channel,batch)
                     end
                 end
                 if isempty(batch), batch = 'unspecified'; end; % put in a scratch name for an omitted batch name
-                TASBESession.error('get_bead_peaks', 'NoChannel', 'Unable to find bead catalog channel entry for model %s, batch %s, channel %s',model,batch,channel);
+                TASBESession.error('TASBE:BeadCatalog', 'NoChannel', 'Unable to find bead catalog channel entry for model %s, batch %s, channel %s',model,batch,channel);
             
             elseif num_batch_matches > 1
-                TASBESession.error('get_bead_peaks', 'VagueInput', 'Input bead catalog batch entry for model %s, batch %s is too vague. Reference BeadCatalog.xlsx for batch entry options.',model,batch);
+                TASBESession.error('TASBE:BeadCatalog', 'VagueInput', 'Input bead catalog batch entry for model %s, batch %s is too vague. Reference BeadCatalog.xlsx for batch entry options.',model,batch);
             
             else
-                TASBESession.error('get_bead_peaks', 'NoBatch', 'Unable to find bead catalog batch entry for model %s, batch %s',model,batch);
+                TASBESession.error('TASBE:BeadCatalog', 'NoBatch', 'Unable to find bead catalog batch entry for model %s, batch %s',model,batch);
             end
         end
     end
-    TASBESession.error('get_bead_peaks', 'NoModel', 'Unable to find bead catalog model entry for %s',model);
+    TASBESession.error('TASBE:BeadCatalog', 'NoModel', 'Unable to find bead catalog model entry for %s',model);
 end
 
 % The catalog has a 4-layer cell structure:
@@ -155,17 +155,17 @@ function channelEntry = parseChannel(entries,currentLine)
     laser = row{2};
     if ischar(row{3}), filter = row{3};
     elseif emptyOrNaN(row{3}), filter = 'Unspecified';
-    else error('Line %i: filter must be either a string or blank',currentLine);
+    else TASBESession.error('TASBE:BeadCatalog','BadFilter','Line %i: filter must be either a string or blank',currentLine);
     end
     units = row{4};
     try
         lastPeak = find(~cellfun(@emptyOrNaN,row(5:end)),1,'last');
     catch e
-        error('Line %i: couldn''t interpret peak specifications',currentLine);
+        TASBESession.error('TASBE:BeadCatalog','BadPeakSpecifications','Line %i: couldn''t interpret peak specifications',currentLine);
     end
     peaks = [row{4+(1:lastPeak)}];
     if isempty(peaks)
-        error('Line %i: bead peak specification must contain at least one peak.',currentLine);
+        TASBESession.error('TASBE:BeadCatalog','MissingPeakSpecification','Line %i: bead peak specification must contain at least one peak.',currentLine);
     end
 
     % Code added to make sure Octave doesn't throw away the empty peak

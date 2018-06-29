@@ -62,7 +62,7 @@ switch(mode)
         end
         
     otherwise
-        error('Unknown statistical mode %s',mode);
+        TASBESession.error('TASBE:Analysis','UnknownStatisticalMode','Unknown statistical mode %s',mode);
 end
 
 excluded = size(data,1) - sum(counts);

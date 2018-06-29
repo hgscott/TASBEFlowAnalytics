@@ -20,7 +20,7 @@ for i=1:numel(channels)
             found=true; continue;
         end
     end
-    if(~found), error('Could not find channel %s',getPrintName(channels{i})); end;
+    if(~found), TASBESession.error('TASBE:Analysis','MissingChannel','Could not find channel %s',getPrintName(channels{i})); end;
 end
 
 end

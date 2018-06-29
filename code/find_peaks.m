@@ -39,7 +39,7 @@ if(numel(maxima) == 0),
     TASBESession.warn('TASBE:FindPeaks','NoPeaksFound','Problematic distribution: no peaks found in histogram'); 
     maxima(1) = 1; bin_counts(1) = NaN;% put in fake data
 end;
-if(abs(numel(maxima)-numel(minima))>1), error('Internal error: impossible distribution of %i maxima and %i minima',numel(maxima),numel(minima)); end;
+if(abs(numel(maxima)-numel(minima))>1), TASBESession.error('TASBE:FindPeaks','ImpossibleDistribution','Internal error: impossible distribution of %i maxima and %i minima',numel(maxima),numel(minima)); end;
 
 % enhance with first/last minima to get minima surrounding each maximum
 if(numel(minima)==0 || minima(1)>maxima(1)), minima = [1 minima]; end;

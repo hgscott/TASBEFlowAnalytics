@@ -16,7 +16,7 @@ n_channels = numel(getChannels(colorModel));
 
 % Get the constitutive
 constitutive_channel = getChannel(analysisParams, 'constitutive');
-if isempty(constitutive_channel), error('A constitutive channel is required!'); end;
+if isempty(constitutive_channel), TASBESession.error('TASBE:Analysis','NoConstitutiveChannel','A constitutive channel is required!'); end;
 c_index = find(colorModel,constitutive_channel); % Determine data column from ColorModel
 
 % Lookup distribution models
