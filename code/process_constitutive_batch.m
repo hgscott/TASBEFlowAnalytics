@@ -18,7 +18,7 @@ for i = 1:batch_size
     fileset = batch_description{i,2};
     for j=1:numel(fileset),
         if ~exist(fileset{j},'file'),
-            error('Could not find file: %s',fileset{j});
+            TASBESession.error('TASBE:Analysis','MissingFile','Could not find file: %s',fileset{j});
         end
     end
 end

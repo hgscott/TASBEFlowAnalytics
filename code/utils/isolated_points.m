@@ -13,7 +13,7 @@ function which = isolated_points(sequence,log_scale)
 
 if nargin>1 && log_scale, sequence(sequence<=0) = NaN; end;
 
-if ~isvector(sequence), TASBESession.error('TASBE:Utilities','IsolatedPointVector','Sequenced expected to be vector, but is not'); end;
+if ~isvector(sequence), TASBESession.error('TASBE:Utilities','IsolatedPointVector','Sequence expected to be vector, but is not'); end;
 if size(sequence,1)>1, sequence = sequence'; end; % transpose if needed
 
 nonplotting = isnan(sequence) | isinf(sequence) | ~isreal(sequence);

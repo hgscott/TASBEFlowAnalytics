@@ -39,7 +39,7 @@
             
             % check to make sure InducerLevelsToFiles has the correct dimensions
             if size(E.InducerLevelsToFiles, 2) ~= 2 && size(E.InducerLevelsToFiles, 2) ~= 0
-                TASBESession.error('Experiment', 'DimensionMismatch', 'Transfer Curve analysis invoked with incorrect number of columns. Make sure InducerLevelsToFiles is a n X 2 matrix.');
+                TASBESession.error('TASBE:Experiment', 'DimensionMismatch', 'Transfer Curve analysis invoked with incorrect number of columns. Make sure InducerLevelsToFiles is a n X 2 matrix.');
             end  
            
             

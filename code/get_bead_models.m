@@ -71,6 +71,7 @@ function [model currentLine] = parseModel(entries,currentLine)
     end
 end
 
+% duplicated with get_bead_peaks --- consider consolidating
 function [batch currentLine] = parseBatch(entries,currentLine)
     % from first line, take first cell to be batch name; rest will be parsed amongst
     name = entries{currentLine,1};
@@ -86,23 +87,24 @@ function [batch currentLine] = parseBatch(entries,currentLine)
     end
 end
 
+% duplicated with get_bead_peaks --- consider consolidating
 function channelEntry = parseChannel(entries,currentLine)
     row = entries(currentLine,2:end);
     name = row{1};
     laser = row{2};
     if ischar(row{3}), filter = row{3};
     elseif emptyOrNaN(row{3}), filter = 'Unspecified';
-    else error('Line %i: filter must be either a string or blank',currentLine);
+    else TASBESession.error('TASBE:BeadCatalog','BadFilter','Line %i: filter must be either a string or blank',currentLine);
     end
     units = row{4};
     try
         lastPeak = find(~cellfun(@emptyOrNaN,row(5:end)),1,'last');
     catch e
-        error('Line %i: couldn''t interpret peak specifications',currentLine);
+        TASBESession.error('TASBE:BeadCatalog','BadPeakSpecifications','Line %i: couldn''t interpret peak specifications',currentLine);
     end
     peaks = [row{4+(1:lastPeak)}];
     if isempty(peaks)
-        error('Line %i: bead peak specification must contain at least one peak.',currentLine);
+        TASBESession.error('TASBE:BeadCatalog','MissingPeakSpecification','Line %i: bead peak specification must contain at least one peak.',currentLine);
     end
 
     % Code added to make sure Octave doesn't throw away the empty peak

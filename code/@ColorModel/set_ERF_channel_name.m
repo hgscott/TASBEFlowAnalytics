@@ -14,5 +14,5 @@ function CM=set_ERF_channel_name(CM, v)
             CM.ERF_channel = CM.Channels{i}; found=true; break; 
         end;
     end;
-    if(~found), error('Unable to find ERF channel %s',CM.ERF_channel_name); end;
+    if(~found), TASBESession.error('TASBE:ColorModel','MissingERFChannel','Unable to find ERF channel %s',CM.ERF_channel_name); end;
 

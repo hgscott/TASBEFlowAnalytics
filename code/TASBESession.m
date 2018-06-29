@@ -108,6 +108,7 @@ classdef TASBESession
             event.type = 'success';
             event.message = sprintf(message,varargin{:});
             out = TASBESession.access('insert',classname,event);
+            fprintf([strrep(event.message,'%','%%') '\n']);
         end
         
         function out = notify(classname,name,message,varargin)
@@ -116,7 +117,7 @@ classdef TASBESession
             event.type = 'success';
             event.message = sprintf(message,varargin{:});
             out = TASBESession.access('insert',classname,event);
-            fprintf(['Note: ' strrep(event.message,'%','%%')]);
+            fprintf(['Note: ' strrep(event.message,'%','%%') '\n']);
         end
         
         function reset()

@@ -29,7 +29,7 @@ m_inductions = getInducerLevelsToFiles(getExperiment(m_results),1);
 if ((get_n_bins(p_bins) ~= get_n_bins(m_bins)) || ...
     numel(find(get_bin_edges(p_bins) ~= get_bin_edges(m_bins))) || ...
     numel(find(p_inductions ~= m_inductions)))
-    error('Plus/Minus experiment cannot compare datasets with differen inductions or bins');
+    TASBESession.error('TASBE:Analysis','PlusMinusMismatch','Plus/Minus experiment cannot compare datasets with different inductions or bins');
 end
 
 n_bins = get_n_bins(p_bins);
