@@ -2,7 +2,7 @@
 TASBEConfig.checkpoint('init');
 
 % Read in Excel for information
-[num,txt,raw] = xlsread('C:/Users/coverney/Documents/SynBio/Template/Templatev2.xlsx', 'Additional Settings', 'A1:D63');
+[num,txt,raw] = xlsread('C:/Users/coverney/Documents/SynBio/Template/batch_template.xlsx', 'Additional Settings', 'A1:D63');
 
 for i=2:63
     if ~isnan(cell2mat(raw(i,3)))

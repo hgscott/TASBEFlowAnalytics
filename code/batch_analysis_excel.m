@@ -1,59 +1,73 @@
-% This template shows how to perform a simple batch analysis of a set of conditions
-% Each color is analyzed independently
-TASBEConfig.checkpoint('init');
-% Read in Excel for information, Samples sheet
-[num,txt,raw] = xlsread('C:/Users/coverney/Documents/SynBio/Template/Template1.xlsx', 'Samples', 'A1:O24');
-
-% Read in Excel for information, Experiment sheet
-[num2,txt2,raw2] = xlsread('C:/Users/coverney/Documents/SynBio/Template/Template1.xlsx', 'Experiment', 'A1:T36');
-
-% Read in Excel for information, Cytometer sheet
-[num3,txt3,raw3] = xlsread('C:/Users/coverney/Documents/SynBio/Template/Template1.xlsx', 'Cytometer', 'A1:H22');
-
-plotPath = cell2mat(raw(24,2));
-if ~isnan(plotPath)
-    TASBEConfig.set('plots.plotPath', char(plotPath));
-else
-    TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing plotPath in "Samples" sheet');
+% Load the color model
+try
+    CM_file = extractor.getExcelValue('inputName_CM', 'char'); 
+catch
+    try
+        CM_file = extractor.getExcelValue('outputName_CM', 'char');
+    catch
+        CM_file = [experimentName '-ColorModel.mat'];
+    end
 end
-% load the color model
-CM_file = cell2mat(raw(24,3));
-if ~isnan(CM_file)
-    load(char(CM_file));
-else
-    TASBESession.warn('make_color_model', 'MissingPreference', 'Missing CM filename in "Samples" sheet. Will generate Color Model');
+
+try 
+    load(CM_file);
+catch
     CM = make_color_model_excel();
 end
 
-% set up metadata
-if ~isnan(cell2mat(raw2(4,1)))
-    experimentName = char(cell2mat(raw2(4,1)));
-else
-    TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing experiment name in "Experiment" sheet');
+% Reset TASBEConfig and create Excel object
+TASBEConfig_updates();
+extractor = Excel;
+
+% Set TASBEConfigs and create variables needed to run batch analysis
+stem = extractor.getExcelValue('stem', 'char');
+experimentName = extractor.getExcelValue('experimentName', 'char');
+try
+    outputName = extractor.getExcelValue('outputName_BA', 'char');
+catch
+    TASBESession.warn('make_color_model_excel', 'MissingPreference', 'Missing Output File Name for Batch Analysis in "Samples" sheet');
+    outputName = [experimentName '-BatchAnalysis.mat'];
 end
 
-% Configure the analysis
+try 
+    stemName = extractor.getExcelValue('OutputSettings.StemName', 'char');
+    TASBEConfig.set('OutputSettings.StemName', stemName);
+catch
+    TASBESession.warn('make_color_model', 'MissingPreference', 'Missing Stem Name in "Samples" sheet');
+    TASBEConfig.set('OutputSettings.StemName', experimentName);
+end
+
+extractor.setTASBEConfig('plots.plotPath', 'char', 2);
 % Analyze on a histogram of 10^[first] to 10^[third] ERF, with bins every 10^[second]
-if isnan(cell2mat(raw(24,11))) | isnan(cell2mat(raw(24,12))) | isnan(cell2mat(raw(24,13)))
-    TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing Bin Sequence information in "Samples" sheet');
-else
-    bins = BinSequence(cell2mat(raw(24,11)),cell2mat(raw(24,12)),cell2mat(raw(24,13)),'log_bins');
+try
+    binseq_min = extractor.getExcelValue('binseq_min', 'numeric');
+    binseq_max = extractor.getExcelValue('binseq_max', 'numeric');
+    binseq_pdecade = extractor.getExcelValue('binseq_pdecade', 'numeric');
+    bins = BinSequence(binseq_min, (1/binseq_pdecade), binseq_max, 'log_bins');
+catch
+    bins = BinSequence();
 end
 
 % Designate which channels have which roles
 ref_channels = {'constitutive', 'input', 'output'};
 outputs = {};
-for i=9:16
-    print_name = cell2mat(raw3(i,2));
-    if ~isnan(print_name)
-        channel_type = char(cell2mat(raw3(i,4)));
-        for j=1:numel(ref_channels)
-            if strcmpi(ref_channels{j}, channel_type)
-                outputs{j} = channel_named(CM, char(print_name));
-            end
-        end
-    else
+print_names = {};
+sh_num1 = extractor.getSheetNum('first_flchrome_name');
+first_flchrome_row = extractor.getRowNum('first_flchrome_name');
+flchrome_name_col = extractor.getColNum('first_flchrome_name');
+flchrome_type_col = extractor.getColNum('first_flchrome_type');
+for i=first_flchrome_row:size(extractor.sheets{sh_num1},1)
+    try
+        print_name = extractor.getExcelValuePos(sh_num1, i, flchrome_name_col, 'char');
+    catch
         break
+    end
+    print_names{end+1} = print_name;
+    channel_type = extractor.getExcelValuePos(sh_num1, i, flchrome_type_col, 'char');
+    for j=1:numel(ref_channels)
+        if strcmpi(ref_channels{j}, channel_type)
+            outputs{j} = channel_named(CM, print_name);
+        end
     end
 end
 
@@ -63,46 +77,52 @@ else
     TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing constitutive, input, output in "Cytometer" sheet');
     AP = AnalysisParameters(bins,{});
 end
+
     
 % Ignore any bins with less than valid count as noise
-if ~isnan(cell2mat(raw(24,7)))
-    AP=setMinValidCount(AP,cell2mat(raw(24,7)));
-else
-    TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing min valid count in "Samples" sheet');
-end
-
-% Ignore any raw fluorescence values less than this threshold as too contaminated by instrument noise
-if ~isnan(cell2mat(raw(24,8)))
-    AP=setPemDropThreshold(AP,cell2mat(raw(24,8)));
-else
-    TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing pem drop threshold in "Samples" sheet');
+try
+    minValidCount = extractor.getExcelValue('minValidCount', 'numeric');
+    AP=setMinValidCount(AP,minValidCount);
+catch
+    TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing Min Valid Count in "Samples" sheet');
 end
 
 % Add autofluorescence back in after removing for compensation?
-if ~isnan(cell2mat(raw(24,9)))
-    AP=setUseAutoFluorescence(AP,cell2mat(raw(24,9)));
-else
-    TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing use auto fluorescence in "Samples" sheet');
+try
+    autofluorescence = extractor.getExcelValue('autofluorescence', 'numeric');
+    AP=setUseAutoFluorescence(AP,autofluorescence);
+catch
+    TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing Use Auto Fluorescence in "Samples" sheet');
 end
 
-if ~isnan(cell2mat(raw(24,10)))
-    AP=setMinFractionActive(AP,cell2mat(raw(24,10)));
-else
-    TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing min fraction active in "Samples" sheet');
+try
+    minFracActive = extractor.getExcelValue('minFracActive', 'numeric');
+    AP=setMinFractionActive(AP,minFracActive);
+catch
+    TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing Min Fraction Active in "Samples" sheet');
 end
 
-stem = '../FCS/';
 sample_names = {};
 file_names = {};
-for i=3:size(raw,1)
-    if ~isnan(cell2mat(raw(i,1)))
-        % is a sample, check if should be included in batch analysis
-        if isnan(cell2mat(raw(i,15)))
-            sample_names{end+1} = char(cell2mat(raw(i,11)));
-            file_names{end+1} = {[stem char(cell2mat(raw(i,12)))]};
-        end
-    else
+sh_num2 = extractor.getSheetNum('first_sample_num');
+first_sample_row = extractor.getRowNum('first_sample_num');
+sample_num_col = extractor.getColNum('first_sample_num');
+sample_filename_col = extractor.getColNum('first_sample_filename');
+sample_name_col = extractor.getColNum('first_sample_name');
+sample_exclude_col = extractor.getColNum('first_sample_exclude');
+for i=first_sample_row:size(extractor.sheets{sh_num2},1)
+    try
+        extractor.getExcelValuePos(sh_num2, i, sample_num_col, 'numeric');
+    catch
         break
+    end
+    % check if sample should be included in batch analysis
+    try
+        extractor.getExcelValuePos(sh_num2, i, sample_exclude_col, 'char');
+    catch
+        sample_names{end+1} = extractor.getExcelValuePos(sh_num2, i, sample_name_col, 'char');
+        file = extractor.getExcelValuePos(sh_num2, i, sample_filename_col, 'char');
+        file_names{end+1} = {[stem file]};
     end
 end
 
@@ -113,40 +133,11 @@ file_pairs(:,2) = file_names;
 
 n_conditions = size(file_pairs,1);
 
-% Execute the actual analysis
-channel_names = {};
-for i=9:16
-    print_name = cell2mat(raw3(i,2));
-    if ~isnan(print_name)
-        channel_names{end+1} = char(print_name);
-    else
-        break
-    end
-end
-
-[results, sampleresults] = per_color_constitutive_analysis(CM,file_pairs,channel_names,AP);
+[results, sampleresults] = per_color_constitutive_analysis(CM,file_pairs,print_names,AP);
 
 % Make output plots
-if ~isnan(cell2mat(raw(24,4)))
-    TASBEConfig.set('OutputSettings.StemName',char(cell2mat(raw(24,4))));
-else
-    TASBESession.warn('make_color_model', 'MissingPreference', 'Missing stem name in "Samples" sheet');
-    TASBEConfig.set('OutputSettings.StemName',experimentName);
-end
-
-if ~isnan(cell2mat(raw(24,5)))
-    bounds = strsplit(char(cell2mat(raw(24,5))), ',');
-    TASBEConfig.set('OutputSettings.FixedInputAxis',[str2double(bounds{1}) str2double(bounds{1})]);
-else
-    TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing fixed input axis in "Samples" sheet');
-end
-
 plot_batch_histograms(results,sampleresults,CM);
 
 [statisticsFile, histogramFile] = serializeBatchOutput(file_pairs, CM, AP, sampleresults);
 
-if ~isnan(cell2mat(raw(24,6)))
-    save(char(cell2mat(raw(24,6))),'AP','bins','file_pairs','results','sampleresults');
-else
-    TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing output filename in "Samples" sheet');
-end
+save(outputName,'AP','bins','file_pairs','results','sampleresults');
