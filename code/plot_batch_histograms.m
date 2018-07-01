@@ -6,19 +6,36 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function plot_batch_histograms(results,sampleresults,linespecs,CM)
+function plot_batch_histograms(results,sampleresults,CM,linespecs)
 % Elements of linespecs can either be LineSpecs, or ColorSpecs (e.g. three-element
 % 0..1 vectors representing RGB color values); currently, only single-letter 
 % color linespecs are properly handled.
+
+if (~exist('linespecs', 'var'))
+    % Build linespecs from CM
+    channels = getChannels(CM);
+    linespecs = {1, numel(channels)};
+    for i=1:numel(channels)
+        linespecs{i} = getLineSpec(channels{i});
+    end
+end
 
 n_conditions = size(sampleresults,1);
 n_colors = numel(linespecs);
 
 fprintf('Plotting histograms');
 
+% Create legendentries
+channels = getChannels(CM);
+legendentries = cell(0);
+for i=1:numel(channels)
+    legendentries{end+1} = getPrintName(channels{i});
+end
+
 % one bincount plot per condition
 maxcount = 1e1;
 for i=1:n_conditions
+    lines = [];
     % TODO: this should really be using a standard number
     h = figure('PaperPosition',[1 1 5 3.66]);
     set(h,'visible','off');
@@ -26,23 +43,27 @@ for i=1:n_conditions
     for k=1:n_colors
         replicates = sampleresults{i};
         numReplicates = numel(replicates);
-        for j=1:numReplicates,
+        for j=1:numReplicates
             counts = replicates{j}.BinCounts;
             ls = linespecs{k};
             isolates = isolated_points(counts(:,k),1);
             if(ischar(ls) && length(ls)==1 && length(findstr(ls, 'rgbcmykw')) == 1)
-                loglog(bin_centers,counts(:,k),ls); hold on;
+                line1 = loglog(bin_centers,counts(:,k),ls); hold on;
                 loglog(bin_centers(isolates),counts(isolates,k),['+' ls]); % add isolated points with markers
             else
-                loglog(bin_centers,counts(:,k),'Color', ls); hold on;
+                line1 = loglog(bin_centers,counts(:,k),'Color', ls); hold on;
                 loglog(bin_centers(isolates),counts(isolates,k),'+','Color',ls); % add isolated points with markers
+            end
+            
+            if j == 1
+                lines(end+1) = line1;
             end
         end
         maxcount = max(maxcount,max(max(counts)));
     end
     
     
-    for j=1:numReplicates,
+    for j=1:numReplicates
         for k=1:n_colors
             ls = linespecs{k};
             if(ischar(ls) && length(ls)==1 && length(findstr(ls, 'rgbcmykw')) == 1)
@@ -54,12 +75,18 @@ for i=1:n_conditions
     end
     
     xlabel(clean_for_latex(getStandardUnits(CM))); ylabel('Count');
-    if(TASBEConfig.isSet('OutputSettings.FixedBinningAxis')), xlim(TASBEConfig.get('OutputSettings.FixedBinningAxis')); end;
-    if(TASBEConfig.isSet('OutputSettings.FixedHistogramAxis')), ylim(TASBEConfig.get('OutputSettings.FixedHistogramAxis')); else ylim([1e0 10.^(ceil(log10(maxcount)))]); end;
+    legend(lines, legendentries,'Location','Best');
+    if(TASBEConfig.isSet('OutputSettings.FixedBinningAxis')), xlim(TASBEConfig.get('OutputSettings.FixedBinningAxis')); end
+    if(TASBEConfig.isSet('OutputSettings.FixedHistogramAxis')), ylim(TASBEConfig.get('OutputSettings.FixedHistogramAxis')); else ylim([1e0 10.^(ceil(log10(maxcount)))]); end
 
     title([TASBEConfig.get('OutputSettings.StemName') ' ' clean_for_latex(results{i}.condition) ' bin counts, by color']);
-    outputfig(h,[TASBEConfig.get('OutputSettings.StemName') '-' results{i}.condition '-bincounts'],TASBEConfig.get('plots.plotPath'));
+    
+    if(strcmp(TASBEConfig.get('OutputSettings.StemName'), ' ') || strcmp(TASBEConfig.get('OutputSettings.StemName'), ''))
+        outputfig(h,[results{i}.condition '-bincounts'],TASBEConfig.get('plots.plotPath'));
+    else
+        outputfig(h,[TASBEConfig.get('OutputSettings.StemName') '-' results{i}.condition '-bincounts'],TASBEConfig.get('plots.plotPath'));
+    end
 
     fprintf('.');
-end;
+end
 fprintf('\n');

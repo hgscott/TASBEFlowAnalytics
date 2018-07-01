@@ -54,7 +54,12 @@ n_conditions = size(file_pairs,1);
 TASBEConfig.set('OutputSettings.StemName','LacI-CAGop');
 TASBEConfig.set('plots.plotPath','/tmp/plots');
 TASBEConfig.set('OutputSettings.FixedInputAxis',[1e4 1e10]);
-plot_batch_histograms(results,sampleresults,{'b','y','r'},CM);
+plot_batch_histograms(results,sampleresults,CM,{'b','y','r'});
+
+% Make output plots without linespecs
+TASBEConfig.set('plots.plotPath','/tmp/plots2');
+TASBEConfig.set('OutputSettings.FixedInputAxis',[1e4 1e10]);
+plot_batch_histograms(results,sampleresults,CM);
 
 save('/tmp/LacI-CAGop-batch.mat','AP','bins','file_pairs','results','sampleresults');
 
@@ -161,7 +166,7 @@ assertEqual(sampleIDs{3}, 'Dox 2.0/5.0');
 %assertEqual(sampleIDs{7}, 'Dox 1000.0/2000.0');
 
 % spot-check first five rows of binCounts
-assertElementsAlmostEqual(cell2mat(binCounts(1:5,:)), expected_bincounts, 'relative', 1e-2);
+assertElementsAlmostEqual(cell2mat(binCounts(1:5,:)), expected_bincounts, 'relative', 2e-2);
 
 % spot-check geo means and geo std devs.
 for i=1:6, % was 7

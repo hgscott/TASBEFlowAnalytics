@@ -1,13 +1,13 @@
 function h=ZeroOnLog(zero,start)
 
-% Create by Jacob Beal in 2014
+% Created by Jacob Beal in 2014
 % based on BreakXAxis by Julie Haas (BSD license, copyright 2004), after Michael Robbins
 % Assumes an already existing plot and axes, just waiting for relabeling and marking
 
 
 yrange = ylim;
 t1=text((zero+start)/2,yrange(1),'//','fontsize',15);
-t2=text((zero+start)/2,yrange(2),'//','fontsize',15);
+% t2=text((zero+start)/2,yrange(2),'//','fontsize',15);
 % For y-axis breaks, use set(t1,'rotation',270);
 
 % remap tick marks, and 'erase' them in the gap
@@ -18,10 +18,11 @@ set(gca,'XMinorTick','off')
 
 mintick = floor(log10(start));
 maxtick = floor(log10(xrange(2)));
+zerotick = floor(log10(xrange(1)));
 
 xtick = zeros((maxtick-mintick+1)*9,1);
 for i=mintick:maxtick
-    xtick(i*9+(1:9)) = (1:9)*10^i;
+    xtick((i-zerotick)*9+(1:9)) = (1:9)*10^i;
 end
 xtick = [zero; xtick(xtick>=start&xtick<=xrange(2))];
 

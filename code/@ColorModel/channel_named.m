@@ -15,5 +15,5 @@ function channel = channel_named(CM,name)
             channel = CM.Channels{i}; found = true; break;
         end;
     end;
-    if(~found), error('Unable to find channel %s',name); end;
+    if(~found), TASBESession.error('TASBE:ColorModel','MissingChannel','Unable to find channel %s',name); end;
        

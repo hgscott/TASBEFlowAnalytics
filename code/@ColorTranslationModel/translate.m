@@ -10,9 +10,9 @@ function translated = translate(CTM,data,original,final)
     if(original==final), translated=data; return; end;
     % Color_j = matrix(
     i = indexof(CTM.Channels,original);
-    if(i==-1), error('Missing translation channel: %s',getPrintName(original)); end;
+    if(i==-1), TASBESession.error('TASBE:ColorTranslation','MissingTranslationChannel','Missing translation channel: %s',getPrintName(original)); end;
     j = indexof(CTM.Channels,final);
-    if(j==-1), error('Missing translation channel: %s',getPrintName(final)); end;
-    if(isnan(CTM.scales(i,j))), error('No pairwise translation for %s to %s',getPrintName(original),getPrintName(final)); end;
+    if(j==-1), TASBESession.error('TASBE:ColorTranslation','MissingTranslationChannel','Missing translation channel: %s',getPrintName(final)); end;
+    if(isnan(CTM.scales(i,j))), TASBESession.error('TASBE:ColorTranslation','MissingTranslation','No pairwise translation for %s to %s',getPrintName(original),getPrintName(final)); end;
 
     translated = CTM.scales(i,j) * data;

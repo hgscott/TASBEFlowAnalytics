@@ -1,7 +1,7 @@
 # TASBE Flow Analytics
 [![Build Status](https://travis-ci.org/TASBE/TASBEFlowAnalytics.svg?branch=master)](https://travis-ci.org/TASBE/TASBEFlowAnalytics)
 
-TASBE Flow Analytics is a flow cytometry analysis package.
+TASBE Flow Analytics is a flow cytometry analysis package. For manual materials, reference the [TASBE Tutorials](https://github.com/TASBE/TASBEFlowAnalytics-tutorial).
 
 ## Features
 
@@ -29,8 +29,8 @@ the following two publications:**
 - Using the shell (requires a Unix-like operating system such as GNU/Linux or Apple OSX):
 
     ```bash
-    git clone https://github.com/TASBE/TASBEFlowAnalyics.git
-    cd TASBEFlowAnalyics
+    git clone https://github.com/TASBE/TASBEFlowAnalytics.git
+    cd TASBEFlowAnalytics
     make install
     ```
     This will add the TASBEFlowAnalyics directory to the Matlab and/or GNU Octave searchpath. If both Matlab and GNU Octave are available on your machine, it will install TASBEFlowAnalyics for both.
@@ -38,13 +38,17 @@ the following two publications:**
 - Manual installation:
   - Download the package from [GitHub](https://github.com/TASBE/TASBEFlowAnalyics)
   - Start Matlab or Octave
-  - Go to the ``TASBEFlowAnalyics/code`` directory
-  - Add and save the set of paths:
+  - Go to the ``TASBEFlowAnalytics/code`` directory
+  - Add and save the set of paths into the command window:
   
       ```
     addpath(genpath(pwd));
     savepath;
     ```
+  - Run ``tasbe_set_path.m`` located outside of the ``TASBEFlowAnalytics/code`` directory
+  - Open up selected matlab file to run (i.e. tutorials)
+  - Run file and select ``Change Folder`` if prompted
+  - **Optional:** install [MOxUnit](https://github.com/MOxUnit/MOxUnit) to run the test files
 
 ## Usage
 

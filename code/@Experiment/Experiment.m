@@ -28,14 +28,19 @@
             E.InducerLevelsToFiles=[]; 
             E.ProteinName =[]; 
             E.Construct =[];
-            
         
             if nargin > 0
                 E.ExperimentName = Name;
                 E.InducerNames = InducerNames;
                 E.InducerLevelsToFiles = InducerLevelsToFiles;
             end;
-          E=class(E,'Experiment');  
+            
+            E=class(E,'Experiment');
+            
+            % check to make sure InducerLevelsToFiles has the correct dimensions
+            if size(E.InducerLevelsToFiles, 2) ~= 2 && size(E.InducerLevelsToFiles, 2) ~= 0
+                TASBESession.error('TASBE:Experiment', 'DimensionMismatch', 'Transfer Curve analysis invoked with incorrect number of columns. Make sure InducerLevelsToFiles is a n X 2 matrix.');
+            end  
            
             
 % C1 = Channel('red','TxRed','r')

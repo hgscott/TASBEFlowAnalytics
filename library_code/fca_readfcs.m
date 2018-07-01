@@ -48,13 +48,13 @@ if nargin == 0
      end
 else
     if isempty(filename)
-        warning('FCS:Read','No file provided! Returning empty dataset.'); 
+        TASBESession.warn('FCS:Read','NoFile','No file provided! Returning empty dataset.'); 
         fcsdat = []; fcshdr = []; fcsdatscaled = [];
         return;
     end
     filecheck = dir(filename);
     if size(filecheck,1) == 0
-        warning('FCS:Read',[filename,': The file does not exist! Returning empty dataset.']); 
+        TASBESession.warn('FCS:Read','NoFile',[filename,': The file does not exist! Returning empty dataset.']); 
         fcsdat = []; fcshdr = []; fcsdatscaled = [];
         return;
     end
@@ -87,7 +87,7 @@ fcsheader_type = char(fcsheader_1stline(1:6)');
 %reading the header
 %
 if strcmp(fcsheader_type,'FCS1.0')
-    hm = msgbox('FCS 1.0 file type is not supported!','FcAnalysis info','warn');
+    TASBESession.error('FCS:Read','FCS1',[FileName ': FCS 1.0 file type is not supported.']);
     fcsdat = []; fcshdr = [];
     fclose(fid);
     return;
@@ -114,7 +114,7 @@ elseif  strcmp(fcsheader_type,'FCS2.0') || strcmp(fcsheader_type,'FCS3.0') || st
         mnemonic_separator = char(fcsheader_main(1));
     end
     if mnemonic_separator == '@';% WinMDI
-        hm = msgbox([FileName,': The file can not be read (Unsupported FCS type: WinMDI histogram file)'],'FcAnalysis info','warn');
+        TASBESession.error('FCS:Read','WinMDI',[FileName ': The file can not be read (Unsupported FCS type: WinMDI histogram file)']);
         fcsdat = []; fcshdr = [];
         fclose(fid);
         return;
@@ -219,7 +219,7 @@ elseif  strcmp(fcsheader_type,'FCS2.0') || strcmp(fcsheader_type,'FCS3.0') || st
     fcshdr.cells = get_mnemonic_value('$Cells',fcsheader_main, mnemonic_separator);
     fcshdr.creator = get_mnemonic_value('CREATOR',fcsheader_main, mnemonic_separator);
 else
-    hm = msgbox([FileName,': The file can not be read (Unsupported FCS type)'],'FcAnalysis info','warn');
+    TASBESession.error('FCS:Read','UnsupportedFCSType',[FileName,': The file can not be read (Unsupported FCS type)']);
     fcsdat = []; fcshdr = [];
     fclose(fid);
     return;
@@ -229,13 +229,13 @@ end
 % This appears to be triggered, with FACSdiva at least, when the FCS file is more than 100MB, which makes
 % the data stop position more than 8 characters and causes it to collide with the start field.   -JSB
 if FcsDataStartPos==0,
-    warning('FCS:BadDataStart','FCS file has invalid data start position; guessing based on header end');
+    TASBESession.warn('FCS:Read','BadDataStart','FCS file has invalid data start position; guessing based on header end');
     FcsDataStartPos = FcsHeaderStopPos+6;
 end
 
 % optionally truncate events to avoid memory problems with extremely large FCS files -JSB
 if fcshdr.TotalEvents>clip_events,
-    warning('FCS:TooManyEvents','FCS file has more than %i events; truncating to avoid memory problems',clip_events);
+    TASBESession.warn('FCS:Read','TooManyEvents','FCS file has more than %i events; truncating to avoid memory problems',clip_events);
     fcshdr.TotalEvents = clip_events;
 end
 
@@ -289,7 +289,7 @@ elseif strcmp(fcsheader_type,'FCS3.0') || strcmp(fcsheader_type,'FCS3.1')
                 else if(fcshdr.par(1).bit==24)
                         fcsdat = uint32(fread(fid,[fcshdr.NumOfPar fcshdr.TotalEvents],'bit24')');
                     else
-                        error('Unsupported bit width: %d',fcshdr.par(1).bit);
+                        TASBESession.error('FCS:Read','UnsupportedBitWidth','Unsupported bit width: %d',fcshdr.par(1).bit);
                     end
                 end
             end
@@ -305,7 +305,7 @@ elseif strcmp(fcsheader_type,'FCS3.0') || strcmp(fcsheader_type,'FCS3.1')
                 end
                 fcsdat = fread(fid,[fcshdr.NumOfPar fcshdr.TotalEvents],'float32',endian)';
             else 
-                error(['Unsupported FCS 3.0 data type: ' fcshdr.datatype])
+                TASBESession.error('FCS:Read','UnsupportedDataType',['Unsupported FCS 3.0 data type: ' fcshdr.datatype]);
             end;
         end
     end
