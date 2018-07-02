@@ -33,6 +33,8 @@ classdef TASBEConfig
             s.flow.outputPointCloud = false;
             doc.flow.pointCloudPath = 'location for point-cloud outputs';
             s.flow.pointCloudPath = 'CSV/';
+            doc.flow.dataCSVPath = 'location for data summary CSVs';
+            s.flow.dataCSVPath = 'CSV/';
             % TASBE Setting migration
             doc.flow.channel_template_file = 'TASBE setting migration';
             s.flow.channel_template_file = '';     

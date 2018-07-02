@@ -35,7 +35,7 @@ function writeIndividualPointCloud(CM, filename, data)
         mkdir(path);
     end
     
-    csvName = [path '/' sanitize_filename(name) '_PointCloud.csv'];
+    csvName = [path sanitize_filename(name) '_PointCloud.csv'];
     
     % sanitize the channel names
     channels = getChannels(CM);

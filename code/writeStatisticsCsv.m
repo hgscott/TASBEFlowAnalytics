@@ -8,9 +8,15 @@
 
 function statisticsFile = writeStatisticsCsv(colorModel, channels, sampleIds, sampleresults, units)
     baseName = sanitize_filename(TASBEConfig.get('OutputSettings.StemName'));
+    
+    path = TASBEConfig.get('flow.dataCSVPath');
+    if ~isdir(path)
+        TASBESession.notify('TASBE:Utilities','MakeDirectory','Directory does not exist, attempting to create it: %s',path);
+        mkdir(path);
+    end
 
     % First create the default output filename.
-    statisticsFile = [baseName '_statisticsFile.csv'];
+    statisticsFile = [path baseName '_statisticsFile.csv'];
     
     numConditions = numel(sampleIds);
     numComponents = size(sampleresults{1}{1}.PopComponentMeans,1);

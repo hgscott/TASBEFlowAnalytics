@@ -8,9 +8,15 @@
 
 function histogramFile = writeHistogramCsv(channels, sampleIds, sampleresults, binCenters, units)
     baseName = sanitize_filename(TASBEConfig.get('OutputSettings.StemName'));
+    
+    path = TASBEConfig.get('flow.dataCSVPath');
+    if ~isdir(path)
+        TASBESession.notify('TASBE:Utilities','MakeDirectory','Directory does not exist, attempting to create it: %s',path);
+        mkdir(path);
+    end
 
     % First create the default output filename.
-    histogramFile = [baseName '_histogramFile.csv'];
+    histogramFile = [path baseName '_histogramFile.csv'];
     
     numConditions = numel(sampleIds);
     replicates = zeros(numConditions, 1);
