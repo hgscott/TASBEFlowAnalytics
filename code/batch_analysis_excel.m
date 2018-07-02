@@ -121,7 +121,8 @@ for i=first_sample_row:size(extractor.sheets{sh_num2},1)
         extractor.getExcelValuePos(sh_num2, i, sample_exclude_col, 'char');
     catch
         sample_names{end+1} = extractor.getExcelValuePos(sh_num2, i, sample_name_col, 'char');
-        file = extractor.getExcelValuePos(sh_num2, i, sample_filename_col, 'char');
+        % file = extractor.getExcelValuePos(sh_num2, i, sample_filename_col, 'char');
+        file = getFilename(i);
         file_names{end+1} = {[stem file]};
     end
 end

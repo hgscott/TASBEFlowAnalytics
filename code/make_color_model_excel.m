@@ -46,7 +46,8 @@ function [CM] = make_color_model_excel()
         dose = extractor.getExcelValuePos(sh_num1, i, sample_dox_col, 'char');
         for j=1:numel(ref_filenames)
             if strcmpi(dose, ref_filenames{j})
-                file = extractor.getExcelValuePos(sh_num1, i, sample_filename_col, 'char');
+                % file = extractor.getExcelValuePos(sh_num1, i, sample_filename_col, 'char');
+                file = getFilename(i);
                 output_filenames{j} = [stem file];
             end
         end
@@ -101,7 +102,8 @@ function [CM] = make_color_model_excel()
         dose = extractor.getExcelValuePos(sh_num1, i, sample_dox_col, 'char');
         for j=1:numel(print_names)
             if strcmpi(dose, print_names{j})
-                file = extractor.getExcelValuePos(sh_num1, i, sample_filename_col, 'char');
+                % file = extractor.getExcelValuePos(sh_num1, i, sample_filename_col, 'char');
+                file = getFilename(i);
                 colorfiles{j} = [stem file];
             end
         end
