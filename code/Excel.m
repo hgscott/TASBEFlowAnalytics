@@ -3,9 +3,9 @@ classdef Excel
         coordinates = {...
                 {'experimentName', {1, 4, 1}}
                 {'stem', {1, 13, 10}}
-                {'filename_template', {1, 13, 5}}
+                {'filename_templates', {{1, 13, 5}, {1, 22, 5}, {1, 31, 5}, {1, 40, 5}}}
                 {'beads.beadModel', {2, 3, 2}}
-                {'plots.plotPath', {{2, 22, 1}, {3, 24, 2}}}
+                {'plots.plotPath', {{2, 22, 1}, {3, 28, 2}}}
                 {'beads.beadBatch', {2, 3, 1}}
                 {'beads.rangeMin', {2, 3, 3}}
                 {'beads.rangeMax', {2, 3, 4}}
@@ -16,6 +16,7 @@ classdef Excel
                 {'outputName_CM', {2, 22, 3}}
                 {'first_sample_num', {3, 3, 1}}
                 {'first_sample_dox', {3, 3, 2}}
+                {'first_sample_template', {3, 3, 8}}
                 {'first_sample_name', {3, 3, 11}}
                 {'first_sample_filename', {3, 3, 12}}
                 {'first_sample_exclude', {3, 3, 15}}
@@ -25,16 +26,19 @@ classdef Excel
                 {'first_flchrome_wavlen', {2, 9, 5}}
                 {'first_flchrome_filter', {2, 9, 6}}
                 {'first_flchrome_color', {2, 9, 7}}
+                {'first_flchrome_id', {2, 9, 9}}
                 {'num_channels', {2, 19, 1}}
-                {'inputName_CM', {3, 24, 3}}
-                {'OutputSettings.StemName', {3, 24, 4}}
-                {'binseq_min', {3, 24, 9}}
-                {'binseq_pdecade', {3, 24, 10}}
-                {'binseq_max', {3, 24, 11}}
-                {'minValidCount', {3, 24, 6}}
-                {'autofluorescence', {3, 24, 7}}
-                {'minFracActive', {3, 24, 8}}
-                {'outputName_BA', {3, 24, 5}}
+                {'inputName_CM', {3, 28, 3}}
+                {'OutputSettings.StemName', {3, 28, 4}}
+                {'binseq_min', {3, 28, 9}}
+                {'binseq_pdecade', {3, 28, 10}}
+                {'binseq_max', {3, 28, 11}}
+                {'minValidCount', {3, 28, 6}}
+                {'autofluorescence', {3, 28, 7}}
+                {'minFracActive', {3, 28, 8}}
+                {'outputName_BA', {3, 28, 5}}
+                {'first_preference_name', {4, 2, 1}}
+                {'first_preference_value', {4, 2, 3}}
                 };
         sheets;
     end
@@ -42,13 +46,35 @@ classdef Excel
         % Constuctor
         function obj = Excel()
             % Read in Excel for information, Experiment sheet
-            [~,~,s1] = xlsread('C:/Users/coverney/Documents/SynBio/Template/batch_template.xlsx', 'Experiment', 'A1:J24');
+            [~,~,s1] = xlsread('C:/Users/coverney/Documents/SynBio/Template/batch_template.xlsx', 'Experiment', 'A1:J46');
             % Read in Excel for information, cytometer sheet
-            [~,~,s2] = xlsread('C:/Users/coverney/Documents/SynBio/Template/batch_template.xlsx', 'Cytometer', 'A1:H24');
+            [~,~,s2] = xlsread('C:/Users/coverney/Documents/SynBio/Template/batch_template.xlsx', 'Cytometer', 'A1:J46');
             % Read in Excel for information, Samples sheet
-            [~,~,s3] = xlsread('C:/Users/coverney/Documents/SynBio/Template/batch_template.xlsx', 'Samples', 'A1:O24');
-            obj.sheets = {s1, s2, s3};
+            [~,~,s3] = xlsread('C:/Users/coverney/Documents/SynBio/Template/batch_template.xlsx', 'Samples', 'A1:O46');
+            % Read in Excel for information, Additional Settings sheet
+            [~,~,s4] = xlsread('C:/Users/coverney/Documents/SynBio/Template/batch_template.xlsx', 'Additional Settings', 'A1:D63');
+            obj.sheets = {s1, s2, s3, s4};
         end
+        
+        % Update any relevant TASBEConfig from the Additional Settings sheet in the
+        % batch_template spreadsheet
+        function TASBEConfig_updates(obj)
+            TASBEConfig.checkpoint('init');
+            raw = obj.sheets{4};
+            name_col = obj.getColNum('first_preference_name');
+            val_col = obj.getColNum('first_preference_value');
+            for i=obj.getRowNum('first_preference_name'):size(raw,1)
+                if ~isnan(cell2mat(raw(i,val_col)))
+                    if contains(char(cell2mat(raw(i,name_col))), 'Size')
+                        bounds = strsplit(char(cell2mat(raw(i,val_col))), ',');
+                        TASBEConfig.set(char(cell2mat(raw(i,name_col))), [str2double(bounds{1}), str2double(bounds{2})]);
+                    else
+                        TASBEConfig.set(char(cell2mat(raw(i,name_col))), cell2mat(raw(i,val_col)));
+                    end
+                end
+            end
+        end
+
         function position = getExcelCoordinates(obj, name)
             for i=1:numel(obj.coordinates)
                 if strcmp(name, obj.coordinates{i}{1})

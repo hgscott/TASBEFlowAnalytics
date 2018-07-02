@@ -1,3 +1,8 @@
+% Reset TASBEConfig and create Excel object
+extractor = Excel;
+extractor.TASBEConfig_updates();
+experimentName = extractor.getExcelValue('experimentName', 'char');
+
 % Load the color model
 try
     CM_file = extractor.getExcelValue('inputName_CM', 'char'); 
@@ -15,13 +20,8 @@ catch
     CM = make_color_model_excel();
 end
 
-% Reset TASBEConfig and create Excel object
-TASBEConfig_updates();
-extractor = Excel;
-
 % Set TASBEConfigs and create variables needed to run batch analysis
 stem = extractor.getExcelValue('stem', 'char');
-experimentName = extractor.getExcelValue('experimentName', 'char');
 try
     outputName = extractor.getExcelValue('outputName_BA', 'char');
 catch
@@ -63,7 +63,11 @@ for i=first_flchrome_row:size(extractor.sheets{sh_num1},1)
         break
     end
     print_names{end+1} = print_name;
-    channel_type = extractor.getExcelValuePos(sh_num1, i, flchrome_type_col, 'char');
+    try
+        channel_type = extractor.getExcelValuePos(sh_num1, i, flchrome_type_col, 'char');
+    catch
+        continue
+    end
     for j=1:numel(ref_channels)
         if strcmpi(ref_channels{j}, channel_type)
             outputs{j} = channel_named(CM, print_name);
@@ -121,7 +125,6 @@ for i=first_sample_row:size(extractor.sheets{sh_num2},1)
         extractor.getExcelValuePos(sh_num2, i, sample_exclude_col, 'char');
     catch
         sample_names{end+1} = extractor.getExcelValuePos(sh_num2, i, sample_name_col, 'char');
-        % file = extractor.getExcelValuePos(sh_num2, i, sample_filename_col, 'char');
         file = getFilename(i);
         file_names{end+1} = {[stem file]};
     end

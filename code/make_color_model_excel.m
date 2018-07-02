@@ -1,7 +1,7 @@
 function [CM] = make_color_model_excel()
     % Reset TASBEConfig and create Excel object
-    TASBEConfig_updates();
     extractor = Excel;
+    extractor.TASBEConfig_updates();
     
     % Set TASBEConfigs and create variables needed to generate the CM
     stem = extractor.getExcelValue('stem', 'char');
@@ -46,7 +46,6 @@ function [CM] = make_color_model_excel()
         dose = extractor.getExcelValuePos(sh_num1, i, sample_dox_col, 'char');
         for j=1:numel(ref_filenames)
             if strcmpi(dose, ref_filenames{j})
-                % file = extractor.getExcelValuePos(sh_num1, i, sample_filename_col, 'char');
                 file = getFilename(i);
                 output_filenames{j} = [stem file];
             end
@@ -63,6 +62,7 @@ function [CM] = make_color_model_excel()
     % Dealing with channels 
     print_names = {};
     channel_names = {};
+    sample_ids = {};
     % Create one channel for each color
     channels = {}; 
     sh_num2 = extractor.getSheetNum('first_flchrome_name');
@@ -72,6 +72,7 @@ function [CM] = make_color_model_excel()
     flchrome_wavlen_col = extractor.getColNum('first_flchrome_wavlen');
     flchrome_filter_col = extractor.getColNum('first_flchrome_filter');
     flchrome_color_col = extractor.getColNum('first_flchrome_color');
+    flchrome_id_col = extractor.getColNum('first_flchrome_id');
     for i=first_flchrome_row:size(extractor.sheets{sh_num2},1)
         try
             print_name = extractor.getExcelValuePos(sh_num2, i, flchrome_name_col, 'char');
@@ -89,9 +90,15 @@ function [CM] = make_color_model_excel()
         channels{ind} = Channel(channel_name, excit_wavelen, str2double(filter{1}), str2double(filter{2}));
         channels{ind} = setPrintName(channels{ind}, print_name); % Name to print on charts
         channels{ind} = setLineSpec(channels{ind}, color); % Color for lines, when needed
+        try
+            id = extractor.getExcelValuePos(sh_num2, i, flchrome_id_col, 'char');
+        catch
+            id = print_name;
+        end
+        sample_ids{ind} = id;
     end
     
-    % Obtain channel filenames using print_names
+    % Obtain channel filenames using sample_ids
     colorfiles = {};
     for i=first_sample_row:size(extractor.sheets{sh_num1},1)
         try
@@ -100,9 +107,8 @@ function [CM] = make_color_model_excel()
             break
         end
         dose = extractor.getExcelValuePos(sh_num1, i, sample_dox_col, 'char');
-        for j=1:numel(print_names)
-            if strcmpi(dose, print_names{j})
-                % file = extractor.getExcelValuePos(sh_num1, i, sample_filename_col, 'char');
+        for j=1:numel(sample_ids)
+            if strcmpi(dose, sample_ids{j})
                 file = getFilename(i);
                 colorfiles{j} = [stem file];
             end
