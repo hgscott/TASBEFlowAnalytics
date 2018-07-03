@@ -16,8 +16,17 @@ if (~exist('linespecs', 'var'))
     channels = getChannels(CM);
     linespecs = {1, numel(channels)};
     for i=1:numel(channels)
-        linespecs{i} = getLineSpec(channels{i});
+        if isempty(getLineSpec(channels{i}))
+            linespecs{i} = 'k';
+            TASBESession.warn('plot_batch_histograms','NoLineSpecs','Linespec for channel %s not found. Defaulting to black.', getName(channels{i}));
+        else
+            linespecs{i} = getLineSpec(channels{i});
+        end
     end
+end
+
+if numel(linespecs) ~= numel(getChannels(CM))
+    TASBESession.error('plot_batch_histograms','LineSpecDimensionMismatch', 'Size of linespecs does not match with number of channels');
 end
 
 n_conditions = size(sampleresults,1);
