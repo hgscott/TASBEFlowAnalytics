@@ -3,11 +3,21 @@
 function [filename] = getFilename(extractor, row)
     filename_sh = extractor.getSheetNum('first_sample_filename');
     filename_col = extractor.getColNum('first_sample_filename');
-    try
-        % See if there is already a filename inputted at that row
-        filename = extractor.getExcelValuePos(filename_sh, row, filename_col, 'char');
-        return;
-    catch
+    filename_col2 = extractor.getColNum('first_sample_exclude');
+    filename = {};
+    multiple = 1;
+    % See if there is already a filename inputted at that row
+    for i=filename_col:filename_col2
+        try
+            filename{end+1} = extractor.getExcelValuePos(filename_sh, row, i, 'char');
+        catch
+            break
+        end
+    end
+    
+    if numel(filename) > 0
+        return
+    else
         % Only reference filename template if there is no another filename in the override columns
         % First get the template number and create position reference variables
         sh_num1 = extractor.getSheetNum('first_sample_num');
@@ -57,32 +67,47 @@ function [filename] = getFilename(extractor, row)
                     if strcmp(header, ref_header)
                         section = extractor.getExcelValuePos(sh_num1, row, j, 'char');
                         % If the contents is an array, split into
-                        % subsections and take the first one
+                        % subsections and make filenames for all
                         if contains(section, ',') 
                             sub_sections = strsplit(section, ',');
-                            sections{end+1} = sub_sections{1};
+                            sections{end+1} = sub_sections;
+                            multiple = numel(sub_sections);
                         else
-                            sections{end+1} = section;
+                            sections{end+1} = {section};
                         end
                     end
                 end
 
             catch
                 % Not variable so just add to sections
-                sections{end+1} = section;
+                sections{end+1} = {section};
             end
         end
         positions = {};
-        filename = filename_template;
         % Replace the numbers in filename_template with the correct section
         for i=1:numel(sections)
             positions{end+1} = strfind(filename_template, num2str(i));
         end
-
-        for i=numel(sections):-1:1
-            filename = insertAfter(filename, positions{i}, sections{i});
-            filename = [filename(1:positions{i}-1) filename(positions{i}+1:end)];
+        
+        names = {};
+        for i=1:multiple
+            names{i} = filename_template;
         end
+        
+        for j=numel(sections):-1:1
+            section = sections{j};
+            % Make sure all sections have the correct length
+            for k=numel(section):multiple
+                section{k} = section{end};
+            end
+            for k=1:numel(section)
+                names{k} = insertAfter(names{k}, positions{j}, section{k});
+                names{k} = [names{k}(1:positions{j}-1) names{k}(positions{j}+1:end)];
+            end
+        end
+        
+        filename = names;
+
     end
     
 end

@@ -49,7 +49,7 @@ function [CM] = make_color_model_excel(extractor)
         for j=1:numel(ref_filenames)
             if strcmpi(dose, ref_filenames{j})
                 file = getFilename(extractor, i);
-                output_filenames{j} = [stem file];
+                output_filenames{j} = [stem file{1}];
             end
         end
     end
@@ -112,7 +112,7 @@ function [CM] = make_color_model_excel(extractor)
         for j=1:numel(sample_ids)
             if strcmpi(dose, sample_ids{j})
                 file = getFilename(extractor, i);
-                colorfiles{j} = [stem file];
+                colorfiles{j} = [stem file{1}];
             end
         end
     end
