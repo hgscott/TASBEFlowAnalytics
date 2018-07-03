@@ -140,7 +140,7 @@ classdef TASBESession
             
             if nargin>0
                 fid = fopen(filename,'w');
-                fprintf(fid,out);
+                fprintf(fid,strrep(out,'%','%%'));
                 fclose(fid);
             end
         end

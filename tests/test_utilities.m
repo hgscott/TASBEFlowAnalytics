@@ -37,3 +37,9 @@ assertEqual(limitPrecision(123456.789, 3), 123000);
 assertEqual(limitPrecision(123456.789, 5), 123460);
 assertEqual(limitPrecision(0.00012345, 2), 0.00012);
 assertEqual(limitPrecision([0.123 456 78.9],1), [0.1 500 80]);
+
+function test_TASBESession
+
+warning('off','TASBESession:test:PercentTest');
+TASBESession.warn('TASBESession:test','PercentTest','100%% success!');
+TASBESession.to_xml([tempdir '/tmp.xml']);
