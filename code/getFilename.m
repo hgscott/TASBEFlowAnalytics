@@ -1,14 +1,15 @@
-function [filename] = getFilename(row)
-    extractor = Excel;
+% Helper function that obtains the correct filename for a given row in the
+% "Samples" sheet with an Excel object and row number as inputs. 
+function [filename] = getFilename(extractor, row)
     filename_sh = extractor.getSheetNum('first_sample_filename');
     filename_col = extractor.getColNum('first_sample_filename');
     try
+        % See if there is already a filename inputted at that row
         filename = extractor.getExcelValuePos(filename_sh, row, filename_col, 'char');
         return;
     catch
-        % Only reference filename template if there is not another filename in the override columns
-        % in "Samples"
-        % First get the template number
+        % Only reference filename template if there is no another filename in the override columns
+        % First get the template number and create position reference variables
         sh_num1 = extractor.getSheetNum('first_sample_num');
         template_col = extractor.getColNum('first_sample_template');
         template_num = extractor.getExcelValuePos(sh_num1, row, template_col, 'numeric');
@@ -23,8 +24,9 @@ function [filename] = getFilename(row)
         sample_start_col = extractor.getColNum('first_sample_num');
         sample_start_row = extractor.getRowNum('first_sample_num') - 1;
         sections = {};
+        % Collect the parts (sections) of the filename template
         for i=start_row:size(extractor.sheets{sh_num2},1)
-            % check to see if there is still a section of the filename template. If so, then check if
+            % Check to see if there is a valid section of the filename template. If so, then check if
             % variable
             try 
                 section = extractor.getExcelValuePos(sh_num2, i, main_col, 'char');
@@ -38,7 +40,7 @@ function [filename] = getFilename(row)
 
             try
                 extractor.getExcelValuePos(sh_num2, i, variable_col, 'char');
-                % variable, look for columns in samples sheet
+                % Variable, look through columns in samples sheet
                 header = section;
                 for j=sample_start_col:size(extractor.sheets{sh_num1},2)
                     try 
@@ -50,9 +52,13 @@ function [filename] = getFilename(row)
                             TASBESession.error('getFilename', 'InvalidHeaderName', 'The header, %s, does not match with any column titles in "Samples" sheet.', header);
                         end
                     end
+                    % Find the matching section name in filename template
+                    % and column header in "Samples"
                     if strcmp(header, ref_header)
                         section = extractor.getExcelValuePos(sh_num1, row, j, 'char');
-                        if contains(section, ',')
+                        % If the contents is an array, split into
+                        % subsections and take the first one
+                        if contains(section, ',') 
                             sub_sections = strsplit(section, ',');
                             sections{end+1} = sub_sections{1};
                         else
@@ -62,13 +68,13 @@ function [filename] = getFilename(row)
                 end
 
             catch
-                % not variable
+                % Not variable so just add to sections
                 sections{end+1} = section;
             end
         end
         positions = {};
         filename = filename_template;
-        % replace the numbers in filename_template with the correct section
+        % Replace the numbers in filename_template with the correct section
         for i=1:numel(sections)
             positions{end+1} = strfind(filename_template, num2str(i));
         end

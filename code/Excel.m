@@ -1,69 +1,83 @@
+% Excel class with objects representing the information for a given template
+% spreadsheet
 classdef Excel
     properties
-        coordinates = {...
-                {'experimentName', {1, 4, 1}}
-                {'stem', {1, 13, 10}}
-                {'filename_templates', {{1, 13, 5}, {1, 22, 5}, {1, 31, 5}, {1, 40, 5}}}
-                {'beads.beadModel', {2, 3, 2}}
-                {'plots.plotPath', {{2, 22, 1}, {3, 28, 2}}}
-                {'beads.beadBatch', {2, 3, 1}}
-                {'beads.rangeMin', {2, 3, 3}}
-                {'beads.rangeMax', {2, 3, 4}}
-                {'beads.peakThreshold', {2, 3, 5}}
-                {'beads.beadChannel', {2, 3, 6}}
-                {'beads.secondaryBeadChannel', {2, 22, 2}}
-                {'transChannelMin', {2, 19, 3}}
-                {'outputName_CM', {2, 22, 3}}
-                {'first_sample_num', {3, 3, 1}}
-                {'first_sample_dox', {3, 3, 2}}
-                {'first_sample_template', {3, 3, 8}}
-                {'first_sample_name', {3, 3, 11}}
-                {'first_sample_filename', {3, 3, 12}}
-                {'first_sample_exclude', {3, 3, 15}}
-                {'first_flchrome_name', {2, 9, 2}}
-                {'first_flchrome_channel', {2, 9, 3}}
-                {'first_flchrome_type', {2, 9, 4}} % whether constitutive or input or output
-                {'first_flchrome_wavlen', {2, 9, 5}}
-                {'first_flchrome_filter', {2, 9, 6}}
-                {'first_flchrome_color', {2, 9, 7}}
-                {'first_flchrome_id', {2, 9, 9}}
-                {'num_channels', {2, 19, 1}}
-                {'inputName_CM', {3, 28, 3}}
-                {'OutputSettings.StemName', {3, 28, 4}}
-                {'binseq_min', {3, 28, 9}}
-                {'binseq_pdecade', {3, 28, 10}}
-                {'binseq_max', {3, 28, 11}}
-                {'minValidCount', {3, 28, 6}}
-                {'autofluorescence', {3, 28, 7}}
-                {'minFracActive', {3, 28, 8}}
-                {'outputName_BA', {3, 28, 5}}
-                {'first_preference_name', {4, 2, 1}}
-                {'first_preference_value', {4, 2, 3}}
-                };
+        % Coordinates is a cell array of different template variable names
+        % and their coordinates in the form of {sheet number, row, col}. (A
+        % few variables have multiple coordinates.) 
+        coordinates;
+        % Sheets is an array of raw data from four main sheets in template
         sheets;
     end
     methods
-        % Constuctor
-        function obj = Excel()
+        % Constuctor with filepath of template and optional coordinates
+        % property as inputs
+        function obj = Excel(file, coords)
             % Read in Excel for information, Experiment sheet
-            [~,~,s1] = xlsread('C:/Users/coverney/Documents/SynBio/Template/batch_template.xlsx', 'Experiment', 'A1:J46');
+            [~,~,s1] = xlsread(file, 'Experiment', 'A1:J46');
             % Read in Excel for information, cytometer sheet
-            [~,~,s2] = xlsread('C:/Users/coverney/Documents/SynBio/Template/batch_template.xlsx', 'Cytometer', 'A1:J46');
+            [~,~,s2] = xlsread(file, 'Cytometer', 'A1:J46');
             % Read in Excel for information, Samples sheet
-            [~,~,s3] = xlsread('C:/Users/coverney/Documents/SynBio/Template/batch_template.xlsx', 'Samples', 'A1:O46');
+            [~,~,s3] = xlsread(file, 'Samples', 'A1:O46');
             % Read in Excel for information, Additional Settings sheet
-            [~,~,s4] = xlsread('C:/Users/coverney/Documents/SynBio/Template/batch_template.xlsx', 'Additional Settings', 'A1:D63');
+            [~,~,s4] = xlsread(file, 'Additional Settings');
             obj.sheets = {s1, s2, s3, s4};
+            if nargin < 2
+                obj.coordinates = {...
+                    {'experimentName', {1, 4, 1}}
+                    {'stem', {1, 13, 10}}
+                    {'filename_templates', {{1, 13, 5}, {1, 22, 5}, {1, 31, 5}, {1, 40, 5}}}
+                    {'beads.beadModel', {2, 3, 2}}
+                    {'plots.plotPath', {{2, 22, 1}, {3, 28, 2}}}
+                    {'beads.beadBatch', {2, 3, 1}}
+                    {'beads.rangeMin', {2, 3, 3}}
+                    {'beads.rangeMax', {2, 3, 4}}
+                    {'beads.peakThreshold', {2, 3, 5}}
+                    {'beads.beadChannel', {2, 3, 6}}
+                    {'beads.secondaryBeadChannel', {2, 22, 2}}
+                    {'transChannelMin', {2, 19, 3}}
+                    {'outputName_CM', {2, 22, 3}}
+                    {'first_flchrome_name', {2, 9, 2}}
+                    {'first_flchrome_channel', {2, 9, 3}}
+                    {'first_flchrome_type', {2, 9, 4}} % whether constitutive or input or output
+                    {'first_flchrome_wavlen', {2, 9, 5}}
+                    {'first_flchrome_filter', {2, 9, 6}}
+                    {'first_flchrome_color', {2, 9, 7}}
+                    {'first_flchrome_id', {2, 9, 9}}
+                    {'num_channels', {2, 19, 1}}
+                    {'first_sample_num', {3, 3, 1}}
+                    {'first_sample_dox', {3, 3, 2}}
+                    {'first_sample_template', {3, 3, 8}}
+                    {'first_sample_name', {3, 3, 11}}
+                    {'first_sample_filename', {3, 3, 12}}
+                    {'first_sample_exclude', {3, 3, 15}}
+                    {'inputName_CM', {3, 28, 3}}
+                    {'OutputSettings.StemName', {3, 28, 4}}
+                    {'binseq_min', {3, 28, 9}}
+                    {'binseq_pdecade', {3, 28, 10}}
+                    {'binseq_max', {3, 28, 11}}
+                    {'minValidCount', {3, 28, 6}}
+                    {'autofluorescence', {3, 28, 7}}
+                    {'minFracActive', {3, 28, 8}}
+                    {'outputName_BA', {3, 28, 5}}
+                    {'first_preference_name', {4, 2, 1}}
+                    {'first_preference_value', {4, 2, 3}}
+                    };
+            else
+                obj.coordinates = coords;
+            end
         end
-        
+
         % Update any relevant TASBEConfig from the Additional Settings sheet in the
-        % batch_template spreadsheet
+        % template spreadsheet
         function TASBEConfig_updates(obj)
             TASBEConfig.checkpoint('init');
             raw = obj.sheets{4};
             name_col = obj.getColNum('first_preference_name');
             val_col = obj.getColNum('first_preference_value');
             for i=obj.getRowNum('first_preference_name'):size(raw,1)
+                % Set the TASBEConfig if value column not empty for given
+                % row
                 if ~isnan(cell2mat(raw(i,val_col)))
                     if contains(char(cell2mat(raw(i,name_col))), 'Size')
                         bounds = strsplit(char(cell2mat(raw(i,val_col))), ',');
@@ -74,7 +88,9 @@ classdef Excel
                 end
             end
         end
-
+        
+        % Returns the ExcelCoordinates stored within obj.coordinates with
+        % name of variable as input
         function position = getExcelCoordinates(obj, name)
             for i=1:numel(obj.coordinates)
                 if strcmp(name, obj.coordinates{i}{1})
@@ -85,21 +101,40 @@ classdef Excel
             TASBESession.error('Excel','CoordNotFound','Inputted name, %s, not valid. No match found in coordinates.', name);
         end
         
+        % Returns the first coordinate value (sheet number) of a given variable
         function sheet_num = getSheetNum(obj, name)
             pos = obj.getExcelCoordinates(name);
             sheet_num = pos{1};
         end
         
+        % Returns the second coordinate value (row number) of a given variable
         function row = getRowNum(obj, name)
             pos = obj.getExcelCoordinates(name);
             row = pos{2};
         end
         
+        % Returns the third coordinate value (col number) of a given variable
         function col = getColNum(obj, name)
             pos = obj.getExcelCoordinates(name);
             col = pos{3};
         end
         
+        % Returns a new Excel object with updated coordinates. Takes the
+        % name of the variable to change and new coords as inputs
+        function new_obj = setExcelCoordinates(obj, name, coords)
+            new_coords = obj.coordinates;
+            for i=1:numel(obj.coordinates)
+                if strcmp(name, obj.coordinates{i}{1})
+                    new_coords{i}{2} = coords;
+                    new_obj = Excel(new_coords);
+                    return
+                end
+            end
+            TASBESession.error('Excel','CoordNotFound','Inputted name, %s, not valid. No match found in coordinates.', name);
+        end
+        
+        % Returns the value at an inputted position. Error checks make sure
+        % that the value is of the correct type
         function value = getExcelValuePos(obj, sheet_num, row, col, type)
             sheet = obj.sheets{sheet_num};
             value = cell2mat(sheet(row,col));
@@ -119,14 +154,22 @@ classdef Excel
             end
         end
         
+        % Returns the value of an inputted variable name using
+        % getExcelValuePos
         function value = getExcelValue(obj, name, type, index)
             pos = obj.getExcelCoordinates(name);
+            % index is considered for variables with more than one
+            % coordinates
             if exist('index', 'var')
                 pos = pos{index};
             end
             value = obj.getExcelValuePos(pos{1}, pos{2}, pos{3}, type);
         end
         
+        % Sets a TASBEConfig given a variable name. getExcelValue is used
+        % extensively in this function. Warnings/ errors are placed to make
+        % sure there is a value found and that the variable is a
+        % TASBEConfig. 
         function setTASBEConfig(obj, name, type, index)
             try
                 if exist('index', 'var')

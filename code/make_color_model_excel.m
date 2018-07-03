@@ -1,6 +1,7 @@
-function [CM] = make_color_model_excel()
-    % Reset TASBEConfig and create Excel object
-    extractor = Excel;
+% Function that uses a template spreadsheet to create and save a Color Model. 
+% Inputs include an Excel object.  
+function [CM] = make_color_model_excel(extractor)
+    % Reset and update TASBEConfig 
     extractor.TASBEConfig_updates();
     
     % Set TASBEConfigs and create variables needed to generate the CM
@@ -36,7 +37,8 @@ function [CM] = make_color_model_excel()
     first_sample_row = extractor.getRowNum('first_sample_num');
     sample_num_col = extractor.getColNum('first_sample_num');
     sample_dox_col = extractor.getColNum('first_sample_dox');
-    sample_filename_col = extractor.getColNum('first_sample_filename');
+    % Go through samples in "Samples" sheet and look for matches in name to
+    % elements in ref_filenames
     for i=first_sample_row:size(extractor.sheets{sh_num1},1)
         try
             extractor.getExcelValuePos(sh_num1, i, sample_num_col, 'numeric');
@@ -46,7 +48,7 @@ function [CM] = make_color_model_excel()
         dose = extractor.getExcelValuePos(sh_num1, i, sample_dox_col, 'char');
         for j=1:numel(ref_filenames)
             if strcmpi(dose, ref_filenames{j})
-                file = getFilename(i);
+                file = getFilename(extractor, i);
                 output_filenames{j} = [stem file];
             end
         end
@@ -109,7 +111,7 @@ function [CM] = make_color_model_excel()
         dose = extractor.getExcelValuePos(sh_num1, i, sample_dox_col, 'char');
         for j=1:numel(sample_ids)
             if strcmpi(dose, sample_ids{j})
-                file = getFilename(i);
+                file = getFilename(extractor, i);
                 colorfiles{j} = [stem file];
             end
         end
