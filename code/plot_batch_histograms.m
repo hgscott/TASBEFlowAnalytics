@@ -16,7 +16,12 @@ if (~exist('linespecs', 'var'))
     channels = getChannels(CM);
     linespecs = {1, numel(channels)};
     for i=1:numel(channels)
-        linespecs{i} = getLineSpec(channels{i});
+        if isnan(getLineSpec(channels{i}))
+            linespecs{i} = 'k';
+            TASBESession.warn('plot_batch_histograms','NoLineSpecs','Linespec for channel %s not found. Defaulting to black.', getName(channels{i}));
+        else
+            linespecs{i} = getLineSpec(channels{i});
+        end
     end
 end
 
