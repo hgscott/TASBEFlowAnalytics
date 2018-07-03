@@ -10,6 +10,7 @@ function histogramFile = writeHistogramCsv(channels, sampleIds, sampleresults, b
     baseName = sanitize_filename(TASBEConfig.get('OutputSettings.StemName'));
     
     path = TASBEConfig.get('flow.dataCSVPath');
+    path = end_with_slash(path);
     if ~isdir(path)
         TASBESession.notify('TASBE:Utilities','MakeDirectory','Directory does not exist, attempting to create it: %s',path);
         mkdir(path);
