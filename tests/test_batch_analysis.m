@@ -257,6 +257,6 @@ TASBEConfig.set('plots.plotPath','/tmp/plots');
 TASBEConfig.set('OutputSettings.FixedInputAxis',[1e4 1e10]);
 plot_batch_histograms(results,sampleresults,CM2);
 log = TASBESession.list();
-assertEqual(log{end-1}.contents{end}.name, 'NoLineSpecs');
+assertEqual(log{end}.contents{end}.name, 'NoLineSpecs');
 assertExceptionThrown(@()plot_batch_histograms(results,sampleresults,CM2,{'b'}), 'plot_batch_histograms:LineSpecDimensionMismatch', 'No error was raised.');
 
