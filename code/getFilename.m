@@ -68,7 +68,7 @@ function [filename] = getFilename(extractor, row)
                         section = extractor.getExcelValuePos(sh_num1, row, j, 'char');
                         % If the contents is an array, split into
                         % subsections and make filenames for all
-                        if contains(section, ',') 
+                        if ~isempty(strfind(section, ',')) 
                             sub_sections = strsplit(section, ',');
                             sections{end+1} = sub_sections;
                             multiple = numel(sub_sections);
@@ -93,7 +93,7 @@ function [filename] = getFilename(extractor, row)
         for i=1:multiple
             names{i} = filename_template;
         end
-        
+     
         for j=numel(sections):-1:1
             section = sections{j};
             % Make sure all sections have the correct length
@@ -101,7 +101,7 @@ function [filename] = getFilename(extractor, row)
                 section{k} = section{end};
             end
             for k=1:numel(section)
-                names{k} = insertAfter(names{k}, positions{j}, section{k});
+                names{k} = [names{k}(1:positions{j}) section{k} names{k}(positions{j}+1:end)];
                 names{k} = [names{k}(1:positions{j}-1) names{k}(positions{j}+1:end)];
             end
         end
