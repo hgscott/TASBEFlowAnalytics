@@ -50,6 +50,7 @@ classdef Excel
                     {'beads.peakThreshold', {3, 3, 5}}
                     {'beads.beadChannel', {3, 3, 6}}
                     {'beads.secondaryBeadChannel', {3, 22, 2}}
+                    {'relevant_channels', {3, 19, 2}}
                     {'transChannelMin', {3, 19, 3}}
                     {'outputName_CM', {3, 22, 3}}
                     {'first_flchrome_name', {3, 9, 2}}

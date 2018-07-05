@@ -65,6 +65,14 @@ function [CM] = make_color_model_excel(extractor)
     print_names = {};
     channel_names = {};
     sample_ids = {};
+    all_channels = false;
+    % Determine relevant channels
+    try 
+        rel_channels = extractor.getExcelValue('relevant_channels', 'cell');
+    catch
+        % this means that all channels are relevant
+        all_channels = true;
+    end
     % Create one channel for each color
     channels = {}; 
     sh_num2 = extractor.getSheetNum('first_flchrome_name');
@@ -82,22 +90,24 @@ function [CM] = make_color_model_excel(extractor)
             break
         end
         ind = i - (first_flchrome_row-1);
-        % Extract the rest of the information for the channel
-        channel_name = extractor.getExcelValuePos(sh_num2, i, flchrome_channel_col, 'char');
-        excit_wavelen = extractor.getExcelValuePos(sh_num2, i, flchrome_wavlen_col, 'numeric');
-        filter = strsplit(extractor.getExcelValuePos(sh_num2, i, flchrome_filter_col, 'char'), '/');
-        color = extractor.getExcelValuePos(sh_num2, i, flchrome_color_col, 'char');
-        print_names{ind} = print_name;
-        channel_names{ind} = channel_name;
-        channels{ind} = Channel(channel_name, excit_wavelen, str2double(filter{1}), str2double(filter{2}));
-        channels{ind} = setPrintName(channels{ind}, print_name); % Name to print on charts
-        channels{ind} = setLineSpec(channels{ind}, color); % Color for lines, when needed
-        try
-            id = extractor.getExcelValuePos(sh_num2, i, flchrome_id_col, 'char');
-        catch
-            id = print_name;
+        if all_channels || ~isempty(find([rel_channels{:}] == ind, 1))
+            % Extract the rest of the information for the channel
+            channel_name = extractor.getExcelValuePos(sh_num2, i, flchrome_channel_col, 'char');
+            excit_wavelen = extractor.getExcelValuePos(sh_num2, i, flchrome_wavlen_col, 'numeric');
+            filter = strsplit(extractor.getExcelValuePos(sh_num2, i, flchrome_filter_col, 'char'), '/');
+            color = extractor.getExcelValuePos(sh_num2, i, flchrome_color_col, 'char');
+            print_names{ind} = print_name;
+            channel_names{ind} = channel_name;
+            channels{ind} = Channel(channel_name, excit_wavelen, str2double(filter{1}), str2double(filter{2}));
+            channels{ind} = setPrintName(channels{ind}, print_name); % Name to print on charts
+            channels{ind} = setLineSpec(channels{ind}, color); % Color for lines, when needed
+            try
+                id = extractor.getExcelValuePos(sh_num2, i, flchrome_id_col, 'char');
+            catch
+                id = print_name;
+            end
+            sample_ids{ind} = id;
         end
-        sample_ids{ind} = id;
     end
     
     % Obtain channel filenames using sample_ids
