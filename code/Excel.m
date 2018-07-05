@@ -14,54 +14,54 @@ classdef Excel
         % property as inputs
         function obj = Excel(file, coords)
             % Read in Excel for information, Experiment sheet
-            [~,~,s1] = xlsread(file, 'Experiment', 'A1:J46');
-            % Read in Excel for information, cytometer sheet
-            [~,~,s2] = xlsread(file, 'Cytometer', 'A1:J46');
+            [~,~,s1] = xlsread(file, 'Experiment');
             % Read in Excel for information, Samples sheet
-            [~,~,s3] = xlsread(file, 'Samples', 'A1:O46');
+            [~,~,s2] = xlsread(file, 'Samples');
+            % Read in Excel for information, Calibration sheet
+            [~,~,s3] = xlsread(file, 'Calibration');
             % Read in Excel for information, Additional Settings sheet
-            [~,~,s4] = xlsread(file, 'Additional Settings');
+            [~,~,s4] = xlsread(file, 'Optional Settings');
             obj.sheets = {s1, s2, s3, s4};
             if nargin < 2
                 obj.coordinates = {...
                     {'experimentName', {1, 4, 1}}
                     {'stem', {1, 13, 10}}
                     {'filename_templates', {{1, 13, 5}, {1, 22, 5}, {1, 31, 5}, {1, 40, 5}}}
-                    {'beads.beadModel', {2, 3, 2}}
-                    {'plots.plotPath', {{2, 22, 1}, {3, 28, 2}}}
-                    {'beads.beadBatch', {2, 3, 1}}
-                    {'beads.rangeMin', {2, 3, 3}}
-                    {'beads.rangeMax', {2, 3, 4}}
-                    {'beads.peakThreshold', {2, 3, 5}}
-                    {'beads.beadChannel', {2, 3, 6}}
-                    {'beads.secondaryBeadChannel', {2, 22, 2}}
-                    {'transChannelMin', {2, 19, 3}}
-                    {'outputName_CM', {2, 22, 3}}
-                    {'first_flchrome_name', {2, 9, 2}}
-                    {'first_flchrome_channel', {2, 9, 3}}
-                    {'first_flchrome_type', {2, 9, 4}} % whether constitutive or input or output
-                    {'first_flchrome_wavlen', {2, 9, 5}}
-                    {'first_flchrome_filter', {2, 9, 6}}
-                    {'first_flchrome_color', {2, 9, 7}}
-                    {'first_flchrome_id', {2, 9, 9}}
-                    {'num_channels', {2, 19, 1}}
-                    {'first_sample_num', {3, 3, 1}}
-                    {'first_sample_dox', {3, 3, 2}}
-                    {'first_sample_template', {3, 3, 8}}
-                    {'first_sample_name', {3, 3, 11}}
-                    {'first_sample_filename', {3, 3, 12}}
-                    {'first_sample_exclude', {3, 3, 15}}
-                    {'inputName_CM', {3, 28, 3}}
-                    {'OutputSettings.StemName', {3, 28, 4}}
-                    {'binseq_min', {3, 28, 9}}
-                    {'binseq_pdecade', {3, 28, 10}}
-                    {'binseq_max', {3, 28, 11}}
-                    {'minValidCount', {3, 28, 6}}
-                    {'autofluorescence', {3, 28, 7}}
-                    {'minFracActive', {3, 28, 8}}
-                    {'outputName_BA', {3, 28, 5}}
-                    {'first_preference_name', {4, 2, 1}}
-                    {'first_preference_value', {4, 2, 3}}
+                    {'first_sample_num', {2, 3, 1}}
+                    {'first_sample_dox', {2, 3, 2}}
+                    {'first_sample_template', {2, 3, 8}}
+                    {'first_sample_name', {2, 3, 11}}
+                    {'first_sample_filename', {2, 3, 12}}
+                    {'first_sample_exclude', {2, 3, 15}}
+                    {'inputName_CM', {2, 28, 3}}
+                    {'OutputSettings.StemName', {2, 28, 4}}
+                    {'binseq_min', {2, 28, 9}}
+                    {'binseq_pdecade', {2, 28, 10}}
+                    {'binseq_max', {2, 28, 11}}
+                    {'minValidCount', {2, 28, 6}}
+                    {'autofluorescence', {2, 28, 7}}
+                    {'minFracActive', {2, 28, 8}}
+                    {'outputName_BA', {2, 28, 5}}
+                    {'beads.beadModel', {3, 3, 2}}
+                    {'plots.plotPath', {{3, 22, 1}, {2, 28, 2}}}
+                    {'beads.beadBatch', {3, 3, 1}}
+                    {'beads.rangeMin', {3, 3, 3}}
+                    {'beads.rangeMax', {3, 3, 4}}
+                    {'beads.peakThreshold', {3, 3, 5}}
+                    {'beads.beadChannel', {3, 3, 6}}
+                    {'beads.secondaryBeadChannel', {3, 22, 2}}
+                    {'transChannelMin', {3, 19, 3}}
+                    {'outputName_CM', {3, 22, 3}}
+                    {'first_flchrome_name', {3, 9, 2}}
+                    {'first_flchrome_channel', {3, 9, 3}}
+                    {'first_flchrome_type', {3, 9, 4}} % whether constitutive or input or output
+                    {'first_flchrome_wavlen', {3, 9, 5}}
+                    {'first_flchrome_filter', {3, 9, 6}}
+                    {'first_flchrome_color', {3, 9, 7}}
+                    {'first_flchrome_id', {3, 9, 9}}
+                    {'num_channels', {3, 19, 1}}
+                    {'first_preference_name', {4, 3, 1}}
+                    {'first_preference_value', {4, 3, 3}}
                     };
             else
                 obj.coordinates = coords;
