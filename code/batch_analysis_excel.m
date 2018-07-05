@@ -25,7 +25,6 @@ function batch_analysis_excel(extractor, CM)
     end
 
     % Set TASBEConfigs and create variables needed to run batch analysis
-    stem = extractor.getExcelValue('stem', 'char');
     try
         outputName = extractor.getExcelValue('outputName_BA', 'char');
     catch
@@ -131,7 +130,7 @@ function batch_analysis_excel(extractor, CM)
             file = getFilename(extractor, i);
             files = {};
             for j=1:numel(file)
-                files{end+1} = [stem file{j}];
+                files{end+1} = file{j};
             end
             file_names{end+1} = files;
         end

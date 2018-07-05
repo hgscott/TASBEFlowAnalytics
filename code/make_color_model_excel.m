@@ -5,7 +5,6 @@ function [CM] = make_color_model_excel(extractor)
     extractor.TASBEConfig_updates();
     
     % Set TASBEConfigs and create variables needed to generate the CM
-    stem = extractor.getExcelValue('stem', 'char');
     experimentName = extractor.getExcelValue('experimentName', 'char');
     try
         outputName = extractor.getExcelValue('outputName_CM', 'char');
@@ -31,12 +30,13 @@ function [CM] = make_color_model_excel(extractor)
     extractor.setTASBEConfig('beads.secondaryBeadChannel', 'char');
    
     % Extract bead, blank, and all files
-    ref_filenames = {'blank','beads','all'};
+    % ref_filenames = {'blank','beads','all'};
+    ref_filenames = {extractor.getExcelValue('blank_name', 'char'),extractor.getExcelValue('bead_name', 'char'),extractor.getExcelValue('all_name', 'char')};
     output_filenames = {};
     sh_num1 = extractor.getSheetNum('first_sample_num');
     first_sample_row = extractor.getRowNum('first_sample_num');
     sample_num_col = extractor.getColNum('first_sample_num');
-    sample_dox_col = extractor.getColNum('first_sample_dox');
+    sample_name_col = extractor.getColNum('first_sample_name');
     % Go through samples in "Samples" sheet and look for matches in name to
     % elements in ref_filenames
     for i=first_sample_row:size(extractor.sheets{sh_num1},1)
@@ -45,11 +45,11 @@ function [CM] = make_color_model_excel(extractor)
         catch
             break
         end
-        dose = extractor.getExcelValuePos(sh_num1, i, sample_dox_col, 'char');
+        name = extractor.getExcelValuePos(sh_num1, i, sample_name_col, 'char');
         for j=1:numel(ref_filenames)
-            if strcmpi(dose, ref_filenames{j})
+            if strcmpi(name, ref_filenames{j})
                 file = getFilename(extractor, i);
-                output_filenames{j} = [stem file{1}];
+                output_filenames{j} = file{1};
             end
         end
     end
@@ -118,11 +118,11 @@ function [CM] = make_color_model_excel(extractor)
         catch
             break
         end
-        dose = extractor.getExcelValuePos(sh_num1, i, sample_dox_col, 'char');
+        name = extractor.getExcelValuePos(sh_num1, i, sample_name_col, 'char');
         for j=1:numel(sample_ids)
-            if strcmpi(dose, sample_ids{j})
+            if strcmpi(name, sample_ids{j})
                 file = getFilename(extractor, i);
-                colorfiles{j} = [stem file{1}];
+                colorfiles{j} = file{1};
             end
         end
     end

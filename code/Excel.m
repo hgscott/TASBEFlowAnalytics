@@ -8,11 +8,14 @@ classdef Excel
         coordinates;
         % Sheets is an array of raw data from four main sheets in template
         sheets;
+        % Save the inputted filepath
+        filepath;
     end
     methods
         % Constuctor with filepath of template and optional coordinates
         % property as inputs
         function obj = Excel(file, coords)
+            obj.filepath = file;
             % Read in Excel for information, Experiment sheet
             [~,~,s1] = xlsread(file, 'Experiment');
             % Read in Excel for information, Samples sheet
@@ -25,14 +28,14 @@ classdef Excel
             if nargin < 2
                 obj.coordinates = {...
                     {'experimentName', {1, 4, 1}}
-                    {'stem', {1, 13, 10}}
-                    {'filename_templates', {{1, 13, 5}, {1, 22, 5}, {1, 31, 5}, {1, 40, 5}}}
+                    % {'stem', {1, 13, 10}}
+                    {'first_filename_template', {1, 12, 5}}
                     {'first_sample_num', {2, 3, 1}}
-                    {'first_sample_dox', {2, 3, 2}}
+                    {'first_sample_dox', {2, 3, 3}} % TODO: will need to generalize further
                     {'first_sample_template', {2, 3, 8}}
-                    {'first_sample_name', {2, 3, 11}}
-                    {'first_sample_filename', {2, 3, 12}}
-                    {'first_sample_exclude', {2, 3, 15}}
+                    {'first_sample_name', {2, 3, 2}}
+                    % {'first_sample_filename', {2, 3, 12}}
+                    {'first_sample_exclude', {2, 3, 10}}
                     {'inputName_CM', {2, 28, 3}}
                     {'OutputSettings.StemName', {2, 28, 4}}
                     {'binseq_min', {2, 28, 9}}
@@ -59,14 +62,19 @@ classdef Excel
                     {'first_flchrome_wavlen', {3, 9, 5}}
                     {'first_flchrome_filter', {3, 9, 6}}
                     {'first_flchrome_color', {3, 9, 7}}
-                    {'first_flchrome_id', {3, 9, 9}}
+                    {'first_flchrome_id', {3, 9, 8}}
                     {'num_channels', {3, 19, 1}}
+                    {'bead_name', {3, 3, 7}}
+                    {'blank_name', {3, 6, 2}}
+                    {'all_name', {3, 19, 4}}
                     {'first_preference_name', {4, 3, 1}}
                     {'first_preference_value', {4, 3, 3}}
                     };
             else
                 obj.coordinates = coords;
             end
+            % Find the number of templates and update coordinates with info
+            obj.coordinates = obj.findTemplates();
         end
 
         % Update any relevant TASBEConfig from the Additional Settings sheet in the
@@ -127,11 +135,37 @@ classdef Excel
             for i=1:numel(obj.coordinates)
                 if strcmp(name, obj.coordinates{i}{1})
                     new_coords{i}{2} = coords;
-                    new_obj = Excel(new_coords);
+                    new_obj = Excel(obj.filepath, new_coords);
                     return
                 end
             end
             TASBESession.error('Excel','CoordNotFound','Inputted name, %s, not valid. No match found in coordinates.', name);
+        end
+        
+        % Returns a new obj.coordinates with updated coordinates. Takes the
+        % name of the variable to add and its coords as inputs
+        function new_coords = addExcelCoordinates(obj, name, coords)
+            new_coords = obj.coordinates;
+            new_coords{end+1} = {name, coords};
+        end
+        
+        % Finds the coordinates for all of the filename templates
+        function new_coords = findTemplates(obj)
+            template_col = obj.getColNum('first_filename_template');
+            template_sh = obj.getSheetNum('first_filename_template');
+            first_template_row = obj.getRowNum('first_filename_template');
+            coords = {};
+            for i=first_template_row:size(obj.sheets{template_sh}, 1)
+                try
+                    value = obj.getExcelValuePos(template_sh, i, template_col, 'char');
+                    if ~isempty(strfind(value, 'Filename Template'))
+                        coords{end+1} = {template_sh, i+1, template_col};
+                    end
+                catch
+                    continue
+                end
+            end
+            new_coords = obj.addExcelCoordinates('filename_templates', coords);
         end
         
         % Returns the value at an inputted position. Error checks make sure
