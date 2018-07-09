@@ -27,9 +27,10 @@ classdef Excel
             obj.sheets = {s1, s2, s3, s4};
             if nargin < 2
                 obj.coordinates = {...
-                    {'experimentName', {1, 4, 1}}
-                    % {'stem', {1, 13, 10}}
-                    {'first_filename_template', {1, 12, 5}}
+                    {'experimentName', {1, 5, 1}}
+                    {'first_filename_template', {1, 16, 5}}
+                    {'first_condition_key', {1, 16, 1}}
+                    % TODO NEED TO UPDATE COORDS BELOW
                     {'first_sample_num', {2, 3, 1}}
                     {'first_sample_dox', {2, 3, 3}} % TODO: will need to generalize further
                     {'first_sample_template', {2, 3, 8}}
@@ -166,6 +167,12 @@ classdef Excel
                 end
             end
             new_coords = obj.addExcelCoordinates('filename_templates', coords);
+        end
+        
+        % Looks through the condition keys in "Experiment" and raises a
+        % warning if a value in "Samples" has a value that is not in the key
+        function checkConditions(obj)
+            condition
         end
         
         % Returns the value at an inputted position. Error checks make sure
