@@ -8,7 +8,7 @@ function batch_analysis_excel(extractor, CM)
     % Load the color model
     if nargin < 2
         try
-            CM_file = extractor.getExcelValue('inputName_CM', 'char'); 
+            CM_file = extractor.getExcelValue('inputName_CM', 'char', 1); 
         catch
             try
                 CM_file = extractor.getExcelValue('outputName_CM', 'char');
@@ -33,7 +33,7 @@ function batch_analysis_excel(extractor, CM)
     end
 
     try 
-        stemName = extractor.getExcelValue('OutputSettings.StemName', 'char');
+        stemName = extractor.getExcelValue('OutputSettings.StemName', 'char', 1);
         TASBEConfig.set('OutputSettings.StemName', stemName);
     catch
         TASBESession.warn('make_color_model', 'MissingPreference', 'Missing Stem Name in "Samples" sheet');
@@ -43,9 +43,9 @@ function batch_analysis_excel(extractor, CM)
     extractor.setTASBEConfig('plots.plotPath', 'char', 2);
     % Analyze on a histogram of 10^[first] to 10^[third] ERF, with bins every 10^[second]
     try
-        binseq_min = extractor.getExcelValue('binseq_min', 'numeric');
-        binseq_max = extractor.getExcelValue('binseq_max', 'numeric');
-        binseq_pdecade = extractor.getExcelValue('binseq_pdecade', 'numeric');
+        binseq_min = extractor.getExcelValue('binseq_min', 'numeric', 1);
+        binseq_max = extractor.getExcelValue('binseq_max', 'numeric', 1);
+        binseq_pdecade = extractor.getExcelValue('binseq_pdecade', 'numeric', 1);
         bins = BinSequence(binseq_min, (1/binseq_pdecade), binseq_max, 'log_bins');
     catch
         bins = BinSequence();
@@ -81,13 +81,13 @@ function batch_analysis_excel(extractor, CM)
     if numel(outputs) == 3
         AP = AnalysisParameters(bins,{'input',outputs{2}; 'output',outputs{3}; 'constitutive',outputs{1}});
     else
-        TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing constitutive, input, output in "Cytometer" sheet');
+        TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing constitutive, input, output in "Calibration" sheet');
         AP = AnalysisParameters(bins,{});
     end
 
     % Ignore any bins with less than valid count as noise
     try
-        minValidCount = extractor.getExcelValue('minValidCount', 'numeric');
+        minValidCount = extractor.getExcelValue('minValidCount', 'numeric', 1);
         AP=setMinValidCount(AP,minValidCount);
     catch
         TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing Min Valid Count in "Samples" sheet');
@@ -95,14 +95,14 @@ function batch_analysis_excel(extractor, CM)
 
     % Add autofluorescence back in after removing for compensation?
     try
-        autofluorescence = extractor.getExcelValue('autofluorescence', 'numeric');
+        autofluorescence = extractor.getExcelValue('autofluorescence', 'numeric', 1);
         AP=setUseAutoFluorescence(AP,autofluorescence);
     catch
         TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing Use Auto Fluorescence in "Samples" sheet');
     end
 
     try
-        minFracActive = extractor.getExcelValue('minFracActive', 'numeric');
+        minFracActive = extractor.getExcelValue('minFracActive', 'numeric', 1);
         AP=setMinFractionActive(AP,minFracActive);
     catch
         TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing Min Fraction Active in "Samples" sheet');
@@ -118,7 +118,10 @@ function batch_analysis_excel(extractor, CM)
     sample_exclude_col = extractor.getColNum('first_sample_exclude');
     for i=first_sample_row:size(extractor.sheets{sh_num2},1)
         try
-            extractor.getExcelValuePos(sh_num2, i, sample_num_col, 'numeric');
+            num = extractor.getExcelValuePos(sh_num2, i, sample_num_col, 'numeric');
+            if isempty(num)
+                break
+            end
         catch
             break
         end

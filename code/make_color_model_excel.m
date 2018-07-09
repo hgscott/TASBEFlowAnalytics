@@ -41,7 +41,10 @@ function [CM] = make_color_model_excel(extractor)
     % elements in ref_filenames
     for i=first_sample_row:size(extractor.sheets{sh_num1},1)
         try
-            extractor.getExcelValuePos(sh_num1, i, sample_num_col, 'numeric');
+            num = extractor.getExcelValuePos(sh_num1, i, sample_num_col, 'numeric');
+            if isempty(num)
+                break
+            end
         catch
             break
         end
@@ -114,7 +117,10 @@ function [CM] = make_color_model_excel(extractor)
     colorfiles = {};
     for i=first_sample_row:size(extractor.sheets{sh_num1},1)
         try
-            extractor.getExcelValuePos(sh_num1, i, sample_num_col, 'numeric');
+            num = extractor.getExcelValuePos(sh_num1, i, sample_num_col, 'numeric');
+            if isempty(num)
+                break
+            end
         catch
             break
         end

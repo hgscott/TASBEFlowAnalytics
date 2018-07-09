@@ -51,6 +51,9 @@ function [filename] = getFilename(extractor, row)
         catch
             try
                 section = num2str(extractor.getExcelValuePos(sh_num2, i, main_col, 'numeric'));
+                if isempty(section)
+                    break
+                end
             catch
                 break
             end
@@ -66,6 +69,9 @@ function [filename] = getFilename(extractor, row)
                 catch
                     try
                         ref_header = num2str(extractor.getExcelValuePos(sh_num1, sample_start_row, j, 'numeric'));
+                        if isempty(ref_header)
+                            break
+                        end
                     catch 
                         TASBESession.error('getFilename', 'InvalidHeaderName', 'The header, %s, does not match with any column titles in "Samples" sheet.', header);
                     end
@@ -106,13 +112,15 @@ function [filename] = getFilename(extractor, row)
     
     for j=numel(sections):-1:1
         section = sections{j};
-        % Make sure all sections have the correct length
-        for k=numel(section):multiple
-            section{k} = section{end};
-        end
-        for k=1:numel(section)
-            names{k} = [names{k}(1:positions{j}) section{k} names{k}(positions{j}+1:end)];
-            names{k} = [names{k}(1:positions{j}-1) names{k}(positions{j}+1:end)];
+        if ~isempty(section{1})
+            % Make sure all sections have the correct length
+            for k=numel(section):multiple
+                section{k} = section{end};
+            end
+            for k=1:numel(section)
+                names{k} = [names{k}(1:positions{j}) section{k} names{k}(positions{j}+1:end)];
+                names{k} = [names{k}(1:positions{j}-1) names{k}(positions{j}+1:end)];
+            end
         end
     end
     

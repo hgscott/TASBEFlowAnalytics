@@ -22,67 +22,80 @@ classdef Excel
             [~,~,s2] = xlsread(file, 'Samples');
             % Read in Excel for information, Calibration sheet
             [~,~,s3] = xlsread(file, 'Calibration');
+            % Read in Excel for information, Comparative Analysis sheet
+            [~,~,s4] = xlsread(file, 'Comparative Analysis');
+            % Read in Excel for information, Transfer Curve Analysis sheet
+            [~,~,s5] = xlsread(file, 'Transfer Curve Analysis');
             % Read in Excel for information, Additional Settings sheet
-            [~,~,s4] = xlsread(file, 'Optional Settings');
-            obj.sheets = {s1, s2, s3, s4};
+            [~,~,s6] = xlsread(file, 'Optional Settings');
+            obj.sheets = {s1, s2, s3, s4, s5, s6};
             if nargin < 2
                 obj.coordinates = {...
-                    {'experimentName', {1, 5, 1}}
-                    {'first_filename_template', {1, 16, 5}}
-                    {'first_condition_key', {1, 16, 1}}
-                    % TODO NEED TO UPDATE COORDS BELOW
-                    {'first_sample_num', {2, 3, 1}}
-                    {'first_sample_dox', {2, 3, 3}} % TODO: will need to generalize further
-                    {'first_sample_template', {2, 3, 8}}
-                    {'first_sample_name', {2, 3, 2}}
-                    % {'first_sample_filename', {2, 3, 12}}
-                    {'first_sample_exclude', {2, 3, 10}}
-                    {'inputName_CM', {2, 28, 3}}
-                    {'OutputSettings.StemName', {2, 28, 4}}
-                    {'binseq_min', {2, 28, 9}}
-                    {'binseq_pdecade', {2, 28, 10}}
-                    {'binseq_max', {2, 28, 11}}
-                    {'minValidCount', {2, 28, 6}}
-                    {'autofluorescence', {2, 28, 7}}
-                    {'minFracActive', {2, 28, 8}}
-                    {'outputName_BA', {2, 28, 5}}
-                    {'beads.beadModel', {3, 3, 2}}
-                    {'plots.plotPath', {{3, 22, 1}, {2, 28, 2}}}
-                    {'beads.beadBatch', {3, 3, 1}}
-                    {'beads.rangeMin', {3, 3, 3}}
-                    {'beads.rangeMax', {3, 3, 4}}
-                    {'beads.peakThreshold', {3, 3, 5}}
-                    {'beads.beadChannel', {3, 3, 6}}
-                    {'beads.secondaryBeadChannel', {3, 22, 2}}
-                    {'relevant_channels', {3, 19, 2}}
-                    {'transChannelMin', {3, 19, 3}}
-                    {'outputName_CM', {3, 22, 3}}
-                    {'first_flchrome_name', {3, 9, 2}}
-                    {'first_flchrome_channel', {3, 9, 3}}
-                    {'first_flchrome_type', {3, 9, 4}} % whether constitutive or input or output
-                    {'first_flchrome_wavlen', {3, 9, 5}}
-                    {'first_flchrome_filter', {3, 9, 6}}
-                    {'first_flchrome_color', {3, 9, 7}}
-                    {'first_flchrome_id', {3, 9, 8}}
-                    {'num_channels', {3, 19, 1}}
-                    {'bead_name', {3, 3, 7}}
-                    {'blank_name', {3, 6, 2}}
-                    {'all_name', {3, 19, 4}}
-                    {'first_preference_name', {4, 3, 1}}
-                    {'first_preference_value', {4, 3, 3}}
+                    % Coords for variables in "Experiment"
+                    {'experimentName'; {1, 5, 1}};
+                    {'first_filename_template'; {1, 16, 5}};
+                    {'first_condition_key'; {1, 16, 1}};
+                    % Coords for variables in "Samples"
+                    {'first_sample_num'; {2, 5, 1}};
+                    {'first_sample_name'; {2, 5, 2}};
+                    {'inputName_CM'; {{2, 30, 3}, {4, 13, 3}}};
+                    {'OutputSettings.StemName'; {{2, 30, 4}, {4, 13, 4}}};
+                    {'binseq_min'; {{2, 30, 9}, {4, 13, 11}}};
+                    {'binseq_pdecade'; {{2, 30, 10}, {4, 13, 12}}};
+                    {'binseq_max'; {{2, 30, 11}, {4, 13, 13}}};
+                    {'minValidCount'; {{2, 30, 6}, {4, 13, 8}}};
+                    {'autofluorescence'; {{2, 30, 7}, {4, 13, 9}}};
+                    {'minFracActive'; {{2, 30, 8}, {4, 13, 10}}};
+                    {'outputName_BA'; {2, 30, 5}};
+                    % Coords for variables in "Calibration"
+                    {'beads.beadModel'; {3, 5, 2}};
+                    {'plots.plotPath'; {{3, 28, 2}, {2, 30, 2}, {4, 13, 2}}};
+                    {'beads.beadBatch'; {3, 5, 1}};
+                    {'beads.rangeMin'; {3, 5, 3}};
+                    {'beads.rangeMax'; {3, 5, 4}};
+                    {'beads.peakThreshold'; {3, 5, 5}};
+                    {'beads.beadChannel'; {3, 5, 6}};
+                    {'beads.secondaryBeadChannel'; {3, 28, 3}};
+                    {'relevant_channels'; {3, 24, 2}};
+                    {'transChannelMin'; {3, 24, 3}};
+                    {'outputName_CM'; {3, 28, 4}};
+                    {'first_flchrome_name'; {3, 13, 2}};
+                    {'first_flchrome_channel'; {3, 13, 3}};
+                    {'first_flchrome_type'; {3, 13, 4}}; % whether constitutive or input or output
+                    {'first_flchrome_wavlen'; {3, 13, 5}};
+                    {'first_flchrome_filter'; {3, 13, 6}};
+                    {'first_flchrome_color'; {3, 13, 7}};
+                    {'first_flchrome_id'; {3, 13, 8}};
+                    {'num_channels'; {3, 24, 1}};
+                    {'bead_name'; {3, 5, 7}};
+                    {'blank_name'; {3, 9, 2}};
+                    {'all_name'; {3, 24, 4}};
+                    % Coords for variables in "Comparative Analysis"
+                    {'device_name'; {4, 13, 6}};
+                    {'inducer_name'; {4, 13, 7}};
+                    {'outputName_PM'; {4, 13, 5}};
+                    % Coords for variables in "Transfer Curve Analysis"
+                    % Coords for variables in "Optional Settings"
+                    {'first_preference_name'; {6, 3, 1}};
+                    {'first_preference_value'; {6, 3, 3}};
                     };
             else
                 obj.coordinates = coords;
             end
             % Find the number of templates and update coordinates with info
             obj.coordinates = obj.findTemplates();
+            % Find position of template # and exclude from batch analysis
+            % in "Samples"
+            obj.coordinates = obj.findSampleCols();
+            % Check on condition keys
+            obj.checkConditions();
         end
 
         % Update any relevant TASBEConfig from the Additional Settings sheet in the
         % template spreadsheet
         function TASBEConfig_updates(obj)
             TASBEConfig.checkpoint('init');
-            raw = obj.sheets{4};
+            raw = obj.getSheetNum('first_preference_name');
             name_col = obj.getColNum('first_preference_name');
             val_col = obj.getColNum('first_preference_value');
             for i=obj.getRowNum('first_preference_name'):size(raw,1)
@@ -145,9 +158,11 @@ classdef Excel
         
         % Returns a new obj.coordinates with updated coordinates. Takes the
         % name of the variable to add and its coords as inputs
-        function new_coords = addExcelCoordinates(obj, name, coords)
+        function new_coords = addExcelCoordinates(obj, names, coords)
             new_coords = obj.coordinates;
-            new_coords{end+1} = {name, coords};
+            for i=1:numel(names)
+                new_coords{end+1} = {names{i}; coords{i}};
+            end
         end
         
         % Finds the coordinates for all of the filename templates
@@ -166,13 +181,105 @@ classdef Excel
                     continue
                 end
             end
-            new_coords = obj.addExcelCoordinates('filename_templates', coords);
+            new_coords = obj.addExcelCoordinates({'filename_templates'}, {coords});
         end
         
         % Looks through the condition keys in "Experiment" and raises a
         % warning if a value in "Samples" has a value that is not in the key
         function checkConditions(obj)
-            condition
+            condition_col = obj.getColNum('first_condition_key');
+            condition_sh = obj.getSheetNum('first_condition_key');
+            first_condition_row = obj.getRowNum('first_condition_key');
+            sh_num1 = obj.getSheetNum('first_sample_num');
+            sample_start_col = obj.getColNum('first_sample_num');
+            sample_start_row = obj.getRowNum('first_sample_num') - 1;
+            for i=first_condition_row:size(obj.sheets{condition_sh}, 1)
+                try
+                    value = obj.getExcelValuePos(condition_sh, i, condition_col, 'char');
+                    if ~isempty(strfind(value, 'Sample Column Name'))
+                        % Found a condition key, save its keys in an array
+                        % and compare with column in "Samples"
+                        try
+                            column_name = obj.getExcelValuePos(condition_sh, i, condition_col+1, 'char');
+                            keys = {};
+                            for j=i+2:size(obj.sheets{condition_sh}, 1)
+                                try
+                                    keys{end+1} = obj.getExcelValuePos(condition_sh, j, condition_col, 'char');
+                                catch
+                                    break
+                                end
+                            end
+                            % look at column in "Samples"
+                            for j=sample_start_col:size(obj.sheets{sh_num1},2)
+                                try 
+                                    ref_header = obj.getExcelValuePos(sh_num1, sample_start_row, j, 'char');
+                                catch
+                                    try
+                                        ref_header = num2str(obj.getExcelValuePos(sh_num1, sample_start_row, j, 'numeric'));
+                                    catch 
+                                        TASBESession.error('Excel', 'InvalidHeaderName', 'The header, %s, does not match with any column titles in "Samples" sheet.', header);
+                                    end
+                                end
+                                % Find the matching section name in filename template
+                                % and column header in "Samples"
+                                if strcmp(column_name, ref_header)
+                                    % go through all the rows and make sure
+                                    % matches with one of the keys, raise
+                                    % warning if not
+                                    for k=sample_start_row+1:size(obj.sheets{sh_num1},1)
+                                        try
+                                            value = obj.getExcelValuePos(sh_num1, k, j, 'char');
+                                            ind = find(ismember(keys, value), 1);
+                                            if isempty(ind)
+                                                TASBESession.warn('Excel', 'InvalidValue', 'The value at row %s col %s does not match with listed keys.', num2str(k), column_name);
+                                            end
+                                        catch
+                                            break
+                                        end
+                                        
+                                    end
+                                    break
+                                end
+                            end
+                            
+                        catch
+                            continue
+                        end
+                    end
+                catch
+                    continue
+                end
+            end
+        end
+        
+        % Find coordinates of Template # and Exclude from Batch Analysis
+        % columns in "Samples" and add to coordinates
+        function new_coords = findSampleCols(obj)
+            sh_num1 = obj.getSheetNum('first_sample_num');
+            sample_start_col = obj.getColNum('first_sample_num');
+            sample_start_row = obj.getRowNum('first_sample_num') - 1;
+            names = {'Template #', 'Exlude from Batch Analysis'};
+            coords = {};
+            % look through columns in "Samples"
+            for i=sample_start_col:size(obj.sheets{sh_num1},2)
+                try 
+                    ref_header = obj.getExcelValuePos(sh_num1, sample_start_row, i, 'char');
+                catch
+                    try
+                        ref_header = num2str(obj.getExcelValuePos(sh_num1, sample_start_row, i, 'numeric'));
+                    catch 
+                        break
+                    end
+                end
+                ind = find(ismember(names, ref_header), 1);
+                if ~isempty(ind)
+                    coords{ind} = {sh_num1, sample_start_row+1, i};
+                end
+            end
+            if numel(coords) ~= 2
+                TASBESession.error('Excel', 'MissingHeader', 'Did not find template # or exclude from batch analysis columns in "Samples".');
+            end
+            new_coords = obj.addExcelCoordinates({'first_sample_template', 'first_sample_exclude'}, coords);
         end
         
         % Returns the value at an inputted position. Error checks make sure

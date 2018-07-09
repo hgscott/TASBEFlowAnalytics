@@ -1,8 +1,19 @@
 % Wrapper function that creates an Excel object and calls the color model
-% and batch analysis functions. The only needed input is the template
-% file path.
-function analyzeFromExcel(file)
+% and batch analysis functions. The only needed inputs are the template
+% file path and type of analysis that needs to be run.
+function analyzeFromExcel(file, type)
     extractor = Excel(file);
-    CM = make_color_model_excel(extractor);
-    batch_analysis_excel(extractor, CM);
+    if type == 1
+        % Make color model
+        make_color_model_excel(extractor);
+    elseif type == 2
+        % Run batch analysis
+        batch_analysis_excel(extractor);
+    elseif type == 3
+        % Run plus minus analysis
+        plusminus_analysis_excel(extractor);
+    else
+        % Run transfer curve analysis 
+    end
+
 end

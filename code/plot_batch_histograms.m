@@ -86,7 +86,7 @@ for i=1:n_conditions
     else
         outputfig(h,[TASBEConfig.get('OutputSettings.StemName') '-' results{i}.condition '-bincounts'],TASBEConfig.get('plots.plotPath'));
     end
-
+    
     fprintf('.');
 end
 fprintf('\n');
