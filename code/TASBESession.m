@@ -73,6 +73,17 @@ classdef TASBESession
             attributes = sprintf('errors="%i" tests="%i" failures="%i" time="0"',errs,numel(suite.contents),fails);
             out = sprintf(' <testsuite name="%s" %s>\n%s </testsuite>\n',suite.name,attributes,tests);
         end
+        
+        function off = checkIfWarningOff(msgId)
+            off = false;
+            warnStruct = warning();
+            for i=1:numel(warnStruct)
+                if strcmp(msgId,warnStruct(i).identifier) && strcmp('off',warnStruct(i).state),
+                    off = true;
+                    return;
+                end
+            end
+        end
     end
     
     methods(Static)
@@ -86,6 +97,9 @@ classdef TASBESession
         end
         
         function out = warn(classname,name,message,varargin)
+            % abort if warning is turned off
+            if TASBESession.checkIfWarningOff([classname ':' name]), return; end;
+            % otherwise, continue
             event.name = name;
             event.classname = classname;
             event.type = 'failure';
