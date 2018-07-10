@@ -40,6 +40,21 @@ assertEqual(limitPrecision([0.123 456 78.9],1), [0.1 500 80]);
 
 function test_TASBESession
 
-warning('off','TASBESession:test:PercentTest');
-TASBESession.warn('TASBESession:test','PercentTest','100%% success!');
+TASBESession.succeed('TASBESession','test','Testing TASBESession');
+
+prelog = TASBESession.list();
+
+warning('on','TASBESession:test');
+TASBESession.warn('TASBESession','test','Testing TASBESession');
+log = TASBESession.list();
+assertEqual(log{end}.contents{end}.name, 'test');
+% make sure the log grew by 1
+assertEqual(numel(log{end}.contents), 1+numel(prelog{end}.contents));
+
+warning('off','TASBESession:test');
+TASBESession.warn('TASBESession','test','100%% success!');
+% make sure the log didn't grow
+log2 = TASBESession.list();
+assertEqual(numel(log2{end}.contents), numel(log{end}.contents));
+
 TASBESession.to_xml([tempdir '/tmp.xml']);
