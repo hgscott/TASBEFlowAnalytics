@@ -38,18 +38,18 @@ classdef Excel
                     % Coords for variables in "Samples"
                     {'first_sample_num'; {2, 5, 1}};
                     {'first_sample_name'; {2, 5, 2}};
-                    {'inputName_CM'; {{2, 30, 3}, {4, 13, 3}}};
-                    {'OutputSettings.StemName'; {{2, 30, 4}, {4, 13, 4}}};
-                    {'binseq_min'; {{2, 30, 9}, {4, 13, 11}}};
-                    {'binseq_pdecade'; {{2, 30, 10}, {4, 13, 12}}};
-                    {'binseq_max'; {{2, 30, 11}, {4, 13, 13}}};
-                    {'minValidCount'; {{2, 30, 6}, {4, 13, 8}}};
-                    {'autofluorescence'; {{2, 30, 7}, {4, 13, 9}}};
-                    {'minFracActive'; {{2, 30, 8}, {4, 13, 10}}};
+                    {'inputName_CM'; {{2, 30, 3}, {4, 13, 2}, {5, 13, 2}}};
+                    {'OutputSettings.StemName'; {{2, 30, 4}, {4, 5, 13}, {5, 5, 13}}};
+                    {'binseq_min'; {{2, 30, 9}, {4, 13, 6}, {5, 13, 6}}};
+                    {'binseq_pdecade'; {{2, 30, 10}, {4, 13, 7}, {5, 13, 7}}};
+                    {'binseq_max'; {{2, 30, 11}, {4, 13, 8}, {5, 13, 8}}};
+                    {'minValidCount'; {{2, 30, 6}, {4, 13, 3}, {5, 13, 3}}};
+                    {'autofluorescence'; {{2, 30, 7}, {4, 13, 4}, {5, 13, 4}}};
+                    {'minFracActive'; {{2, 30, 8}, {4, 13, 5}, {5, 13, 5}}};
                     {'outputName_BA'; {2, 30, 5}};
                     % Coords for variables in "Calibration"
                     {'beads.beadModel'; {3, 5, 2}};
-                    {'plots.plotPath'; {{3, 28, 2}, {2, 30, 2}, {4, 13, 2}}};
+                    {'plots.plotPath'; {{3, 28, 2}, {2, 30, 2}, {4, 5, 17}, {5, 5, 17}}};
                     {'beads.beadBatch'; {3, 5, 1}};
                     {'beads.rangeMin'; {3, 5, 3}};
                     {'beads.rangeMax'; {3, 5, 4}};
@@ -71,10 +71,18 @@ classdef Excel
                     {'blank_name'; {3, 9, 2}};
                     {'all_name'; {3, 24, 4}};
                     % Coords for variables in "Comparative Analysis"
-                    {'device_name'; {4, 13, 6}};
-                    {'inducer_name'; {4, 13, 7}};
-                    {'outputName_PM'; {4, 13, 5}};
+                    {'device_name'; {{4, 5, 15}, {5, 5, 15}}};
+                    {'inducer_name'; {{4, 5, 16}, {5, 5, 16}}};
+                    {'outputName_PM'; {4, 5, 14}};
+                    {'primary_sampleColName_PM'; {4, 5, 7}};
+                    {'secondary_sampleColName_PM'; {4, 5, 10}};
+                    {'first_sampleColName_PM'; {4, 5, 1}};
+                    {'first_sampleVal_PM'; {4, 5, 4}};
                     % Coords for variables in "Transfer Curve Analysis"
+                    {'outputName_TC'; {5, 5, 14}};
+                    {'sampleColName_TC'; {5, 5, 7}};
+                    {'first_sampleColName_TC'; {5, 5, 1}};
+                    {'first_sampleVal_TC'; {5, 5, 4}};
                     % Coords for variables in "Optional Settings"
                     {'first_preference_name'; {6, 3, 1}};
                     {'first_preference_value'; {6, 3, 3}};
@@ -87,6 +95,8 @@ classdef Excel
             % Find position of template # and exclude from batch analysis
             % in "Samples"
             obj.coordinates = obj.findSampleCols();
+            % Find last sample row
+            obj.coordinates = obj.findLastSampleRow();
             % Check on condition keys
             obj.checkConditions();
         end
@@ -190,9 +200,6 @@ classdef Excel
             condition_col = obj.getColNum('first_condition_key');
             condition_sh = obj.getSheetNum('first_condition_key');
             first_condition_row = obj.getRowNum('first_condition_key');
-            sh_num1 = obj.getSheetNum('first_sample_num');
-            sample_start_col = obj.getColNum('first_sample_num');
-            sample_start_row = obj.getRowNum('first_sample_num') - 1;
             for i=first_condition_row:size(obj.sheets{condition_sh}, 1)
                 try
                     value = obj.getExcelValuePos(condition_sh, i, condition_col, 'char');
@@ -201,53 +208,80 @@ classdef Excel
                         % and compare with column in "Samples"
                         try
                             column_name = obj.getExcelValuePos(condition_sh, i, condition_col+1, 'char');
-                            keys = {};
-                            for j=i+2:size(obj.sheets{condition_sh}, 1)
-                                try
-                                    keys{end+1} = obj.getExcelValuePos(condition_sh, j, condition_col, 'char');
-                                catch
-                                    break
-                                end
-                            end
-                            % look at column in "Samples"
-                            for j=sample_start_col:size(obj.sheets{sh_num1},2)
-                                try 
-                                    ref_header = obj.getExcelValuePos(sh_num1, sample_start_row, j, 'char');
-                                catch
-                                    try
-                                        ref_header = num2str(obj.getExcelValuePos(sh_num1, sample_start_row, j, 'numeric'));
-                                    catch 
-                                        TASBESession.error('Excel', 'InvalidHeaderName', 'The header, %s, does not match with any column titles in "Samples" sheet.', header);
-                                    end
-                                end
-                                % Find the matching section name in filename template
-                                % and column header in "Samples"
-                                if strcmp(column_name, ref_header)
-                                    % go through all the rows and make sure
-                                    % matches with one of the keys, raise
-                                    % warning if not
-                                    for k=sample_start_row+1:size(obj.sheets{sh_num1},1)
-                                        try
-                                            value = obj.getExcelValuePos(sh_num1, k, j, 'char');
-                                            ind = find(ismember(keys, value), 1);
-                                            if isempty(ind)
-                                                TASBESession.warn('Excel', 'InvalidValue', 'The value at row %s col %s does not match with listed keys.', num2str(k), column_name);
-                                            end
-                                        catch
-                                            break
-                                        end
-                                        
-                                    end
-                                    break
-                                end
-                            end
+                            obj.checkConditions_helper(i, column_name);
                             
                         catch
-                            continue
+                            try
+                                column_name = num2str(obj.getExcelValuePos(condition_sh, i, condition_col+1, 'numeric'));
+                                obj.checkConditions_helper(i, column_name);
+                            catch
+                                continue
+                            end
                         end
                     end
                 catch
                     continue
+                end
+            end
+        end
+        
+        % Helper function for checkConditions
+        function checkConditions_helper(obj, i, column_name)
+            condition_col = obj.getColNum('first_condition_key');
+            condition_sh = obj.getSheetNum('first_condition_key');
+            sh_num1 = obj.getSheetNum('first_sample_num');
+            sample_start_col = obj.getColNum('first_sample_num');
+            sample_start_row = obj.getRowNum('first_sample_num') - 1;
+            keys = {};
+            for j=i+2:size(obj.sheets{condition_sh}, 1)
+                try
+                    keys{end+1} = obj.getExcelValuePos(condition_sh, j, condition_col, 'char');
+                catch
+                    try
+                        keys{end+1} = num2str(obj.getExcelValuePos(condition_sh, j, condition_col, 'numeric'));
+                    catch
+                        break
+                    end
+                end
+            end
+            % look at column in "Samples"
+            for j=sample_start_col:size(obj.sheets{sh_num1},2)
+                try 
+                    ref_header = obj.getExcelValuePos(sh_num1, sample_start_row, j, 'char');
+                catch
+                    try
+                        ref_header = num2str(obj.getExcelValuePos(sh_num1, sample_start_row, j, 'numeric'));
+                    catch 
+                        TASBESession.error('Excel', 'InvalidHeaderName', 'The header, %s, does not match with any column titles in "Samples" sheet.', header);
+                    end
+                end
+                % Find the matching section name in filename template
+                % and column header in "Samples"
+                if strcmp(column_name, ref_header)
+                    % go through all the rows and make sure
+                    % matches with one of the keys, raise
+                    % warning if not
+                    for k=sample_start_row+1:obj.getRowNum('last_sample_num')
+                        try
+                            value = obj.getExcelValuePos(sh_num1, k, j, 'char');
+                            ind = find(ismember(keys, value), 1);
+                            if isempty(ind)
+                                TASBESession.warn('Excel', 'InvalidValue', 'The value of %s at row %s col %s does not match with listed keys.', value, num2str(k), column_name);
+                            end
+                        catch
+                            try
+                                value = num2str(obj.getExcelValuePos(sh_num1, k, j, 'numeric'));
+                                ind = find(ismember(keys, value), 1);
+                                if isempty(ind)
+                                    TASBESession.warn('Excel', 'InvalidValue', 'The value of %s at row %s col %s does not match with listed keys.', value, num2str(k), column_name);
+                                end
+                            catch
+                                continue
+                            end
+                        end
+
+                    end
+                    break
                 end
             end
         end
@@ -282,6 +316,26 @@ classdef Excel
             new_coords = obj.addExcelCoordinates({'first_sample_template', 'first_sample_exclude'}, coords);
         end
         
+        % Finds the last sample row
+        function new_coords = findLastSampleRow(obj)
+            sh_num1 = obj.getSheetNum('first_sample_num');
+            sample_start_col = obj.getColNum('first_sample_num');
+            sample_start_row = obj.getRowNum('first_sample_num');
+            coords = {};
+            row_num = 0;
+            for i=sample_start_row:size(obj.sheets{sh_num1},1)
+                try 
+                    num = num2str(obj.getExcelValuePos(sh_num1, i, sample_start_col, 'numeric'));
+                catch
+                    % found last
+                    row_num = i-1;
+                    break
+                end 
+            end
+            coords{end+1} = {sh_num1, row_num, sample_start_col};
+            new_coords = obj.addExcelCoordinates({'last_sample_num'}, coords);
+        end
+        
         % Returns the value at an inputted position. Error checks make sure
         % that the value is of the correct type
         function value = getExcelValuePos(obj, sheet_num, row, col, type)
@@ -290,16 +344,18 @@ classdef Excel
             if isnan(value)
                 TASBESession.error('Excel','ValueNotFound','No value at position (%s, %s, %s).', num2str(sheet_num), num2str(row), num2str(col));
             end
-            if strcmp(type, 'cell') 
-                bounds = strsplit(char(value), ',');
-                if isnan(str2double(bounds))
-                    TASBESession.error('Excel','IncorrectType','Value at (%s, %s, %s) does not make a numeric array. Make sure value is in the form of 1,2,3.', num2str(sheet_num), num2str(row), num2str(col));
-                else
-                    value = num2cell(str2double(bounds));
+            if exist('type', 'var')
+                if strcmp(type, 'cell') 
+                    bounds = strsplit(char(value), ',');
+                    if isnan(str2double(bounds))
+                        TASBESession.error('Excel','IncorrectType','Value at (%s, %s, %s) does not make a numeric array. Make sure value is in the form of #,#,#.', num2str(sheet_num), num2str(row), num2str(col));
+                    else
+                        value = num2cell(str2double(bounds));
+                    end
                 end
-            end
-            if ~isa(value, type)
-                TASBESession.error('Excel','IncorrectType','Value at (%s, %s, %s) of type %s, does not match with required type, %s.', num2str(sheet_num), num2str(row), num2str(col), class(value), type);
+                if ~isa(value, type)
+                    TASBESession.error('Excel','IncorrectType','Value at (%s, %s, %s) of type %s, does not match with required type, %s.', num2str(sheet_num), num2str(row), num2str(col), class(value), type);
+                end
             end
         end
         
@@ -312,7 +368,11 @@ classdef Excel
             if exist('index', 'var')
                 pos = pos{index};
             end
-            value = obj.getExcelValuePos(pos{1}, pos{2}, pos{3}, type);
+            if exist('type', 'var')
+                value = obj.getExcelValuePos(pos{1}, pos{2}, pos{3}, type);
+            else
+                value = obj.getExcelValuePos(pos{1}, pos{2}, pos{3});
+            end
         end
         
         % Sets a TASBEConfig given a variable name. getExcelValue is used

@@ -131,11 +131,7 @@ function batch_analysis_excel(extractor, CM)
         catch
             sample_names{end+1} = extractor.getExcelValuePos(sh_num2, i, sample_name_col, 'char');
             file = getFilename(extractor, i);
-            files = {};
-            for j=1:numel(file)
-                files{end+1} = file{j};
-            end
-            file_names{end+1} = files;
+            file_names{end+1} = file;
         end
     end
 

@@ -14,6 +14,7 @@ function analyzeFromExcel(file, type)
         plusminus_analysis_excel(extractor);
     else
         % Run transfer curve analysis 
+        transfercurve_analysis_excel(extractor);
     end
 
 end
