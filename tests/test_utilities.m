@@ -40,6 +40,8 @@ assertEqual(limitPrecision([0.123 456 78.9],1), [0.1 500 80]);
 
 function test_TASBESession
 
+TASBESession.succeed('TASBESession','test','Testing TASBESession');
+
 prelog = TASBESession.list();
 
 warning('on','TASBESession:test');
