@@ -10,7 +10,11 @@ function [statisticsFile, histogramFile] = serializeBatchOutput(file_pairs, CM, 
 
     % Grab all the data in separate data structures. Then format for output
     % files.    
-    channels = getChannels(CM);
+    channel_names = getChannelNames(sampleresults{1}{1}.AnalysisParameters); % channel names are same across conditions and replicates
+    channels = {};
+    for i=1:numel(channel_names)
+        channels{end+1} = channel_named(CM, channel_names{i});
+    end
     sampleIds = file_pairs(:,1);
     binCenters = get_bin_centers(getBins(AP));
     units = getStandardUnits(CM);

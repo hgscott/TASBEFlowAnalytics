@@ -38,12 +38,12 @@ colorfiles{1} = [stem0312 'EYFP_P3.fcs']; % If there is only one channel, the co
 
 channels{2} = Channel('PE-Tx-Red-YG-A', 561, 610, 20);
 channels{2} = setPrintName(channels{2}, 'mKate');
-% channels{2} = setLineSpec(channels{2}, 'r');
+channels{2} = setLineSpec(channels{2}, 'r');
 colorfiles{2} = [stem0312 'mkate_P3.fcs'];
 
 channels{3} = Channel('Pacific Blue-A', 405, 450, 50);
 channels{3} = setPrintName(channels{3}, 'EBFP2');
-% channels{3} = setLineSpec(channels{3}, 'b');
+channels{3} = setLineSpec(channels{3}, 'b');
 colorfiles{3} = [stem0312 'ebfp2_P3.fcs'];
 
 % Multi-color controls are used for converting other colors into ERF units

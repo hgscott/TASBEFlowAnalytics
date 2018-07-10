@@ -256,7 +256,18 @@ TASBEConfig.set('OutputSettings.StemName','LacI-CAGop');
 TASBEConfig.set('plots.plotPath','/tmp/plots');
 TASBEConfig.set('OutputSettings.FixedInputAxis',[1e4 1e10]);
 plot_batch_histograms(results,sampleresults,CM2);
+[~, ~] = serializeBatchOutput(file_pairs, CM2, AP, sampleresults); % should not error
 log = TASBESession.list();
 assertEqual(log{end}.contents{end}.name, 'NoLineSpecs');
 assertExceptionThrown(@()plot_batch_histograms(results,sampleresults,CM2,{'b'}), 'plot_batch_histograms:LineSpecDimensionMismatch', 'No error was raised.');
 
+% Execute the actual analysis
+[results, sampleresults] = per_color_constitutive_analysis(CM2,file_pairs,{'EYFP','mKate'},AP); % shouldn't error, but should set one color to 'k'
+% Make output plots
+TASBEConfig.set('OutputSettings.StemName','LacI-CAGop');
+TASBEConfig.set('plots.plotPath','/tmp/plots');
+TASBEConfig.set('OutputSettings.FixedInputAxis',[1e4 1e10]);
+plot_batch_histograms(results,sampleresults,CM2);
+log = TASBESession.list();
+assertEqual(log{end}.contents{end}.name, 'NoLineSpecs');
+[~, ~] = serializeBatchOutput(file_pairs, CM2, AP, sampleresults); % should not error
