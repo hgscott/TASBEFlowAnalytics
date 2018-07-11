@@ -20,7 +20,7 @@ function batch_analysis_excel(extractor, CM)
         try 
             load(CM_file);
         catch
-            CM = make_color_model_excel();
+            CM = make_color_model_excel(extractor);
         end
     end
 
@@ -28,7 +28,7 @@ function batch_analysis_excel(extractor, CM)
     try
         outputName = extractor.getExcelValue('outputName_BA', 'char');
     catch
-        TASBESession.warn('make_color_model_excel', 'MissingPreference', 'Missing Output File Name for Batch Analysis in "Samples" sheet');
+        TASBESession.warn('batch_analysis_excel', 'MissingPreference', 'Missing Output File Name for Batch Analysis in "Samples" sheet');
         outputName = [experimentName '-BatchAnalysis.mat'];
     end
 
@@ -36,7 +36,7 @@ function batch_analysis_excel(extractor, CM)
         stemName = extractor.getExcelValue('OutputSettings.StemName', 'char', 1);
         TASBEConfig.set('OutputSettings.StemName', stemName);
     catch
-        TASBESession.warn('make_color_model', 'MissingPreference', 'Missing Stem Name in "Samples" sheet');
+        TASBESession.warn('batch_analysis_excel', 'MissingPreference', 'Missing Stem Name in "Samples" sheet');
         TASBEConfig.set('OutputSettings.StemName', experimentName);
     end
 
@@ -81,7 +81,7 @@ function batch_analysis_excel(extractor, CM)
     if numel(outputs) == 3
         AP = AnalysisParameters(bins,{'input',outputs{2}; 'output',outputs{3}; 'constitutive',outputs{1}});
     else
-        TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing constitutive, input, output in "Calibration" sheet');
+        TASBESession.warn('batch_analysis_excel', 'ImportantMissingPreference', 'Missing constitutive, input, output in "Calibration" sheet');
         AP = AnalysisParameters(bins,{});
     end
 
@@ -90,7 +90,7 @@ function batch_analysis_excel(extractor, CM)
         minValidCount = extractor.getExcelValue('minValidCount', 'numeric', 1);
         AP=setMinValidCount(AP,minValidCount);
     catch
-        TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing Min Valid Count in "Samples" sheet');
+        TASBESession.warn('batch_analysis_excel', 'ImportantMissingPreference', 'Missing Min Valid Count in "Samples" sheet');
     end
 
     % Add autofluorescence back in after removing for compensation?
@@ -98,14 +98,14 @@ function batch_analysis_excel(extractor, CM)
         autofluorescence = extractor.getExcelValue('autofluorescence', 'numeric', 1);
         AP=setUseAutoFluorescence(AP,autofluorescence);
     catch
-        TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing Use Auto Fluorescence in "Samples" sheet');
+        TASBESession.warn('batch_analysis_excel', 'ImportantMissingPreference', 'Missing Use Auto Fluorescence in "Samples" sheet');
     end
 
     try
         minFracActive = extractor.getExcelValue('minFracActive', 'numeric', 1);
         AP=setMinFractionActive(AP,minFracActive);
     catch
-        TASBESession.warn('make_color_model', 'ImportantMissingPreference', 'Missing Min Fraction Active in "Samples" sheet');
+        TASBESession.warn('batch_analysis_excel', 'ImportantMissingPreference', 'Missing Min Fraction Active in "Samples" sheet');
     end
     
     % Obtain the necessary sample filenames and print names

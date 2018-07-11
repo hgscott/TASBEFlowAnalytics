@@ -1,6 +1,6 @@
 % Excel class with objects representing the information for a given template
 % spreadsheet
-classdef Excel
+classdef TemplateExtraction
     properties
         % Coordinates is a cell array of different template variable names
         % and their coordinates in the form of {sheet number, row, col}. (A
@@ -14,7 +14,7 @@ classdef Excel
     methods
         % Constuctor with filepath of template and optional coordinates
         % property as inputs
-        function obj = Excel(file, coords)
+        function obj = TemplateExtraction(file, coords)
             obj.filepath = file;
             % Read in Excel for information, Experiment sheet
             [~,~,s1] = xlsread(file, 'Experiment');
@@ -49,7 +49,7 @@ classdef Excel
                     {'outputName_BA'; {2, 30, 5}};
                     % Coords for variables in "Calibration"
                     {'beads.beadModel'; {3, 5, 2}};
-                    {'plots.plotPath'; {{3, 28, 2}, {2, 30, 2}, {4, 5, 17}, {5, 5, 17}}};
+                    {'plots.plotPath'; {{3, 28, 2}, {2, 30, 2}, {4, 5, 16}, {5, 5, 16}}};
                     {'beads.beadBatch'; {3, 5, 1}};
                     {'beads.rangeMin'; {3, 5, 3}};
                     {'beads.rangeMax'; {3, 5, 4}};
@@ -72,7 +72,6 @@ classdef Excel
                     {'all_name'; {3, 24, 4}};
                     % Coords for variables in "Comparative Analysis"
                     {'device_name'; {{4, 5, 15}, {5, 5, 15}}};
-                    {'inducer_name'; {{4, 5, 16}, {5, 5, 16}}};
                     {'outputName_PM'; {4, 5, 14}};
                     {'primary_sampleColName_PM'; {4, 5, 7}};
                     {'secondary_sampleColName_PM'; {4, 5, 10}};
@@ -131,7 +130,7 @@ classdef Excel
                     return
                 end
             end
-            TASBESession.error('Excel','CoordNotFound','Inputted name, %s, not valid. No match found in coordinates.', name);
+            TASBESession.error('TemplateExtraction','CoordNotFound','Inputted name, %s, not valid. No match found in coordinates.', name);
         end
         
         % Returns the first coordinate value (sheet number) of a given variable
@@ -163,7 +162,7 @@ classdef Excel
                     return
                 end
             end
-            TASBESession.error('Excel','CoordNotFound','Inputted name, %s, not valid. No match found in coordinates.', name);
+            TASBESession.error('TemplateExtraction','CoordNotFound','Inputted name, %s, not valid. No match found in coordinates.', name);
         end
         
         % Returns a new obj.coordinates with updated coordinates. Takes the
@@ -252,7 +251,7 @@ classdef Excel
                     try
                         ref_header = num2str(obj.getExcelValuePos(sh_num1, sample_start_row, j, 'numeric'));
                     catch 
-                        TASBESession.error('Excel', 'InvalidHeaderName', 'The header, %s, does not match with any column titles in "Samples" sheet.', header);
+                        TASBESession.error('TemplateExtraction', 'InvalidHeaderName', 'The header, %s, does not match with any column titles in "Samples" sheet.', header);
                     end
                 end
                 % Find the matching section name in filename template
@@ -266,14 +265,14 @@ classdef Excel
                             value = obj.getExcelValuePos(sh_num1, k, j, 'char');
                             ind = find(ismember(keys, value), 1);
                             if isempty(ind)
-                                TASBESession.warn('Excel', 'InvalidValue', 'The value of %s at row %s col %s does not match with listed keys.', value, num2str(k), column_name);
+                                TASBESession.warn('TemplateExtraction', 'InvalidValue', 'The value of %s at row %s col %s does not match with listed keys.', value, num2str(k), column_name);
                             end
                         catch
                             try
                                 value = num2str(obj.getExcelValuePos(sh_num1, k, j, 'numeric'));
                                 ind = find(ismember(keys, value), 1);
                                 if isempty(ind)
-                                    TASBESession.warn('Excel', 'InvalidValue', 'The value of %s at row %s col %s does not match with listed keys.', value, num2str(k), column_name);
+                                    TASBESession.warn('TemplateExtraction', 'InvalidValue', 'The value of %s at row %s col %s does not match with listed keys.', value, num2str(k), column_name);
                                 end
                             catch
                                 continue
@@ -311,7 +310,7 @@ classdef Excel
                 end
             end
             if numel(coords) ~= 2
-                TASBESession.error('Excel', 'MissingHeader', 'Did not find template # or exclude from batch analysis columns in "Samples".');
+                TASBESession.error('TemplateExtraction', 'MissingHeader', 'Did not find template # or exclude from batch analysis columns in "Samples".');
             end
             new_coords = obj.addExcelCoordinates({'first_sample_template', 'first_sample_exclude'}, coords);
         end
@@ -342,19 +341,19 @@ classdef Excel
             sheet = obj.sheets{sheet_num};
             value = cell2mat(sheet(row,col));
             if isnan(value)
-                TASBESession.error('Excel','ValueNotFound','No value at position (%s, %s, %s).', num2str(sheet_num), num2str(row), num2str(col));
+                TASBESession.error('TemplateExtraction','ValueNotFound','No value at position (%s, %s, %s).', num2str(sheet_num), num2str(row), num2str(col));
             end
             if exist('type', 'var')
                 if strcmp(type, 'cell') 
                     bounds = strsplit(char(value), ',');
                     if isnan(str2double(bounds))
-                        TASBESession.error('Excel','IncorrectType','Value at (%s, %s, %s) does not make a numeric array. Make sure value is in the form of #,#,#.', num2str(sheet_num), num2str(row), num2str(col));
+                        TASBESession.error('TemplateExtraction','IncorrectType','Value at (%s, %s, %s) does not make a numeric array. Make sure value is in the form of #,#,#.', num2str(sheet_num), num2str(row), num2str(col));
                     else
                         value = num2cell(str2double(bounds));
                     end
                 end
                 if ~isa(value, type)
-                    TASBESession.error('Excel','IncorrectType','Value at (%s, %s, %s) of type %s, does not match with required type, %s.', num2str(sheet_num), num2str(row), num2str(col), class(value), type);
+                    TASBESession.error('TemplateExtraction','IncorrectType','Value at (%s, %s, %s) of type %s, does not match with required type, %s.', num2str(sheet_num), num2str(row), num2str(col), class(value), type);
                 end
             end
         end
@@ -388,14 +387,14 @@ classdef Excel
                 end
                 
             catch
-                TASBESession.warn('Excel','ValueNotFound','Name, %s, has no value at recorded position.', name);
+                TASBESession.warn('TemplateExtraction','ValueNotFound','Name, %s, has no value at recorded position.', name);
                 return
             end
             
             try
                 TASBEConfig.isSet(name)
             catch
-                TASBESession.error('Excel', 'NotTASBEConfig', 'Could not get any preference for: %s', name);
+                TASBESession.error('TemplateExtraction', 'NotTASBEConfig', 'Could not get any preference for: %s', name);
             end
             
             TASBEConfig.set(name, value);

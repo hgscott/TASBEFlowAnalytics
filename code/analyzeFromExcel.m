@@ -2,14 +2,14 @@
 % and batch analysis functions. The only needed inputs are the template
 % file path and type of analysis that needs to be run.
 function analyzeFromExcel(file, type)
-    extractor = Excel(file);
-    if type == 1
+    extractor = TemplateExtraction(file);
+    if ~isempty(strfind(type, 'colormodel'))
         % Make color model
         make_color_model_excel(extractor);
-    elseif type == 2
+    elseif ~isempty(strfind(type, 'batch'))
         % Run batch analysis
         batch_analysis_excel(extractor);
-    elseif type == 3
+    elseif ~isempty(strfind(type, 'plusminus'))
         % Run plus minus analysis
         plusminus_analysis_excel(extractor);
     else

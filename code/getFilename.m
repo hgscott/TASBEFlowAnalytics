@@ -4,7 +4,7 @@ function [filename] = getFilename(extractor, row)
     % filename_sh = extractor.getSheetNum('first_sample_filename');
     % filename_col = extractor.getColNum('first_sample_filename');
     % filename_col2 = extractor.getColNum('first_sample_exclude');
-    filename = {};
+    % filename = {};
     multiple = 1;
 %     % See if there is already a filename inputted at that row
 %     for i=filename_col:filename_col2
