@@ -131,7 +131,11 @@ legend(lines, legendentries,'Location','Best');
 if(TASBEConfig.isSet('OutputSettings.FixedInputAxis')), xlim(TASBEConfig.get('OutputSettings.FixedInputAxis')); end
 if(TASBEConfig.isSet('OutputSettings.FixedOutputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedOutputAxis')); end
 title(['Raw All ',clean_for_latex(stemName),' Transfer Curves']);
-outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-all-mean'],directory);
+if(strcmp(clean_for_latex(stemName), ' ') || strcmp(clean_for_latex(stemName), ''))
+    outputfig(h,[clean_for_latex(deviceName),'-all-mean'],directory);
+else
+    outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-all-mean'],directory);
+end
 
 % normalized I/O plot
 h = figure('PaperPosition',[1 1 5 3.66]);
@@ -196,7 +200,11 @@ legend(lines, clean_for_latex(legendentries),'Location','Best');
 if(TASBEConfig.isSet('OutputSettings.FixedInputAxis')), xlim(TASBEConfig.get('OutputSettings.FixedInputAxis')); end
 if(TASBEConfig.isSet('OutputSettings.FixedNormalizedOutputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedNormalizedOutputAxis')); end
 title(['All ' clean_for_latex(stemName),' Transfer Curves Normalized by CFP']);
-outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-all-mean-norm'],directory);
+if(strcmp(clean_for_latex(stemName), ' ') || strcmp(clean_for_latex(stemName), ''))
+    outputfig(h,[clean_for_latex(deviceName),'-all-mean-norm'],directory);
+else
+    outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-all-mean-norm'],directory);
+end
 
 % IFP vs. CFP
 h = figure('PaperPosition',[1 1 5 3.66]);
@@ -262,7 +270,11 @@ legend(lines, clean_for_latex(legendentries),'Location','Best');
 if(TASBEConfig.isSet('OutputSettings.FixedBinningAxis')), xlim(TASBEConfig.get('OutputSettings.FixedBinningAxis')); end
 if(TASBEConfig.isSet('OutputSettings.FixedInputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedInputAxis')); end
 title(['All ' clean_for_latex(stemName),' IFP vs. CFP']);
-outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-all-input-v-cfp'],directory);
+if(strcmp(clean_for_latex(stemName), ' ') || strcmp(clean_for_latex(stemName), ''))
+    outputfig(h,[clean_for_latex(deviceName),'-all-input-v-cfp'],directory);
+else
+    outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-all-input-v-cfp'],directory);
+end
 
 % OFP vs. CFP
 h = figure('PaperPosition',[1 1 5 3.66]);
@@ -328,7 +340,11 @@ legend(lines, clean_for_latex(legendentries),'Location','Best');
 if(TASBEConfig.isSet('OutputSettings.FixedBinningAxis')), xlim(TASBEConfig.get('OutputSettings.FixedBinningAxis')); end
 if(TASBEConfig.isSet('OutputSettings.FixedOutputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedOutputAxis')); end
 title(['All ' clean_for_latex(stemName),' OFP vs. CFP']);
-outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-all-v-cfp'],directory);
+if(strcmp(clean_for_latex(stemName), ' ') || strcmp(clean_for_latex(stemName), ''))
+    outputfig(h,[clean_for_latex(deviceName),'-all-v-cfp'],directory);
+else
+    outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-all-v-cfp'],directory);
+end
 
 % % Relative change in OFP vs. CFP
 % Removed because it wasn't ever useful
@@ -388,7 +404,11 @@ legend(lines, clean_for_latex(comlegendentries),'Location','Best');
 if(TASBEConfig.isSet('OutputSettings.FixedBinningAxis')), xlim(TASBEConfig.get('OutputSettings.FixedBinningAxis')); end
 if(TASBEConfig.isSet('OutputSettings.FixedRatioAxis')), ylim(TASBEConfig.get('OutputSettings.FixedRatioAxis')); end
 title(['All Ratios (in respect to ' batch_names{end} ') for ',clean_for_latex(stemName)]);
-outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-all-ratios'],directory);
+if(strcmp(clean_for_latex(stemName), ' ') || strcmp(clean_for_latex(stemName), ''))
+    outputfig(h,[clean_for_latex(deviceName),'-all-ratios'],directory);
+else
+    outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-all-ratios'],directory);
+end
 
 % SNR plots
 legendentries2 = legendentries;
@@ -435,7 +455,11 @@ legend(lines, clean_for_latex(legendentries2),'Location','Best');
 if(TASBEConfig.isSet('OutputSettings.FixedBinningAxis')), xlim(TASBEConfig.get('OutputSettings.FixedBinningAxis')); end
 if(TASBEConfig.isSet('OutputSettings.FixedSNRAxis')), ylim(TASBEConfig.get('OutputSettings.FixedSNRAxis')); end
 title(['All ' clean_for_latex(stemName),' SNR vs. CFP']);
-outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-all-SNR'],directory);
+if(strcmp(clean_for_latex(stemName), ' ') || strcmp(clean_for_latex(stemName), ''))
+    outputfig(h,[clean_for_latex(deviceName),'-all-SNR'],directory);
+else
+    outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-all-SNR'],directory);
+end
 
 % Delta SNR plots
 h = figure('PaperPosition',[1 1 5 3.66]);
@@ -463,4 +487,8 @@ legend(lines, clean_for_latex(comlegendentries),'Location','Best');
 if(TASBEConfig.isSet('OutputSettings.FixedBinningAxis')), xlim(TASBEConfig.get('OutputSettings.FixedBinningAxis')); end
 if(TASBEConfig.isSet('OutputSettings.FixedDeltaSNRAxis')), ylim(TASBEConfig.get('OutputSettings.FixedDeltaSNRAxis')); end
 title(['All ' clean_for_latex(stemName),' \Delta SNR vs. CFP']);
-outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-all-dSNR'],directory);
+if(strcmp(clean_for_latex(stemName), ' ') || strcmp(clean_for_latex(stemName), ''))
+    outputfig(h,[clean_for_latex(deviceName),'-all-dSNR'],directory);
+else
+    outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-all-dSNR'],directory);
+end

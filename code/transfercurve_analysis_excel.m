@@ -214,7 +214,7 @@ function transfercurve_analysis_excel(extractor, CM)
         try
             outputNames{end+1} = extractor.getExcelValuePos(sh_num3, row_nums{i}, extractor.getColNum('outputName_TC'), 'char');
         catch
-            TASBESession.warn('transfercurve_analysis_excel', 'MissingPreference', 'Missing Output File Name for Transfer Curve Analysis %s in "Transfer Curve Analysis" sheet', i);
+            TASBESession.warn('transfercurve_analysis_excel', 'MissingPreference', 'Missing Output File Name for Transfer Curve Analysis %s in "Transfer Curve Analysis" sheet', num2str(i));
             outputNames{end+1} = [experimentName '-TransAnalysis' num2str(i) '.mat'];
         end
 
@@ -222,21 +222,21 @@ function transfercurve_analysis_excel(extractor, CM)
             stemName_coord = extractor.getExcelCoordinates('OutputSettings.StemName');
             stemNames{end+1} = extractor.getExcelValuePos(sh_num3, row_nums{i}, stemName_coord{3}{3}, 'char');
         catch
-            TASBESession.warn('transfercurve_analysis_excel', 'MissingPreference', 'Missing Stem Name for Transfer Curve Analysis %s in "Transfer Curve Analysis" sheet', i);
+            TASBESession.warn('transfercurve_analysis_excel', 'MissingPreference', 'Missing Stem Name for Transfer Curve Analysis %s in "Transfer Curve Analysis" sheet', num2str(i));
             stemNames{end+1} = [experimentName num2str(i)];
         end
         try
             plotPath_coord = extractor.getExcelCoordinates('plots.plotPath');
             plotPaths{end+1} = extractor.getExcelValuePos(sh_num3, row_nums{i}, plotPath_coord{4}{3}, 'char');
         catch
-            TASBESession.warn('transfercurve_analysis_excel', 'MissingPreference', 'Missing plot path for Transfer Curve Analysis %s in "Transfer Curve Analysis" sheet', i);
+            TASBESession.warn('transfercurve_analysis_excel', 'MissingPreference', 'Missing plot path for Transfer Curve Analysis %s in "Transfer Curve Analysis" sheet', num2str(i));
             plotPaths{end+1} = extractor.getExcelValue('plots.plotPath', 'char', 4);
         end
         try
             device_name_coord = extractor.getExcelCoordinates('device_name');
             device_names{end+1} = extractor.getExcelValuePos(sh_num3, row_nums{i}, device_name_coord{2}{3}, 'char');
         catch
-            TASBESession.warn('transfercurve_analysis_excel', 'MissingPreference', 'Missing device name for Transfer Curve Analysis %s in "Transfer Curve Analysis" sheet', i);
+            TASBESession.warn('transfercurve_analysis_excel', 'MissingPreference', 'Missing device name for Transfer Curve Analysis %s in "Transfer Curve Analysis" sheet', num2str(i));
             device_names{end+1} = extractor.getExcelValue('device_name', 'char', 2);
         end
         inducer_names{end+1} = col_names{i};

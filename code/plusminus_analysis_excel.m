@@ -122,16 +122,20 @@ function plusminus_analysis_excel(extractor, CM)
         end
         try
             col_name{end+1} = extractor.getExcelValuePos(sh_num3, i, extractor.getColNum('secondary_sampleColName_PM'), 'char');
+            col_names{end+1} = col_name;
         catch
             try
                 col_name{end+1} = num2str(extractor.getExcelValuePos(sh_num3, i, extractor.getColNum('secondary_sampleColName_PM'), 'numeric'));
-            catch 
+                col_names{end+1} = col_name;
+            catch
+                % no secondary column add col_name to col_names and
+                % continue
+                col_names{end+1} = col_name;
                 continue
             end
         end
-        col_names{end+1} = col_name;
     end
-    % to get old to work: col_names = col_names{1}
+    
     % Go through columns to find column numbers of primary and secondary col names
     for i=1:numel(col_names)
         col_name = col_names{i};
@@ -210,12 +214,15 @@ function plusminus_analysis_excel(extractor, CM)
                 end 
             end
         end
+        if isempty(comp_group)
+            comp_group{end+1} = {};
+        end
         comp_groups{end+1} = comp_group;
         % Get unique preferences
         try
             outputNames{end+1} = extractor.getExcelValuePos(sh_num3, row_nums{i}, extractor.getColNum('outputName_PM'), 'char');
         catch
-            TASBESession.warn('transfercurve_analysis_excel', 'MissingPreference', 'Missing Output File Name for Transfer Curve Analysis %s in "Transfer Curve Analysis" sheet', i);
+            TASBESession.warn('plusminus_analysis_excel', 'MissingPreference', 'Missing Output File Name for Plusminus Analysis %s in "Comparative Analysis" sheet', num2str(i));
             outputNames{end+1} = [experimentName '-CompAnalysis' num2str(i) '.mat'];
         end
 
@@ -223,7 +230,7 @@ function plusminus_analysis_excel(extractor, CM)
             stemName_coord = extractor.getExcelCoordinates('OutputSettings.StemName');
             stemNames{end+1} = extractor.getExcelValuePos(sh_num3, row_nums{i}, stemName_coord{2}{3}, 'char');
         catch
-            TASBESession.warn('plusminus_analysis_excel', 'MissingPreference', 'Missing Stem Name for Plusminus Analysis %s in "Comparative Analysis" sheet', i);
+            TASBESession.warn('plusminus_analysis_excel', 'MissingPreference', 'Missing Stem Name for Plusminus Analysis %s in "Comparative Analysis" sheet', num2str(i));
             stemNames{end+1} = [experimentName num2str(i)];
         end
         
@@ -231,14 +238,14 @@ function plusminus_analysis_excel(extractor, CM)
             plotPath_coord = extractor.getExcelCoordinates('plots.plotPath');
             plotPaths{end+1} = extractor.getExcelValuePos(sh_num3, row_nums{i}, plotPath_coord{3}{3}, 'char');
         catch
-            TASBESession.warn('plusminus_analysis_excel', 'MissingPreference', 'Missing plot path for Plusminus Analysis %s in "Comparative Analysis" sheet', i);
+            TASBESession.warn('plusminus_analysis_excel', 'MissingPreference', 'Missing plot path for Plusminus Analysis %s in "Comparative Analysis" sheet', num2str(i));
             plotPaths{end+1} = extractor.getExcelValue('plots.plotPath', 'char', 3);
         end
         try
             device_name_coord = extractor.getExcelCoordinates('device_name');
             device_names{end+1} = extractor.getExcelValuePos(sh_num3, row_nums{i}, device_name_coord{1}{3}, 'char');
         catch
-            TASBESession.warn('plusminus_analysis_excel', 'MissingPreference', 'Missing device name for Plusminus Analysis %s in "Comparative Analysis" sheet', i);
+            TASBESession.warn('plusminus_analysis_excel', 'MissingPreference', 'Missing device name for Plusminus Analysis %s in "Comparative Analysis" sheet', num2str(i));
             device_names{end+1} = extractor.getExcelValue('device_name', 'char', 1);
         end
         inducer_names{end+1} = col_names{i}{1};
@@ -275,7 +282,6 @@ function plusminus_analysis_excel(extractor, CM)
                                     end
                                 end
                             end
-                            display(key);
                             keys{end+1} = key;
                         end
                     catch
@@ -296,7 +302,6 @@ function plusminus_analysis_excel(extractor, CM)
                                         end
                                     end
                                 end
-                                display(key);
                                 keys{end+1} = key;
                             end
                         catch
@@ -308,96 +313,139 @@ function plusminus_analysis_excel(extractor, CM)
                 continue
             end
         end
-        display(keys);
         all_keys{end+1} = keys;
     end
     
-    %RIGHT HERE!! Do the rest of the steps nested in one big for loop for each analysis         
-%     % Find the different sets for each group 
-%     batch_description = {}; % contains all the sample row numbers for groups
-%     for i=1:numel(comp_groups)
-%         group = {};
-%         for j=first_sample_row:extractor.getRowNum('last_sample_num')
-%             try
-%                 if isempty(comp_groups{i}) || extractor.getExcelValuePos(sh_num2, j, comp_groups{i}{1}) == comp_groups{i}{2}
-%                     group{end+1} = j;
-%                 end
-%             catch
-%                 continue
-%             end
-%         end
-%         if ~isempty(comp_groups{i})
-%             if ~isa(comp_groups{i}{2}, 'char')
-%                 batch_description{end+1} = {num2str(comp_groups{i}{2}); col_names{1}; keys{1}; group};
-%             else
-%                 batch_description{end+1} = {comp_groups{i}{2}; col_names{1}; keys{1}; group};
-%             end
-%         else
-%             batch_description{end+1} = {experimentName; col_names{1}; keys{1}; group};
-%         end
-%     end
-%     
-%     % Go through row numbers in groups and extract and organize by keys{1}
-%     for i=1:numel(batch_description)
-%         sets = {};
-%         for j=1:numel(batch_description{i}{4})
-%             try
-%                 value = extractor.getExcelValuePos(sh_num2, batch_description{i}{4}{j}, col_nums{1});
-%                 ind = find(ismember(keys{1}, value), 1);
-%                 if ~isempty(ind)
-%                     try 
-%                         isempty(sets{ind})
-%                         sets{ind}{end+1} = batch_description{i}{4}{j};
-%                     catch
-%                         sets{ind} = {batch_description{i}{4}{j}};
-%                     end
-%                 end
-%             catch
-%                 continue
-%             end
-%         end
-%         for j=1:numel(sets)
-%             batch_description{i}{3+j} = sets{j};
-%         end
-%     end
-% 
-%     % Reorder the sample within the sets if applicable to match with the
-%     % order of the secondary sample column name (else just keep old order)
-%     if numel(col_names) > 1
-%         for i=1:numel(batch_description)
-%             sets = {};
-%             for j=4:numel(batch_description{i})
-%                 set = batch_description{i}{j};
-%                 ordered_set = {};
-%                 for k=1:numel(set)
-%                     % Get value at col_nums{2} and compare with keys{2}
-%                     try
-%                         value = extractor.getExcelValuePos(sh_num2, set{k}, col_nums{2});
-%                         ind = find(ismember(keys{2}, value), 1);
-%                         if ~isempty(ind)
-%                             ordered_set{ind,1} = value;
-%                             ordered_set{ind,2} = getFilename(extractor, set{k});
-%                         end
-%                     catch
-%                         continue
-%                     end
-%                 end
-%                 batch_description{i}{j} = ordered_set;
-%             end
-%         end
-%     else
-%         % do the same but no reordering
-%     end
-%     
-%     % Execute the actual analysis
-%     results = process_plusminus_batch( CM, batch_description, AP);
-% 
-%     % Make additional output plots
-%     for i=1:numel(results)
-%         TASBEConfig.set('OutputSettings.StemName',batch_description{i}{1});
-%         TASBEConfig.set('OutputSettings.DeviceName',device_name);
-%         plot_plusminus_comparison(results{i}, batch_description{i}{3});
-%     end
-% 
-%     save('-V7',outputName,'batch_description','AP','results');
+    %RIGHT HERE!! Do the rest of the steps nested in one big for loop for each analysis  
+    for i=1:numel(col_names)
+        device_name = device_names{i};
+        TASBEConfig.set('OutputSettings.DeviceName', device_names{i});
+        TASBEConfig.set('OutputSettings.StemName', stemNames{i});
+        TASBEConfig.set('plots.plotPath', plotPaths{i});
+        outputName = outputNames{i};
+        keys = all_keys{i};
+        comp_group = comp_groups{i};
+        col_num = col_nums{i};
+        col_name = col_names{i};
+        batch_description = {}; % contains all the sample row numbers for groups
+        % Find the different sets for each group 
+        for k=1:numel(comp_group)
+            group = {};
+            for j=first_sample_row:extractor.getRowNum('last_sample_num')
+                try
+                    if isempty(comp_group{k})
+                        group{end+1} = j;
+                    else
+                        value = extractor.getExcelValuePos(sh_num2, j, comp_group{k}{1});
+                        if isa(value, 'char') && strcmp(value, comp_group{k}{2})
+                            group{end+1} = j;
+                        elseif isa(value, 'numeric') && value == comp_group{k}{2}
+                            group{end+1} = j;
+                        end
+                    end
+                catch
+                    continue
+                end
+            end
+            if ~isempty(comp_group{k})
+                if ~isa(comp_group{k}{2}, 'char')
+                    batch_description{end+1} = {num2str(comp_group{k}{2}); col_name{1}; keys{1}; group};
+                else
+                    batch_description{end+1} = {comp_group{k}{2}; col_name{1}; keys{1}; group};
+                end
+            else
+                batch_description{end+1} = {experimentName; col_name{1}; keys{1}; group};
+            end
+        end
+
+        % Go through row numbers in groups and extract and organize by keys{1}
+        for k=1:numel(batch_description)
+            sets = {};
+            for j=1:numel(batch_description{k}{4})
+                try
+                    value = extractor.getExcelValuePos(sh_num2, batch_description{k}{4}{j}, col_num{1});
+                    ind = find(ismember(keys{1}, value), 1);
+                    if ~isempty(ind)
+                        try 
+                            isempty(sets{ind})
+                            sets{ind}{end+1} = batch_description{k}{4}{j};
+                        catch
+                            sets{ind} = {batch_description{k}{4}{j}};
+                        end
+                    end
+                catch
+                    continue
+                end
+            end
+            for j=1:numel(sets)
+                batch_description{k}{3+j} = sets{j};
+            end
+        end
+
+        % Reorder the sample within the sets if applicable to match with the
+        % order of the secondary sample column name (else just keep old order)
+        if numel(col_name) > 1 && numel(keys) > 1
+            for z=1:numel(batch_description)
+                for j=4:numel(batch_description{z})
+                    set = batch_description{z}{j};
+                    ordered_set = {};
+                    for k=1:numel(set)
+                        % Get value at col_num{2} and compare with keys{2}
+                        try
+                            value = extractor.getExcelValuePos(sh_num2, set{k}, col_num{2});
+                            ind = find(ismember(keys{2}, value), 1);
+                            if ~isempty(ind)
+                                ordered_set{ind,1} = value;
+                                ordered_set{ind,2} = getFilename(extractor, set{k});
+                            end
+                        catch
+                            continue
+                        end
+                    end
+                    batch_description{z}{j} = ordered_set;
+                end
+            end
+        else
+            % do the same but no reordering
+            for z=1:numel(batch_description)
+                for j=4:numel(batch_description{z})
+                    set = batch_description{z}{j};
+                    ordered_set = {};
+                    for k=1:numel(set)
+                        % Get value at col_num{2}}
+                        if numel(col_name) > 1
+                            try
+                                value = extractor.getExcelValuePos(sh_num2, set{k}, col_num{2});
+                                ordered_set{end+1,1} = value;
+                                ordered_set{end,2} = getFilename(extractor, set{k});
+                            catch
+                                continue
+                            end
+                        else
+                            % TODO: FINALIZE WHAT THE DEFAULT SHOULD BE
+                            try
+                                value = extractor.getExcelValuePos(sh_num2, set{k}, col_num{1});
+                                ordered_set{end+1,1} = k; % default to just index
+                                ordered_set{end,2} = getFilename(extractor, set{k});
+                            catch
+                                continue
+                            end
+                        end
+                    end
+                    batch_description{z}{j} = ordered_set;
+                end
+            end
+        end
+
+        % Execute the actual analysis
+        results = process_plusminus_batch(CM, batch_description, AP);
+
+        % Make additional output plots
+        for j=1:numel(results)
+            TASBEConfig.set('OutputSettings.StemName',batch_description{j}{1});
+            TASBEConfig.set('OutputSettings.DeviceName',device_name);
+            plot_plusminus_comparison(results{j}, batch_description{j}{3});
+        end
+        save('-V7',outputName,'batch_description','AP','results');
+    end
 end
