@@ -3,18 +3,20 @@
 % file path and type of analysis that needs to be run.
 function analyzeFromExcel(file, type)
     extractor = TemplateExtraction(file);
-    if ~isempty(strfind(type, 'colormodel'))
-        % Make color model
-        make_color_model_excel(extractor);
-    elseif ~isempty(strfind(type, 'batch'))
-        % Run batch analysis
-        batch_analysis_excel(extractor);
-    elseif ~isempty(strfind(type, 'plusminus'))
-        % Run plus minus analysis
-        plusminus_analysis_excel(extractor);
-    else
-        % Run transfer curve analysis 
-        transfercurve_analysis_excel(extractor);
+    switch type
+        case {'colormodel', 'CM', 'Colormodel'}
+            % Make color model
+            make_color_model_excel(extractor);
+        case {'batch', 'BA', 'Batch'}
+            % Run batch analysis
+            batch_analysis_excel(extractor);
+        case {'plusminus', 'PM', 'Plusminus'}
+            % Run plus minus analysis
+            plusminus_analysis_excel(extractor);
+        case {'transfercurve', 'TC', 'Transfercurve'}
+            % Run transfer curve analysis 
+            transfercurve_analysis_excel(extractor);
+        otherwise
+            TASBESession.error('analyzeFromExcel', 'InvalidType', 'Input type of %s is invalid. The choices are colormodel, batch, plusminus, and transfercurve.', type);
     end
-
 end
