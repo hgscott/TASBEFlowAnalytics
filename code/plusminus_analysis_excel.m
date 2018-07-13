@@ -108,12 +108,14 @@ function plusminus_analysis_excel(extractor, CM)
     for i=extractor.getRowNum('primary_sampleColName_PM'): last_sampleColName_row
         col_name = {};
         try
-            col_name{end+1} = extractor.getExcelValuePos(sh_num3, i, extractor.getColNum('primary_sampleColName_PM'), 'char');
+            value = extractor.getExcelValuePos(sh_num3, i, extractor.getColNum('primary_sampleColName_PM'), 'char');
+            col_name{end+1} = value;
             row_nums{end+1} = i;
         catch
             try
-                col_name{end+1} = num2str(extractor.getExcelValuePos(sh_num3, i, extractor.getColNum('primary_sampleColName_PM'), 'numeric'));
-                if ~isempty(col_name{end})
+                value = num2str(extractor.getExcelValuePos(sh_num3, i, extractor.getColNum('primary_sampleColName_PM'), 'numeric'));
+                if ~isempty(value)
+                    col_name{end+1} = value;
                     row_nums{end+1} = i;
                 end
             catch 
@@ -125,7 +127,10 @@ function plusminus_analysis_excel(extractor, CM)
             col_names{end+1} = col_name;
         catch
             try
-                col_name{end+1} = num2str(extractor.getExcelValuePos(sh_num3, i, extractor.getColNum('secondary_sampleColName_PM'), 'numeric'));
+                value = num2str(extractor.getExcelValuePos(sh_num3, i, extractor.getColNum('secondary_sampleColName_PM'), 'numeric'));
+                if ~isempty(value)
+                    col_name{end+1} = value;
+                end
                 col_names{end+1} = col_name;
             catch
                 % no secondary column add col_name to col_names and
@@ -316,7 +321,6 @@ function plusminus_analysis_excel(extractor, CM)
         all_keys{end+1} = keys;
     end
     
-    %RIGHT HERE!! Do the rest of the steps nested in one big for loop for each analysis  
     for i=1:numel(col_names)
         device_name = device_names{i};
         TASBEConfig.set('OutputSettings.DeviceName', device_names{i});

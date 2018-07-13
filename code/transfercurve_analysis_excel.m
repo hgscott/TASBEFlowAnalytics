@@ -103,14 +103,16 @@ function transfercurve_analysis_excel(extractor, CM)
     % Determine the number of transfer curve analysis to run
     for i=extractor.getRowNum('sampleColName_TC'):size(extractor.sheets{sh_num3},1)
         try
-            col_names{end+1} = extractor.getExcelValuePos(sh_num3, i, extractor.getColNum('sampleColName_TC'), 'char');
+            value = extractor.getExcelValuePos(sh_num3, i, extractor.getColNum('sampleColName_TC'), 'char');
+            col_names{end+1} = value;
             row_nums{end+1} = i;
         catch
             try
-                col_names{end+1} = num2str(extractor.getExcelValuePos(sh_num3, i, extractor.getColNum('sampleColName_TC'), 'numeric'));
-                if isempty(col_names{end})
+                value = num2str(extractor.getExcelValuePos(sh_num3, i, extractor.getColNum('sampleColName_TC'), 'numeric'));
+                if isempty(value)
                     break
                 end
+                col_names{end+1} = value;
                 row_nums{end+1} = i;
             catch 
                 break
