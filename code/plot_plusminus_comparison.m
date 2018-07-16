@@ -77,6 +77,7 @@ for i=1:numel(all_pm_results)
     % Plot the results for each batch_name and level
     for j=1:step:n_var
         which = pm_results.Valid(:,j,1) & pm_results.Valid(:,j,2);
+        if sum(which)==0, continue; end; % don't try to plot when lines are empty 
         if by_n_var
             line = loglog(pm_results.InMeans(which,j,1),pm_results.OutMeans(which,j,1),['-' marker_types{i}],'Color',hsv2rgb([hues(j) 1 0.9])); hold on;
             line2 = loglog(pm_results.InMeans(which,j,2),pm_results.OutMeans(which,j,2),['-' marker_types{i+1}],'Color',hsv2rgb([hues(j) 1 0.9])); hold on;
@@ -143,6 +144,7 @@ for i=1:numel(all_pm_results)
     % Plot the results for each batch_name and level
     for j=1:step:n_var
         which = pm_results.Valid(:,j,1) & pm_results.Valid(:,j,2);
+        if sum(which)==0, continue; end; % don't try to plot when lines are empty 
         if by_n_var
             line = loglog(pm_results.InMeans(which,j,1),pm_results.OutMeans(which,j,1)./all_bin_centers{i}(which)',['-' marker_types{i}],'Color',hsv2rgb([hues(j) 1 0.9])); hold on;
             line2 = loglog(pm_results.InMeans(which,j,2),pm_results.OutMeans(which,j,2)./all_bin_centers{i}(which)',['-' marker_types{i+1}],'Color',hsv2rgb([hues(j) 1 0.9])); hold on;
@@ -208,6 +210,7 @@ for i=1:numel(all_pm_results)
     % Plot the results for each batch_name and level
     for j=1:step:n_var
         which = pm_results.Valid(:,j,1) & pm_results.Valid(:,j,2);
+        if sum(which)==0, continue; end; % don't try to plot when lines are empty 
         if by_n_var
             line = loglog(all_bin_centers{i}(which),pm_results.InMeans(which,j,1),['-' marker_types{i}],'Color',hsv2rgb([hues(j) 1 0.9])); hold on;
             line2 = loglog(all_bin_centers{i}(which),pm_results.InMeans(which,j,2),['-' marker_types{i+1}],'Color',hsv2rgb([hues(j) 1 0.9])); hold on;
@@ -274,6 +277,7 @@ for i=1:numel(all_pm_results)
     % Plot the results for each batch_name and level
     for j=1:step:n_var
         which = pm_results.Valid(:,j,1) & pm_results.Valid(:,j,2);
+        if sum(which)==0, continue; end; % don't try to plot when lines are empty 
         if by_n_var
             line = loglog(all_bin_centers{i}(which),pm_results.OutMeans(which,j,1),['-' marker_types{i}],'Color',hsv2rgb([hues(j) 1 0.9])); hold on;
             line2 = loglog(all_bin_centers{i}(which),pm_results.OutMeans(which,j,2),['-' marker_types{i+1}],'Color',hsv2rgb([hues(j) 1 0.9])); hold on;
@@ -369,6 +373,7 @@ for i=1:numel(all_pm_results)
     pm_results = all_pm_results{i};
     for j=1:step:n_var
         which = pm_results.Valid(:,j,1) & pm_results.Valid(:,j,2);
+        if sum(which)==0, continue; end; % don't try to plot when lines are empty 
         if by_n_var
             line = semilogx(all_bin_centers{i}(which),pm_results.Ratios(which,j),['-' marker_types{i}],'Color',hsv2rgb([hues(j) 1 0.9])); hold on;
         else
@@ -403,6 +408,7 @@ for i=1:numel(all_pm_results)
     pm_results = all_pm_results{i};
     for j=1:step:n_var
         which = pm_results.Valid(:,j,1) & pm_results.Valid(:,j,2);
+        if sum(which)==0, continue; end; % don't try to plot when lines are empty 
         if by_n_var
             line = semilogx(all_bin_centers{i}(which),pm_results.OutputSNR(which,j),['-' marker_types{i}],'Color',hsv2rgb([hues(j) 1 0.9])); hold on;
         else
@@ -417,6 +423,7 @@ for i=1:numel(all_pm_results)
     
     for j=1:step:n_var
         which = pm_results.Valid(:,j,1) & pm_results.Valid(:,j,2);
+        if sum(which)==0, continue; end; % don't try to plot when lines are empty 
         if by_n_var
             line = loglog(all_bin_centers{i}(which),pm_results.InputSNR(which,j),[':' marker_types{i}],'Color',hsv2rgb([hues(j) 1 0.9])); hold on;
         else
@@ -445,6 +452,7 @@ for i=1:numel(all_pm_results)
     pm_results = all_pm_results{i};
     for j=1:step:n_var
         which = pm_results.Valid(:,j,1) & pm_results.Valid(:,j,2);
+        if sum(which)==0, continue; end; % don't try to plot when lines are empty 
         if by_n_var
             line = semilogx(all_bin_centers{i}(which),pm_results.OutputSNR(which,j)-pm_results.InputSNR(which,j),['-' marker_types{i}],'Color',hsv2rgb([hues(j) 1 0.9])); hold on;
         else
