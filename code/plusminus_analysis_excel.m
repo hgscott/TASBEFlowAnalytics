@@ -4,11 +4,14 @@ function plusminus_analysis_excel(extractor, CM)
     % Reset and update TASBEConfig and get exp, device, and inducer names
     extractor.TASBEConfig_updates();
     experimentName = extractor.getExcelValue('experimentName', 'char');
+    
+    preference_row = extractor.getExcelValue('last_row_PM', 'numeric') + 5;
 
     % Load the color model
     if nargin < 2
         try
-            CM_file = extractor.getExcelValue('inputName_CM', 'char', 2); 
+            coords = extractor.getExcelCoordinates('inputName_CM', 2);
+            CM_file = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char'); 
         catch
             try
                 CM_file = extractor.getExcelValue('outputName_CM', 'char');
@@ -27,69 +30,28 @@ function plusminus_analysis_excel(extractor, CM)
     % Set TASBEConfigs and create variables needed to run plusminus analysis
     % Analyze on a histogram of 10^[first] to 10^[third] ERF, with bins every 10^[second]
     try
-        binseq_min = extractor.getExcelValue('binseq_min', 'numeric', 2);
-        binseq_max = extractor.getExcelValue('binseq_max', 'numeric', 2);
-        binseq_pdecade = extractor.getExcelValue('binseq_pdecade', 'numeric', 2);
+        coords = extractor.getExcelCoordinates('binseq_min', 2);
+        binseq_min = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'numeric');
+        coords = extractor.getExcelCoordinates('binseq_max', 2);
+        binseq_max = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'numeric');
+        coords = extractor.getExcelCoordinates('binseq_pdecade', 2);
+        binseq_pdecade = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'numeric');
         bins = BinSequence(binseq_min, (1/binseq_pdecade), binseq_max, 'log_bins');
     catch
         bins = BinSequence();
     end
 
     % Designate which channels have which roles
-    ref_channels = {'constitutive', 'input', 'output'};
-    outputs = {};
-    print_names = {};
-    sh_num1 = extractor.getSheetNum('first_flchrome_name');
-    first_flchrome_row = extractor.getRowNum('first_flchrome_name');
-    flchrome_name_col = extractor.getColNum('first_flchrome_name');
-    flchrome_type_col = extractor.getColNum('first_flchrome_type');
-    for i=first_flchrome_row:size(extractor.sheets{sh_num1},1)
-        try
-            print_name = extractor.getExcelValuePos(sh_num1, i, flchrome_name_col, 'char');
-        catch
-            break
-        end
-        print_names{end+1} = print_name;
-        try
-            channel_type = extractor.getExcelValuePos(sh_num1, i, flchrome_type_col, 'char');
-        catch
-            continue
-        end
-        for j=1:numel(ref_channels)
-            if strcmpi(ref_channels{j}, channel_type)
-                outputs{j} = channel_named(CM, print_name);
-            end
-        end
-    end
-
-    if numel(outputs) == 3
-        AP = AnalysisParameters(bins,{'input',outputs{2}; 'output',outputs{3}; 'constitutive',outputs{1}});
+    [channel_roles, ~] = getChannelRoles(CM, extractor);
+    
+    if isempty(channel_roles)
+        TASBESession.warn('plusminus_analysis_excel', 'MissingPreference', 'Missing constitutive, input, output in "Calibration" sheet');
+        APs = {AnalysisParameters(bins,{})};
     else
-        TASBESession.warn('plusminus_analysis_excel', 'ImportantMissingPreference', 'Missing constitutive, input, output in "Calibration" sheet');
-        AP = AnalysisParameters(bins,{});
-    end
-
-    % Ignore any bins with less than valid count as noise
-    try
-        minValidCount = extractor.getExcelValue('minValidCount', 'numeric', 2);
-        AP=setMinValidCount(AP,minValidCount);
-    catch
-        TASBESession.warn('plusminus_analysis_excel', 'ImportantMissingPreference', 'Missing Min Valid Count in "Comparative Analysis" sheet');
-    end
-
-    % Add autofluorescence back in after removing for compensation?
-    try
-        autofluorescence = extractor.getExcelValue('autofluorescence', 'numeric', 2);
-        AP=setUseAutoFluorescence(AP,autofluorescence);
-    catch
-        TASBESession.warn('plusminus_analysis_excel', 'ImportantMissingPreference', 'Missing Use Auto Fluorescence in "Comparative Analysis" sheet');
-    end
-
-    try
-        minFracActive = extractor.getExcelValue('minFracActive', 'numeric', 2);
-        AP=setMinFractionActive(AP,minFracActive);
-    catch
-        TASBESession.warn('plusminus_analysis_excel', 'ImportantMissingPreference', 'Missing Min Fraction Active in "Comparative Analysis" sheet');
+        APs = {};
+        for j=1:numel(channel_roles)
+            APs{end+1} = AnalysisParameters(bins,channel_roles{j});
+        end
     end
     
     % Obtain the necessary sample filenames and print names
@@ -102,8 +64,7 @@ function plusminus_analysis_excel(extractor, CM)
     col_names = {};
     row_nums = {};
     col_nums = {};
-    binseq_coords = extractor.getExcelCoordinates('binseq_pdecade');
-    last_sampleColName_row = binseq_coords{2}{2}-3;
+    last_sampleColName_row = extractor.getExcelValue('last_row_PM', 'numeric');
     % Determine the number of plusminus analysis to run
     for i=extractor.getRowNum('primary_sampleColName_PM'): last_sampleColName_row
         col_name = {};
@@ -152,10 +113,10 @@ function plusminus_analysis_excel(extractor, CM)
                 try
                     ref_header = num2str(extractor.getExcelValuePos(sh_num2, first_sample_row-1, j, 'numeric'));
                     if isempty(ref_header)
-                        break
+                        continue
                     end
                 catch 
-                    break
+                    continue
                 end
             end
             ind = find(ismember(col_name, ref_header), 1);
@@ -197,6 +158,7 @@ function plusminus_analysis_excel(extractor, CM)
                     continue
                 end
             end
+            checkError = true;
             % Get column number of col_name
             for k=sample_num_col:size(extractor.sheets{sh_num2},2)
                 try 
@@ -205,18 +167,20 @@ function plusminus_analysis_excel(extractor, CM)
                     try
                         ref_header = num2str(extractor.getExcelValuePos(sh_num2, first_sample_row-1, k, 'numeric'));
                         if isempty(ref_header)
-                            TASBESession.error('plusminus_analysis_excel', 'InvalidColumnName', 'Sample column name, %s, under Comparison Groups in "Comparative Analysis" does not match with any column name in "Samples".', col_name);
-                            break
+                            continue
                         end
                     catch 
-                        TASBESession.error('plusminus_analysis_excel', 'InvalidColumnName', 'Sample column name, %s, under Comparison Groups in "Comparative Analysis" does not match with any column name in "Samples".', col_name);
-                        break
+                        continue
                     end
                 end
                 if strcmp(col_name, ref_header)
+                    checkError = false;
                     comp_group{end+1} = {k, extractor.getExcelValuePos(sh_num3, j, extractor.getColNum('first_sampleVal_PM'))};
                     break
                 end 
+            end
+            if checkError
+                TASBESession.error('plusminus_analysis_excel', 'InvalidColumnName', 'Sample column name, %s, under Comparison Groups in "Comparative Analysis" does not match with any column name in "Samples".', col_name);
             end
         end
         if isempty(comp_group)
@@ -324,7 +288,8 @@ function plusminus_analysis_excel(extractor, CM)
     for i=1:numel(col_names)
         device_name = device_names{i};
         TASBEConfig.set('OutputSettings.DeviceName', device_names{i});
-        TASBEConfig.set('OutputSettings.StemName', stemNames{i});
+        stemName = stemNames{i};
+        TASBEConfig.set('OutputSettings.StemName', stemName);
         TASBEConfig.set('plots.plotPath', plotPaths{i});
         outputName = outputNames{i};
         keys = all_keys{i};
@@ -440,16 +405,54 @@ function plusminus_analysis_excel(extractor, CM)
                 end
             end
         end
+        
+        % Go through all possible APs
+        for j=1:numel(APs)
+            AP = APs{j};
+            % Ignore any bins with less than valid count as noise
+            try
+                coords = extractor.getExcelCoordinates('minValidCount', 2);
+                minValidCount = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'numeric');
+                AP=setMinValidCount(AP,minValidCount);
+            catch
+                TASBESession.warn('plusminus_analysis_excel', 'ImportantMissingPreference', 'Missing Min Valid Count in "Comparative Analysis" sheet');
+            end
 
-        % Execute the actual analysis
-        results = process_plusminus_batch(CM, batch_description, AP);
+            % Add autofluorescence back in after removing for compensation?
+            try
+                coords = extractor.getExcelCoordinates('autofluorescence', 2);
+                autofluorescence = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'numeric');
+                AP=setUseAutoFluorescence(AP,autofluorescence);
+            catch
+                TASBESession.warn('plusminus_analysis_excel', 'ImportantMissingPreference', 'Missing Use Auto Fluorescence in "Comparative Analysis" sheet');
+            end
 
-        % Make additional output plots
-        for j=1:numel(results)
-            TASBEConfig.set('OutputSettings.StemName',batch_description{j}{1});
-            TASBEConfig.set('OutputSettings.DeviceName',device_name);
-            plot_plusminus_comparison(results{j}, batch_description{j}{3});
+            try
+                coords = extractor.getExcelCoordinates('minFracActive', 2);
+                minFracActive = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'numeric');
+                AP=setMinFractionActive(AP,minFracActive);
+            catch
+                TASBESession.warn('plusminus_analysis_excel', 'ImportantMissingPreference', 'Missing Min Fraction Active in "Comparative Analysis" sheet');
+            end
+            
+            if j > 1
+                outputName_parts = strsplit(outputName, '.');
+                outputName = [outputName_parts{1} '-' num2str(j) '.' outputName_parts{2}];
+                for z=1:numel(batch_description)
+                    batch_description{z}{1} = [batch_description{z}{1} '-' num2str(j)];
+                end
+            end
+
+            % Execute the actual analysis
+            results = process_plusminus_batch(CM, batch_description, AP);
+
+            % Make additional output plots
+            for k=1:numel(results)
+                TASBEConfig.set('OutputSettings.StemName', batch_description{k}{1});
+                TASBEConfig.set('OutputSettings.DeviceName',device_name);
+                plot_plusminus_comparison(results{k}, batch_description{k}{3});
+            end
+            save('-V7',outputName,'batch_description','AP','results');
         end
-        save('-V7',outputName,'batch_description','AP','results');
     end
 end

@@ -70,13 +70,15 @@ classdef TemplateExtraction
                     {'bead_name'; {3, 5, 7}};
                     {'blank_name'; {3, 9, 2}};
                     {'all_name'; {3, 24, 4}};
+                    {'bead_tolerance'; {3, 5, 8}};
                     % Coords for variables in "Comparative Analysis"
                     {'device_name'; {{4, 5, 15}, {5, 5, 15}}};
                     {'outputName_PM'; {4, 5, 14}};
                     {'primary_sampleColName_PM'; {4, 5, 7}};
                     {'secondary_sampleColName_PM'; {4, 5, 10}};
-                    {'first_sampleColName_PM'; {4, 5, 1}};
+                    {'first_sampleColName_PM'; {4, 5, 2}};
                     {'first_sampleVal_PM'; {4, 5, 4}};
+                    {'last_row_PM'; {4, 4, 1}};
                     % Coords for variables in "Transfer Curve Analysis"
                     {'outputName_TC'; {5, 5, 14}};
                     {'sampleColName_TC'; {5, 5, 7}};
@@ -123,10 +125,13 @@ classdef TemplateExtraction
         
         % Returns the ExcelCoordinates stored within obj.coordinates with
         % name of variable as input
-        function position = getExcelCoordinates(obj, name)
+        function position = getExcelCoordinates(obj, name, index)
             for i=1:numel(obj.coordinates)
                 if strcmp(name, obj.coordinates{i}{1})
                     position = obj.coordinates{i}{2};
+                    if exist('index', 'var')
+                        position = position{index};
+                    end
                     return
                 end
             end
@@ -134,20 +139,32 @@ classdef TemplateExtraction
         end
         
         % Returns the first coordinate value (sheet number) of a given variable
-        function sheet_num = getSheetNum(obj, name)
-            pos = obj.getExcelCoordinates(name);
+        function sheet_num = getSheetNum(obj, name, index)
+            if exist('index', 'var')
+                pos = obj.getExcelCoordinates(name, index);
+            else
+                pos = obj.getExcelCoordinates(name);
+            end
             sheet_num = pos{1};
         end
         
         % Returns the second coordinate value (row number) of a given variable
-        function row = getRowNum(obj, name)
-            pos = obj.getExcelCoordinates(name);
+        function row = getRowNum(obj, name, index)
+            if exist('index', 'var')
+                pos = obj.getExcelCoordinates(name, index);
+            else
+                pos = obj.getExcelCoordinates(name);
+            end
             row = pos{2};
         end
         
         % Returns the third coordinate value (col number) of a given variable
-        function col = getColNum(obj, name)
-            pos = obj.getExcelCoordinates(name);
+        function col = getColNum(obj, name, index)
+            if exist('index', 'var')
+                pos = obj.getExcelCoordinates(name, index);
+            else
+                pos = obj.getExcelCoordinates(name);
+            end
             col = pos{3};
         end
         
@@ -301,7 +318,7 @@ classdef TemplateExtraction
                     try
                         ref_header = num2str(obj.getExcelValuePos(sh_num1, sample_start_row, i, 'numeric'));
                     catch 
-                        break
+                        continue
                     end
                 end
                 ind = find(ismember(names, ref_header), 1);
@@ -340,20 +357,26 @@ classdef TemplateExtraction
         function value = getExcelValuePos(obj, sheet_num, row, col, type)
             sheet = obj.sheets{sheet_num};
             value = cell2mat(sheet(row,col));
-            if isnan(value)
+            if and(isnan(value), TASBEConfig.get('template.displayErrors')) 
                 TASBESession.error('TemplateExtraction','ValueNotFound','No value at position (%s, %s, %s).', num2str(sheet_num), num2str(row), num2str(col));
+            elseif isnan(value)
+                error('ValueNotFound');
             end
             if exist('type', 'var')
                 if strcmp(type, 'cell') 
                     bounds = strsplit(char(value), ',');
-                    if isnan(str2double(bounds))
+                    if and(isnan(str2double(bounds)), TASBEConfig.get('template.displayErrors')) 
                         TASBESession.error('TemplateExtraction','IncorrectType','Value at (%s, %s, %s) does not make a numeric array. Make sure value is in the form of #,#,#.', num2str(sheet_num), num2str(row), num2str(col));
+                    elseif isnan(str2double(bounds))
+                        error('IncorrectType');
                     else
                         value = num2cell(str2double(bounds));
                     end
                 end
-                if ~isa(value, type)
+                if and(~isa(value, type), TASBEConfig.get('template.displayErrors') )
                     TASBESession.error('TemplateExtraction','IncorrectType','Value at (%s, %s, %s) of type %s, does not match with required type, %s.', num2str(sheet_num), num2str(row), num2str(col), class(value), type);
+                elseif ~isa(value, type)
+                    error('IncorrectType');
                 end
             end
         end

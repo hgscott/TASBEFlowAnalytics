@@ -70,7 +70,7 @@ function [filename] = getFilename(extractor, row)
                     try
                         ref_header = num2str(extractor.getExcelValuePos(sh_num1, sample_start_row, j, 'numeric'));
                         if isempty(ref_header)
-                            break
+                            continue
                         end
                     catch 
                         TASBESession.error('getFilename', 'InvalidHeaderName', 'The header, %s, does not match with any column titles in "Samples" sheet.', header);

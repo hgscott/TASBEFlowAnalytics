@@ -9,14 +9,14 @@ function [CM] = make_color_model_excel(extractor)
     try
         outputName = extractor.getExcelValue('outputName_CM', 'char');
     catch
-        TASBESession.warn('make_color_model_excel', 'MissingPreference', 'Missing Output File Name in "Cytometer" sheet');
+        TASBESession.warn('make_color_model_excel', 'MissingPreference', 'Missing Output File Name in "Calibration" sheet');
         outputName = [experimentName '-ColorModel.mat'];
     end
     
     try
         transChannelMin = extractor.getExcelValue('transChannelMin', 'cell');
     catch
-        TASBESession.warn('make_color_model_excel', 'MissingPreference', 'Missing Translation Channel Min in "Cytometer" sheet');
+        TASBESession.warn('make_color_model_excel', 'MissingPreference', 'Missing Translation Channel Min in "Calibration" sheet');
         transChannelMin = {};
     end
     
@@ -31,7 +31,7 @@ function [CM] = make_color_model_excel(extractor)
    
     % Extract bead, blank, and all files
     % ref_filenames = {'blank','beads','all'};
-    ref_filenames = {extractor.getExcelValue('blank_name', 'char'),extractor.getExcelValue('bead_name', 'char'),extractor.getExcelValue('all_name', 'char')};
+    ref_filenames = {extractor.getExcelValue('blank_name', 'char'), extractor.getExcelValue('all_name', 'char')};
     output_filenames = {};
     sh_num1 = extractor.getSheetNum('first_sample_num');
     first_sample_row = extractor.getRowNum('first_sample_num');
@@ -56,9 +56,10 @@ function [CM] = make_color_model_excel(extractor)
             end
         end
     end
-    beads_file = output_filenames{2};
+    bead_files = getBeadFile(extractor);
+    beads_file = bead_files{1};
     blank_file = output_filenames{1};
-    all_file = output_filenames{3};
+    all_file = output_filenames{2};
     
     % Autodetect gating with an N-dimensional gaussian-mixture-model
     AGP = AutogateParameters();
@@ -169,8 +170,26 @@ function [CM] = make_color_model_excel(extractor)
     % Execute and save the model
     CM = resolve(CM);
     save('-V7',outputName,'CM');
+    
+    % Conduct bead comparisons if applicable
+    % If size of beadfiles is greater than 1, then run bead comparisons
+    if numel(bead_files) > 1
+        try
+            tolerance = extractor.getExcelValue('bead_tolerance', 'numeric');
+        catch
+            tolerance = 0.5;
+            TASBESession.notify('make_color_model_excel', 'MissingPreference', 'Bead comparison tolerance defaulting to 0.5');
+        end
+        
+        for i=2:numel(bead_files)
+            [ok, ratios] = check_beads_identical(CM, bead_files{i}, tolerance);
+            TASBESession.notify('make_color_model_excel', 'BeadCompRatio', 'Ratios between peaks: %.2f \n', ratios);
+            % A warning is thrown if two beadfiles are not considered identical
+            if ok
+                TASBESession.succeed('make_color_model_excel', 'Identical', 'Bead files are sufficiently identical to each other');
+            else
+                TASBESession.warn('make_color_model_excel', 'NotIdentical', 'Bead files are not identical to each other!');
+            end
+        end
+    end
 end
-
-
-
-

@@ -2,6 +2,15 @@
 % and batch analysis functions. The only needed inputs are the template
 % file path and type of analysis that needs to be run.
 function analyzeFromExcel(file, type)
+    TASBESession.warn('analyzeFromExcel', 'ExampleWarning', 'This is what a warning looks like.');
+    TASBESession.succeed('analyzeFromExcel', 'ExampleSuccess', 'This is what a success/ notification looks like.');
+    TASBESession.skip('analyzeFromExcel', 'ExampleSkip', 'A skip is also green.');
+    try
+        TASBESession.error('analyzeFromExcel', 'ExampleError', 'This is what an error looks like.');
+    catch
+        % Just makes sure that the program does not terminate after
+        % establishing key for TASBESession log
+    end
     extractor = TemplateExtraction(file);
     switch type
         case {'colormodel', 'CM', 'Colormodel'}
