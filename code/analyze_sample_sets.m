@@ -17,7 +17,7 @@ fprintf('Confirming files are present...\n');
 for i=1:batch_size
     for j=1:numel(batch_description{i,2}),
         if ~exist(batch_description{i,2}{j},'file'),
-            error('Could not find file: %s',batch_description{i,2}{j});
+            TASBESession.error('TASBE:Analysis','MissingFile','Could not find file: %s',batch_description{i,2}{j});
         end
     end
 end

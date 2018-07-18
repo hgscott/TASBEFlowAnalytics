@@ -59,7 +59,7 @@ function CM = ColorModel(beadfile, blankfile, channels, colorfiles, pairfiles)
             CM.BlankFile = blankfile;
             if numel(channels)~=numel(colorfiles)
                 if ~(numel(channels) == 1 && isempty(colorfiles)) % can drop colorfile if only one channel
-                    error('Must have one-to-one match between colors and channels');
+                    TASBESession.error('TASBE:ColorModel','OneColorfilePerChannel','Must have one-to-one match between colors and channels');
                 end
             end
             CM.Channels = channels;

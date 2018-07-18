@@ -26,5 +26,5 @@ for i=1:size(fcshdr.par,2)
 end;
 
 if ~suppress_errors
-    error('Could not find color %s in FCS data',color);
+    TASBESession.error('FCS:Select','MissingColor','Could not find color %s in FCS data',color);
 end

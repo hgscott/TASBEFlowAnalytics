@@ -33,6 +33,8 @@ classdef TASBEConfig
             s.flow.outputPointCloud = false;
             doc.flow.pointCloudPath = 'location for point-cloud outputs';
             s.flow.pointCloudPath = 'CSV/';
+            doc.flow.dataCSVPath = 'location for data summary CSVs';
+            s.flow.dataCSVPath = 'CSV/';
             % TASBE Setting migration
             doc.flow.channel_template_file = 'TASBE setting migration';
             s.flow.channel_template_file = '';     
@@ -188,7 +190,7 @@ classdef TASBEConfig
             s.OutputSettings.FixedHistogramAxis = [];
             doc.OutputSettings.FixedBinningAxis = 'Set to fix limit [min max] of binning variable plot axis';
             s.OutputSettings.FixedBinningAxis = [];
-            doc.OutputSettings.FixedInputAxis = 'Set to fix limit [min max] of normalized output plot axis';
+            doc.OutputSettings.FixedInputAxis = 'Set to fix limit [min max] of input plot axis';
             s.OutputSettings.FixedInputAxis =   [];
             doc.OutputSettings.FixedNormalizedInputAxis = 'Set to fix limit [min max] of normalized input plot axis';
             s.OutputSettings.FixedNormalizedInputAxis =   [];

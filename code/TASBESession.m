@@ -97,6 +97,17 @@ classdef TASBESession
             % TODO: should also include timestamp, compute time
             out = sprintf(' <testsuite>\n%s </testsuite>\n',tests);
         end
+
+        function off = checkIfWarningOff(msgId)
+            off = false;
+            warnStruct = warning();
+            for i=1:numel(warnStruct)
+                if strcmp(msgId,warnStruct(i).identifier) && strcmp('off',warnStruct(i).state),
+                    off = true;
+                    return;
+                end
+            end
+        end
     end
     
     methods(Static)
@@ -110,6 +121,9 @@ classdef TASBESession
         end
         
         function out = warn(classname,name,message,varargin)
+            % abort if warning is turned off
+            if TASBESession.checkIfWarningOff([classname ':' name]), return; end;
+            % otherwise, continue
             event.name = name;
             event.classname = classname;
             event.type = 'failure';
@@ -132,6 +146,7 @@ classdef TASBESession
             event.type = 'success';
             event.message = sprintf(message,varargin{:});
             out = TASBESession.access('insert',classname,event);
+            fprintf([strrep(event.message,'%','%%') '\n']);
         end
         
         function out = notify(classname,name,message,varargin)
@@ -140,7 +155,7 @@ classdef TASBESession
             event.type = 'success';
             event.message = sprintf(message,varargin{:});
             out = TASBESession.access('insert',classname,event);
-            fprintf(['Note: ' strrep(event.message,'%','%%')]);
+            fprintf(['Note: ' strrep(event.message,'%','%%') '\n']);
         end
         
         function reset()
@@ -163,7 +178,7 @@ classdef TASBESession
             
             if nargin>0
                 fid = fopen(filename,'w');
-                fprintf(fid,out);
+                fprintf(fid,strrep(out,'%','%%'));
                 fclose(fid);
             end
         end

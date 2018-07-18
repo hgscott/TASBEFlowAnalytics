@@ -43,7 +43,7 @@ function B = BinSequence(min_edge, step, max_edge, mode)
                 B.bin_centers = mean([B.bin_edges(1:end-1);B.bin_edges(2:end)]);
                 B.bin_widths = step;
             otherwise
-                error('Unknown bin mode %s',mode);
+                TASBESession.error('TASBE:BinSequence','UnknownBinMode','Unknown bin mode %s',mode);
         end
     end
             

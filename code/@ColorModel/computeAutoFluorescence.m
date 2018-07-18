@@ -53,6 +53,6 @@ for i=1:numel(CM.Channels)
         end
     end
     if(found==false)
-        error('Unable to find required channel %s',name)
+        TASBESession.error('TASBE:Autofluorescence','MissingChannel','Unable to find required channel %s',name)
     end
 end

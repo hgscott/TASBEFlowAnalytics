@@ -289,7 +289,7 @@ elseif strcmp(fcsheader_type,'FCS3.0') || strcmp(fcsheader_type,'FCS3.1')
                 else if(fcshdr.par(1).bit==24)
                         fcsdat = uint32(fread(fid,[fcshdr.NumOfPar fcshdr.TotalEvents],'bit24')');
                     else
-                        error('Unsupported bit width: %d',fcshdr.par(1).bit);
+                        TASBESession.error('FCS:Read','UnsupportedBitWidth','Unsupported bit width: %d',fcshdr.par(1).bit);
                     end
                 end
             end
@@ -305,7 +305,7 @@ elseif strcmp(fcsheader_type,'FCS3.0') || strcmp(fcsheader_type,'FCS3.1')
                 end
                 fcsdat = fread(fid,[fcshdr.NumOfPar fcshdr.TotalEvents],'float32',endian)';
             else 
-                error(['Unsupported FCS 3.0 data type: ' fcshdr.datatype])
+                TASBESession.error('FCS:Read','UnsupportedDataType',['Unsupported FCS 3.0 data type: ' fcshdr.datatype]);
             end;
         end
     end

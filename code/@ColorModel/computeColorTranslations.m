@@ -17,11 +17,11 @@ scales = zeros(n,n)*NaN;
 for i=1:numel(CM.ColorPairFiles)
     cp = CM.ColorPairFiles{i};
     cX = indexof(CM.Channels,cp{1});
-    if(cX==-1), error('Missing channel %s',getPrintName(cp{1})); end
+    if(cX==-1), TASBESession.error('TASBE:ColorTranslation','MissingTranslationChannel','Missing channel %s',getPrintName(cp{1})); end
     cY = indexof(CM.Channels,cp{2});
-    if(cY==-1), error('Missing channel %s',getPrintName(cp{2})); end
+    if(cY==-1), TASBESession.error('TASBE:ColorTranslation','MissingTranslationChannel','Missing channel %s',getPrintName(cp{2})); end
     cCtrl = indexof(CM.Channels,cp{3});
-    if(cCtrl==-1), error('Missing channel %s',getPrintName(cp{3})); end
+    if(cCtrl==-1), TASBESession.error('TASBE:ColorTranslation','MissingTranslationChannel','Missing channel %s',getPrintName(cp{3})); end
     
     data = readfcs_compensated_au(CM,cp{4},false,true); % Leave out AF, use floor
     if(cX==cCtrl || cY==cCtrl),

@@ -28,7 +28,7 @@ for i=1:numel(CM.Channels)
         for k=1:2 % find target channel
             if(CM.Channels{i}==cp{k})
                 target = indexof(CM.Channels,cp{k}); found=true; target_id = k;
-                if(target==-1), error('Missing channel %s',getPrintName(cp{k})); end
+                if(target==-1), TASBESession.error('TASBE:ColorModel','MissingChannel','Missing channel %s',getPrintName(cp{k})); end
             end
         end
         if ~found, continue; end;
@@ -37,7 +37,7 @@ for i=1:numel(CM.Channels)
             ctrl_idx = 3-target_id;
         end
         cCtrl = indexof(CM.Channels,cp{ctrl_idx});
-        if(cCtrl==-1), error('Missing channel %s',getPrintName(cp{ctrl_idx})); end
+        if(cCtrl==-1), TASBESession.error('TASBE:ColorModel','MissingChannel','Missing channel %s',getPrintName(cp{ctrl_idx})); end
         
         % read the file and get another layer of statistics
         data = readfcs_compensated_ERF(CM,cp{4},false,true);
