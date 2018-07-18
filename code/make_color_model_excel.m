@@ -1,6 +1,6 @@
 % Function that uses a template spreadsheet to create and save a Color Model. 
 % Inputs include an Excel object.  
-function [CM] = make_color_model_excel(extractor)
+function [CM] = make_color_model_excel(path, extractor)
     % Reset and update TASBEConfig 
     extractor.TASBEConfig_updates();
     
@@ -23,7 +23,13 @@ function [CM] = make_color_model_excel(extractor)
     end
     
     extractor.setTASBEConfig('beads.rangeMax', 'numeric');
-    extractor.setTASBEConfig('plots.plotPath', 'char', 1);
+    try
+        plot_path = extractor.getExcelValue('plots.plotPath', 'char', 1);
+        % TASBEConfig.set('plots.plotPath', fullfile(path, plot_path));
+        TASBEConfig.set('plots.plotPath', plot_path);
+    catch
+        TASBESession.warn('make_color_model_excel', 'MissingPreference', 'Missing plot path in "Calibration" sheet');
+    end
     extractor.setTASBEConfig('beads.beadModel', 'char');
     extractor.setTASBEConfig('beads.beadBatch', 'char');
     extractor.setTASBEConfig('beads.rangeMin', 'numeric');

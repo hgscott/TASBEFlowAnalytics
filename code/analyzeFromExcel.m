@@ -2,6 +2,15 @@
 % and batch analysis functions. The only needed inputs are the template
 % file path and type of analysis that needs to be run.
 function analyzeFromExcel(file, type)
+    directory = strsplit(file, '/');
+    if numel(directory) < 2
+        directory = strsplit(file, '\');
+    end
+    path = '';
+    for i=1:numel(directory)-1
+        path = [path directory{i} '/'];
+    end
+    
     TASBESession.warn('analyzeFromExcel', 'ExampleWarning', 'This is what a warning looks like.');
     TASBESession.succeed('analyzeFromExcel', 'ExampleSuccess', 'This is what a success/ notification looks like.');
     TASBESession.skip('analyzeFromExcel', 'ExampleSkip', 'A skip is also green.');
@@ -15,11 +24,11 @@ function analyzeFromExcel(file, type)
     switch type
         case {'colormodel', 'CM', 'Colormodel'}
             % Make color model
-            make_color_model_excel(extractor);
+            make_color_model_excel(path, extractor);
         case {'batch', 'BA', 'Batch'}
             % Run batch analysis
             batch_analysis_excel(extractor);
-        case {'plusminus', 'PM', 'Plusminus'}
+        case {'plusminus', 'PM', 'Plusminus', 'comparativeanalysis', 'companalysis'}
             % Run plus minus analysis
             plusminus_analysis_excel(extractor);
         case {'transfercurve', 'TC', 'Transfercurve'}
