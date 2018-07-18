@@ -3,7 +3,9 @@
 function transfercurve_analysis_excel(extractor, CM)
     % Reset and update TASBEConfig and get exp, device, and inducer names
     extractor.TASBEConfig_updates();
+    TASBEConfig.set('template.displayErrors', 1);
     experimentName = extractor.getExcelValue('experimentName', 'char');
+    TASBEConfig.set('template.displayErrors', 0);
     
     % Determine the number of transfer curve analysis to run
     sh_num3 = extractor.getSheetNum('first_sampleColName_TC');

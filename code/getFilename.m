@@ -23,10 +23,12 @@ function [filename] = getFilename(extractor, row)
     % First get the template number and create position reference variables
     sh_num1 = extractor.getSheetNum('first_sample_num');
     template_col = extractor.getColNum('first_sample_template');
+    TASBEConfig.set('template.displayErrors', 1);
     template_num = extractor.getExcelValuePos(sh_num1, row, template_col, 'numeric');
     filename_templates = extractor.getExcelCoordinates('filename_templates');
     template_pos = filename_templates{template_num};
     filename_template = extractor.getExcelValuePos(template_pos{1}, template_pos{2}, template_pos{3}, 'char');
+    TASBEConfig.set('template.displayErrors', 0);
     % Extracting the data stem path 
     try
         stem = extractor.getExcelValuePos(template_pos{1}, template_pos{2}+1, template_pos{3}+4, 'char');
@@ -62,6 +64,7 @@ function [filename] = getFilename(extractor, row)
         try
             extractor.getExcelValuePos(sh_num2, i, variable_col, 'char');
             % Variable, look through columns in samples sheet
+            checkError = true;
             header = section;
             for j=sample_start_col:size(extractor.sheets{sh_num1},2)
                 try 
@@ -73,12 +76,13 @@ function [filename] = getFilename(extractor, row)
                             continue
                         end
                     catch 
-                        TASBESession.error('getFilename', 'InvalidHeaderName', 'The header, %s, does not match with any column titles in "Samples" sheet.', header);
+                        continue
                     end
                 end
                 % Find the matching section name in filename template
                 % and column header in "Samples"
                 if strcmp(header, ref_header)
+                    checkError = false;
                     section = extractor.getExcelValuePos(sh_num1, row, j, 'char');
                     % If the contents is an array, split into
                     % subsections and make filenames for all
@@ -91,6 +95,10 @@ function [filename] = getFilename(extractor, row)
                     end
                     break
                 end
+            end
+            
+            if checkError
+                TASBESession.error('getFilename', 'InvalidHeaderName', 'The header, %s, does not match with any column titles in "Samples" sheet.', header);
             end
 
         catch

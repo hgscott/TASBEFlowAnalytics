@@ -3,9 +3,10 @@
 function plusminus_analysis_excel(extractor, CM)
     % Reset and update TASBEConfig and get exp, device, and inducer names
     extractor.TASBEConfig_updates();
-    experimentName = extractor.getExcelValue('experimentName', 'char');
-    
+    TASBEConfig.set('template.displayErrors', 1);
+    experimentName = extractor.getExcelValue('experimentName', 'char'); 
     preference_row = extractor.getExcelValue('last_row_PM', 'numeric') + 5;
+    TASBEConfig.set('template.displayErrors', 0);
 
     % Load the color model
     if nargin < 2
@@ -64,7 +65,9 @@ function plusminus_analysis_excel(extractor, CM)
     col_names = {};
     row_nums = {};
     col_nums = {};
+    TASBEConfig.set('template.displayErrors', 1);
     last_sampleColName_row = extractor.getExcelValue('last_row_PM', 'numeric');
+    TASBEConfig.set('template.displayErrors', 0);
     % Determine the number of plusminus analysis to run
     for i=extractor.getRowNum('primary_sampleColName_PM'): last_sampleColName_row
         col_name = {};

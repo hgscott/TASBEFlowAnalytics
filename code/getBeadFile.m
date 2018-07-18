@@ -1,5 +1,7 @@
 function beadfiles = getBeadFile(extractor)
+    TASBEConfig.set('template.displayErrors', 1);    
     bead_name = {extractor.getExcelValue('bead_name', 'char')};
+    TASBEConfig.set('template.displayErrors', 0);
     if ~isempty(strfind(bead_name{1}, ',')) 
         bead_name = strsplit(bead_name{1}, ',');
     end
@@ -16,13 +18,13 @@ function beadfiles = getBeadFile(extractor)
     for i=first_sample_row:size(extractor.sheets{sh_num1},1)
         try
             num = extractor.getExcelValuePos(sh_num1, i, sample_num_col, 'numeric');
+            name = extractor.getExcelValuePos(sh_num1, i, sample_name_col, 'char');
             if isempty(num)
                 break
             end
         catch
             break
         end
-        name = extractor.getExcelValuePos(sh_num1, i, sample_name_col, 'char');
         ind = find(ismember(bead_name, name), 1);
         if ~isempty(ind)
             file = getFilename(extractor, i);

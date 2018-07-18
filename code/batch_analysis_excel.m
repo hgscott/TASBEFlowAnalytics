@@ -3,9 +3,10 @@
 function batch_analysis_excel(extractor, CM)
     % Reset and update TASBEConfig and obtain experiment name
     extractor.TASBEConfig_updates();
+    TASBEConfig.set('template.displayErrors', 1);
     experimentName = extractor.getExcelValue('experimentName', 'char');
-    
     preference_row = extractor.getRowNum('last_sample_num') + 5;
+    TASBEConfig.set('template.displayErrors', 0);
 
     % Load the color model
     if nargin < 2

@@ -5,7 +5,9 @@ function [CM] = make_color_model_excel(extractor)
     extractor.TASBEConfig_updates();
     
     % Set TASBEConfigs and create variables needed to generate the CM
+    TASBEConfig.set('template.displayErrors', 1);
     experimentName = extractor.getExcelValue('experimentName', 'char');
+    TASBEConfig.set('template.displayErrors', 0);
     try
         outputName = extractor.getExcelValue('outputName_CM', 'char');
     catch
@@ -31,7 +33,9 @@ function [CM] = make_color_model_excel(extractor)
    
     % Extract bead, blank, and all files
     % ref_filenames = {'blank','beads','all'};
+    TASBEConfig.set('template.displayErrors', 1);
     ref_filenames = {extractor.getExcelValue('blank_name', 'char'), extractor.getExcelValue('all_name', 'char')};
+    TASBEConfig.set('template.displayErrors', 0);
     output_filenames = {};
     sh_num1 = extractor.getSheetNum('first_sample_num');
     first_sample_row = extractor.getRowNum('first_sample_num');
@@ -42,13 +46,13 @@ function [CM] = make_color_model_excel(extractor)
     for i=first_sample_row:size(extractor.sheets{sh_num1},1)
         try
             num = extractor.getExcelValuePos(sh_num1, i, sample_num_col, 'numeric');
+            name = extractor.getExcelValuePos(sh_num1, i, sample_name_col, 'char');
             if isempty(num)
                 break
             end
         catch
             break
         end
-        name = extractor.getExcelValuePos(sh_num1, i, sample_name_col, 'char');
         for j=1:numel(ref_filenames)
             if strcmpi(name, ref_filenames{j})
                 file = getFilename(extractor, i);
@@ -119,13 +123,13 @@ function [CM] = make_color_model_excel(extractor)
     for i=first_sample_row:size(extractor.sheets{sh_num1},1)
         try
             num = extractor.getExcelValuePos(sh_num1, i, sample_num_col, 'numeric');
+            name = extractor.getExcelValuePos(sh_num1, i, sample_name_col, 'char');
             if isempty(num)
                 break
             end
         catch
             break
         end
-        name = extractor.getExcelValuePos(sh_num1, i, sample_name_col, 'char');
         for j=1:numel(sample_ids)
             if strcmpi(name, sample_ids{j})
                 file = getFilename(extractor, i);
