@@ -248,7 +248,7 @@ function plusminus_analysis_excel(extractor, CM)
                                     key{end+1} = extractor.getExcelValuePos(condition_sh, k, condition_col, 'char');
                                 catch
                                     try
-                                        key{end+1} = num2str(extractor.getExcelValuePos(condition_sh, k, condition_col, 'numeric'));
+                                        key{end+1} = extractor.getExcelValuePos(condition_sh, k, condition_col, 'numeric');
                                     catch
                                         break
                                     end
@@ -268,7 +268,7 @@ function plusminus_analysis_excel(extractor, CM)
                                         key{end+1} = extractor.getExcelValuePos(condition_sh, k, condition_col, 'char');
                                     catch
                                         try
-                                            key{end+1} = num2str(extractor.getExcelValuePos(condition_sh, k, condition_col, 'numeric'));
+                                            key{end+1} = extractor.getExcelValuePos(condition_sh, k, condition_col, 'numeric');
                                         catch
                                             break
                                         end
@@ -365,7 +365,17 @@ function plusminus_analysis_excel(extractor, CM)
                         % Get value at col_num{2} and compare with keys{2}
                         try
                             value = extractor.getExcelValuePos(sh_num2, set{k}, col_num{2});
-                            ind = find(ismember(keys{2}, value), 1);
+                            ind = double.empty(0);
+                            if isa(value, 'numeric')
+                                for c=1:numel(keys{2})
+                                    if keys{2}{c} == value
+                                        ind = c;
+                                        break
+                                    end
+                                end
+                            else
+                                ind = find(ismember(keys{2}, value), 1);
+                            end
                             if ~isempty(ind)
                                 ordered_set{ind,1} = value;
                                 ordered_set{ind,2} = getFilename(extractor, set{k});
@@ -408,6 +418,8 @@ function plusminus_analysis_excel(extractor, CM)
                 end
             end
         end
+        
+        assignin('base','batch_description',batch_description);
         
         % Go through all possible APs
         for j=1:numel(APs)
