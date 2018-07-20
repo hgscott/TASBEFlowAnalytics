@@ -1,6 +1,6 @@
 % Function that runs batch analysis given a template spreadsheet. An Excel
 % object and optional Color Model are inputs
-function batch_analysis_excel(extractor, CM)
+function batch_analysis_excel(path, extractor, CM)
     % Reset and update TASBEConfig and obtain experiment name
     extractor.TASBEConfig_updates();
     TASBEConfig.set('template.displayErrors', 1);
@@ -9,28 +9,76 @@ function batch_analysis_excel(extractor, CM)
     TASBEConfig.set('template.displayErrors', 0);
 
     % Load the color model
-    if nargin < 2
+    if nargin < 3
+        % Obtain the CM_name
         try
             coords = extractor.getExcelCoordinates('inputName_CM', 1);
-            CM_file = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char');  
+            CM_name = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char'); 
+            [~,name,~] = fileparts(CM_name);
+            CM_name = [name '.mat'];
         catch
+            TASBESession.warn('batch_analysis_excel', 'MissingPreference', 'Missing CM Filename in "Samples" sheet. Looking in "Calibration" sheet.');
             try
-                CM_file = extractor.getExcelValue('outputName_CM', 'char');
+                CM_name = extractor.getExcelValue('outputName_CM', 'char');
+                [~,name,~] = fileparts(CM_name);
+                CM_name = [name '.mat'];
             catch
-                CM_file = [experimentName '-ColorModel.mat'];
+                TASBESession.warn('batch_analysis_excel', 'MissingPreference', 'Missing Output Filename in "Calibration" sheet. Defaulting to exp name.');
+                CM_name = [experimentName '-ColorModel.mat'];
             end
         end
+        
+        % Obtain the CM_path
+        try
+            coords = extractor.getExcelCoordinates('inputPath_CM', 1);
+            CM_path = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char');
+            javaFileObj = java.io.File(end_with_slash(CM_path));
+            if javaFileObj.isAbsolute()
+                CM_path = end_with_slash(CM_path);
+            else
+                CM_path = end_with_slash(fullfile(path, CM_path));
+            end
+        catch
+            TASBESession.warn('batch_analysis_excel', 'MissingPreference', 'Missing CM Filepath in "Samples" sheet. Looking in "Calibration" sheet.'); 
+            try
+                CM_path = extractor.getExcelValue('outputPath_CM', 'char');
+                javaFileObj = java.io.File(end_with_slash(CM_path));
+                if javaFileObj.isAbsolute()
+                    CM_path = end_with_slash(CM_path);
+                else
+                    CM_path = end_with_slash(fullfile(path, CM_path));
+                end
+            catch
+                TASBESession.warn('batch_analysis_excel', 'MissingPreference', 'Missing Output Filepath in "Calibration" sheet. Defaulting to template path.'); 
+                CM_path = path;
+            end
+        end
+        CM_file = [CM_path CM_name];
 
         try 
             load(CM_file);
         catch
+            TASBESession.warn('batch_analysis_excel', 'MissingPreference', 'Could not load CM file, creating a new one.');
             CM = make_color_model_excel(extractor);
         end
     end
 
     % Set TASBEConfigs and create variables needed to run batch analysis
-    coords = extractor.getExcelCoordinates('plots.plotPath', 2);
-    TASBEConfig.set('plots.plotPath', extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char'));
+    try
+        coords = extractor.getExcelCoordinates('plots.plotPath', 2);
+        plot_path = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char');
+        javaFileObj = java.io.File(end_with_slash(plot_path));
+        if javaFileObj.isAbsolute()
+            plot_path = end_with_slash(plot_path);
+        else
+            plot_path = end_with_slash(fullfile(path, plot_path));
+        end
+        TASBEConfig.set('plots.plotPath', plot_path);
+    catch
+        TASBESession.warn('batch_analysis_excel', 'MissingPreference', 'Missing plot path in "Samples" sheet');
+        plot_path = end_with_slash(fullfile(path, 'plots/'));
+        TASBEConfig.set('plots.plotPath', plot_path);
+    end
 
     % Analyze on a histogram of 10^[first] to 10^[third] ERF, with bins every 10^[second]
     try
@@ -92,13 +140,34 @@ function batch_analysis_excel(extractor, CM)
     
     for i=1:numel(APs)
         AP = APs{i};
+        % Obtain output name
         try
             coords = extractor.getExcelCoordinates('outputName_BA'); 
-            outputName = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char');  
+            outputName = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char');
+            [~, name, ~] = fileparts(outputName);
+            outputName = [name '.mat'];
         catch
             TASBESession.warn('batch_analysis_excel', 'MissingPreference', 'Missing Output File Name for Batch Analysis in "Samples" sheet');
             outputName = [experimentName '-BatchAnalysis.mat'];
         end
+        
+        % Obtain output path
+        try
+            coords = extractor.getExcelCoordinates('outputPath_BA'); 
+            outputPath = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char');
+            javaFileObj = java.io.File(end_with_slash(outputPath));
+            if javaFileObj.isAbsolute()
+                outputPath = end_with_slash(outputPath);
+            else
+                outputPath = end_with_slash(fullfile(path, outputPath));
+            end
+        catch
+            TASBESession.warn('batch_analysis_excel', 'MissingPreference', 'Missing Output File Path in "Samples" sheet');
+            outputPath = path;
+        end
+        
+        TASBEConfig.set('flow.pointCloudPath',outputPath);
+        TASBEConfig.set('flow.dataCSVPath',outputPath);
 
         try 
             coords = extractor.getExcelCoordinates('OutputSettings.StemName', 1);   
@@ -149,6 +218,6 @@ function batch_analysis_excel(extractor, CM)
 
         [statisticsFile, histogramFile] = serializeBatchOutput(file_pairs, CM, AP, sampleresults);
 
-        save(outputName,'AP','bins','file_pairs','results','sampleresults');
+        save([outputPath outputName],'AP','bins','file_pairs','results','sampleresults');
     end
 end

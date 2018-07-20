@@ -39,17 +39,19 @@ classdef TemplateExtraction
                     {'first_sample_num'; {2, 5, 1}};
                     {'first_sample_name'; {2, 5, 2}};
                     {'inputName_CM'; {{2, 30, 3}, {4, 13, 2}, {5, 13, 2}}};
-                    {'OutputSettings.StemName'; {{2, 30, 4}, {4, 5, 13}, {5, 5, 13}}};
-                    {'binseq_min'; {{2, 30, 9}, {4, 13, 6}, {5, 13, 6}}};
-                    {'binseq_pdecade'; {{2, 30, 10}, {4, 13, 7}, {5, 13, 7}}};
-                    {'binseq_max'; {{2, 30, 11}, {4, 13, 8}, {5, 13, 8}}};
-                    {'minValidCount'; {{2, 30, 6}, {4, 13, 3}, {5, 13, 3}}};
-                    {'autofluorescence'; {{2, 30, 7}, {4, 13, 4}, {5, 13, 4}}};
-                    {'minFracActive'; {{2, 30, 8}, {4, 13, 5}, {5, 13, 5}}};
-                    {'outputName_BA'; {2, 30, 5}};
+                    {'inputPath_CM'; {{2, 30, 4}, {4, 13, 3}, {5, 13, 3}}};
+                    {'OutputSettings.StemName'; {{2, 30, 5}, {4, 5, 13}, {5, 5, 13}}};
+                    {'binseq_min'; {{2, 30, 11}, {4, 13, 7}, {5, 13, 7}}};
+                    {'binseq_pdecade'; {{2, 30, 12}, {4, 13, 8}, {5, 13, 8}}};
+                    {'binseq_max'; {{2, 30, 13}, {4, 13, 9}, {5, 13, 9}}};
+                    {'minValidCount'; {{2, 30, 8}, {4, 13, 4}, {5, 13, 4}}};
+                    {'autofluorescence'; {{2, 30, 9}, {4, 13, 5}, {5, 13, 5}}};
+                    {'minFracActive'; {{2, 30, 10}, {4, 13, 6}, {5, 13, 6}}};
+                    {'outputName_BA'; {2, 30, 6}};
+                    {'outputPath_BA'; {2, 30, 7}};
                     % Coords for variables in "Calibration"
                     {'beads.beadModel'; {3, 5, 2}};
-                    {'plots.plotPath'; {{3, 28, 2}, {2, 30, 2}, {4, 5, 16}, {5, 5, 16}}};
+                    {'plots.plotPath'; {{3, 28, 2}, {2, 30, 2}, {4, 5, 17}, {5, 5, 17}}};
                     {'beads.beadBatch'; {3, 5, 1}};
                     {'beads.rangeMin'; {3, 5, 3}};
                     {'beads.rangeMax'; {3, 5, 4}};
@@ -59,6 +61,7 @@ classdef TemplateExtraction
                     {'relevant_channels'; {3, 24, 2}};
                     {'transChannelMin'; {3, 24, 3}};
                     {'outputName_CM'; {3, 28, 4}};
+                    {'outputPath_CM'; {3, 28, 5}};
                     {'first_flchrome_name'; {3, 13, 2}};
                     {'first_flchrome_channel'; {3, 13, 3}};
                     {'first_flchrome_type'; {3, 13, 4}}; % whether constitutive or input or output
@@ -72,8 +75,9 @@ classdef TemplateExtraction
                     {'all_name'; {3, 24, 4}};
                     {'bead_tolerance'; {3, 5, 8}};
                     % Coords for variables in "Comparative Analysis"
-                    {'device_name'; {{4, 5, 15}, {5, 5, 15}}};
+                    {'device_name'; {{4, 5, 16}, {5, 5, 16}}};
                     {'outputName_PM'; {4, 5, 14}};
+                    {'outputPath_PM'; {4, 5, 15}};
                     {'primary_sampleColName_PM'; {4, 5, 7}};
                     {'secondary_sampleColName_PM'; {4, 5, 10}};
                     {'first_sampleColName_PM'; {4, 5, 2}};
@@ -81,6 +85,7 @@ classdef TemplateExtraction
                     {'last_row_PM'; {4, 4, 1}};
                     % Coords for variables in "Transfer Curve Analysis"
                     {'outputName_TC'; {5, 5, 14}};
+                    {'outputPath_TC'; {5, 5, 15}};
                     {'sampleColName_TC'; {5, 5, 7}};
                     {'first_sampleColName_TC'; {5, 5, 1}};
                     {'first_sampleVal_TC'; {5, 5, 4}};

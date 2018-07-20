@@ -10,9 +10,24 @@ function [CM] = make_color_model_excel(path, extractor)
     TASBEConfig.set('template.displayErrors', 0);
     try
         outputName = extractor.getExcelValue('outputName_CM', 'char');
+        [~, name, ~] = fileparts(outputName);
+        outputName = [name '.mat'];
     catch
         TASBESession.warn('make_color_model_excel', 'MissingPreference', 'Missing Output File Name in "Calibration" sheet');
         outputName = [experimentName '-ColorModel.mat'];
+    end
+    
+    try
+        outputPath = extractor.getExcelValue('outputPath_CM', 'char');
+        javaFileObj = java.io.File(end_with_slash(outputPath));
+        if javaFileObj.isAbsolute()
+            outputPath = end_with_slash(outputPath);
+        else
+            outputPath = end_with_slash(fullfile(path, outputPath));
+        end
+    catch
+        TASBESession.warn('make_color_model_excel', 'MissingPreference', 'Missing Output File Path in "Calibration" sheet');
+        outputPath = path;
     end
     
     try
@@ -25,10 +40,17 @@ function [CM] = make_color_model_excel(path, extractor)
     extractor.setTASBEConfig('beads.rangeMax', 'numeric');
     try
         plot_path = extractor.getExcelValue('plots.plotPath', 'char', 1);
-        % TASBEConfig.set('plots.plotPath', fullfile(path, plot_path));
+        javaFileObj = java.io.File(end_with_slash(plot_path));
+        if javaFileObj.isAbsolute()
+            plot_path = end_with_slash(plot_path);
+        else
+            plot_path = end_with_slash(fullfile(path, plot_path));
+        end
         TASBEConfig.set('plots.plotPath', plot_path);
     catch
         TASBESession.warn('make_color_model_excel', 'MissingPreference', 'Missing plot path in "Calibration" sheet');
+        plot_path = end_with_slash(fullfile(path, 'plots/'));
+        TASBEConfig.set('plots.plotPath', plot_path);
     end
     extractor.setTASBEConfig('beads.beadModel', 'char');
     extractor.setTASBEConfig('beads.beadBatch', 'char');
@@ -147,7 +169,7 @@ function [CM] = make_color_model_excel(path, extractor)
     % Included a check to make sure that the number of channels matches with
     % the number in the template
     if numel(channels) ~= extractor.getExcelValue('num_channels', 'numeric')
-        TASBESession.warn('make_color_model', 'DimensionMismatch', 'Channel dimensions do not match with number of channels from template');
+        TASBESession.warn('make_color_model_excel', 'DimensionMismatch', 'Channel dimensions do not match with number of channels from template');
     end
 
     % Multi-color controls are used for converting other colors into FITC units
@@ -179,7 +201,15 @@ function [CM] = make_color_model_excel(path, extractor)
     
     % Execute and save the model
     CM = resolve(CM);
-    save('-V7',outputName,'CM');
+    if ~isdir(outputPath)
+        sanitized_path = strrep(outputPath, '/', '&#47;');
+        sanitized_path = strrep(sanitized_path, '\', '&#92;');
+        sanitized_path = strrep(sanitized_path, ':', '&#58;');
+        TASBESession.notify('TASBE:OutputFig','MakeDirectory','Directory does not exist, attempting to create it: %s',sanitized_path);
+        mkdir(outputPath);
+    end
+    save('-V7',[outputPath, outputName],'CM');
+    % save('-V7',outputName,'CM');
     
     % Conduct bead comparisons if applicable
     % If size of beadfiles is greater than 1, then run bead comparisons

@@ -1,6 +1,6 @@
 % Function that runs transfer curve analysis given a template spreadsheet. An Excel
 % object and optional Color Model are inputs
-function transfercurve_analysis_excel(extractor, CM)
+function transfercurve_analysis_excel(path, extractor, CM)
     % Reset and update TASBEConfig and get exp, device, and inducer names
     extractor.TASBEConfig_updates();
     TASBEConfig.set('template.displayErrors', 1);
@@ -44,21 +44,56 @@ function transfercurve_analysis_excel(extractor, CM)
     end
 
     % Load the color model
-    if nargin < 2
+    if nargin < 3
+        % Obtain the CM_name
         try
             coords = extractor.getExcelCoordinates('inputName_CM', 3);
-            CM_file = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char'); 
+            CM_name = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char'); 
+            [~,name,~] = fileparts(CM_name);
+            CM_name = [name '.mat'];
         catch
+            TASBESession.warn('transfercurve_analysis_excel', 'MissingPreference', 'Missing CM Filename in "Transfer Curve Analysis" sheet. Looking in "Calibration" sheet.');
             try
-                CM_file = extractor.getExcelValue('outputName_CM', 'char');
+                CM_name = extractor.getExcelValue('outputName_CM', 'char');
+                [~,name,~] = fileparts(CM_name);
+                CM_name = [name '.mat'];
             catch
-                CM_file = [experimentName '-ColorModel.mat'];
+                TASBESession.warn('transfercurve_analysis_excel', 'MissingPreference', 'Missing Output Filename in "Calibration" sheet. Defaulting to exp name.');
+                CM_name = [experimentName '-ColorModel.mat'];
             end
         end
+        
+        % Obtain the CM_path
+        try
+            coords = extractor.getExcelCoordinates('inputPath_CM', 3);
+            CM_path = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char');
+            javaFileObj = java.io.File(end_with_slash(CM_path));
+            if javaFileObj.isAbsolute()
+                CM_path = end_with_slash(CM_path);
+            else
+                CM_path = end_with_slash(fullfile(path, CM_path));
+            end
+        catch
+            TASBESession.warn('transfercurve_analysis_excel', 'MissingPreference', 'Missing CM Filepath in "Transfer Curve Analysis" sheet. Looking in "Calibration" sheet.'); 
+            try
+                CM_path = extractor.getExcelValue('outputPath_CM', 'char');
+                javaFileObj = java.io.File(end_with_slash(CM_path));
+                if javaFileObj.isAbsolute()
+                    CM_path = end_with_slash(CM_path);
+                else
+                    CM_path = end_with_slash(fullfile(path, CM_path));
+                end
+            catch
+                TASBESession.warn('transfercurve_analysis_excel', 'MissingPreference', 'Missing Output Filepath in "Calibration" sheet. Defaulting to template path.'); 
+                CM_path = path;
+            end
+        end
+        CM_file = [CM_path CM_name];
 
         try 
             load(CM_file);
         catch
+            TASBESession.warn('transfercurve_analysis_excel', 'MissingPreference', 'Could not load CM file, creating a new one.');
             CM = make_color_model_excel(extractor);
         end
     end
@@ -121,6 +156,7 @@ function transfercurve_analysis_excel(extractor, CM)
     comp_groups = {};
     first_group_col = extractor.getColNum('first_sampleColName_TC');
     outputNames = {};
+    outputPaths = {};
     stemNames = {};
     plotPaths = {};
     device_names = {};
@@ -191,8 +227,11 @@ function transfercurve_analysis_excel(extractor, CM)
             end
         end
         % Get unique preferences 
-        try
-            outputNames{end+1} = extractor.getExcelValuePos(sh_num3, row_nums{i}, extractor.getColNum('outputName_TC'), 'char');
+        % Obtain output name
+        try 
+            outputName = extractor.getExcelValuePos(sh_num3, row_nums{i}, extractor.getColNum('outputName_TC'), 'char');
+            [~, name, ~] = fileparts(outputName);
+            outputNames{end+1} = [name '.mat'];
         catch
             TASBESession.warn('transfercurve_analysis_excel', 'MissingPreference', 'Missing Output File Name for Transfer Curve Analysis %s in "Transfer Curve Analysis" sheet', num2str(i));
             if i > 1
@@ -200,6 +239,21 @@ function transfercurve_analysis_excel(extractor, CM)
             else
                 outputNames{end+1} = [experimentName '-TransAnalysis.mat'];
             end
+        end
+        
+        % Obtain output path
+        try
+            outputPath = extractor.getExcelValuePos(sh_num3, row_nums{i}, extractor.getColNum('outputPath_TC'), 'char');
+            javaFileObj = java.io.File(end_with_slash(outputPath));
+            if javaFileObj.isAbsolute()
+                outputPath = end_with_slash(outputPath);
+            else
+                outputPath = end_with_slash(fullfile(path, outputPath));
+            end
+            outputPaths{end+1} = outputPath;
+        catch
+            TASBESession.warn('transfercurve_analysis_excel', 'MissingPreference', 'Missing Output File Path for Transfer Curve Analysis %s in "Transfer Curve" sheet', num2str(i));
+            outputPaths{end+1} = path;
         end
 
         try 
@@ -213,13 +267,23 @@ function transfercurve_analysis_excel(extractor, CM)
                 stemNames{end+1} = experimentName;
             end
         end
+        
         try
             plotPath_coord = extractor.getExcelCoordinates('plots.plotPath');
-            plotPaths{end+1} = extractor.getExcelValuePos(sh_num3, row_nums{i}, plotPath_coord{4}{3}, 'char');
+            plot_path = extractor.getExcelValuePos(sh_num3, row_nums{i}, plotPath_coord{4}{3}, 'char');
+            javaFileObj = java.io.File(end_with_slash(plot_path));
+            if javaFileObj.isAbsolute()
+                plot_path = end_with_slash(plot_path);
+            else
+                plot_path = end_with_slash(fullfile(path, plot_path));
+            end
+            plotPaths{end+1} = plot_path;
         catch
-            TASBESession.warn('transfercurve_analysis_excel', 'MissingPreference', 'Missing plot path for Transfer Curve Analysis %s in "Transfer Curve Analysis" sheet', num2str(i));
-            plotPaths{end+1} = extractor.getExcelValue('plots.plotPath', 'char', 4);
+            TASBESession.warn('transfercurve_analysis_excel', 'MissingPreference', 'Missing plot path for Transfer Curve Analysis %s in "Transfer Curve Analysis" sheet', num2str(i));            
+            plot_path = end_with_slash(fullfile(path, 'plots/'));
+            plotPaths{end+1} = plot_path;
         end
+        
         try
             device_name_coord = extractor.getExcelCoordinates('device_name');
             device_names{end+1} = extractor.getExcelValuePos(sh_num3, row_nums{i}, device_name_coord{2}{3}, 'char');
@@ -239,6 +303,7 @@ function transfercurve_analysis_excel(extractor, CM)
         TASBEConfig.set('OutputSettings.DeviceName', device_names{i});
         TASBEConfig.set('plots.plotPath', plotPaths{i});
         outputName = outputNames{i};
+        outputPath = outputPaths{i};
         % Go though sample rows of selected column and add to cell arrays
         for j=first_sample_row:extractor.getRowNum('last_sample_num')
             try
@@ -313,7 +378,7 @@ function transfercurve_analysis_excel(extractor, CM)
             plot_IO_characterization(results);
 
             % Save the results of computation
-            save('-V7',outputName,'experiment','AP','sampleresults','results');
+            save('-V7',[outputPath outputName],'experiment','AP','sampleresults','results');
         end
     end
 end
