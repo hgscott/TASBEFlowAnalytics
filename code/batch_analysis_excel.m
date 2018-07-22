@@ -128,7 +128,7 @@ function batch_analysis_excel(path, extractor, CM)
             extractor.getExcelValuePos(sh_num2, i, sample_exclude_col, 'char');
         catch
             sample_names{end+1} = extractor.getExcelValuePos(sh_num2, i, sample_name_col, 'char');
-            file = getFilename(extractor, i);
+            file = getFilename(extractor, i, path);
             file_names{end+1} = file;
         end
     end

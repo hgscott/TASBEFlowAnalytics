@@ -154,6 +154,7 @@ function transfercurve_analysis_excel(path, extractor, CM)
     % Go though comparison groups and store values and column numbers in
     % cell array
     comp_groups = {};
+    comp_group_names = {};
     first_group_col = extractor.getColNum('first_sampleColName_TC');
     outputNames = {};
     outputPaths = {};
@@ -214,6 +215,7 @@ function transfercurve_analysis_excel(path, extractor, CM)
                         if strcmp(col_name, ref_header)
                             checkError = false;
                             comp_groups{end+1} = {j, extractor.getExcelValuePos(sh_num3, row_nums{i}, extractor.getColNum('first_sampleVal_TC'))};
+                            comp_group_names{end+1} = col_name;
                             break
                         end 
                     end
@@ -285,12 +287,12 @@ function transfercurve_analysis_excel(path, extractor, CM)
         end
         
         try
-            device_name_coord = extractor.getExcelCoordinates('device_name');
-            device_names{end+1} = extractor.getExcelValuePos(sh_num3, row_nums{i}, device_name_coord{2}{3}, 'char');
+            device_names{end+1} = comp_group_names{1};
         catch
-            TASBESession.warn('transfercurve_analysis_excel', 'MissingPreference', 'Missing device name for Transfer Curve Analysis %s in "Transfer Curve Analysis" sheet', num2str(i));
-            device_names{end+1} = extractor.getExcelValue('device_name', 'char', 2);
+            TASBESession.warn('transfercurve_analysis_excel', 'MissingPreference', 'Missing device name for Transfer Curve Analysis %s in "Transfer Curve Analysis" sheet. Defaulting to exp name.', num2str(i));
+            device_names{end+1} = [experimentName num2str(i)];
         end
+        
         inducer_names{end+1} = col_names{i};
     end
     
@@ -310,7 +312,7 @@ function transfercurve_analysis_excel(path, extractor, CM)
                 value = extractor.getExcelValuePos(sh_num2, j, col_nums{i}, 'numeric');
                 if isempty(comp_groups{i}) || extractor.getExcelValuePos(sh_num2, j, comp_groups{i}{1}) == comp_groups{i}{2}
                     sample_names{end+1} = value;
-                    file = getFilename(extractor, j);
+                    file = getFilename(extractor, j, path);
                     file_names{end+1} = file;
                 end
             catch

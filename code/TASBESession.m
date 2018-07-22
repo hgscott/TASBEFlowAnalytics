@@ -117,7 +117,9 @@ classdef TASBESession
             event.type = 'error';
             event.message = sprintf(message,varargin{:});
             out = TASBESession.access('insert',classname,event);
-            error([classname ':' name],strrep(event.message,'%','%%'));
+            errorStruct.message = strrep(event.message,'%','%%');
+            errorStruct.identifier = [classname ':' name];
+            error(errorStruct);
         end
         
         function out = warn(classname,name,message,varargin)

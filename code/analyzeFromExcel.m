@@ -2,7 +2,7 @@
 % and batch analysis functions. The only needed inputs are the template
 % file path and type of analysis that needs to be run.
 function analyzeFromExcel(file, type)
-%     try
+    try
         % Editing file to get path
         file = strrep(file, '\', '/');
         file_parts = strsplit(file, '/');
@@ -41,8 +41,12 @@ function analyzeFromExcel(file, type)
             otherwise
                 TASBESession.error('analyzeFromExcel', 'InvalidType', 'Input type of %s is invalid. The choices are colormodel, batch, plusminus, and transfercurve.', type);
         end
-%     catch exception
-%         % Turn MATLAB error into a TASBESession error
-%         TASBESession.error('analyzeFromExcel', exception.identifier, exception.message);
-%     end
+    catch exception
+        % Turn MATLAB error into a TASBESession error
+        if isempty(exception.identifier)
+            TASBESession.error('analyzeFromExcel', 'NoIdentifier', exception.message);
+        else
+            TASBESession.error('analyzeFromExcel', exception.identifier, exception.message);
+        end
+    end
 end

@@ -171,6 +171,7 @@ function plusminus_analysis_excel(path, extractor, CM)
     % Go though comparison groups and store values and column numbers in
     % cell array
     comp_groups = {};
+    comp_group_names = {};
     first_group_row = extractor.getRowNum('first_sampleColName_PM');
     first_group_col = extractor.getColNum('first_sampleColName_PM');
     outputNames = {};
@@ -215,6 +216,7 @@ function plusminus_analysis_excel(path, extractor, CM)
                 if strcmp(col_name, ref_header)
                     checkError = false;
                     comp_group{end+1} = {k, extractor.getExcelValuePos(sh_num3, j, extractor.getColNum('first_sampleVal_PM'))};
+                    comp_group_names{end+1} = col_name;
                     break
                 end 
             end
@@ -279,14 +281,14 @@ function plusminus_analysis_excel(path, extractor, CM)
             plot_path = end_with_slash(fullfile(path, 'plots/'));
             plotPaths{end+1} = plot_path;
         end
-    
+   
         try
-            device_name_coord = extractor.getExcelCoordinates('device_name');
-            device_names{end+1} = extractor.getExcelValuePos(sh_num3, row_nums{i}, device_name_coord{1}{3}, 'char');
+            device_names{end+1} = comp_group_names{1};
         catch
-            TASBESession.warn('plusminus_analysis_excel', 'MissingPreference', 'Missing device name for Plusminus Analysis %s in "Comparative Analysis" sheet', num2str(i));
-            device_names{end+1} = extractor.getExcelValue('device_name', 'char', 1);
+            TASBESession.warn('plusminus_analysis_excel', 'MissingPreference', 'Missing device name for Plusminus Analysis %s in "Comparative Analysis" sheet. Defaulting to exp name.', num2str(i));
+            device_names{end+1} = [experimentName num2str(i)];
         end
+        
         inducer_names{end+1} = col_names{i}{1};
     end
 
@@ -446,7 +448,7 @@ function plusminus_analysis_excel(path, extractor, CM)
                             end
                             if ~isempty(ind)
                                 ordered_set{ind,1} = value;
-                                ordered_set{ind,2} = getFilename(extractor, set{k});
+                                ordered_set{ind,2} = getFilename(extractor, set{k}, path);
                             end
                         catch
                             continue
@@ -467,7 +469,7 @@ function plusminus_analysis_excel(path, extractor, CM)
                             try
                                 value = extractor.getExcelValuePos(sh_num2, set{k}, col_num{2});
                                 ordered_set{end+1,1} = value;
-                                ordered_set{end,2} = getFilename(extractor, set{k});
+                                ordered_set{end,2} = getFilename(extractor, set{k}, path);
                             catch
                                 continue
                             end
@@ -476,7 +478,7 @@ function plusminus_analysis_excel(path, extractor, CM)
                             try
                                 value = extractor.getExcelValuePos(sh_num2, set{k}, col_num{1});
                                 ordered_set{end+1,1} = k; % default to just index
-                                ordered_set{end,2} = getFilename(extractor, set{k});
+                                ordered_set{end,2} = getFilename(extractor, set{k}, path);
                             catch
                                 continue
                             end

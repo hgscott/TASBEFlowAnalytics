@@ -1,6 +1,6 @@
 % Helper function that obtains the correct filename for a given row in the
 % "Samples" sheet with an Excel object and row number as inputs. 
-function [filename] = getFilename(extractor, row)
+function [filename] = getFilename(extractor, row, path)
     % filename_sh = extractor.getSheetNum('first_sample_filename');
     % filename_col = extractor.getColNum('first_sample_filename');
     % filename_col2 = extractor.getColNum('first_sample_exclude');
@@ -32,6 +32,12 @@ function [filename] = getFilename(extractor, row)
     % Extracting the data stem path 
     try
         stem = extractor.getExcelValuePos(template_pos{1}, template_pos{2}+1, template_pos{3}+4, 'char');
+        javaFileObj = java.io.File(end_with_slash(stem));
+        if javaFileObj.isAbsolute()
+            stem = end_with_slash(stem);
+        else
+            stem = end_with_slash(fullfile(path, stem));
+        end
     catch
         TASBESession.warn('getFilename','ValueNotFound','Template %s has no data stem.', num2str(template_num));
         stem = '';

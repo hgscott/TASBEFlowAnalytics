@@ -51,7 +51,7 @@ classdef TemplateExtraction
                     {'outputPath_BA'; {2, 30, 7}};
                     % Coords for variables in "Calibration"
                     {'beads.beadModel'; {3, 5, 2}};
-                    {'plots.plotPath'; {{3, 28, 2}, {2, 30, 2}, {4, 5, 17}, {5, 5, 17}}};
+                    {'plots.plotPath'; {{3, 28, 2}, {2, 30, 2}, {4, 5, 16}, {5, 5, 16}}};
                     {'beads.beadBatch'; {3, 5, 1}};
                     {'beads.rangeMin'; {3, 5, 3}};
                     {'beads.rangeMax'; {3, 5, 4}};
@@ -75,7 +75,7 @@ classdef TemplateExtraction
                     {'all_name'; {3, 24, 4}};
                     {'bead_tolerance'; {3, 5, 8}};
                     % Coords for variables in "Comparative Analysis"
-                    {'device_name'; {{4, 5, 16}, {5, 5, 16}}};
+                    % {'device_name'; {{4, 5, 16}, {5, 5, 16}}};
                     {'outputName_PM'; {4, 5, 14}};
                     {'outputPath_PM'; {4, 5, 15}};
                     {'primary_sampleColName_PM'; {4, 5, 7}};
@@ -125,6 +125,16 @@ classdef TemplateExtraction
                         TASBEConfig.set(char(cell2mat(raw(i,name_col))), cell2mat(raw(i,val_col)));
                     end
                 end
+            end
+        end
+        
+        % Cleans up the Excel cell values by calling trim function is value
+        % is a string
+        function new_value = sanitizeFromExcel(obj, value)
+            if isstring(value) || isa(value, 'char')
+                new_value = strtrim(value);
+            else
+                new_value = value;
             end
         end
         
@@ -313,7 +323,7 @@ classdef TemplateExtraction
             sh_num1 = obj.getSheetNum('first_sample_num');
             sample_start_col = obj.getColNum('first_sample_num');
             sample_start_row = obj.getRowNum('first_sample_num') - 1;
-            names = {'Template #', 'Exlude from Batch Analysis'};
+            names = {'Template #', 'Exclude from Batch Analysis'};
             coords = {};
             % look through columns in "Samples"
             for i=sample_start_col:size(obj.sheets{sh_num1},2)
@@ -384,6 +394,7 @@ classdef TemplateExtraction
                     error('IncorrectType');
                 end
             end
+            value = obj.sanitizeFromExcel(value);
         end
         
         % Returns the value of an inputted variable name using
