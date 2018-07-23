@@ -127,7 +127,7 @@ title(['All ' clean_for_latex(stemName),' bin counts, colored by inducer level']
 if(strcmp(clean_for_latex(stemName), ' ') || strcmp(clean_for_latex(stemName), ''))
     outputfig(h,['all-' channelName 'bincounts'],directory);
 else
-    outputfig(h,[clean_for_latex(stemName),'-all-' channelName 'bincounts'],directory);
+    outputfig(h,[clean_for_latex(stemName),'-all-' channelName '-bincounts'],directory);
 end
 
 % Fraction active per bin:

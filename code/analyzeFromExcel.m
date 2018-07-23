@@ -4,14 +4,8 @@
 function analyzeFromExcel(file, type)
     try
         % Editing file to get path
-        file = strrep(file, '\', '/');
-        file_parts = strsplit(file, '/');
-        path = '';
-        for i=1:numel(file_parts)-1
-            path = [path file_parts{i} '/'];
-        end
-        path = end_with_slash(path);
-        
+        [filepath, name, ext] = fileparts(file);
+        path = end_with_slash(filepath);
         % Setting up TASBESession log key
         TASBESession.warn('analyzeFromExcel', 'ExampleWarning', 'This is what a warning looks like.');
         TASBESession.succeed('analyzeFromExcel', 'ExampleSuccess', 'This is what a success/ notification looks like.');
@@ -24,7 +18,7 @@ function analyzeFromExcel(file, type)
         end
         
         % Running the actual analysis
-        extractor = TemplateExtraction(file);
+        extractor = TemplateExtraction([path name ext]);
         switch type
             case {'colormodel', 'CM', 'Colormodel'}
                 % Make color model
@@ -46,7 +40,8 @@ function analyzeFromExcel(file, type)
         if isempty(exception.identifier)
             TASBESession.error('analyzeFromExcel', 'NoIdentifier', exception.message);
         else
-            TASBESession.error('analyzeFromExcel', exception.identifier, exception.message);
+            msg = strrep(sprintf(getReport(exception, 'extended', 'hyperlinks', 'off')), newline, '');
+            TASBESession.error('analyzeFromExcel', exception.identifier, msg);
         end
     end
 end

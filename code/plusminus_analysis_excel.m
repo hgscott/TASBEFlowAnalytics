@@ -1,7 +1,7 @@
 % Function that runs plusminus analysis given a template spreadsheet. An Excel
 % object and optional Color Model are inputs
 function plusminus_analysis_excel(path, extractor, CM)
-    % Reset and update TASBEConfig and get exp, device, and inducer names
+    % Reset and update TASBEConfig and get exp name
     extractor.TASBEConfig_updates();
     TASBEConfig.set('template.displayErrors', 1);
     experimentName = extractor.getExcelValue('experimentName', 'char'); 
@@ -32,7 +32,7 @@ function plusminus_analysis_excel(path, extractor, CM)
         try
             coords = extractor.getExcelCoordinates('inputPath_CM', 2);
             CM_path = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char');
-            javaFileObj = java.io.File(end_with_slash(CM_path));
+            javaFileObj = javaObject("java.io.File", end_with_slash(CM_path));
             if javaFileObj.isAbsolute()
                 CM_path = end_with_slash(CM_path);
             else
@@ -42,7 +42,7 @@ function plusminus_analysis_excel(path, extractor, CM)
             TASBESession.warn('plusminus_analysis_excel', 'MissingPreference', 'Missing CM Filepath in "Comparative Analysis" sheet. Looking in "Calibration" sheet.'); 
             try
                 CM_path = extractor.getExcelValue('outputPath_CM', 'char');
-                javaFileObj = java.io.File(end_with_slash(CM_path));
+                javaFileObj = javaObject("java.io.File", end_with_slash(CM_path));
                 if javaFileObj.isAbsolute()
                     CM_path = end_with_slash(CM_path);
                 else
@@ -176,9 +176,7 @@ function plusminus_analysis_excel(path, extractor, CM)
     first_group_col = extractor.getColNum('first_sampleColName_PM');
     outputNames = {};
     outputPaths = {};
-    stemNames = {};
     plotPaths = {};
-    device_names = {};
     inducer_names = {};
     
     for i=1:numel(row_nums)
@@ -246,7 +244,7 @@ function plusminus_analysis_excel(path, extractor, CM)
         % Obtain output path
         try
             outputPath = extractor.getExcelValuePos(sh_num3, row_nums{i}, extractor.getColNum('outputPath_PM'), 'char');
-            javaFileObj = java.io.File(end_with_slash(outputPath));
+            javaFileObj = javaObject("java.io.File", end_with_slash(outputPath));
             if javaFileObj.isAbsolute()
                 outputPath = end_with_slash(outputPath);
             else
@@ -257,19 +255,11 @@ function plusminus_analysis_excel(path, extractor, CM)
             TASBESession.warn('plusminus_analysis_excel', 'MissingPreference', 'Missing Output File Path for Plusminus Analysis %s in "Comparative Analysis" sheet', num2str(i));
             outputPaths{end+1} = path;
         end
-
-        try 
-            stemName_coord = extractor.getExcelCoordinates('OutputSettings.StemName');
-            stemNames{end+1} = extractor.getExcelValuePos(sh_num3, row_nums{i}, stemName_coord{2}{3}, 'char');
-        catch
-            TASBESession.warn('plusminus_analysis_excel', 'MissingPreference', 'Missing Stem Name for Plusminus Analysis %s in "Comparative Analysis" sheet', num2str(i));
-            stemNames{end+1} = [experimentName num2str(i)];
-        end
         
         try
             plotPath_coord = extractor.getExcelCoordinates('plots.plotPath');
             plot_path = extractor.getExcelValuePos(sh_num3, row_nums{i}, plotPath_coord{3}{3}, 'char');
-            javaFileObj = java.io.File(end_with_slash(plot_path));
+            javaFileObj = javaObject("java.io.File", end_with_slash(plot_path));
             if javaFileObj.isAbsolute()
                 plot_path = end_with_slash(plot_path);
             else
@@ -280,13 +270,6 @@ function plusminus_analysis_excel(path, extractor, CM)
             TASBESession.warn('plusminus_analysis_excel', 'MissingPreference', 'Missing plot path for Plusminus Analysis %s in "Comparative Analysis" sheet', num2str(i));
             plot_path = end_with_slash(fullfile(path, 'plots/'));
             plotPaths{end+1} = plot_path;
-        end
-   
-        try
-            device_names{end+1} = comp_group_names{1};
-        catch
-            TASBESession.warn('plusminus_analysis_excel', 'MissingPreference', 'Missing device name for Plusminus Analysis %s in "Comparative Analysis" sheet. Defaulting to exp name.', num2str(i));
-            device_names{end+1} = [experimentName num2str(i)];
         end
         
         inducer_names{end+1} = col_names{i}{1};
@@ -358,10 +341,6 @@ function plusminus_analysis_excel(path, extractor, CM)
     end
     
     for i=1:numel(col_names)
-        device_name = device_names{i};
-        TASBEConfig.set('OutputSettings.DeviceName', device_names{i});
-        stemName = stemNames{i};
-        TASBEConfig.set('OutputSettings.StemName', stemName);
         TASBEConfig.set('plots.plotPath', plotPaths{i});
         outputName = outputNames{i};
         outputPath = outputPaths{i};
@@ -391,9 +370,9 @@ function plusminus_analysis_excel(path, extractor, CM)
             end
             if ~isempty(comp_group{k})
                 if ~isa(comp_group{k}{2}, 'char')
-                    batch_description{end+1} = {num2str(comp_group{k}{2}); col_name{1}; keys{1}; group};
+                    batch_description{end+1} = {[comp_group_names{k} '=' num2str(comp_group{k}{2})]; col_name{1}; keys{1}; group};
                 else
-                    batch_description{end+1} = {comp_group{k}{2}; col_name{1}; keys{1}; group};
+                    batch_description{end+1} = {[comp_group_names{k} '=' comp_group{k}{2}]; col_name{1}; keys{1}; group};
                 end
             else
                 batch_description{end+1} = {experimentName; col_name{1}; keys{1}; group};
@@ -534,7 +513,6 @@ function plusminus_analysis_excel(path, extractor, CM)
             % Make additional output plots
             for k=1:numel(results)
                 TASBEConfig.set('OutputSettings.StemName', batch_description{k}{1});
-                TASBEConfig.set('OutputSettings.DeviceName',device_name);
                 plot_plusminus_comparison(results{k}, batch_description{k}{3});
             end
             save('-V7',[outputPath outputName],'batch_description','AP','results');

@@ -32,7 +32,7 @@ function batch_analysis_excel(path, extractor, CM)
         try
             coords = extractor.getExcelCoordinates('inputPath_CM', 1);
             CM_path = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char');
-            javaFileObj = java.io.File(end_with_slash(CM_path));
+            javaFileObj = javaObject("java.io.File", end_with_slash(CM_path));
             if javaFileObj.isAbsolute()
                 CM_path = end_with_slash(CM_path);
             else
@@ -42,7 +42,7 @@ function batch_analysis_excel(path, extractor, CM)
             TASBESession.warn('batch_analysis_excel', 'MissingPreference', 'Missing CM Filepath in "Samples" sheet. Looking in "Calibration" sheet.'); 
             try
                 CM_path = extractor.getExcelValue('outputPath_CM', 'char');
-                javaFileObj = java.io.File(end_with_slash(CM_path));
+                javaFileObj = javaObject("java.io.File", end_with_slash(CM_path));
                 if javaFileObj.isAbsolute()
                     CM_path = end_with_slash(CM_path);
                 else
@@ -67,7 +67,7 @@ function batch_analysis_excel(path, extractor, CM)
     try
         coords = extractor.getExcelCoordinates('plots.plotPath', 2);
         plot_path = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char');
-        javaFileObj = java.io.File(end_with_slash(plot_path));
+        javaFileObj = javaObject("java.io.File", end_with_slash(plot_path));
         if javaFileObj.isAbsolute()
             plot_path = end_with_slash(plot_path);
         else
@@ -140,6 +140,14 @@ function batch_analysis_excel(path, extractor, CM)
     
     for i=1:numel(APs)
         AP = APs{i};
+        try 
+            coords = extractor.getExcelCoordinates('OutputSettings.StemName', 1);   
+            stemName = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char');
+        catch
+            TASBESession.warn('batch_analysis_excel', 'MissingPreference', 'Missing Stem Name in "Samples" sheet');
+            stemName = experimentName;
+        end
+        
         % Obtain output name
         try
             coords = extractor.getExcelCoordinates('outputName_BA'); 
@@ -155,7 +163,7 @@ function batch_analysis_excel(path, extractor, CM)
         try
             coords = extractor.getExcelCoordinates('outputPath_BA'); 
             outputPath = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char');
-            javaFileObj = java.io.File(end_with_slash(outputPath));
+            javaFileObj = javaObject("java.io.File", end_with_slash(outputPath));
             if javaFileObj.isAbsolute()
                 outputPath = end_with_slash(outputPath);
             else
@@ -166,24 +174,64 @@ function batch_analysis_excel(path, extractor, CM)
             outputPath = path;
         end
         
-        TASBEConfig.set('flow.pointCloudPath',outputPath);
-        TASBEConfig.set('flow.dataCSVPath',outputPath);
-
-        try 
-            coords = extractor.getExcelCoordinates('OutputSettings.StemName', 1);   
-            stemName = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char');
+        % Obtain stat name
+        try
+            coords = extractor.getExcelCoordinates('statName_BA'); 
+            statName = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char');
         catch
-            TASBESession.warn('batch_analysis_excel', 'MissingPreference', 'Missing Stem Name in "Samples" sheet');
-            stemName = experimentName;
+            TASBESession.warn('batch_analysis_excel', 'MissingPreference', 'Missing Statistics Filename for Batch Analysis in "Samples" sheet');
+            statName = stemName;
+        end
+        
+        % Obtain stat path
+        try
+            coords = extractor.getExcelCoordinates('statPath_BA'); 
+            statPath = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char');
+            javaFileObj = javaObject("java.io.File", end_with_slash(statPath));
+            if javaFileObj.isAbsolute()
+                statPath = end_with_slash(statPath);
+            else
+                statPath = end_with_slash(fullfile(path, statPath));
+            end
+        catch
+            TASBESession.warn('batch_analysis_excel', 'MissingPreference', 'Missing Statistics Filepath in "Samples" sheet');
+            statPath = path;
+        end
+        
+%         % Obtain cloud name
+%         try
+%             coords = extractor.getExcelCoordinates('cloudName_BA'); 
+%             cloudName = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char');
+%         catch
+%             TASBESession.warn('batch_analysis_excel', 'MissingPreference', 'Missing Point Cloud Filename for Batch Analysis in "Samples" sheet');
+%             cloudName = stemName;
+%         end
+        
+        % Obtain cloud path
+        try
+            coords = extractor.getExcelCoordinates('cloudPath_BA'); 
+            cloudPath = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char');
+            javaFileObj = javaObject("java.io.File", end_with_slash(cloudPath));
+            if javaFileObj.isAbsolute()
+                cloudPath = end_with_slash(cloudPath);
+            else
+                cloudPath = end_with_slash(fullfile(path, cloudPath));
+            end
+        catch
+            TASBESession.warn('batch_analysis_excel', 'MissingPreference', 'Missing Point Cloud Filepath in "Samples" sheet');
+            cloudPath = path;
         end
         
         if i > 1
             outputName_parts = strsplit(outputName, '.');
             outputName = [outputName_parts{1} num2str(i) '.' outputName_parts{2}];
             stemName = [stemName num2str(i)];
+            statName = [statName num2str(i)];
         end
         
         TASBEConfig.set('OutputSettings.StemName', stemName);
+        TASBEConfig.set('flow.pointCloudPath',cloudPath);
+        TASBEConfig.set('flow.dataCSVPath',statPath);
         
         % Ignore any bins with less than valid count as noise
         try
@@ -215,8 +263,10 @@ function batch_analysis_excel(path, extractor, CM)
 
         % Make output plots
         plot_batch_histograms(results,sampleresults,CM);
-
+        
+        TASBEConfig.set('OutputSettings.StemName', statName);
         [statisticsFile, histogramFile] = serializeBatchOutput(file_pairs, CM, AP, sampleresults);
+        TASBEConfig.set('OutputSettings.StemName', stemName);
 
         save([outputPath outputName],'AP','bins','file_pairs','results','sampleresults');
     end

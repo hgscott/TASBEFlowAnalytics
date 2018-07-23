@@ -32,7 +32,7 @@ function [filename] = getFilename(extractor, row, path)
     % Extracting the data stem path 
     try
         stem = extractor.getExcelValuePos(template_pos{1}, template_pos{2}+1, template_pos{3}+4, 'char');
-        javaFileObj = java.io.File(end_with_slash(stem));
+        javaFileObj = javaObject("java.io.File", end_with_slash(stem));
         if javaFileObj.isAbsolute()
             stem = end_with_slash(stem);
         else

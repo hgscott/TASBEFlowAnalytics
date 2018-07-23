@@ -41,17 +41,21 @@ classdef TemplateExtraction
                     {'inputName_CM'; {{2, 30, 3}, {4, 13, 2}, {5, 13, 2}}};
                     {'inputPath_CM'; {{2, 30, 4}, {4, 13, 3}, {5, 13, 3}}};
                     {'OutputSettings.StemName'; {{2, 30, 5}, {4, 5, 13}, {5, 5, 13}}};
-                    {'binseq_min'; {{2, 30, 11}, {4, 13, 7}, {5, 13, 7}}};
-                    {'binseq_pdecade'; {{2, 30, 12}, {4, 13, 8}, {5, 13, 8}}};
-                    {'binseq_max'; {{2, 30, 13}, {4, 13, 9}, {5, 13, 9}}};
-                    {'minValidCount'; {{2, 30, 8}, {4, 13, 4}, {5, 13, 4}}};
-                    {'autofluorescence'; {{2, 30, 9}, {4, 13, 5}, {5, 13, 5}}};
-                    {'minFracActive'; {{2, 30, 10}, {4, 13, 6}, {5, 13, 6}}};
+                    {'binseq_min'; {{2, 30, 15}, {4, 13, 7}, {5, 13, 7}}};
+                    {'binseq_pdecade'; {{2, 30, 16}, {4, 13, 8}, {5, 13, 8}}};
+                    {'binseq_max'; {{2, 30, 17}, {4, 13, 9}, {5, 13, 9}}};
+                    {'minValidCount'; {{2, 30, 12}, {4, 13, 4}, {5, 13, 4}}};
+                    {'autofluorescence'; {{2, 30, 13}, {4, 13, 5}, {5, 13, 5}}};
+                    {'minFracActive'; {{2, 30, 14}, {4, 13, 6}, {5, 13, 6}}};
                     {'outputName_BA'; {2, 30, 6}};
                     {'outputPath_BA'; {2, 30, 7}};
+                    {'statName_BA'; {2, 30, 8}};
+                    {'statPath_BA'; {2, 30, 9}};
+                    {'cloudName_BA'; {2, 30, 10}};
+                    {'cloudPath_BA'; {2, 30, 11}};
                     % Coords for variables in "Calibration"
                     {'beads.beadModel'; {3, 5, 2}};
-                    {'plots.plotPath'; {{3, 28, 2}, {2, 30, 2}, {4, 5, 16}, {5, 5, 16}}};
+                    {'plots.plotPath'; {{3, 28, 2}, {2, 30, 2}, {4, 5, 15}, {5, 5, 16}}};
                     {'beads.beadBatch'; {3, 5, 1}};
                     {'beads.rangeMin'; {3, 5, 3}};
                     {'beads.rangeMax'; {3, 5, 4}};
@@ -76,8 +80,8 @@ classdef TemplateExtraction
                     {'bead_tolerance'; {3, 5, 8}};
                     % Coords for variables in "Comparative Analysis"
                     % {'device_name'; {{4, 5, 16}, {5, 5, 16}}};
-                    {'outputName_PM'; {4, 5, 14}};
-                    {'outputPath_PM'; {4, 5, 15}};
+                    {'outputName_PM'; {4, 5, 13}};
+                    {'outputPath_PM'; {4, 5, 14}};
                     {'primary_sampleColName_PM'; {4, 5, 7}};
                     {'secondary_sampleColName_PM'; {4, 5, 10}};
                     {'first_sampleColName_PM'; {4, 5, 2}};
@@ -118,7 +122,7 @@ classdef TemplateExtraction
                 % Set the TASBEConfig if value column not empty for given
                 % row
                 if ~isnan(cell2mat(raw(i,val_col)))
-                    if contains(char(cell2mat(raw(i,name_col))), 'Size')
+                    if ~isempty(strfind(char(cell2mat(raw(i,name_col))), 'Size'))
                         bounds = strsplit(char(cell2mat(raw(i,val_col))), ',');
                         TASBEConfig.set(char(cell2mat(raw(i,name_col))), [str2double(bounds{1}), str2double(bounds{2})]);
                     else

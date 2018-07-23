@@ -19,7 +19,7 @@ function [CM] = make_color_model_excel(path, extractor)
     
     try
         outputPath = extractor.getExcelValue('outputPath_CM', 'char');
-        javaFileObj = java.io.File(end_with_slash(outputPath));
+        javaFileObj = javaObject("java.io.File", end_with_slash(outputPath));
         if javaFileObj.isAbsolute()
             outputPath = end_with_slash(outputPath);
         else
@@ -40,7 +40,7 @@ function [CM] = make_color_model_excel(path, extractor)
     extractor.setTASBEConfig('beads.rangeMax', 'numeric');
     try
         plot_path = extractor.getExcelValue('plots.plotPath', 'char', 1);
-        javaFileObj = java.io.File(end_with_slash(plot_path));
+        javaFileObj = javaObject("java.io.File", end_with_slash(plot_path));
         if javaFileObj.isAbsolute()
             plot_path = end_with_slash(plot_path);
         else
@@ -88,7 +88,7 @@ function [CM] = make_color_model_excel(path, extractor)
             end
         end
     end
-    bead_files = getBeadFile(extractor);
+    bead_files = getBeadFile(extractor, path);
     beads_file = bead_files{1};
     blank_file = output_filenames{1};
     all_file = output_filenames{2};
@@ -209,7 +209,6 @@ function [CM] = make_color_model_excel(path, extractor)
         mkdir(outputPath);
     end
     save('-V7',[outputPath, outputName],'CM');
-    % save('-V7',outputName,'CM');
     
     % Conduct bead comparisons if applicable
     % If size of beadfiles is greater than 1, then run bead comparisons

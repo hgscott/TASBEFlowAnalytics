@@ -1,4 +1,4 @@
-function beadfiles = getBeadFile(extractor)
+function beadfiles = getBeadFile(extractor, path)
     TASBEConfig.set('template.displayErrors', 1);    
     bead_name = {extractor.getExcelValue('bead_name', 'char')};
     TASBEConfig.set('template.displayErrors', 0);
@@ -27,7 +27,7 @@ function beadfiles = getBeadFile(extractor)
         end
         ind = find(ismember(bead_name, name), 1);
         if ~isempty(ind)
-            file = getFilename(extractor, i);
+            file = getFilename(extractor, i, path);
             beadfiles{ind} = file{1};
         end
     end

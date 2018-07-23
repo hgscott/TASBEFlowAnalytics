@@ -10,7 +10,6 @@ function plot_plusminus_comparison(all_pm_results, batch_names)
 % Obtaining TASBEConfig preferences for various graphs
 step = TASBEConfig.get('OutputSettings.PlotEveryN');
 ticks = TASBEConfig.get('OutputSettings.PlotTickMarks');
-deviceName = TASBEConfig.get('OutputSettings.DeviceName');
 directory = TASBEConfig.get('plots.plotPath');
 stemName = TASBEConfig.get('OutputSettings.StemName');
 
@@ -77,7 +76,7 @@ for i=1:numel(all_pm_results)
     % Plot the results for each batch_name and level
     for j=1:step:n_var
         which = pm_results.Valid(:,j,1) & pm_results.Valid(:,j,2);
-        if sum(which)==0, continue; end; % don't try to plot when lines are empty 
+        if sum(which)==0, continue; end % don't try to plot when lines are empty 
         if by_n_var
             line = loglog(pm_results.InMeans(which,j,1),pm_results.OutMeans(which,j,1),['-' marker_types{i}],'Color',hsv2rgb([hues(j) 1 0.9])); hold on;
             line2 = loglog(pm_results.InMeans(which,j,2),pm_results.OutMeans(which,j,2),['-' marker_types{i+1}],'Color',hsv2rgb([hues(j) 1 0.9])); hold on;
@@ -133,9 +132,9 @@ if(TASBEConfig.isSet('OutputSettings.FixedInputAxis')), xlim(TASBEConfig.get('Ou
 if(TASBEConfig.isSet('OutputSettings.FixedOutputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedOutputAxis')); end
 title(['Raw All ',clean_for_latex(stemName),' Transfer Curves']);
 if(strcmp(clean_for_latex(stemName), ' ') || strcmp(clean_for_latex(stemName), ''))
-    outputfig(h,[clean_for_latex(deviceName),'-all-mean'],directory);
+    outputfig(h,'all-mean',directory);
 else
-    outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-all-mean'],directory);
+    outputfig(h,[clean_for_latex(stemName),'-all-mean'],directory);
 end
 
 % normalized I/O plot
@@ -148,7 +147,7 @@ for i=1:numel(all_pm_results)
     % Plot the results for each batch_name and level
     for j=1:step:n_var
         which = pm_results.Valid(:,j,1) & pm_results.Valid(:,j,2);
-        if sum(which)==0, continue; end; % don't try to plot when lines are empty 
+        if sum(which)==0, continue; end % don't try to plot when lines are empty 
         if by_n_var
             line = loglog(pm_results.InMeans(which,j,1),pm_results.OutMeans(which,j,1)./all_bin_centers{i}(which)',['-' marker_types{i}],'Color',hsv2rgb([hues(j) 1 0.9])); hold on;
             line2 = loglog(pm_results.InMeans(which,j,2),pm_results.OutMeans(which,j,2)./all_bin_centers{i}(which)',['-' marker_types{i+1}],'Color',hsv2rgb([hues(j) 1 0.9])); hold on;
@@ -203,9 +202,9 @@ if(TASBEConfig.isSet('OutputSettings.FixedInputAxis')), xlim(TASBEConfig.get('Ou
 if(TASBEConfig.isSet('OutputSettings.FixedNormalizedOutputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedNormalizedOutputAxis')); end
 title(['All ' clean_for_latex(stemName),' Transfer Curves Normalized by CFP']);
 if(strcmp(clean_for_latex(stemName), ' ') || strcmp(clean_for_latex(stemName), ''))
-    outputfig(h,[clean_for_latex(deviceName),'-all-mean-norm'],directory);
+    outputfig(h,'all-mean-norm',directory);
 else
-    outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-all-mean-norm'],directory);
+    outputfig(h,[clean_for_latex(stemName),'-all-mean-norm'],directory);
 end
 
 % IFP vs. CFP
@@ -218,7 +217,7 @@ for i=1:numel(all_pm_results)
     % Plot the results for each batch_name and level
     for j=1:step:n_var
         which = pm_results.Valid(:,j,1) & pm_results.Valid(:,j,2);
-        if sum(which)==0, continue; end; % don't try to plot when lines are empty 
+        if sum(which)==0, continue; end % don't try to plot when lines are empty 
         if by_n_var
             line = loglog(all_bin_centers{i}(which),pm_results.InMeans(which,j,1),['-' marker_types{i}],'Color',hsv2rgb([hues(j) 1 0.9])); hold on;
             line2 = loglog(all_bin_centers{i}(which),pm_results.InMeans(which,j,2),['-' marker_types{i+1}],'Color',hsv2rgb([hues(j) 1 0.9])); hold on;
@@ -274,9 +273,9 @@ if(TASBEConfig.isSet('OutputSettings.FixedBinningAxis')), xlim(TASBEConfig.get('
 if(TASBEConfig.isSet('OutputSettings.FixedInputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedInputAxis')); end
 title(['All ' clean_for_latex(stemName),' IFP vs. CFP']);
 if(strcmp(clean_for_latex(stemName), ' ') || strcmp(clean_for_latex(stemName), ''))
-    outputfig(h,[clean_for_latex(deviceName),'-all-input-v-cfp'],directory);
+    outputfig(h,'all-input-v-cfp',directory);
 else
-    outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-all-input-v-cfp'],directory);
+    outputfig(h,[clean_for_latex(stemName),'-all-input-v-cfp'],directory);
 end
 
 % OFP vs. CFP
@@ -289,7 +288,7 @@ for i=1:numel(all_pm_results)
     % Plot the results for each batch_name and level
     for j=1:step:n_var
         which = pm_results.Valid(:,j,1) & pm_results.Valid(:,j,2);
-        if sum(which)==0, continue; end; % don't try to plot when lines are empty 
+        if sum(which)==0, continue; end % don't try to plot when lines are empty 
         if by_n_var
             line = loglog(all_bin_centers{i}(which),pm_results.OutMeans(which,j,1),['-' marker_types{i}],'Color',hsv2rgb([hues(j) 1 0.9])); hold on;
             line2 = loglog(all_bin_centers{i}(which),pm_results.OutMeans(which,j,2),['-' marker_types{i+1}],'Color',hsv2rgb([hues(j) 1 0.9])); hold on;
@@ -345,9 +344,9 @@ if(TASBEConfig.isSet('OutputSettings.FixedBinningAxis')), xlim(TASBEConfig.get('
 if(TASBEConfig.isSet('OutputSettings.FixedOutputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedOutputAxis')); end
 title(['All ' clean_for_latex(stemName),' OFP vs. CFP']);
 if(strcmp(clean_for_latex(stemName), ' ') || strcmp(clean_for_latex(stemName), ''))
-    outputfig(h,[clean_for_latex(deviceName),'-all-v-cfp'],directory);
+    outputfig(h,'all-v-cfp',directory);
 else
-    outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-all-v-cfp'],directory);
+    outputfig(h,[clean_for_latex(stemName),'-all-v-cfp'],directory);
 end
 
 % % Relative change in OFP vs. CFP
@@ -389,7 +388,7 @@ for i=1:numel(all_pm_results)
     pm_results = all_pm_results{i};
     for j=1:step:n_var
         which = pm_results.Valid(:,j,1) & pm_results.Valid(:,j,2);
-        if sum(which)==0, continue; end; % don't try to plot when lines are empty 
+        if sum(which)==0, continue; end % don't try to plot when lines are empty 
         if by_n_var
             line = semilogx(all_bin_centers{i}(which),pm_results.Ratios(which,j),['-' marker_types{i}],'Color',hsv2rgb([hues(j) 1 0.9])); hold on;
         else
@@ -410,9 +409,9 @@ if(TASBEConfig.isSet('OutputSettings.FixedBinningAxis')), xlim(TASBEConfig.get('
 if(TASBEConfig.isSet('OutputSettings.FixedRatioAxis')), ylim(TASBEConfig.get('OutputSettings.FixedRatioAxis')); end
 title(['All Ratios (in respect to ' batch_names{end} ') for ',clean_for_latex(stemName)]);
 if(strcmp(clean_for_latex(stemName), ' ') || strcmp(clean_for_latex(stemName), ''))
-    outputfig(h,[clean_for_latex(deviceName),'-all-ratios'],directory);
+    outputfig(h,'all-ratios',directory);
 else
-    outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-all-ratios'],directory);
+    outputfig(h,[clean_for_latex(stemName),'-all-ratios'],directory);
 end
 
 % SNR plots
@@ -428,7 +427,7 @@ for i=1:numel(all_pm_results)
     pm_results = all_pm_results{i};
     for j=1:step:n_var
         which = pm_results.Valid(:,j,1) & pm_results.Valid(:,j,2);
-        if sum(which)==0, continue; end; % don't try to plot when lines are empty 
+        if sum(which)==0, continue; end % don't try to plot when lines are empty 
         if by_n_var
             line = semilogx(all_bin_centers{i}(which),pm_results.OutputSNR(which,j),['-' marker_types{i}],'Color',hsv2rgb([hues(j) 1 0.9])); hold on;
         else
@@ -443,7 +442,7 @@ for i=1:numel(all_pm_results)
     
     for j=1:step:n_var
         which = pm_results.Valid(:,j,1) & pm_results.Valid(:,j,2);
-        if sum(which)==0, continue; end; % don't try to plot when lines are empty 
+        if sum(which)==0, continue; end % don't try to plot when lines are empty 
         if by_n_var
             line = loglog(all_bin_centers{i}(which),pm_results.InputSNR(which,j),[':' marker_types{i}],'Color',hsv2rgb([hues(j) 1 0.9])); hold on;
         else
@@ -463,9 +462,9 @@ if(TASBEConfig.isSet('OutputSettings.FixedBinningAxis')), xlim(TASBEConfig.get('
 if(TASBEConfig.isSet('OutputSettings.FixedSNRAxis')), ylim(TASBEConfig.get('OutputSettings.FixedSNRAxis')); end
 title(['All ' clean_for_latex(stemName),' SNR vs. CFP']);
 if(strcmp(clean_for_latex(stemName), ' ') || strcmp(clean_for_latex(stemName), ''))
-    outputfig(h,[clean_for_latex(deviceName),'-all-SNR'],directory);
+    outputfig(h,'all-SNR',directory);
 else
-    outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-all-SNR'],directory);
+    outputfig(h,[clean_for_latex(stemName),'-all-SNR'],directory);
 end
 
 % Delta SNR plots
@@ -476,7 +475,7 @@ for i=1:numel(all_pm_results)
     pm_results = all_pm_results{i};
     for j=1:step:n_var
         which = pm_results.Valid(:,j,1) & pm_results.Valid(:,j,2);
-        if sum(which)==0, continue; end; % don't try to plot when lines are empty 
+        if sum(which)==0, continue; end % don't try to plot when lines are empty 
         if by_n_var
             line = semilogx(all_bin_centers{i}(which),pm_results.OutputSNR(which,j)-pm_results.InputSNR(which,j),['-' marker_types{i}],'Color',hsv2rgb([hues(j) 1 0.9])); hold on;
         else
@@ -496,7 +495,7 @@ if(TASBEConfig.isSet('OutputSettings.FixedBinningAxis')), xlim(TASBEConfig.get('
 if(TASBEConfig.isSet('OutputSettings.FixedDeltaSNRAxis')), ylim(TASBEConfig.get('OutputSettings.FixedDeltaSNRAxis')); end
 title(['All ' clean_for_latex(stemName),' \Delta SNR vs. CFP']);
 if(strcmp(clean_for_latex(stemName), ' ') || strcmp(clean_for_latex(stemName), ''))
-    outputfig(h,[clean_for_latex(deviceName),'-all-dSNR'],directory);
+    outputfig(h,'all-dSNR',directory);
 else
-    outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-all-dSNR'],directory);
+    outputfig(h,[clean_for_latex(stemName),'-all-dSNR'],directory);
 end
