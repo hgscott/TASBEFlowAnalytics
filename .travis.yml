@@ -5,7 +5,11 @@
 # available (as of April 2015)
 
 language: java
-
+sudo: false
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
 cache:
   - apt
 env:
