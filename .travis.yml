@@ -37,7 +37,7 @@ before_install:
     # - wget -O io-2.4.10.tar.gz https://downloads.sourceforge.net/octave/io-2.4.10.tar.gz?download --no-check-certificate
     # - octave --no-gui --quiet --eval "pkg install matlab_compat/io-2.4.10.tar.gz"
     - octave --no-gui --quiet --eval "pkg install matlab_compat/io-2.4.11.tar.gz"
-    - octave "pkg load io"
+    - octave --no-gui --quiet --eval "pkg load io"
     - octave "octave_config_info ("features").JAVA"
     - octave "getenv('JAVA_HOME')"
     - octave "octave_config_info('CC')"
