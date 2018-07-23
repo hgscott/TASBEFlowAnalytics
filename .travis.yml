@@ -6,10 +6,12 @@
 
 language: java
 sudo: false
+dist: trusty
+jdk: oraclejdk9
 addons:
   apt:
     packages:
-      - oracle-java8-installer
+      - oracle-java9-installer
 cache:
   - apt
 env:
