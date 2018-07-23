@@ -38,10 +38,10 @@ before_install:
     # - octave --no-gui --quiet --eval "pkg install matlab_compat/io-2.4.10.tar.gz"
     - octave --no-gui --quiet --eval "pkg install matlab_compat/io-2.4.11.tar.gz"
     - octave --no-gui --quiet --eval "pkg load io"
-    - octave --no-gui --quiet --eval "octave_config_info ("features").JAVA"
-    - octave --no-gui --quiet --eval "getenv('JAVA_HOME')"
-    - octave --no-gui --quiet --eval "octave_config_info('CC')"
-    - octave --no-gui --quiet --eval "version("-java")"
+    - octave --eval "octave_config_info ("features").JAVA"
+    - octave --eval "getenv('JAVA_HOME')"
+    - octave --eval "octave_config_info('CC')"
+    - octave --eval "version("-java")"
     # install MOxUnit
     - cd ..
     - rm -rf MOxUnit
