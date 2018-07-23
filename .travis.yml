@@ -41,7 +41,8 @@ before_install:
     # - octave --eval "octave_config_info ("features").JAVA"
     - octave --eval "getenv('JAVA_HOME')"
     - octave --eval "octave_config_info('CC')"
-    - octave --eval "version("-java")"
+    - octave --eval "version('-java')"
+    - octave --eval "uname()"
     # install MOxUnit
     - cd ..
     - rm -rf MOxUnit
