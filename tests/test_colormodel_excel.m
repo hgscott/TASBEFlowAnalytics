@@ -8,7 +8,7 @@ function test_suite = test_colormodel_excel
 
 function test_colormodel_excel_endtoend
     % Create TemplateExtraction object
-    extractor = TemplateExtraction('test_batch_template1.xlsm');
+    extractor = TemplateExtraction('../test_templates/test_batch_template1.xlsm');
     [filepath, ~, ~] = fileparts(mfilename('fullpath'));
     CM = make_color_model_excel(filepath, extractor);
     
@@ -54,7 +54,7 @@ function test_colormodel_excel_endtoend
 
 function test_colormodel_excel_singlered
     % Create TemplateExtraction object
-    extractor = TemplateExtraction('test_batch_template2.xlsm');
+    extractor = TemplateExtraction('../test_templates/test_batch_template2.xlsm');
     [filepath, ~, ~] = fileparts(mfilename('fullpath'));
     CM = make_color_model_excel(filepath, extractor);
     % Check results in CM:
@@ -78,7 +78,7 @@ function test_colormodel_excel_singlered
 
 function test_colormodel_excel_singlered_nocolorfile
     % Create TemplateExtraction object
-    extractor = TemplateExtraction('test_batch_template3.xlsm');
+    extractor = TemplateExtraction('../test_templates/test_batch_template3.xlsm');
     [filepath, ~, ~] = fileparts(mfilename('fullpath'));
     CM = make_color_model_excel(filepath, extractor);
     % Check results in CM:
