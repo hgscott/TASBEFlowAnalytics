@@ -83,7 +83,7 @@ function [CM] = make_color_model_excel(path, extractor)
         end
         for j=1:numel(ref_filenames)
             if strcmpi(name, ref_filenames{j})
-                file = getFilename(extractor, i, path);
+                file = getExcelFilename(extractor, i, path);
                 output_filenames{j} = file{1};
             end
         end
@@ -160,7 +160,7 @@ function [CM] = make_color_model_excel(path, extractor)
         end
         for j=1:numel(sample_ids)
             if strcmpi(name, sample_ids{j})
-                file = getFilename(extractor, i, path);
+                file = getExcelFilename(extractor, i, path);
                 colorfiles{j} = file{1};
             end
         end

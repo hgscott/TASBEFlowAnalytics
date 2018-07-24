@@ -312,15 +312,15 @@ function transfercurve_analysis_excel(path, extractor, CM)
                 value = extractor.getExcelValuePos(sh_num2, j, col_nums{i}, 'numeric');
                 if isempty(comp_groups{i})
                     sample_names{end+1} = value;
-                    file = getFilename(extractor, j, path);
+                    file = getExcelFilename(extractor, j, path);
                     file_names{end+1} = file;
                 elseif isa(extractor.getExcelValuePos(sh_num2, j, comp_groups{i}{1}), 'numeric') && (extractor.getExcelValuePos(sh_num2, j, comp_groups{i}{1}) == comp_groups{i}{2})
                     sample_names{end+1} = value;
-                    file = getFilename(extractor, j, path);
+                    file = getExcelFilename(extractor, j, path);
                     file_names{end+1} = file;
                 elseif isa(extractor.getExcelValuePos(sh_num2, j, comp_groups{i}{1}), 'char') && strcmp(extractor.getExcelValuePos(sh_num2, j, comp_groups{i}{1}), comp_groups{i}{2})
                     sample_names{end+1} = value;
-                    file = getFilename(extractor, j, path);
+                    file = getExcelFilename(extractor, j, path);
                     file_names{end+1} = file;
                 end
             catch

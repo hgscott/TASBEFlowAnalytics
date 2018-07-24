@@ -427,7 +427,7 @@ function plusminus_analysis_excel(path, extractor, CM)
                             end
                             if ~isempty(ind)
                                 ordered_set{ind,1} = value;
-                                ordered_set{ind,2} = getFilename(extractor, set{k}, path);
+                                ordered_set{ind,2} = getExcelFilename(extractor, set{k}, path);
                             end
                         catch
                             continue
@@ -448,7 +448,7 @@ function plusminus_analysis_excel(path, extractor, CM)
                             try
                                 value = extractor.getExcelValuePos(sh_num2, set{k}, col_num{2});
                                 ordered_set{end+1,1} = value;
-                                ordered_set{end,2} = getFilename(extractor, set{k}, path);
+                                ordered_set{end,2} = getExcelFilename(extractor, set{k}, path);
                             catch
                                 continue
                             end
@@ -457,7 +457,7 @@ function plusminus_analysis_excel(path, extractor, CM)
                             try
                                 value = extractor.getExcelValuePos(sh_num2, set{k}, col_num{1});
                                 ordered_set{end+1,1} = k; % default to just index
-                                ordered_set{end,2} = getFilename(extractor, set{k}, path);
+                                ordered_set{end,2} = getExcelFilename(extractor, set{k}, path);
                             catch
                                 continue
                             end
