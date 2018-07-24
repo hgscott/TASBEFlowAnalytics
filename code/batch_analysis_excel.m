@@ -106,6 +106,16 @@ function batch_analysis_excel(path, extractor, CM)
         end
     end
     
+    % Obtain template number for cloud names
+    cloudNames = {};
+    try
+        coords = extractor.getExcelCoordinates('cloudName_BA'); 
+        template_num = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'numeric');
+    catch
+        TASBESession.warn('batch_analysis_excel', 'MissingPreference', 'Missing filename template number Point Cloud Filename in "Samples" sheet');
+        template_num = 0;
+    end
+    
     % Obtain the necessary sample filenames and print names
     sample_names = {};
     file_names = {};
@@ -130,6 +140,11 @@ function batch_analysis_excel(path, extractor, CM)
             sample_names{end+1} = extractor.getExcelValuePos(sh_num2, i, sample_name_col, 'char');
             file = getFilename(extractor, i, path);
             file_names{end+1} = file;
+            % Obtain point cloud name
+            if template_num ~= 0
+                name = getCloudName(extractor, i, template_num);
+                cloudNames{end+1} = name;
+            end
         end
     end
 
@@ -198,15 +213,6 @@ function batch_analysis_excel(path, extractor, CM)
             statPath = path;
         end
         
-%         % Obtain cloud name
-%         try
-%             coords = extractor.getExcelCoordinates('cloudName_BA'); 
-%             cloudName = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char');
-%         catch
-%             TASBESession.warn('batch_analysis_excel', 'MissingPreference', 'Missing Point Cloud Filename for Batch Analysis in "Samples" sheet');
-%             cloudName = stemName;
-%         end
-        
         % Obtain cloud path
         try
             coords = extractor.getExcelCoordinates('cloudPath_BA'); 
@@ -258,9 +264,13 @@ function batch_analysis_excel(path, extractor, CM)
         catch
             TASBESession.warn('batch_analysis_excel', 'ImportantMissingPreference', 'Missing Min Fraction Active in "Samples" sheet');
         end
-
-        [results, sampleresults] = per_color_constitutive_analysis(CM,file_pairs,print_names,AP);
-
+        
+        if ~isempty(cloudNames)
+            [results, sampleresults] = per_color_constitutive_analysis(CM,file_pairs,print_names,AP, cloudNames);
+        else
+            [results, sampleresults] = per_color_constitutive_analysis(CM,file_pairs,print_names,AP);
+        end
+       
         % Make output plots
         plot_batch_histograms(results,sampleresults,CM);
         
