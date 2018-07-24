@@ -30,8 +30,8 @@ before_install:
     # - octave --no-gui --quiet --eval "pkg install -forge io"
     # - wget -O io-2.4.10.tar.gz https://downloads.sourceforge.net/octave/io-2.4.10.tar.gz?download --no-check-certificate
     - octave --no-gui --quiet --eval "pkg install matlab_compat/io-2.4.10.tar.gz"
-    - octave --no-gui --quiet --eval "pkg install matlab_compat/io-2.4.11.tar.gz"
-    - octave --no-gui --quiet --eval "pkg load io"
+    # - octave --no-gui --quiet --eval "pkg install matlab_compat/io-2.4.11.tar.gz"
+    # - octave --no-gui --quiet --eval "pkg load io"
     # - octave --eval "octave_config_info ("features").JAVA"
     # - octave --eval "getenv('JAVA_HOME')"
     # - octave --eval "octave_config_info('CC')"
