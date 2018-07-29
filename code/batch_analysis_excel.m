@@ -1,6 +1,6 @@
 % Function that runs batch analysis given a template spreadsheet. An Excel
 % object and optional Color Model are inputs
-function batch_analysis_excel(path, extractor, CM)
+function results = batch_analysis_excel(path, extractor, CM)
     % Reset and update TASBEConfig and obtain experiment name
     extractor.TASBEConfig_updates();
     TASBEConfig.set('template.displayErrors', 1);
@@ -32,7 +32,7 @@ function batch_analysis_excel(path, extractor, CM)
         try
             coords = extractor.getExcelCoordinates('inputPath_CM', 1);
             CM_path = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char');
-            javaFileObj = javaObject("java.io.File", end_with_slash(CM_path));
+            javaFileObj = javaObject('java.io.File', end_with_slash(CM_path));
             if javaFileObj.isAbsolute()
                 CM_path = end_with_slash(CM_path);
             else
@@ -42,7 +42,7 @@ function batch_analysis_excel(path, extractor, CM)
             TASBESession.warn('batch_analysis_excel', 'MissingPreference', 'Missing CM Filepath in "Samples" sheet. Looking in "Calibration" sheet.'); 
             try
                 CM_path = extractor.getExcelValue('outputPath_CM', 'char');
-                javaFileObj = javaObject("java.io.File", end_with_slash(CM_path));
+                javaFileObj = javaObject('java.io.File', end_with_slash(CM_path));
                 if javaFileObj.isAbsolute()
                     CM_path = end_with_slash(CM_path);
                 else
@@ -67,7 +67,7 @@ function batch_analysis_excel(path, extractor, CM)
     try
         coords = extractor.getExcelCoordinates('plots.plotPath', 2);
         plot_path = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char');
-        javaFileObj = javaObject("java.io.File", end_with_slash(plot_path));
+        javaFileObj = javaObject('java.io.File', end_with_slash(plot_path));
         if javaFileObj.isAbsolute()
             plot_path = end_with_slash(plot_path);
         else
@@ -158,6 +158,7 @@ function batch_analysis_excel(path, extractor, CM)
         try 
             coords = extractor.getExcelCoordinates('OutputSettings.StemName', 1);   
             stemName = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char');
+            display(stemName);
         catch
             TASBESession.warn('batch_analysis_excel', 'MissingPreference', 'Missing Stem Name in "Samples" sheet');
             stemName = experimentName;
@@ -178,7 +179,7 @@ function batch_analysis_excel(path, extractor, CM)
         try
             coords = extractor.getExcelCoordinates('outputPath_BA'); 
             outputPath = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char');
-            javaFileObj = javaObject("java.io.File", end_with_slash(outputPath));
+            javaFileObj = javaObject('java.io.File', end_with_slash(outputPath));
             if javaFileObj.isAbsolute()
                 outputPath = end_with_slash(outputPath);
             else
@@ -202,7 +203,7 @@ function batch_analysis_excel(path, extractor, CM)
         try
             coords = extractor.getExcelCoordinates('statPath_BA'); 
             statPath = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char');
-            javaFileObj = javaObject("java.io.File", end_with_slash(statPath));
+            javaFileObj = javaObject('java.io.File', end_with_slash(statPath));
             if javaFileObj.isAbsolute()
                 statPath = end_with_slash(statPath);
             else
@@ -217,7 +218,7 @@ function batch_analysis_excel(path, extractor, CM)
         try
             coords = extractor.getExcelCoordinates('cloudPath_BA'); 
             cloudPath = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char');
-            javaFileObj = javaObject("java.io.File", end_with_slash(cloudPath));
+            javaFileObj = javaObject('java.io.File', end_with_slash(cloudPath));
             if javaFileObj.isAbsolute()
                 cloudPath = end_with_slash(cloudPath);
             else

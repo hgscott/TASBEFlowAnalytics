@@ -32,7 +32,7 @@ function plusminus_analysis_excel(path, extractor, CM)
         try
             coords = extractor.getExcelCoordinates('inputPath_CM', 2);
             CM_path = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char');
-            javaFileObj = javaObject("java.io.File", end_with_slash(CM_path));
+            javaFileObj = javaObject('java.io.File', end_with_slash(CM_path));
             if javaFileObj.isAbsolute()
                 CM_path = end_with_slash(CM_path);
             else
@@ -42,7 +42,7 @@ function plusminus_analysis_excel(path, extractor, CM)
             TASBESession.warn('plusminus_analysis_excel', 'MissingPreference', 'Missing CM Filepath in "Comparative Analysis" sheet. Looking in "Calibration" sheet.'); 
             try
                 CM_path = extractor.getExcelValue('outputPath_CM', 'char');
-                javaFileObj = javaObject("java.io.File", end_with_slash(CM_path));
+                javaFileObj = javaObject('java.io.File', end_with_slash(CM_path));
                 if javaFileObj.isAbsolute()
                     CM_path = end_with_slash(CM_path);
                 else
@@ -244,7 +244,7 @@ function plusminus_analysis_excel(path, extractor, CM)
         % Obtain output path
         try
             outputPath = extractor.getExcelValuePos(sh_num3, row_nums{i}, extractor.getColNum('outputPath_PM'), 'char');
-            javaFileObj = javaObject("java.io.File", end_with_slash(outputPath));
+            javaFileObj = javaObject('java.io.File', end_with_slash(outputPath));
             if javaFileObj.isAbsolute()
                 outputPath = end_with_slash(outputPath);
             else
@@ -259,7 +259,7 @@ function plusminus_analysis_excel(path, extractor, CM)
         try
             plotPath_coord = extractor.getExcelCoordinates('plots.plotPath');
             plot_path = extractor.getExcelValuePos(sh_num3, row_nums{i}, plotPath_coord{3}{3}, 'char');
-            javaFileObj = javaObject("java.io.File", end_with_slash(plot_path));
+            javaFileObj = javaObject('java.io.File', end_with_slash(plot_path));
             if javaFileObj.isAbsolute()
                 plot_path = end_with_slash(plot_path);
             else

@@ -107,7 +107,8 @@ function [filename] = getCloudName(extractor, row, template_num)
     
     % Add ext 
     for i=1:numel(names)
-        names{i} = [names{i} '.fcs'];
+        [~, name, ext] = fileparts(mfilename(names{i}));
+        names{i} = [name '.fcs'];
     end
     
     filename = names;

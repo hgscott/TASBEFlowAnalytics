@@ -135,11 +135,15 @@ classdef TemplateExtraction
         % Cleans up the Excel cell values by calling trim function is value
         % is a string
         function new_value = sanitizeFromExcel(obj, value)
-            if isstring(value) || isa(value, 'char')
-                new_value = strtrim(value);
-            else
+            try 
+                if isstring(value) || isa(value, 'char')
+                    new_value = strtrim(value);
+                else
+                    new_value = value;
+                end
+            catch
                 new_value = value;
-            end
+            end    
         end
         
         % Returns the ExcelCoordinates stored within obj.coordinates with
@@ -361,6 +365,11 @@ classdef TemplateExtraction
             for i=sample_start_row:size(obj.sheets{sh_num1},1)
                 try 
                     num = num2str(obj.getExcelValuePos(sh_num1, i, sample_start_col, 'numeric'));
+                    if isempty(num)
+                        % found last
+                        row_num = i-1;
+                        break
+                    end
                 catch
                     % found last
                     row_num = i-1;

@@ -19,7 +19,7 @@ function [CM] = make_color_model_excel(path, extractor)
     
     try
         outputPath = extractor.getExcelValue('outputPath_CM', 'char');
-        javaFileObj = javaObject("java.io.File", end_with_slash(outputPath));
+        javaFileObj = javaObject('java.io.File', end_with_slash(outputPath));
         if javaFileObj.isAbsolute()
             outputPath = end_with_slash(outputPath);
         else
@@ -40,7 +40,7 @@ function [CM] = make_color_model_excel(path, extractor)
     extractor.setTASBEConfig('beads.rangeMax', 'numeric');
     try
         plot_path = extractor.getExcelValue('plots.plotPath', 'char', 1);
-        javaFileObj = javaObject("java.io.File", end_with_slash(plot_path));
+        javaFileObj = javaObject('java.io.File', end_with_slash(plot_path));
         if javaFileObj.isAbsolute()
             plot_path = end_with_slash(plot_path);
         else

@@ -13,7 +13,7 @@ function [filename] = getExcelFilename(extractor, row, path)
     % Extracting the data stem path 
     try
         stem = extractor.getExcelValuePos(template_pos{1}, template_pos{2}+1, template_pos{3}+4, 'char');
-        javaFileObj = javaObject("java.io.File", end_with_slash(stem));
+        javaFileObj = javaObject('java.io.File', end_with_slash(stem));
         if javaFileObj.isAbsolute()
             stem = end_with_slash(stem);
         else
@@ -30,8 +30,11 @@ function [filename] = getExcelFilename(extractor, row, path)
     for i=exclude_col+1:size(extractor.sheets{sh_num1},2)
         try
             name = extractor.getExcelValuePos(sh_num1, row, i);
-            display(name);
-            names{end+1} = name;
+            if isempty(name) && isempty(names)
+                TASBESession.error('getExcelFilename', 'FilenameNotFound', 'No filename found at row %s. Make sure "Click to Update Filenames" button was pressed.', num2str(row));
+            elseif ~isempty(name)
+                names{end+1} = name;
+            end
         catch
             if isempty(names)
                 TASBESession.error('getExcelFilename', 'FilenameNotFound', 'No filename found at row %s. Make sure "Click to Update Filenames" button was pressed.', num2str(row));
