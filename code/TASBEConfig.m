@@ -235,6 +235,13 @@ classdef TASBEConfig
             doc.histogram.displayLegend = 'If true, displays legend in bin statistics graphs';
             s.histogram.displayLegend = true;
             
+            % Excel wrapper preferences
+            s.template = struct();
+            doc.template = struct();
+            doc.template.about = 'Settings controlling excel wrapper preferences';
+            doc.template.displayErrors = 'If true, will display ALL of the TASBE warnings and errors from TemplateExtraction';
+            s.template.displayErrors = false;
+            
             % Color translation
 %             s.colortranslation = struct();
 %             s.colortranslation.rangeMin = 3;                % bin minimum (log10 scale), universal minimum trim
@@ -358,7 +365,7 @@ classdef TASBEConfig
                 if nargin>=2
                     out = TASBEConfig.setget(key,default);
                 else
-                    error('Requested non-existing setting without default: %s',key);
+                    error('TASBEConfig', 'NoDefault', 'Requested non-existing setting without default: %s',key);
                 end
             end
         end
@@ -372,7 +379,7 @@ classdef TASBEConfig
                 catch e % ignore error and continue
                 end
             end
-            error('Couldn''t get any preference in sequence: %s',[varargin{:}]);
+            error('TASBEConfig', 'NoPreference', 'Couldn''t get any preference in sequence: %s',[varargin{:}]);
         end
         
         % Get a value for this key, possibly via default
@@ -389,7 +396,7 @@ classdef TASBEConfig
                     try
                         current = defaults(current);
                     catch e
-                        error('Couldn''t get any preference for: %s',key);
+                        error('TASBEConfig', 'NoPreference', 'Couldn''t get any preference for: %s',key);
                     end
                 end
             end

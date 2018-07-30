@@ -84,7 +84,7 @@ for i = 1:batch_size
     pm_results{i} = comp_results; % array of arrays of comparisons
     % dump bincounts files
     % get/set should be replaced by push/pop of output settings
-    stemName = TASBEConfig.getexact('OutputSettings.StemName',[]);
+    % stemName = TASBEConfig.getexact('OutputSettings.StemName',[]);
     ERROR = []; % This is an ugly kludge, and we should figure out a way to avoid it
     try
         for j = 1:batch_names_size
@@ -101,7 +101,7 @@ for i = 1:batch_size
         plot_bin_statistics_all(sampleresults, batch_description{i}{3}, getInducerLevelsToFiles(experiments{1},1), output_index, 'Output');
     catch ERROR
     end
-    TASBEConfig.set('OutputSettings.StemName', stemName);
+    % TASBEConfig.set('OutputSettings.StemName', stemName);
     if ~isempty(ERROR)
         rethrow(ERROR);
     end

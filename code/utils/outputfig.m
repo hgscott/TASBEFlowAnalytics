@@ -22,7 +22,10 @@ end;
 
 % If directory doesn't exist, try to create it
 if ~isdir(path),
-    TASBESession.notify('TASBE:OutputFig','MakeDirectory','Directory does not exist, attempting to create it: %s',path);
+    sanitized_path = strrep(path, '/', '&#47;');
+    sanitized_path = strrep(sanitized_path, '\', '&#92;');
+    sanitized_path = strrep(sanitized_path, ':', '&#58;');
+    TASBESession.notify('TASBE:OutputFig','MakeDirectory','Directory does not exist, attempting to create it: %s',sanitized_path);
     mkdir(path);
 end
 

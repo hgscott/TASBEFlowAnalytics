@@ -9,7 +9,7 @@
 function sanitized = sanitize_filename(name)
 % remove all non-"word" characters from a name (e.g., a filename)
 
-sanitized = regexprep(name,'[^\w+\-*]','');
+sanitized = regexprep(name,'[^\w+\-*=]','');
 if numel(sanitized) < numel(name)
     TASBESession.notify('TASBE:SanitizeFilename','UnsafeCharacters','Name "%s" contains unsafe characters: abbreviated to "%s"',name,sanitized);
 end

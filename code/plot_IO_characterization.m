@@ -13,7 +13,6 @@ if nargin<3, out_channel = 'output'; end;
 step = TASBEConfig.get('OutputSettings.PlotEveryN');
 ticks = TASBEConfig.get('OutputSettings.PlotTickMarks');
 stemName = TASBEConfig.get('OutputSettings.StemName');
-deviceName = TASBEConfig.get('OutputSettings.DeviceName');
 directory = TASBEConfig.get('plots.plotPath');
 
 AP = getAnalysisParameters(results);
@@ -42,14 +41,14 @@ for i=1:step:n_bins
     % plot standard deviations
     loglog(input_mean(i,which),output_mean(i,which).*output_std(i,which),':','Color',hsv2rgb([hues(i) 1 0.9]));
     loglog(input_mean(i,which),output_mean(i,which)./output_std(i,which),':','Color',hsv2rgb([hues(i) 1 0.9]));
-end;
+end
 %if(TASBEConfig.get('OutputSettings.FixedAxis')), axis([1e2 1e10 1e2 1e10]); end;
 xlabel(['IFP ' clean_for_latex(in_units)]); ylabel(['OFP ' clean_for_latex(out_units)]);
 set(gca,'XScale','log'); set(gca,'YScale','log');
-if(TASBEConfig.isSet('OutputSettings.FixedInputAxis')), xlim(TASBEConfig.get('OutputSettings.FixedInputAxis')); end;
-if(TASBEConfig.isSet('OutputSettings.FixedOutputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedOutputAxis')); end;
+if(TASBEConfig.isSet('OutputSettings.FixedInputAxis')), xlim(TASBEConfig.get('OutputSettings.FixedInputAxis')); end
+if(TASBEConfig.isSet('OutputSettings.FixedOutputAxis')), ylim(TASBEConfig.get('OutputSettings.FixedOutputAxis')); end
 title(['Raw ',clean_for_latex(stemName),' transfer curve, colored by constitutive bin']);
-outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-mean'],directory);
+outputfig(h,[clean_for_latex(stemName),'-mean'],directory);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Plasmid system is disabled, due to uncertainty about correctness
