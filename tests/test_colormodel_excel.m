@@ -56,7 +56,7 @@ function test_colormodel_excel_singlered
     % Create TemplateExtraction object
     extractor = TemplateExtraction('test_templates/test_batch_template2.xlsx');
     [filepath, ~, ~] = fileparts(mfilename('fullpath'));
-    CM = make_color_model_excel(filepath, extractor);
+    CM = make_color_model_excel([end_with_slash(filepath) '../'], extractor);
     % Check results in CM:
     CMS = struct(CM);
 
@@ -80,7 +80,7 @@ function test_colormodel_excel_singlered_nocolorfile
     % Create TemplateExtraction object
     extractor = TemplateExtraction('test_templates/test_batch_template3.xlsx');
     [filepath, ~, ~] = fileparts(mfilename('fullpath'));
-    CM = make_color_model_excel(filepath, extractor);
+    CM = make_color_model_excel([end_with_slash(filepath) '../'], extractor);
     % Check results in CM:
     CMS = struct(CM);
 
