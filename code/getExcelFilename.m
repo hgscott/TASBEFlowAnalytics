@@ -12,13 +12,10 @@ function [filename] = getExcelFilename(extractor, row, path)
     TASBEConfig.set('template.displayErrors', 0);
     % Extracting the data stem path 
     try
+        fprintf(['trying to get stem']);
         stem = extractor.getExcelValuePos(template_pos{1}, template_pos{2}+1, template_pos{3}+4, 'char');
-        javaFileObj = javaObject('java.io.File', end_with_slash(stem));
-        if javaFileObj.isAbsolute()
-            stem = end_with_slash(stem);
-        else
-            stem = end_with_slash(fullfile(path, stem));
-        end
+        stem = make_filename_absolute(stem,path);
+        fprintf('absolute/relative resolved');
     catch
         TASBESession.warn('getExcelFilename','ValueNotFound','Template %s has no data stem.', num2str(template_num));
         stem = '';
