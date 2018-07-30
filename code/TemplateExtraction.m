@@ -114,7 +114,7 @@ classdef TemplateExtraction
         % Update any relevant TASBEConfig from the Additional Settings sheet in the
         % template spreadsheet
         function TASBEConfig_updates(obj)
-            TASBEConfig.checkpoint('init');
+            TASBEConfig.checkpoint(TASBEConfig.checkpoints());
             raw = obj.sheets{obj.getSheetNum('first_preference_name')};
             name_col = obj.getColNum('first_preference_name');
             val_col = obj.getColNum('first_preference_value');
