@@ -1,4 +1,4 @@
-function absolute_name = make_filename_absolute(stem,path)
+function absolute_name = make_filename_absolute(stem, path)
 
 if is_octave()
     absolute = is_absolute_filename(stem);

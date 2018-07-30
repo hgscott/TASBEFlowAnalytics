@@ -27,7 +27,7 @@ function beadfiles = getBeadFile(extractor, path)
         end
         ind = find(ismember(bead_name, name), 1);
         if ~isempty(ind)
-            file = getFilename(extractor, i, path);
+            file = getExcelFilename(extractor, i, path);
             beadfiles{ind} = file{1};
         end
     end

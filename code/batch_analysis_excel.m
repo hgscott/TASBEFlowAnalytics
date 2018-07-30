@@ -32,22 +32,12 @@ function results = batch_analysis_excel(path, extractor, CM)
         try
             coords = extractor.getExcelCoordinates('inputPath_CM', 1);
             CM_path = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char');
-            javaFileObj = javaObject('java.io.File', end_with_slash(CM_path));
-            if javaFileObj.isAbsolute()
-                CM_path = end_with_slash(CM_path);
-            else
-                CM_path = end_with_slash(fullfile(path, CM_path));
-            end
+            CM_path = make_filename_absolute(CM_path, path);
         catch
             TASBESession.warn('batch_analysis_excel', 'MissingPreference', 'Missing CM Filepath in "Samples" sheet. Looking in "Calibration" sheet.'); 
             try
                 CM_path = extractor.getExcelValue('outputPath_CM', 'char');
-                javaFileObj = javaObject('java.io.File', end_with_slash(CM_path));
-                if javaFileObj.isAbsolute()
-                    CM_path = end_with_slash(CM_path);
-                else
-                    CM_path = end_with_slash(fullfile(path, CM_path));
-                end
+                CM_path = make_filename_absolute(CM_path, path);
             catch
                 TASBESession.warn('batch_analysis_excel', 'MissingPreference', 'Missing Output Filepath in "Calibration" sheet. Defaulting to template path.'); 
                 CM_path = path;
@@ -67,12 +57,7 @@ function results = batch_analysis_excel(path, extractor, CM)
     try
         coords = extractor.getExcelCoordinates('plots.plotPath', 2);
         plot_path = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char');
-        javaFileObj = javaObject('java.io.File', end_with_slash(plot_path));
-        if javaFileObj.isAbsolute()
-            plot_path = end_with_slash(plot_path);
-        else
-            plot_path = end_with_slash(fullfile(path, plot_path));
-        end
+        plot_path = make_filename_absolute(plot_path, path);
         TASBEConfig.set('plots.plotPath', plot_path);
     catch
         TASBESession.warn('batch_analysis_excel', 'MissingPreference', 'Missing plot path in "Samples" sheet');
@@ -179,12 +164,7 @@ function results = batch_analysis_excel(path, extractor, CM)
         try
             coords = extractor.getExcelCoordinates('outputPath_BA'); 
             outputPath = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char');
-            javaFileObj = javaObject('java.io.File', end_with_slash(outputPath));
-            if javaFileObj.isAbsolute()
-                outputPath = end_with_slash(outputPath);
-            else
-                outputPath = end_with_slash(fullfile(path, outputPath));
-            end
+            outputPath = make_filename_absolute(outputPath, path);
         catch
             TASBESession.warn('batch_analysis_excel', 'MissingPreference', 'Missing Output File Path in "Samples" sheet');
             outputPath = path;
@@ -203,12 +183,7 @@ function results = batch_analysis_excel(path, extractor, CM)
         try
             coords = extractor.getExcelCoordinates('statPath_BA'); 
             statPath = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char');
-            javaFileObj = javaObject('java.io.File', end_with_slash(statPath));
-            if javaFileObj.isAbsolute()
-                statPath = end_with_slash(statPath);
-            else
-                statPath = end_with_slash(fullfile(path, statPath));
-            end
+            statPath = make_filename_absolute(statPath, path);
         catch
             TASBESession.warn('batch_analysis_excel', 'MissingPreference', 'Missing Statistics Filepath in "Samples" sheet');
             statPath = path;
@@ -218,12 +193,7 @@ function results = batch_analysis_excel(path, extractor, CM)
         try
             coords = extractor.getExcelCoordinates('cloudPath_BA'); 
             cloudPath = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char');
-            javaFileObj = javaObject('java.io.File', end_with_slash(cloudPath));
-            if javaFileObj.isAbsolute()
-                cloudPath = end_with_slash(cloudPath);
-            else
-                cloudPath = end_with_slash(fullfile(path, cloudPath));
-            end
+            cloudPath = make_filename_absolute(cloudPath, path);
         catch
             TASBESession.warn('batch_analysis_excel', 'MissingPreference', 'Missing Point Cloud Filepath in "Samples" sheet');
             cloudPath = path;

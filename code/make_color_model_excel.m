@@ -19,12 +19,7 @@ function [CM] = make_color_model_excel(path, extractor)
     
     try
         outputPath = extractor.getExcelValue('outputPath_CM', 'char');
-        javaFileObj = javaObject('java.io.File', end_with_slash(outputPath));
-        if javaFileObj.isAbsolute()
-            outputPath = end_with_slash(outputPath);
-        else
-            outputPath = end_with_slash(fullfile(path, outputPath));
-        end
+        outputPath = make_filename_absolute(outputPath, path);
     catch
         TASBESession.warn('make_color_model_excel', 'MissingPreference', 'Missing Output File Path in "Calibration" sheet');
         outputPath = path;
@@ -40,12 +35,7 @@ function [CM] = make_color_model_excel(path, extractor)
     extractor.setTASBEConfig('beads.rangeMax', 'numeric');
     try
         plot_path = extractor.getExcelValue('plots.plotPath', 'char', 1);
-        javaFileObj = javaObject('java.io.File', end_with_slash(plot_path));
-        if javaFileObj.isAbsolute()
-            plot_path = end_with_slash(plot_path);
-        else
-            plot_path = end_with_slash(fullfile(path, plot_path));
-        end
+        plot_path = make_filename_absolute(plot_path, path);
         TASBEConfig.set('plots.plotPath', plot_path);
     catch
         TASBESession.warn('make_color_model_excel', 'MissingPreference', 'Missing plot path in "Calibration" sheet');

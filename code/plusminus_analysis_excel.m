@@ -32,22 +32,12 @@ function plusminus_analysis_excel(path, extractor, CM)
         try
             coords = extractor.getExcelCoordinates('inputPath_CM', 2);
             CM_path = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char');
-            javaFileObj = javaObject('java.io.File', end_with_slash(CM_path));
-            if javaFileObj.isAbsolute()
-                CM_path = end_with_slash(CM_path);
-            else
-                CM_path = end_with_slash(fullfile(path, CM_path));
-            end
+            CM_path = make_filename_absolute(CM_path, path);
         catch
             TASBESession.warn('plusminus_analysis_excel', 'MissingPreference', 'Missing CM Filepath in "Comparative Analysis" sheet. Looking in "Calibration" sheet.'); 
             try
                 CM_path = extractor.getExcelValue('outputPath_CM', 'char');
-                javaFileObj = javaObject('java.io.File', end_with_slash(CM_path));
-                if javaFileObj.isAbsolute()
-                    CM_path = end_with_slash(CM_path);
-                else
-                    CM_path = end_with_slash(fullfile(path, CM_path));
-                end
+                CM_path = make_filename_absolute(CM_path, path);
             catch
                 TASBESession.warn('plusminus_analysis_excel', 'MissingPreference', 'Missing Output Filepath in "Calibration" sheet. Defaulting to template path.'); 
                 CM_path = path;
@@ -244,12 +234,7 @@ function plusminus_analysis_excel(path, extractor, CM)
         % Obtain output path
         try
             outputPath = extractor.getExcelValuePos(sh_num3, row_nums{i}, extractor.getColNum('outputPath_PM'), 'char');
-            javaFileObj = javaObject('java.io.File', end_with_slash(outputPath));
-            if javaFileObj.isAbsolute()
-                outputPath = end_with_slash(outputPath);
-            else
-                outputPath = end_with_slash(fullfile(path, outputPath));
-            end
+            outputPath = make_filename_absolute(outputPath, path);
             outputPaths{end+1} = outputPath;
         catch
             TASBESession.warn('plusminus_analysis_excel', 'MissingPreference', 'Missing Output File Path for Plusminus Analysis %s in "Comparative Analysis" sheet', num2str(i));
@@ -259,12 +244,7 @@ function plusminus_analysis_excel(path, extractor, CM)
         try
             plotPath_coord = extractor.getExcelCoordinates('plots.plotPath');
             plot_path = extractor.getExcelValuePos(sh_num3, row_nums{i}, plotPath_coord{3}{3}, 'char');
-            javaFileObj = javaObject('java.io.File', end_with_slash(plot_path));
-            if javaFileObj.isAbsolute()
-                plot_path = end_with_slash(plot_path);
-            else
-                plot_path = end_with_slash(fullfile(path, plot_path));
-            end
+            plot_path = make_filename_absolute(plot_path, path);
             plotPaths{end+1} = plot_path;
         catch
             TASBESession.warn('plusminus_analysis_excel', 'MissingPreference', 'Missing plot path for Plusminus Analysis %s in "Comparative Analysis" sheet', num2str(i));

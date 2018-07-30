@@ -13,7 +13,7 @@ function [filename] = getExcelFilename(extractor, row, path)
     % Extracting the data stem path 
     try
         stem = extractor.getExcelValuePos(template_pos{1}, template_pos{2}+1, template_pos{3}+4, 'char');
-        stem = make_filename_absolute(stem,path);
+        stem = make_filename_absolute(stem, path);
     catch
         TASBESession.warn('getExcelFilename','ValueNotFound','Template %s has no data stem.', num2str(template_num));
         stem = '';
