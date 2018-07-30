@@ -9,7 +9,7 @@ end
 % if it doesn't already exist, make it:
 TASBEConfig.set('plots.plotPath',[tempdir 'plots']);
 
-stem0312 = '../../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_';
+stem0312 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_';
 
 
 beadfile = [stem0312 'Beads_P3.fcs'];

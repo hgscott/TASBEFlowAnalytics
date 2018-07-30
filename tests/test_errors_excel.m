@@ -8,7 +8,7 @@ function test_suite = test_errors_excel
 
 function test_errors_excel_filenames
     % Create TemplateExtraction object
-    extractor = TemplateExtraction('../../test_templates/faulty_batch_template1.xlsx');
+    extractor = TemplateExtraction('../test_templates/faulty_batch_template1.xlsx');
     [filepath, ~, ~] = fileparts(mfilename('fullpath'));
     CM = load_or_make_testing_colormodel();
     assertExceptionThrown(@()batch_analysis_excel(filepath, extractor, CM), 'getExcelFilename:FilenameNotFound', 'No error was raised');
