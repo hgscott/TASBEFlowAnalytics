@@ -12,10 +12,8 @@ function [filename] = getExcelFilename(extractor, row, path)
     TASBEConfig.set('template.displayErrors', 0);
     % Extracting the data stem path 
     try
-        fprintf(['trying to get stem']);
         stem = extractor.getExcelValuePos(template_pos{1}, template_pos{2}+1, template_pos{3}+4, 'char');
         stem = make_filename_absolute(stem,path);
-        fprintf('absolute/relative resolved');
     catch
         TASBESession.warn('getExcelFilename','ValueNotFound','Template %s has no data stem.', num2str(template_num));
         stem = '';
