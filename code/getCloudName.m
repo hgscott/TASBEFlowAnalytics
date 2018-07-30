@@ -107,8 +107,14 @@ function [filename] = getCloudName(extractor, row, template_num)
     
     % Add ext 
     for i=1:numel(names)
-        [~, name, ext] = fileparts(mfilename(names{i}));
-        names{i} = [name '.fcs'];
+        [~, name, ext] = fileparts(names{i});
+        exts = {'fcs', 'csv'};
+        ind = find(ismember(exts, ext), 1);
+        if ~isempty(ind)
+            names{i} = [name '.fcs'];
+        else
+            names{i} = [names{i} '.fcs'];
+        end
     end
     
     filename = names;

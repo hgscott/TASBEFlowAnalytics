@@ -28,7 +28,7 @@ end
 
 function writeIndividualPointCloud(CM, filename, data)
     % create output filename for cloud
-    [filepath,name,ext] = fileparts(filename);
+    [~,name,ext] = fileparts(filename);
     path = TASBEConfig.get('flow.pointCloudPath');
     path = end_with_slash(path);
     if ~isdir(path)

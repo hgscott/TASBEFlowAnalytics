@@ -143,7 +143,6 @@ function results = batch_analysis_excel(path, extractor, CM)
         try 
             coords = extractor.getExcelCoordinates('OutputSettings.StemName', 1);   
             stemName = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'char');
-            display(stemName);
         catch
             TASBESession.warn('batch_analysis_excel', 'MissingPreference', 'Missing Stem Name in "Samples" sheet');
             stemName = experimentName;
