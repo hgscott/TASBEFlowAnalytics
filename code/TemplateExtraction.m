@@ -136,11 +136,12 @@ classdef TemplateExtraction
         % is a string
         function new_value = sanitizeFromExcel(obj, value)
             try 
-                if isstring(value) || isa(value, 'char')
-                    new_value = strtrim(value);
-                else
-                    new_value = value;
-                end
+%                 if isstring(value) || isa(value, 'char')
+%                     
+%                 else
+%                     new_value = value;
+%                 end
+                new_value = strtrim(value);
             catch
                 new_value = value;
             end    
