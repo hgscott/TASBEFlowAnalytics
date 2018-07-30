@@ -10,7 +10,7 @@ function test_colormodel_excel_endtoend
     % Create TemplateExtraction object
     extractor = TemplateExtraction('test_templates/test_batch_template1.xlsx');
     [filepath, ~, ~] = fileparts(mfilename('fullpath'));
-    CM = make_color_model_excel([filepath '/..'], extractor);
+    CM = make_color_model_excel([end_with_slash(filepath) '../'], extractor);
     
     % Check that bead files are identical 
     log = TASBESession.list();
