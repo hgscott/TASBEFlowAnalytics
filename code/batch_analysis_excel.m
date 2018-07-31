@@ -1,6 +1,6 @@
 % Function that runs batch analysis given a template spreadsheet. An Excel
 % object and optional Color Model are inputs
-function results = batch_analysis_excel(path, extractor, CM)
+function [results, statisticsFile, histogramFile] = batch_analysis_excel(path, extractor, CM)
     % Reset and update TASBEConfig and obtain experiment name
     extractor.TASBEConfig_updates();
     TASBEConfig.set('template.displayErrors', 1);
