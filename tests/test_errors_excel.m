@@ -12,4 +12,6 @@ function test_errors_excel_filenames
     [filepath, ~, ~] = fileparts(mfilename('fullpath'));
     CM = load_or_make_testing_colormodel();
     assertExceptionThrown(@()batch_analysis_excel([end_with_slash(filepath) '../'], extractor, CM), 'getExcelFilename:FilenameNotFound', 'No error was raised');
-    
+
+function test_errors_excel_session
+    assertExceptionThrown(@()analyzeFromExcel('', ''), 'analyzeFromExcel:NoIdentifier', 'No error was raised');    

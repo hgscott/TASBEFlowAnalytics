@@ -37,7 +37,7 @@ function analyzeFromExcel(file, type)
         end
     catch exception
         % Turn MATLAB error into a TASBESession error
-        if isempty(exception.identifier)
+        if isempty(exception.identifier) || is_octave()
             TASBESession.error('analyzeFromExcel', 'NoIdentifier', exception.message);
         else
             msg = strrep(sprintf(getReport(exception, 'extended', 'hyperlinks', 'off')), newline, '');
