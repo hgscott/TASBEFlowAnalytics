@@ -283,7 +283,7 @@ good_file_pairs_pm3 = {...
  };
 
 % Execute the actual analysis to see if an error gets thrown
-assertExceptionThrown(@()process_plusminus_batch( CM, bad_file_pairs_pm1, AP), 'TASBE:Analysis:ColumnDimensionMismatch', 'No error was raised.');
-assertExceptionThrown(@()process_plusminus_batch( CM, bad_file_pairs_pm2, AP), 'TASBE:Analysis:ColumnDimensionMismatch', 'No error was raised.');
-assertExceptionThrown(@()process_plusminus_batch( CM, bad_file_pairs_pm3, AP), 'TASBE:Analysis:SetDimensionMismatch', 'No error was raised.');
-assertExceptionThrown(@()process_plusminus_batch( CM, bad_file_pairs_pm4, AP), 'TASBE:Analysis:SetDimensionMismatch', 'No error was raised.');
+assertExceptionThrown(@()process_plusminus_batch( CM, bad_file_pairs_pm1, AP), 'process_plusminus_batch:ColumnDimensionMismatch', 'No error was raised.');
+assertExceptionThrown(@()process_plusminus_batch( CM, bad_file_pairs_pm2, AP), 'process_plusminus_batch:ColumnDimensionMismatch', 'No error was raised.');
+assertExceptionThrown(@()process_plusminus_batch( CM, bad_file_pairs_pm3, AP), 'process_plusminus_batch:SetDimensionMismatch', 'No error was raised.');
+assertExceptionThrown(@()process_plusminus_batch( CM, bad_file_pairs_pm4, AP), 'process_plusminus_batch:SetDimensionMismatch', 'No error was raised.');
