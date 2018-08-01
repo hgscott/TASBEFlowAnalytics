@@ -35,16 +35,20 @@ function [channel_roles, print_names] = getChannelRoles(CM, extractor)
         TASBESession.warn('getChannelRoles', 'PotentialTypo', 'A channel type of %s does not match with the options constitutive, input, or output', channel_type);
     end
     
+    if isempty(outputs)
+        TASBESession.error('getChannelRoles', 'NoInformation', 'No channels are annotated with constitutive, input, or output.');
+    end
+        
     % There should only one constitutive
     if ~isempty(outputs) && numel(outputs{1}) ~= 1
-        TASBESession.warn('getChannelRoles', 'IncorrectNumber', 'Exactly one constitutive channel is allowed');
+        TASBESession.error('getChannelRoles', 'IncorrectNumber', 'Exactly one constitutive channel is allowed');
     end
     
     channel_roles = {};
     
     % There needs to be at least 2 colors
     if num_channels < 2
-        TASBESession.warn('getChannelRoles', 'TooFew', 'There needs to be at least two designated channel types');
+        TASBESession.error('getChannelRoles', 'TooFew', 'There needs to be at least two designated channel types');
     % 2 color case, input and output are from the same channel
     elseif num_channels == 2
         if ~isempty(outputs{2})
@@ -52,13 +56,14 @@ function [channel_roles, print_names] = getChannelRoles(CM, extractor)
         else
             channel = outputs{3}{end};
         end
+        TASBESession.warn('getChannelRoles', '2Colors', 'Input and output channels are the same');
         channel_roles = {{'input',channel; 'output',channel; 'constitutive',outputs{1}{end}}};
     % 3+ color case, pairwise matching of input & output
     else
         input = outputs{2};
         output = outputs{3};
         if isempty(input) || isempty(output)
-            TASBESession.warn('getChannelRoles', 'MissingTypes', 'At least two channels should be marked as input and output');
+            TASBESession.error('getChannelRoles', 'MissingTypes', 'At least two channels should be marked as input and output');
         end
         % Double for loop to get all pairwise combinations between input
         % and ouput
