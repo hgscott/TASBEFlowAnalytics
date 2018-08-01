@@ -365,6 +365,14 @@ function transfercurve_analysis_excel(path, extractor, CM)
 
             % Plot the relation between input and output fluorescence
             plot_IO_characterization(results);
+            
+            if ~isdir(outputPath)
+                sanitized_path = strrep(outputPath, '/', '&#47;');
+                sanitized_path = strrep(sanitized_path, '\', '&#92;');
+                sanitized_path = strrep(sanitized_path, ':', '&#58;');
+                TASBESession.notify('OutputFig','MakeDirectory','Directory does not exist, attempting to create it: %s',sanitized_path);
+                mkdir(outputPath);
+            end
 
             % Save the results of computation
             save('-V7',[outputPath outputName],'experiment','AP','sampleresults','results');

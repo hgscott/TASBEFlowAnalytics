@@ -527,6 +527,14 @@ function [all_results, all_batch_descrips] = plusminus_analysis_excel(path, extr
                 TASBEConfig.set('OutputSettings.StemName', batch_description{k}{1});
                 plot_plusminus_comparison(results{k}, batch_description{k}{3});
             end
+            
+            if ~isdir(outputPath)
+                sanitized_path = strrep(outputPath, '/', '&#47;');
+                sanitized_path = strrep(sanitized_path, '\', '&#92;');
+                sanitized_path = strrep(sanitized_path, ':', '&#58;');
+                TASBESession.notify('OutputFig','MakeDirectory','Directory does not exist, attempting to create it: %s',sanitized_path);
+                mkdir(outputPath);
+            end
             save('-V7',[outputPath outputName],'batch_description','AP','results');
         end
     end
