@@ -35,6 +35,10 @@ classdef TASBEConfig
             s.flow.pointCloudPath = 'CSV/';
             doc.flow.dataCSVPath = 'location for data summary CSVs';
             s.flow.dataCSVPath = 'CSV/';
+            doc.flow.outputHistogramFile = 'if true, output histogram file for batch analysis';
+            s.flow.outputHistogramFile = true;
+            doc.flow.outputStatisticsFile = 'if true, output statistics file for batch analysis';
+            s.flow.outputStatisticsFile = true;
             % TASBE Setting migration
             doc.flow.channel_template_file = 'TASBE setting migration';
             s.flow.channel_template_file = '';     
