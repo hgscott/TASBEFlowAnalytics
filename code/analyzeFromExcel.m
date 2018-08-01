@@ -18,19 +18,22 @@ function analyzeFromExcel(file, type)
         end
         
         % Running the actual analysis
-        extractor = TemplateExtraction([path name ext]);
         switch type
             case {'colormodel', 'CM', 'Colormodel'}
                 % Make color model
+                extractor = TemplateExtraction([path name ext]);
                 make_color_model_excel(path, extractor);
             case {'batch', 'BA', 'Batch'}
                 % Run batch analysis
+                extractor = TemplateExtraction([path name ext]);
                 batch_analysis_excel(path, extractor);
             case {'plusminus', 'PM', 'Plusminus', 'comparativeanalysis', 'companalysis', 'comparative'}
                 % Run plus minus analysis
+                extractor = TemplateExtraction([path name ext]);
                 plusminus_analysis_excel(path, extractor);
             case {'transfercurve', 'TC', 'Transfercurve'}
                 % Run transfer curve analysis 
+                extractor = TemplateExtraction([path name ext]);
                 transfercurve_analysis_excel(path, extractor);
             otherwise
                 TASBESession.error('analyzeFromExcel', 'InvalidType', 'Input type of %s is invalid. The choices are colormodel, batch, plusminus, and transfercurve.', type);

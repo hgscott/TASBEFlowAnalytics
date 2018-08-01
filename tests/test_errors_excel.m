@@ -14,7 +14,9 @@ function test_errors_excel_filenames
     assertExceptionThrown(@()batch_analysis_excel([end_with_slash(filepath) '../'], extractor, CM), 'getExcelFilename:FilenameNotFound', 'No error was raised');
 
 function test_errors_excel_session
-    assertExceptionThrown(@()analyzeFromExcel('', ''), 'analyzeFromExcel:NoIdentifier', 'No error was raised');    
+    assertExceptionThrown(@()analyzeFromExcel('', ''), 'analyzeFromExcel:NoIdentifier', 'No error was raised');   
+    assertExceptionThrown(@()analyzeFromExcel('/folder/test.xlsx', 'comparative'), 'analyzeFromExcel:NoIdentifier', 'No error was raised');
+    assertExceptionThrown(@()analyzeFromExcel('/folder/test.xlsx', 'none'), 'analyzeFromExcel:InvalidType', 'No error was raised');
     
 function test_errors_excel_channel_roles
     CM = load_or_make_testing_colormodel();
