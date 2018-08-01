@@ -11,7 +11,11 @@ function test_batch_excel_endtoend
     extractor = TemplateExtraction('test_templates/test_batch_template1.xlsx');
     [filepath, ~, ~] = fileparts(mfilename('fullpath'));
     CM = load_or_make_testing_colormodel();
-    results = batch_analysis_excel([end_with_slash(filepath) '../'], extractor, CM);
+    [results, statisticsFile, histogramFile] = batch_analysis_excel([end_with_slash(filepath) '../'], extractor, CM);
+    
+    % Make sure statistics and histogram files are 'none'
+    assertEqual(statisticsFile, 'none');
+    assertEqual(histogramFile, 'none');
     
     % Yellow, Red, Blue
     result1_expected_bincounts = [...
