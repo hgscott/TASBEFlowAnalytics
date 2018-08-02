@@ -1,6 +1,6 @@
 % Function that runs transfer curve analysis given a template spreadsheet. An Excel
 % object and optional Color Model are inputs
-function transfercurve_analysis_excel(path, extractor, CM)
+function all_results = transfercurve_analysis_excel(path, extractor, CM)
     % Reset and update TASBEConfig and get exp name
     extractor.TASBEConfig_updates();
     TASBEConfig.set('template.displayErrors', 1);
@@ -278,6 +278,7 @@ function transfercurve_analysis_excel(path, extractor, CM)
         inducer_names{end+1} = col_names{i};
     end
     
+    all_results = {};
     for i=1:numel(col_names)
         sample_names = {};
         file_names = {};
@@ -290,6 +291,9 @@ function transfercurve_analysis_excel(path, extractor, CM)
         for j=first_sample_row:extractor.getRowNum('last_sample_num')
             try
                 value = extractor.getExcelValuePos(sh_num2, j, col_nums{i}, 'numeric');
+                if isempty(value)
+                    continue
+                end
                 if isempty(comp_groups{i})
                     sample_names{end+1} = value;
                     file = getExcelFilename(extractor, j, path);
@@ -320,6 +324,9 @@ function transfercurve_analysis_excel(path, extractor, CM)
             try
                 coords = extractor.getExcelCoordinates('minValidCount', 3);
                 minValidCount = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'numeric');
+                if isempty(minValidCount)
+                    error('empty preference');
+                end
                 AP=setMinValidCount(AP,minValidCount);
             catch
                 TASBESession.warn('transfercurve_analysis_excel', 'ImportantMissingPreference', 'Missing Min Valid Count in "Transfer Curve Analysis" sheet');
@@ -329,6 +336,9 @@ function transfercurve_analysis_excel(path, extractor, CM)
             try
                 coords = extractor.getExcelCoordinates('autofluorescence', 3);
                 autofluorescence = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'numeric');
+                if isempty(autofluorescence)
+                    error('empty preference');
+                end
                 AP=setUseAutoFluorescence(AP,autofluorescence);
             catch
                 TASBESession.warn('transfercurve_analysis_excel', 'ImportantMissingPreference', 'Missing Use Auto Fluorescence in "Transfer Curve Analysis" sheet');
@@ -337,6 +347,9 @@ function transfercurve_analysis_excel(path, extractor, CM)
             try
                 coords = extractor.getExcelCoordinates('minFracActive', 3);
                 minFracActive = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'numeric');
+                if isempty(minFracActive)
+                    error('empty preference');
+                end
                 AP=setMinFractionActive(AP,minFracActive);
             catch
                 TASBESession.warn('transfercurve_analysis_excel', 'ImportantMissingPreference', 'Missing Min Fraction Active in "Transfer Curve Analysis" sheet');
@@ -354,6 +367,7 @@ function transfercurve_analysis_excel(path, extractor, CM)
             % Execute the actual analysis
             fprintf('Starting analysis...\n');
             [results, sampleresults] = process_transfer_curve( CM, experiment, AP);
+            all_results{end+1} = results;
 
             % Plot how the constitutive fluorescence was distributed
             TASBEConfig.set('histogram.displayLegend',false);

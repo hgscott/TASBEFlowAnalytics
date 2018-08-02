@@ -18,7 +18,7 @@ function test_errors_excel_session
     try
         assertExceptionThrown(@()analyzeFromExcel('test_templates/faulty_batch_template1.xlsx', 'comparative'), 'TASBE:Analysis:ColumnDimensionMismatch', 'No error was raised');
     catch
-        assertExceptionThrown(@()analyzeFromExcel('test_templates/faulty_batch_template1.xlsx', 'comparative'), 'TASBE:ColorModel', 'No error was raised');
+        assertExceptionThrown(@()analyzeFromExcel('test_templates/faulty_batch_template1.xlsx', 'comparative'), 'TASBE:ColorModel:MissingChannel', 'No error was raised');
     end
     assertExceptionThrown(@()analyzeFromExcel('test_templates/faulty_batch_template1.xlsx', 'none'), 'analyzeFromExcel:InvalidType', 'No error was raised');
     
