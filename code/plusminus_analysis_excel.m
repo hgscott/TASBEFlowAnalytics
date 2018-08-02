@@ -66,7 +66,7 @@ function [all_results, all_batch_descrips] = plusminus_analysis_excel(path, extr
             load(CM_file);
         catch
             TASBESession.warn('plusminus_analysis_excel', 'MissingPreference', 'Could not load CM file, creating a new one.');
-            CM = make_color_model_excel(extractor);
+            CM = make_color_model_excel(path, extractor);
         end
     end
 
