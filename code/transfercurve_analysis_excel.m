@@ -84,7 +84,7 @@ function all_results = transfercurve_analysis_excel(path, extractor, CM)
             load(CM_file);
         catch
             TASBESession.warn('transfercurve_analysis_excel', 'MissingPreference', 'Could not load CM file, creating a new one.');
-            CM = make_color_model_excel(extractor);
+            CM = make_color_model_excel(path, extractor);
         end
     end
 

@@ -49,7 +49,7 @@ function [results, statisticsFile, histogramFile] = batch_analysis_excel(path, e
             load(CM_file);
         catch
             TASBESession.warn('batch_analysis_excel', 'MissingPreference', 'Could not load CM file, creating a new one.');
-            CM = make_color_model_excel(extractor);
+            CM = make_color_model_excel(path, extractor);
         end
     end
 
