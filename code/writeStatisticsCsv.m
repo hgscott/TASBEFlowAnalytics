@@ -7,67 +7,78 @@
 % package distribution's top directory.
 
 function statisticsFile = writeStatisticsCsv(colorModel, channels, sampleIds, sampleresults, units)
-    baseName = sanitize_filename(TASBEConfig.get('OutputSettings.StemName'));
+    if TASBEConfig.get('flow.outputStatisticsFile')
+        baseName = sanitize_filename(TASBEConfig.get('OutputSettings.StemName'));
 
-    % First create the default output filename.
-    statisticsFile = [baseName '_statisticsFile.csv'];
-    
-    numConditions = numel(sampleIds);
-    numComponents = size(sampleresults{1}{1}.PopComponentMeans,1);
-    
-    totalCounts = cell(numConditions, 1);
-    geoMeans = totalCounts; geoStdDev = totalCounts;
-    gmmMeans = totalCounts; gmmStds = totalCounts; gmmWeights = totalCounts;
-    
-    replicates = zeros(numConditions, 1);
-    
-    for i=1:numConditions
-        replicates(i) = numel(sampleresults{i});
-        totalCounts{i} = cell(1,replicates(i));
-        geoMeans{i} = totalCounts{i}; geoStdDev{i} = totalCounts{i};
-        gmmMeans{i} = totalCounts{i}; gmmStds{i} = totalCounts{i}; gmmWeights{i} = totalCounts{i};
-        for j=1:replicates(i)
-            totalCounts{i}{j} = sum(sampleresults{i}{j}.BinCounts);
-            geoMeans{i}{j} = limitPrecision(sampleresults{i}{j}.Means,4);
-            geoStdDev{i}{j} = limitPrecision(sampleresults{i}{j}.StandardDevs,4);
-            geoStdDev{i}{j} = limitPrecision(sampleresults{i}{j}.StandardDevs,4);
-            gmmMeans{i}{j} = limitPrecision(sampleresults{i}{j}.PopComponentMeans,4);
-            gmmStds{i}{j} = limitPrecision(sampleresults{i}{j}.PopComponentStandardDevs,4);
-            gmmWeights{i}{j} = limitPrecision(sampleresults{i}{j}.PopComponentWeights,4);
+        path = TASBEConfig.get('flow.dataCSVPath');
+        path = end_with_slash(path);
+        if ~isdir(path)
+            TASBESession.notify('TASBE:Utilities','MakeDirectory','Directory does not exist, attempting to create it: %s',path);
+            mkdir(path);
         end
-    end
-    
-    effective_channels = cell(size(channels));
-    for i=1:numel(channels)
-        colors = getChannelNames(sampleresults{1}{1}.AnalysisParameters); % assume batch analysis AP
-        color_column = find(colorModel,channel_named(colorModel,colors{i}));
-        effective_channels{i} = channels{color_column};
-    end
 
-    columnNames = buildDefaultStatsFileHeader(effective_channels, units, numComponents);
-    numColumns = numel(columnNames);
-    totalReplicates = sum(replicates);
-    
-    statsTable = cell(totalReplicates+1, numColumns);
-    statsTable(1, 1:numColumns) = columnNames;
-    endingRow = 1;  % Because the column labels are in the first row.
-    
-    % Put everything in a cell array for Octave
-    for i=1:numConditions
-        startingRow = endingRow + 1;
-        endingRow = startingRow + replicates(i) - 1;
-        statsTable(startingRow:endingRow,1:numColumns) = formatDataPerSampleIndivdualColumns(numel(channels), sampleIds{i}, totalCounts{i}, geoMeans{i}, geoStdDev{i}, gmmMeans{i}, gmmStds{i}, gmmWeights{i});
-    end
-    
-    % Needed to add column names when I created the tables due to conflicts
-    % with the default names.  For a table, the column names must be valid
-    % matlab variable names so I filtered out spaces and hypens and
-    % replaced them with underscores.
-    if (is_octave)
-        cell2csv(statisticsFile, statsTable);
+        % First create the default output filename.
+        statisticsFile = [path baseName '_statisticsFile.csv'];
+
+        numConditions = numel(sampleIds);
+        numComponents = size(sampleresults{1}{1}.PopComponentMeans,1);
+
+        totalCounts = cell(numConditions, 1);
+        geoMeans = totalCounts; geoStdDev = totalCounts;
+        gmmMeans = totalCounts; gmmStds = totalCounts; gmmWeights = totalCounts;
+
+        replicates = zeros(numConditions, 1);
+
+        for i=1:numConditions
+            replicates(i) = numel(sampleresults{i});
+            totalCounts{i} = cell(1,replicates(i));
+            geoMeans{i} = totalCounts{i}; geoStdDev{i} = totalCounts{i};
+            gmmMeans{i} = totalCounts{i}; gmmStds{i} = totalCounts{i}; gmmWeights{i} = totalCounts{i};
+            for j=1:replicates(i)
+                totalCounts{i}{j} = sum(sampleresults{i}{j}.BinCounts);
+                geoMeans{i}{j} = limitPrecision(sampleresults{i}{j}.Means,4);
+                geoStdDev{i}{j} = limitPrecision(sampleresults{i}{j}.StandardDevs,4);
+                geoStdDev{i}{j} = limitPrecision(sampleresults{i}{j}.StandardDevs,4);
+                gmmMeans{i}{j} = limitPrecision(sampleresults{i}{j}.PopComponentMeans,4);
+                gmmStds{i}{j} = limitPrecision(sampleresults{i}{j}.PopComponentStandardDevs,4);
+                gmmWeights{i}{j} = limitPrecision(sampleresults{i}{j}.PopComponentWeights,4);
+            end
+        end
+
+        effective_channels = cell(size(channels));
+        for i=1:numel(channels)
+            colors = getChannelNames(sampleresults{1}{1}.AnalysisParameters); % assume batch analysis AP
+            color_column = find(colorModel,channel_named(colorModel,colors{i}));
+            effective_channels{i} = channels{color_column};
+        end
+
+        columnNames = buildDefaultStatsFileHeader(effective_channels, units, numComponents);
+        numColumns = numel(columnNames);
+        totalReplicates = sum(replicates);
+
+        statsTable = cell(totalReplicates+1, numColumns);
+        statsTable(1, 1:numColumns) = columnNames;
+        endingRow = 1;  % Because the column labels are in the first row.
+
+        % Put everything in a cell array for Octave
+        for i=1:numConditions
+            startingRow = endingRow + 1;
+            endingRow = startingRow + replicates(i) - 1;
+            statsTable(startingRow:endingRow,1:numColumns) = formatDataPerSampleIndivdualColumns(numel(channels), sampleIds{i}, totalCounts{i}, geoMeans{i}, geoStdDev{i}, gmmMeans{i}, gmmStds{i}, gmmWeights{i});
+        end
+
+        % Needed to add column names when I created the tables due to conflicts
+        % with the default names.  For a table, the column names must be valid
+        % matlab variable names so I filtered out spaces and hypens and
+        % replaced them with underscores.
+        if (is_octave)
+            cell2csv(statisticsFile, statsTable);
+        else
+            t = table(statsTable);
+            writetable(t, statisticsFile, 'WriteVariableNames', false);
+        end
     else
-        t = table(statsTable);
-        writetable(t, statisticsFile, 'WriteVariableNames', false);
+        statisticsFile = 'none';
     end
 end
 

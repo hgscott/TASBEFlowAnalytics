@@ -6,7 +6,7 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function [results, sampleresults] = per_color_constitutive_analysis(colorModel,batch_description,colors,AP)
+function [results, sampleresults] = per_color_constitutive_analysis(colorModel,batch_description,colors,AP, cloudNames)
 % The 'results' here is not a standard ExperimentResults, but a similar scratch structure
 
 TASBESession.warn('TASBE:Analysis','UpdateNeeded','Need to update per_color_constitutive_analysis to use new samplestatistics');
@@ -20,11 +20,13 @@ end
 for i = 1:batch_size
     condition_name = batch_description{i,1};
     fileset = batch_description{i,2};
-    
     experiment = Experiment(condition_name,'', {0,fileset});
     data{i} = read_data(colorModel, experiment, AP);
-    
-    filenames = getInducerLevelsToFiles(experiment); % array of file names
+    if exist('cloudNames', 'var')
+        filenames = {cloudNames{i}};
+    else
+        filenames = getInducerLevelsToFiles(experiment); % array of file names
+    end
     writeFcsPointCloudCSV(colorModel, filenames, data{i});
 end
 

@@ -26,7 +26,7 @@ the following two publications:**
 
 ## Installation
 
-- Using the shell (requires a Unix-like operating system such as GNU/Linux or Apple OSX):
+- Installation on Apple OSX or GNU/Linux using the shell:
 
     ```bash
     git clone https://github.com/TASBE/TASBEFlowAnalytics.git
@@ -35,20 +35,16 @@ the following two publications:**
     ```
     This will add the TASBEFlowAnalyics directory to the Matlab and/or GNU Octave searchpath. If both Matlab and GNU Octave are available on your machine, it will install TASBEFlowAnalyics for both.
 
-- Manual installation:
+- Installation on Windows (or manual installation on Mac/Linux):
   - Download the package from [GitHub](https://github.com/TASBE/TASBEFlowAnalyics)
   - Start Matlab or Octave
-  - Go to the ``TASBEFlowAnalytics/code`` directory
-  - Add and save the set of paths into the command window:
+  - Go to the ``TASBEFlowAnalytics`` directory
+  - Run the installation command by hand:
   
       ```
-    addpath(genpath(pwd));
-    savepath;
+    tasbe_set_path(); savepath();
     ```
-  - Run ``tasbe_set_path.m`` located outside of the ``TASBEFlowAnalytics/code`` directory
-  - Open up selected matlab file to run (i.e. tutorials)
-  - Run file and select ``Change Folder`` if prompted
-  - **Optional:** install [MOxUnit](https://github.com/MOxUnit/MOxUnit) to run the test files
+- **Optional:** If you want to run the test files, install [MOxUnit](https://github.com/MOxUnit/MOxUnit)
 
 ## Usage
 

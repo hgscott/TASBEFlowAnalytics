@@ -7,48 +7,59 @@
 % package distribution's top directory.
 
 function histogramFile = writeHistogramCsv(channels, sampleIds, sampleresults, binCenters, units)
-    baseName = sanitize_filename(TASBEConfig.get('OutputSettings.StemName'));
+    if TASBEConfig.get('flow.outputHistogramFile')
+        baseName = sanitize_filename(TASBEConfig.get('OutputSettings.StemName'));
 
-    % First create the default output filename.
-    histogramFile = [baseName '_histogramFile.csv'];
-    
-    numConditions = numel(sampleIds);
-    replicates = zeros(numConditions, 1);
-    numBinsPerChannel = numel(binCenters);
-    
-    % Pull histogram data out of sample results.
-    binCounts = cell(numConditions, 1);
-    for i=1:numConditions
-        replicates(i) = numel(sampleresults{i});
-        binCounts{i} = cell(1,replicates(i));
-        for j=1:replicates(i)
-            binCounts{i}{j} = sampleresults{i}{j}.BinCounts;
+        path = TASBEConfig.get('flow.dataCSVPath');
+        path = end_with_slash(path);
+        if ~isdir(path)
+            TASBESession.notify('TASBE:Utilities','MakeDirectory','Directory does not exist, attempting to create it: %s',path);
+            mkdir(path);
         end
-    end
-    
-    columnNames = buildDefaultHistFileHeader(channels, units);
-    numColumns = numel(columnNames);
-    totalReplicates = sum(replicates);
-    
-    histTable = cell(totalReplicates*numBinsPerChannel+1, numColumns);
-    histTable(1, 1:numColumns) = columnNames;
-    endingRow = 1;  % Because the column labels are in the first row.
-    
-    for i=1:numConditions
-        startingRow = endingRow + 1;
-        endingRow = startingRow + replicates(i)*numBinsPerChannel - 1;
-        histTable(startingRow:endingRow,1:numColumns) = formatDataPerSample(channels, sampleIds{i}, limitPrecision(binCenters,4), binCounts{i});
-    end
-    
-    % Needed to add column names when I created the tables due to conflicts
-    % with the default names.  For a table, the column names must be valid
-    % matlab variable names so I filtered out spaces and hypens and
-    % replaced them with underscores.
-    if (is_octave)
-        cell2csv(histogramFile, histTable);
+
+        % First create the default output filename.
+        histogramFile = [path baseName '_histogramFile.csv'];
+
+        numConditions = numel(sampleIds);
+        replicates = zeros(numConditions, 1);
+        numBinsPerChannel = numel(binCenters);
+
+        % Pull histogram data out of sample results.
+        binCounts = cell(numConditions, 1);
+        for i=1:numConditions
+            replicates(i) = numel(sampleresults{i});
+            binCounts{i} = cell(1,replicates(i));
+            for j=1:replicates(i)
+                binCounts{i}{j} = sampleresults{i}{j}.BinCounts;
+            end
+        end
+
+        columnNames = buildDefaultHistFileHeader(channels, units);
+        numColumns = numel(columnNames);
+        totalReplicates = sum(replicates);
+
+        histTable = cell(totalReplicates*numBinsPerChannel+1, numColumns);
+        histTable(1, 1:numColumns) = columnNames;
+        endingRow = 1;  % Because the column labels are in the first row.
+
+        for i=1:numConditions
+            startingRow = endingRow + 1;
+            endingRow = startingRow + replicates(i)*numBinsPerChannel - 1;
+            histTable(startingRow:endingRow,1:numColumns) = formatDataPerSample(channels, sampleIds{i}, limitPrecision(binCenters,4), binCounts{i});
+        end
+
+        % Needed to add column names when I created the tables due to conflicts
+        % with the default names.  For a table, the column names must be valid
+        % matlab variable names so I filtered out spaces and hypens and
+        % replaced them with underscores.
+        if (is_octave)
+            cell2csv(histogramFile, histTable);
+        else
+            t = table(histTable);
+            writetable(t, histogramFile, 'WriteVariableNames', false);
+        end
     else
-        t = table(histTable);
-        writetable(t, histogramFile, 'WriteVariableNames', false);
+        histogramFile = 'none';
     end
         
 end

@@ -11,13 +11,23 @@ function plot_batch_histograms(results,sampleresults,CM,linespecs)
 % 0..1 vectors representing RGB color values); currently, only single-letter 
 % color linespecs are properly handled.
 
+% Obtain channel names in order to generate linespecs
 if (~exist('linespecs', 'var'))
-    % Build linespecs from CM
-    channels = getChannels(CM);
+    % Build linespecs from sampleresults
+    channels = getChannelNames(sampleresults{1}{1}.AnalysisParameters); % channel names are same across conditions and replicates
     linespecs = {1, numel(channels)};
     for i=1:numel(channels)
-        linespecs{i} = getLineSpec(channels{i});
+        if isempty(getLineSpec(channel_named(CM, channels{i})))
+            linespecs{i} = 'k';
+            TASBESession.warn('plot_batch_histograms','NoLineSpecs','Linespec for channel %s not found. Defaulting to black.', channels{i});
+        else
+            linespecs{i} = getLineSpec(channel_named(CM, channels{i}));
+        end
     end
+end
+
+if numel(linespecs) ~= numel(getChannelNames(sampleresults{1}{1}.AnalysisParameters))
+    TASBESession.error('plot_batch_histograms','LineSpecDimensionMismatch', 'Size of linespecs does not match with number of channels');
 end
 
 n_conditions = size(sampleresults,1);
@@ -26,11 +36,7 @@ n_colors = numel(linespecs);
 fprintf('Plotting histograms');
 
 % Create legendentries
-channels = getChannels(CM);
-legendentries = cell(0);
-for i=1:numel(channels)
-    legendentries{end+1} = getPrintName(channels{i});
-end
+legendentries = getChannelNames(sampleresults{1}{1}.AnalysisParameters);
 
 % one bincount plot per condition
 maxcount = 1e1;
@@ -86,7 +92,7 @@ for i=1:n_conditions
     else
         outputfig(h,[TASBEConfig.get('OutputSettings.StemName') '-' results{i}.condition '-bincounts'],TASBEConfig.get('plots.plotPath'));
     end
-
+    
     fprintf('.');
 end
 fprintf('\n');

@@ -62,7 +62,7 @@ for i=1:n_var
         % loglog(get_bin_centers(bins),counts,'-','Color',hsv2rgb([hues(i) 1 0.9])); hold on;
 
         %%% Gaussian Mixture model
-        if(~isempty(replicates{j}.PlasmidModel))
+        if(~isempty(replicates{j}.PlasmidModel) && ~isempty(get_fp_dist(replicates{j}.PlasmidModel)))
             multiplier = sum(counts)*log10(bin_widths);
             fp_dist = get_fp_dist(replicates{j}.PlasmidModel);
             model = gmm_pdf(fp_dist, log10(bin_centers)')*multiplier;
@@ -93,7 +93,11 @@ end
 if(TASBEConfig.isSet('OutputSettings.FixedBinningAxis')), xlim(TASBEConfig.get('OutputSettings.FixedBinningAxis')); end
 if(TASBEConfig.isSet('OutputSettings.FixedHistogramAxis')), ylim(TASBEConfig.get('OutputSettings.FixedHistogramAxis')); else ylim([1e0 10.^(ceil(log10(maxcount)))]); end
 title([clean_for_latex(stemName),' bin counts, colored by inducer level']);
-outputfig(h,[clean_for_latex(stemName),'-bincounts'],directory);
+if(strcmp(clean_for_latex(stemName), ' ') || strcmp(clean_for_latex(stemName), ''))
+    outputfig(h,'bincounts', directory);
+else
+    outputfig(h,[clean_for_latex(stemName),'-bincounts'],directory);
+end
 
 % Fraction active per bin:
 h = figure('PaperPosition',[1 1 5 3.66]);
@@ -122,7 +126,12 @@ end
 if(TASBEConfig.isSet('OutputSettings.FixedBinningAxis')), xlim(TASBEConfig.get('OutputSettings.FixedBinningAxis')); end
 ylim([-0.05 1.05]);
 title([clean_for_latex(stemName),' estimated fraction of cells active, colored by inducer level']);
-outputfig(h, [clean_for_latex(stemName),'-active'],directory);
+if(strcmp(clean_for_latex(stemName), ' ') || strcmp(clean_for_latex(stemName), ''))
+    outputfig(h,'active', directory);
+else
+    outputfig(h, [clean_for_latex(stemName),'-active'],directory);
+end
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Plasmid system is disabled, due to uncertainty about correctness
