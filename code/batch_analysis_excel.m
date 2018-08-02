@@ -247,6 +247,14 @@ function [results, statisticsFile, histogramFile] = batch_analysis_excel(path, e
         TASBEConfig.set('OutputSettings.StemName', statName);
         [statisticsFile, histogramFile] = serializeBatchOutput(file_pairs, CM, AP, sampleresults);
         TASBEConfig.set('OutputSettings.StemName', stemName);
+        
+        if ~isdir(outputPath)
+            sanitized_path = strrep(outputPath, '/', '&#47;');
+            sanitized_path = strrep(sanitized_path, '\', '&#92;');
+            sanitized_path = strrep(sanitized_path, ':', '&#58;');
+            TASBESession.notify('OutputFig','MakeDirectory','Directory does not exist, attempting to create it: %s',sanitized_path);
+            mkdir(outputPath);
+        end
 
         save([outputPath outputName],'AP','bins','file_pairs','results','sampleresults');
     end

@@ -195,7 +195,7 @@ function [CM] = make_color_model_excel(path, extractor)
         sanitized_path = strrep(outputPath, '/', '&#47;');
         sanitized_path = strrep(sanitized_path, '\', '&#92;');
         sanitized_path = strrep(sanitized_path, ':', '&#58;');
-        TASBESession.notify('TASBE:OutputFig','MakeDirectory','Directory does not exist, attempting to create it: %s',sanitized_path);
+        TASBESession.notify('OutputFig','MakeDirectory','Directory does not exist, attempting to create it: %s',sanitized_path);
         mkdir(outputPath);
     end
     save('-V7',[outputPath, outputName],'CM');

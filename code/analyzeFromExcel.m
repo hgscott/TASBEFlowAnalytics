@@ -17,8 +17,9 @@ function analyzeFromExcel(file, type)
             % establishing key for TASBESession log
         end
         
-        % Running the actual analysis
         extractor = TemplateExtraction([path name ext]);
+        
+        % Running the actual analysis
         switch type
             case {'colormodel', 'CM', 'Colormodel'}
                 % Make color model
@@ -37,11 +38,21 @@ function analyzeFromExcel(file, type)
         end
     catch exception
         % Turn MATLAB error into a TASBESession error
-        if isempty(exception.identifier) || is_octave()
+        if isempty(exception.identifier)
             TASBESession.error('analyzeFromExcel', 'NoIdentifier', exception.message);
         else
-            msg = strrep(sprintf(getReport(exception, 'extended', 'hyperlinks', 'off')), newline, '');
-            TASBESession.error('analyzeFromExcel', exception.identifier, msg);
+            if is_octave()
+                msg = exception.message;
+            else
+                msg = strrep(sprintf(getReport(exception, 'extended', 'hyperlinks', 'off')), newline, '');
+            end
+            id = exception.identifier;
+            id_parts = strsplit(id, ':');
+            if numel(id_parts) > 1
+                TASBESession.error(id_parts{1}, id_parts{2}, msg);
+            else
+                TASBESession.error('analyzeFromExcel', exception.identifier, msg);
+            end
         end
     end
 end

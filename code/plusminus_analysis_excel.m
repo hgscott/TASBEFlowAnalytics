@@ -1,6 +1,6 @@
 % Function that runs plusminus analysis given a template spreadsheet. An Excel
 % object and optional Color Model are inputs
-function plusminus_analysis_excel(path, extractor, CM)
+function [all_results, all_batch_descrips] = plusminus_analysis_excel(path, extractor, CM)
     % Reset and update TASBEConfig and get exp name
     extractor.TASBEConfig_updates();
     TASBEConfig.set('template.displayErrors', 1);
@@ -113,23 +113,29 @@ function plusminus_analysis_excel(path, extractor, CM)
         end
         try
             col_name{end+1} = extractor.getExcelValuePos(sh_num3, i, extractor.getColNum('secondary_sampleColName_PM'), 'char');
-            col_names{end+1} = col_name;
+            if ~isempty(col_name)
+                col_names{end+1} = col_name;
+            end
         catch
             try
                 value = num2str(extractor.getExcelValuePos(sh_num3, i, extractor.getColNum('secondary_sampleColName_PM'), 'numeric'));
                 if ~isempty(value)
                     col_name{end+1} = value;
                 end
-                col_names{end+1} = col_name;
+                if ~isempty(col_name)
+                    col_names{end+1} = col_name;
+                end
             catch
                 % no secondary column add col_name to col_names and
                 % continue
-                col_names{end+1} = col_name;
+                if ~isempty(col_name)
+                    col_names{end+1} = col_name;
+                end
                 continue
             end
         end
     end
-    
+
     % Go through columns to find column numbers of primary and secondary col names
     for i=1:numel(col_names)
         col_name = col_names{i};
@@ -182,6 +188,9 @@ function plusminus_analysis_excel(path, extractor, CM)
             catch
                 try
                     col_name = num2str(extractor.getExcelValuePos(sh_num3, i, first_group_col, 'numeric'));
+                    if isempty(col_name)
+                        continue
+                    end
                 catch 
                     continue
                 end
@@ -280,7 +289,11 @@ function plusminus_analysis_excel(path, extractor, CM)
                                     key{end+1} = extractor.getExcelValuePos(condition_sh, k, condition_col, 'char');
                                 catch
                                     try
-                                        key{end+1} = extractor.getExcelValuePos(condition_sh, k, condition_col, 'numeric');
+                                        part = extractor.getExcelValuePos(condition_sh, k, condition_col, 'numeric');
+                                        if isempty(part)
+                                            break
+                                        end
+                                        key{end+1} = part;
                                     catch
                                         break
                                     end
@@ -291,6 +304,9 @@ function plusminus_analysis_excel(path, extractor, CM)
                     catch
                         try
                             column_name = num2str(extractor.getExcelValuePos(condition_sh, j, condition_col+1, 'numeric'));
+                            if isempty(column_name)
+                                continue
+                            end
                             ind = find(ismember(col_name, column_name), 1);
                             if ~isempty(ind)
                                 % get keys
@@ -300,7 +316,11 @@ function plusminus_analysis_excel(path, extractor, CM)
                                         key{end+1} = extractor.getExcelValuePos(condition_sh, k, condition_col, 'char');
                                     catch
                                         try
-                                            key{end+1} = extractor.getExcelValuePos(condition_sh, k, condition_col, 'numeric');
+                                            part = extractor.getExcelValuePos(condition_sh, k, condition_col, 'numeric');
+                                            if isempty(part)
+                                                break
+                                            end
+                                            key{end+1} = part;
                                         catch
                                             break
                                         end
@@ -320,6 +340,8 @@ function plusminus_analysis_excel(path, extractor, CM)
         all_keys{end+1} = keys;
     end
     
+    all_results = {};
+    all_batch_descrips = {};
     for i=1:numel(col_names)
         TASBEConfig.set('plots.plotPath', plotPaths{i});
         outputName = outputNames{i};
@@ -457,6 +479,9 @@ function plusminus_analysis_excel(path, extractor, CM)
             try
                 coords = extractor.getExcelCoordinates('minValidCount', 2);
                 minValidCount = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'numeric');
+                if isempty(minValidCount)
+                    error('empty preference');
+                end
                 AP=setMinValidCount(AP,minValidCount);
             catch
                 TASBESession.warn('plusminus_analysis_excel', 'ImportantMissingPreference', 'Missing Min Valid Count in "Comparative Analysis" sheet');
@@ -466,6 +491,9 @@ function plusminus_analysis_excel(path, extractor, CM)
             try
                 coords = extractor.getExcelCoordinates('autofluorescence', 2);
                 autofluorescence = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'numeric');
+                if isempty(autofluorescence)
+                    error('empty preference');
+                end
                 AP=setUseAutoFluorescence(AP,autofluorescence);
             catch
                 TASBESession.warn('plusminus_analysis_excel', 'ImportantMissingPreference', 'Missing Use Auto Fluorescence in "Comparative Analysis" sheet');
@@ -474,6 +502,9 @@ function plusminus_analysis_excel(path, extractor, CM)
             try
                 coords = extractor.getExcelCoordinates('minFracActive', 2);
                 minFracActive = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'numeric');
+                if isempty(minFracActive)
+                    error('empty preference');
+                end
                 AP=setMinFractionActive(AP,minFracActive);
             catch
                 TASBESession.warn('plusminus_analysis_excel', 'ImportantMissingPreference', 'Missing Min Fraction Active in "Comparative Analysis" sheet');
@@ -489,11 +520,20 @@ function plusminus_analysis_excel(path, extractor, CM)
 
             % Execute the actual analysis
             results = process_plusminus_batch(CM, batch_description, AP);
-
+            all_results{end+1} = results;
+            all_batch_descrips{end+1} = batch_description;
             % Make additional output plots
             for k=1:numel(results)
                 TASBEConfig.set('OutputSettings.StemName', batch_description{k}{1});
                 plot_plusminus_comparison(results{k}, batch_description{k}{3});
+            end
+            
+            if ~isdir(outputPath)
+                sanitized_path = strrep(outputPath, '/', '&#47;');
+                sanitized_path = strrep(sanitized_path, '\', '&#92;');
+                sanitized_path = strrep(sanitized_path, ':', '&#58;');
+                TASBESession.notify('OutputFig','MakeDirectory','Directory does not exist, attempting to create it: %s',sanitized_path);
+                mkdir(outputPath);
             end
             save('-V7',[outputPath outputName],'batch_description','AP','results');
         end
