@@ -5,7 +5,24 @@ function [all_results, all_batch_descrips] = plusminus_analysis_excel(path, extr
     extractor.TASBEConfig_updates();
     TASBEConfig.set('template.displayErrors', 1);
     experimentName = extractor.getExcelValue('experimentName', 'char'); 
-    preference_row = extractor.getExcelValue('last_row_PM', 'numeric') + 5;
+    % Find preference_row
+    preference_row = 0;
+    col_num = extractor.getColNum('last_row_PM');
+    sh_num = extractor.getSheetNum('last_row_PM');
+    for i=1:size(extractor.sheets{sh_num},1)
+        try
+            value = extractor.getExcelValuePos(sh_num, i, col_num, 'char');
+            if strcmp(value, 'Required: Instructions to use button below')
+                preference_row = i + 2;
+                break
+            end
+        catch
+            continue
+        end
+    end
+    if preference_row == 0
+        TASBESession.error('plusminus_analysis_excel', 'MissingPreference', 'No end row number found for plusminus analysis. Make sure run button is in column A.')
+    end
     TASBEConfig.set('template.displayErrors', 0);
 
     % Load the color model
@@ -90,9 +107,7 @@ function [all_results, all_batch_descrips] = plusminus_analysis_excel(path, extr
     col_names = {};
     row_nums = {};
     col_nums = {};
-    TASBEConfig.set('template.displayErrors', 1);
-    last_sampleColName_row = extractor.getExcelValue('last_row_PM', 'numeric');
-    TASBEConfig.set('template.displayErrors', 0);
+    last_sampleColName_row = preference_row - 5;
     % Determine the number of plusminus analysis to run
     for i=extractor.getRowNum('primary_sampleColName_PM'): last_sampleColName_row
         col_name = {};
@@ -168,13 +183,11 @@ function [all_results, all_batch_descrips] = plusminus_analysis_excel(path, extr
     % cell array
     comp_groups = {};
     comp_group_names = {};
-    first_group_row = extractor.getRowNum('first_sampleColName_PM');
     first_group_col = extractor.getColNum('first_sampleColName_PM');
     outputNames = {};
     outputPaths = {};
     plotPaths = {};
     inducer_names = {};
-    
     for i=1:numel(row_nums)
         if i == numel(row_nums)
             end_row = last_sampleColName_row;

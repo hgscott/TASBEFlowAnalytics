@@ -84,7 +84,7 @@ classdef TemplateExtraction
                     {'outputPath_PM'; {4, 5, 14}};
                     {'primary_sampleColName_PM'; {4, 5, 7}};
                     {'secondary_sampleColName_PM'; {4, 5, 10}};
-                    {'first_sampleColName_PM'; {4, 5, 2}};
+                    {'first_sampleColName_PM'; {4, 5, 1}};
                     {'first_sampleVal_PM'; {4, 5, 4}};
                     {'last_row_PM'; {4, 4, 1}};
                     % Coords for variables in "Transfer Curve Analysis"
@@ -194,7 +194,7 @@ classdef TemplateExtraction
             for i=1:numel(obj.coordinates)
                 if strcmp(name, obj.coordinates{i}{1})
                     new_coords{i}{2} = coords;
-                    new_obj = Excel(obj.filepath, new_coords);
+                    new_obj = TemplateExtraction(obj.filepath, new_coords);
                     return
                 end
             end

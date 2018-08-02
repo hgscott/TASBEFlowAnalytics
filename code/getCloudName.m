@@ -1,5 +1,5 @@
-% Helper function that obtains the correct filename for a given row in the
-% "Samples" sheet with an Excel object and row number as inputs. 
+% Helper function that obtains the correct point cloud filename for a given row in the
+% "Samples" sheet with an Excel object, row number, and template number as inputs. 
 function [filename] = getCloudName(extractor, row, template_num)
     multiple = 1;
     % First get the template number and create position reference variables
