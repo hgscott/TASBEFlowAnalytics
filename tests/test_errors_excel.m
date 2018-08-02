@@ -15,11 +15,6 @@ function test_errors_excel_filenames
 
 function test_errors_excel_session
     assertExceptionThrown(@()analyzeFromExcel('', ''), 'Octave:invalid-index', 'No error was raised');   
-    try
-        assertExceptionThrown(@()analyzeFromExcel('../test_templates/faulty_batch_template1.xlsx', 'comparative'), 'process_plusminus_batch:ColumnDimensionMismatch', 'No error was raised');
-    catch
-        assertExceptionThrown(@()analyzeFromExcel('../test_templates/faulty_batch_template1.xlsx', 'comparative'), 'TASBE:ColorModel', 'No error was raised');
-    end
     assertExceptionThrown(@()analyzeFromExcel('../test_templates/faulty_batch_template1.xlsx', 'none'), 'analyzeFromExcel:InvalidType', 'No error was raised');
     
 function test_errors_excel_channel_roles
