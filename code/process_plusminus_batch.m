@@ -19,11 +19,11 @@ for i=1:category_size
     section_size = numel(batch_description{i});
     batch_names_size = numel(batch_description{i}{3});
     if section_size ~= batch_names_size+3
-        TASBESession.error('process_plusminus_batch', 'SetDimensionMismatch', 'Plus Minus analysis invoked with incorrect number of sets. Make sure batch_description is a n X 2 matrix with the correct number of sets (size of batch_names including condition_name and inducer_name).');
+        TASBESession.error('TASBE:Analysis', 'SetDimensionMismatch', 'Plus Minus analysis invoked with incorrect number of sets. Make sure batch_description is a n X 2 matrix with the correct number of sets (size of batch_names including condition_name and inducer_name).');
     end
     for j=4:section_size
         if size(batch_description{i}{j}, 2) ~= 2
-            TASBESession.error('process_plusminus_batch', 'ColumnDimensionMismatch', 'Plus Minus analysis invoked with incorrect number of columns. Make sure batch_description is a n X 2 matrix.');
+            TASBESession.error('TASBE:Analysis', 'ColumnDimensionMismatch', 'Plus Minus analysis invoked with incorrect number of columns. Make sure batch_description is a n X 2 matrix.');
         end
     end
 end
@@ -41,7 +41,7 @@ for i=1:batch_size
         fileset = level_file_pairs{j,2};
         for k=1:size(fileset,1)
             if ~exist(char(fileset{k,2}),'file')
-                TASBESession.error('process_plusminus_batch','MissingFile','Could not find file: %s',char(fileset{k,2}));
+                TASBESession.error('TASBE:Analysis','MissingFile','Could not find file: %s',char(fileset{k,2}));
             end
         end
     end

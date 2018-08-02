@@ -49,7 +49,15 @@ function analyzeFromExcel(file, type)
             id = exception.identifier;
             id_parts = strsplit(id, ':');
             if numel(id_parts) > 1
-                TASBESession.error(id_parts{1}, id_parts{2}, msg);
+                name = '';
+                for i=2:numel(id_parts)
+                    if i > 2
+                        name =[name ':' id_parts{i}];
+                    else
+                        name = id_parts{i};
+                    end
+                end
+                TASBESession.error(id_parts{1}, name, msg);
             else
                 TASBESession.error('analyzeFromExcel', exception.identifier, msg);
             end
