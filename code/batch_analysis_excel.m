@@ -110,7 +110,10 @@ function [results, statisticsFile, histogramFile] = batch_analysis_excel(extract
     first_sample_row = extractor.getRowNum('first_sample_num');
     sample_num_col = extractor.getColNum('first_sample_num');
     sample_name_col = extractor.getColNum('first_sample_name');
-    sample_exclude_col = extractor.getColNum('first_sample_exclude');
+    sample_exclude_col = find(ismember(extractor.col_names, 'Exclude from Batch Analysis'), 1);
+    if isempty(sample_exclude_col)
+        TASBESession.error('batch_analysis_excel', 'InvalidHeaderName', 'The header, Exclude from Batch Analysis, does not match with any column titles in "Samples" sheet.');
+    end
     for i=first_sample_row:size(extractor.sheets{sh_num2},1)
         try
             num = extractor.getExcelValuePos(sh_num2, i, sample_num_col, 'numeric');

@@ -156,22 +156,10 @@ function [all_results, all_batch_descrips] = plusminus_analysis_excel(extractor,
     for i=1:numel(col_names)
         col_name = col_names{i};
         col_num = {};
-        for j=sample_num_col:size(extractor.sheets{sh_num2},2)
-            try 
-                ref_header = extractor.getExcelValuePos(sh_num2, first_sample_row-1, j, 'char');
-            catch
-                try
-                    ref_header = num2str(extractor.getExcelValuePos(sh_num2, first_sample_row-1, j, 'numeric'));
-                    if isempty(ref_header)
-                        continue
-                    end
-                catch 
-                    continue
-                end
-            end
-            ind = find(ismember(col_name, ref_header), 1);
-            if ~isempty(ind)
-                col_num{ind} = j;
+        for j=1:numel(col_name)
+            pos = find(ismember(extractor.col_names, col_name{j}), 1);
+            if ~isempty(pos)
+                col_num{j} = pos;
             end
         end
         if numel(col_num) ~= numel(col_name)
@@ -209,29 +197,12 @@ function [all_results, all_batch_descrips] = plusminus_analysis_excel(extractor,
                     continue
                 end
             end
-            checkError = true;
             % Get column number of col_name
-            for k=sample_num_col:size(extractor.sheets{sh_num2},2)
-                try 
-                    ref_header = extractor.getExcelValuePos(sh_num2, first_sample_row-1, k, 'char');
-                catch
-                    try
-                        ref_header = num2str(extractor.getExcelValuePos(sh_num2, first_sample_row-1, k, 'numeric'));
-                        if isempty(ref_header)
-                            continue
-                        end
-                    catch 
-                        continue
-                    end
-                end
-                if strcmp(col_name, ref_header)
-                    checkError = false;
-                    comp_group{end+1} = {k, extractor.getExcelValuePos(sh_num3, j, extractor.getColNum('first_sampleVal_PM'))};
-                    comp_group_names{end+1} = col_name;
-                    break
-                end 
-            end
-            if checkError
+            pos = find(ismember(extractor.col_names, col_name), 1);
+            if ~isempty(pos)
+                comp_group{end+1} = {pos, extractor.getExcelValuePos(sh_num3, j, extractor.getColNum('first_sampleVal_PM'))};
+                comp_group_names{end+1} = col_name;
+            else
                 TASBESession.error('plusminus_analysis_excel', 'InvalidColumnName', 'Sample column name, %s, under Comparison Groups in "Comparative Analysis" does not match with any column name in "Samples".', col_name);
             end
         end

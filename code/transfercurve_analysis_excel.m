@@ -120,23 +120,9 @@ function all_results = transfercurve_analysis_excel(extractor, CM)
     % Go through columns to find column number
     for i=1:numel(col_names)
         col_name = col_names{i};
-        for j=sample_num_col:size(extractor.sheets{sh_num2},2)
-            try 
-                ref_header = extractor.getExcelValuePos(sh_num2, first_sample_row-1, j, 'char');
-            catch
-                try
-                    ref_header = num2str(extractor.getExcelValuePos(sh_num2, first_sample_row-1, j, 'numeric'));
-                    if isempty(ref_header)
-                        continue
-                    end
-                catch 
-                    continue
-                end
-            end
-            if strcmp(col_name, ref_header)
-                col_nums{end+1} = j;
-                break
-            end 
+        pos = find(ismember(extractor.col_names, col_name), 1);
+        if ~isempty(pos)
+            col_nums{end+1} = pos;
         end
     end
     if numel(col_nums) ~= numel(col_names)
@@ -156,68 +142,25 @@ function all_results = transfercurve_analysis_excel(extractor, CM)
     for i=1:numel(row_nums)
         try
             col_name = extractor.getExcelValuePos(sh_num3, row_nums{i}, first_group_col, 'char');
-            checkError = true;
-            % Get column number of col_name
-            for j=sample_num_col:size(extractor.sheets{sh_num2},2)
-                try 
-                    ref_header = extractor.getExcelValuePos(sh_num2, first_sample_row-1, j, 'char');
-                catch
-                    try
-                        ref_header = num2str(extractor.getExcelValuePos(sh_num2, first_sample_row-1, j, 'numeric'));
-                        if isempty(ref_header)
-                            continue
-                        end
-                    catch 
-                        continue
-                    end
-                end
-                if strcmp(col_name, ref_header)
-                    checkError = false;
-                    comp_groups{end+1} = {j, extractor.getExcelValuePos(sh_num3, row_nums{i}, extractor.getColNum('first_sampleVal_TC'))};
-                    comp_group_names{end+1} = col_name;
-                    break
-                end 
-            end
-            if checkError
-                TASBESession.error('transfercurve_analysis_excel', 'InvalidColumnName', 'Sample column name, %s, under Comparison Groups in "Transfer Curve Analysis" does not match with any column name in "Samples".', col_name);
-            end
         catch
             try
                 col_name = num2str(extractor.getExcelValuePos(sh_num3, row_nums{i}, first_group_col, 'numeric'));
-                if isempty(col_name)
-                    % Add empty col_name
-                    comp_groups{end+1} = {};
-                else
-                    checkError = true;
-                    % Get column number of col_name
-                    for j=sample_num_col:size(extractor.sheets{sh_num2},2)
-                        try 
-                            ref_header = extractor.getExcelValuePos(sh_num2, first_sample_row-1, j, 'char');
-                        catch
-                            try
-                                ref_header = num2str(extractor.getExcelValuePos(sh_num2, first_sample_row-1, j, 'numeric'));
-                                if isempty(ref_header)
-                                    continue
-                                end
-                            catch 
-                                continue
-                            end
-                        end
-                        if strcmp(col_name, ref_header)
-                            checkError = false;
-                            comp_groups{end+1} = {j, extractor.getExcelValuePos(sh_num3, row_nums{i}, extractor.getColNum('first_sampleVal_TC'))};
-                            comp_group_names{end+1} = col_name;
-                            break
-                        end 
-                    end
-                    if checkError
-                        TASBESession.error('transfercurve_analysis_excel', 'InvalidColumnName', 'Sample column name, %s, under Comparison Groups in "Transfer Curve Analysis" does not match with any column name in "Samples".', col_name);
-                    end
-                end
             catch 
-                % Add empty col_name
-                comp_groups{end+1} = {};
+                col_name = '';
             end
+        end
+        if ~isempty(col_name)
+            % Get column number of col_name
+            pos = find(ismember(extractor.col_names, col_name), 1);
+            if ~isempty(pos)
+                comp_groups{end+1} = {pos, extractor.getExcelValuePos(sh_num3, row_nums{i}, extractor.getColNum('first_sampleVal_TC'))};
+                comp_group_names{end+1} = col_name;
+            else
+                TASBESession.error('transfercurve_analysis_excel', 'InvalidColumnName', 'Sample column name, %s, under Comparison Groups in "Transfer Curve Analysis" does not match with any column name in "Samples".', col_name);
+            end
+        end
+        if isempty(comp_groups)
+            comp_groups{end+1} = {};
         end
         % Get unique preferences 
         % Obtain output name

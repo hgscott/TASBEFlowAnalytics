@@ -12,6 +12,8 @@ classdef TemplateExtraction
         file;
         % The path of the template used to for relative filepath inputs
         path;
+        % Cell array of sample column names 
+        col_names;
     end
     methods
         % Constuctor with filepath of template and optional coordinates
@@ -111,7 +113,7 @@ classdef TemplateExtraction
             obj.coordinates = obj.findTemplates();
             % Find position of template # and exclude from batch analysis
             % in "Samples"
-            obj.coordinates = obj.findSampleCols();
+            obj.col_names = obj.findSampleCols();
             % Find last sample row
             obj.coordinates = obj.findLastSampleRow();
             % Check on condition keys
@@ -255,6 +257,9 @@ classdef TemplateExtraction
                         catch
                             try
                                 column_name = num2str(obj.getExcelValuePos(condition_sh, i, condition_col+1, 'numeric'));
+                                if isempty(column_name)
+                                    continue
+                                end
                                 obj.checkConditions_helper(i, column_name);
                             catch
                                 continue
@@ -280,82 +285,73 @@ classdef TemplateExtraction
                     keys{end+1} = obj.getExcelValuePos(condition_sh, j, condition_col, 'char');
                 catch
                     try
-                        keys{end+1} = num2str(obj.getExcelValuePos(condition_sh, j, condition_col, 'numeric'));
+                        key = num2str(obj.getExcelValuePos(condition_sh, j, condition_col, 'numeric'));
+                        if isempty(key)
+                            break
+                        end
+                        keys{end+1} = key;
                     catch
                         break
                     end
                 end
             end
             % look at column in "Samples"
-            for j=sample_start_col:size(obj.sheets{sh_num1},2)
-                try 
-                    ref_header = obj.getExcelValuePos(sh_num1, sample_start_row, j, 'char');
-                catch
+            % Find the matching section name in filename template
+            % and column header in "Samples"
+            pos = find(ismember(obj.col_names, column_name), 1);
+            if isempty(pos)
+                TASBESession.error('TemplateExtraction', 'InvalidHeaderName', 'The header, %s, does not match with any column titles in "Samples" sheet.', column_name);
+            else
+                % go through all the rows and make sure
+                % matches with one of the keys, raise
+                % warning if not
+                for k=sample_start_row+1:obj.getRowNum('last_sample_num')
                     try
-                        ref_header = num2str(obj.getExcelValuePos(sh_num1, sample_start_row, j, 'numeric'));
-                    catch 
-                        TASBESession.error('TemplateExtraction', 'InvalidHeaderName', 'The header, %s, does not match with any column titles in "Samples" sheet.', header);
-                    end
-                end
-                % Find the matching section name in filename template
-                % and column header in "Samples"
-                if strcmp(column_name, ref_header)
-                    % go through all the rows and make sure
-                    % matches with one of the keys, raise
-                    % warning if not
-                    for k=sample_start_row+1:obj.getRowNum('last_sample_num')
+                        value = obj.getExcelValuePos(sh_num1, k, pos, 'char');
+                        ind = find(ismember(keys, value), 1);
+                        if isempty(ind)
+                            TASBESession.warn('TemplateExtraction', 'InvalidValue', 'The value of %s at row %s col %s does not match with listed keys.', value, num2str(k), column_name);
+                        end
+                    catch
                         try
-                            value = obj.getExcelValuePos(sh_num1, k, j, 'char');
+                            value = num2str(obj.getExcelValuePos(sh_num1, k, pos, 'numeric'));
+                            if isempty(value)
+                                continue
+                            end
                             ind = find(ismember(keys, value), 1);
                             if isempty(ind)
                                 TASBESession.warn('TemplateExtraction', 'InvalidValue', 'The value of %s at row %s col %s does not match with listed keys.', value, num2str(k), column_name);
                             end
                         catch
-                            try
-                                value = num2str(obj.getExcelValuePos(sh_num1, k, j, 'numeric'));
-                                ind = find(ismember(keys, value), 1);
-                                if isempty(ind)
-                                    TASBESession.warn('TemplateExtraction', 'InvalidValue', 'The value of %s at row %s col %s does not match with listed keys.', value, num2str(k), column_name);
-                                end
-                            catch
-                                continue
-                            end
+                            continue
                         end
-
                     end
-                    break
                 end
             end
         end
         
-        % Find coordinates of Template # and Exclude from Batch Analysis
-        % columns in "Samples" and add to coordinates
-        function new_coords = findSampleCols(obj)
+        % Find column names in "Samples" sheet and add to cell array
+        function col_names = findSampleCols(obj)
             sh_num1 = obj.getSheetNum('first_sample_num');
             sample_start_col = obj.getColNum('first_sample_num');
             sample_start_row = obj.getRowNum('first_sample_num') - 1;
-            names = {'Template #', 'Exclude from Batch Analysis'};
-            coords = {};
+            col_names = {};
             % look through columns in "Samples"
             for i=sample_start_col:size(obj.sheets{sh_num1},2)
                 try 
                     ref_header = obj.getExcelValuePos(sh_num1, sample_start_row, i, 'char');
-                catch
+                catch 
                     try
                         ref_header = num2str(obj.getExcelValuePos(sh_num1, sample_start_row, i, 'numeric'));
+                        if isempty(ref_header)
+                            continue
+                        end
                     catch 
                         continue
                     end
                 end
-                ind = find(ismember(names, ref_header), 1);
-                if ~isempty(ind)
-                    coords{ind} = {sh_num1, sample_start_row+1, i};
-                end
+                col_names{i} = ref_header;
             end
-            if numel(coords) ~= 2
-                TASBESession.error('TemplateExtraction', 'MissingHeader', 'Did not find template # or exclude from batch analysis columns in "Samples".');
-            end
-            new_coords = obj.addExcelCoordinates({'first_sample_template', 'first_sample_exclude'}, coords);
         end
         
         % Finds the last sample row
