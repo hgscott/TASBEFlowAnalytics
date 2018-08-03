@@ -1,8 +1,9 @@
 % Function that runs plusminus analysis given a template spreadsheet. An Excel
 % object and optional Color Model are inputs
-function [all_results, all_batch_descrips] = plusminus_analysis_excel(path, extractor, CM)
+function [all_results, all_batch_descrips] = plusminus_analysis_excel(extractor, CM)
     % Reset and update TASBEConfig and get exp name
     extractor.TASBEConfig_updates();
+    path = extractor.path;
     TASBEConfig.set('template.displayErrors', 1);
     experimentName = extractor.getExcelValue('experimentName', 'char'); 
     % Find preference_row
@@ -26,7 +27,7 @@ function [all_results, all_batch_descrips] = plusminus_analysis_excel(path, extr
     TASBEConfig.set('template.displayErrors', 0);
 
     % Load the color model
-    if nargin < 3
+    if nargin < 2
         % Obtain the CM_name
         try
             coords = extractor.getExcelCoordinates('inputName_CM', 2);
@@ -66,7 +67,7 @@ function [all_results, all_batch_descrips] = plusminus_analysis_excel(path, extr
             load(CM_file);
         catch
             TASBESession.warn('plusminus_analysis_excel', 'MissingPreference', 'Could not load CM file, creating a new one.');
-            CM = make_color_model_excel(path, extractor);
+            CM = make_color_model_excel(extractor);
         end
     end
 
@@ -155,22 +156,10 @@ function [all_results, all_batch_descrips] = plusminus_analysis_excel(path, extr
     for i=1:numel(col_names)
         col_name = col_names{i};
         col_num = {};
-        for j=sample_num_col:size(extractor.sheets{sh_num2},2)
-            try 
-                ref_header = extractor.getExcelValuePos(sh_num2, first_sample_row-1, j, 'char');
-            catch
-                try
-                    ref_header = num2str(extractor.getExcelValuePos(sh_num2, first_sample_row-1, j, 'numeric'));
-                    if isempty(ref_header)
-                        continue
-                    end
-                catch 
-                    continue
-                end
-            end
-            ind = find(ismember(col_name, ref_header), 1);
-            if ~isempty(ind)
-                col_num{ind} = j;
+        for j=1:numel(col_name)
+            pos = find(ismember(extractor.col_names, col_name{j}), 1);
+            if ~isempty(pos)
+                col_num{j} = pos;
             end
         end
         if numel(col_num) ~= numel(col_name)
@@ -208,29 +197,12 @@ function [all_results, all_batch_descrips] = plusminus_analysis_excel(path, extr
                     continue
                 end
             end
-            checkError = true;
             % Get column number of col_name
-            for k=sample_num_col:size(extractor.sheets{sh_num2},2)
-                try 
-                    ref_header = extractor.getExcelValuePos(sh_num2, first_sample_row-1, k, 'char');
-                catch
-                    try
-                        ref_header = num2str(extractor.getExcelValuePos(sh_num2, first_sample_row-1, k, 'numeric'));
-                        if isempty(ref_header)
-                            continue
-                        end
-                    catch 
-                        continue
-                    end
-                end
-                if strcmp(col_name, ref_header)
-                    checkError = false;
-                    comp_group{end+1} = {k, extractor.getExcelValuePos(sh_num3, j, extractor.getColNum('first_sampleVal_PM'))};
-                    comp_group_names{end+1} = col_name;
-                    break
-                end 
-            end
-            if checkError
+            pos = find(ismember(extractor.col_names, col_name), 1);
+            if ~isempty(pos)
+                comp_group{end+1} = {pos, extractor.getExcelValuePos(sh_num3, j, extractor.getColNum('first_sampleVal_PM'))};
+                comp_group_names{end+1} = col_name;
+            else
                 TASBESession.error('plusminus_analysis_excel', 'InvalidColumnName', 'Sample column name, %s, under Comparison Groups in "Comparative Analysis" does not match with any column name in "Samples".', col_name);
             end
         end
@@ -442,7 +414,7 @@ function [all_results, all_batch_descrips] = plusminus_analysis_excel(path, extr
                             end
                             if ~isempty(ind)
                                 ordered_set{ind,1} = value;
-                                ordered_set{ind,2} = getExcelFilename(extractor, set{k}, path);
+                                ordered_set{ind,2} = getExcelFilename(extractor, set{k});
                             end
                         catch
                             continue
@@ -463,7 +435,7 @@ function [all_results, all_batch_descrips] = plusminus_analysis_excel(path, extr
                             try
                                 value = extractor.getExcelValuePos(sh_num2, set{k}, col_num{2});
                                 ordered_set{end+1,1} = value;
-                                ordered_set{end,2} = getExcelFilename(extractor, set{k}, path);
+                                ordered_set{end,2} = getExcelFilename(extractor, set{k});
                             catch
                                 continue
                             end
@@ -472,7 +444,7 @@ function [all_results, all_batch_descrips] = plusminus_analysis_excel(path, extr
                             try
                                 value = extractor.getExcelValuePos(sh_num2, set{k}, col_num{1});
                                 ordered_set{end+1,1} = k; % default to just index
-                                ordered_set{end,2} = getExcelFilename(extractor, set{k}, path);
+                                ordered_set{end,2} = getExcelFilename(extractor, set{k});
                             catch
                                 continue
                             end

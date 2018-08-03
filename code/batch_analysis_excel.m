@@ -1,15 +1,17 @@
 % Function that runs batch analysis given a template spreadsheet. An Excel
 % object and optional Color Model are inputs
-function [results, statisticsFile, histogramFile] = batch_analysis_excel(path, extractor, CM)
+function [results, statisticsFile, histogramFile] = batch_analysis_excel(extractor, CM)
     % Reset and update TASBEConfig and obtain experiment name
     extractor.TASBEConfig_updates();
     TASBEConfig.set('template.displayErrors', 1);
     experimentName = extractor.getExcelValue('experimentName', 'char');
     preference_row = extractor.getRowNum('last_sample_num') + 5;
     TASBEConfig.set('template.displayErrors', 0);
+    
+    path = extractor.path;
 
     % Load the color model
-    if nargin < 3
+    if nargin < 2
         % Obtain the CM_name
         try
             coords = extractor.getExcelCoordinates('inputName_CM', 1);
@@ -49,7 +51,7 @@ function [results, statisticsFile, histogramFile] = batch_analysis_excel(path, e
             load(CM_file);
         catch
             TASBESession.warn('batch_analysis_excel', 'MissingPreference', 'Could not load CM file, creating a new one.');
-            CM = make_color_model_excel(path, extractor);
+            CM = make_color_model_excel(extractor);
         end
     end
 
@@ -108,7 +110,10 @@ function [results, statisticsFile, histogramFile] = batch_analysis_excel(path, e
     first_sample_row = extractor.getRowNum('first_sample_num');
     sample_num_col = extractor.getColNum('first_sample_num');
     sample_name_col = extractor.getColNum('first_sample_name');
-    sample_exclude_col = extractor.getColNum('first_sample_exclude');
+    sample_exclude_col = find(ismember(extractor.col_names, 'Exclude from Batch Analysis'), 1);
+    if isempty(sample_exclude_col)
+        TASBESession.error('batch_analysis_excel', 'InvalidHeaderName', 'The header, Exclude from Batch Analysis, does not match with any column titles in "Samples" sheet.');
+    end
     for i=first_sample_row:size(extractor.sheets{sh_num2},1)
         try
             num = extractor.getExcelValuePos(sh_num2, i, sample_num_col, 'numeric');
@@ -123,7 +128,7 @@ function [results, statisticsFile, histogramFile] = batch_analysis_excel(path, e
             extractor.getExcelValuePos(sh_num2, i, sample_exclude_col, 'char');
         catch
             sample_names{end+1} = extractor.getExcelValuePos(sh_num2, i, sample_name_col, 'char');
-            file = getExcelFilename(extractor, i, path);
+            file = getExcelFilename(extractor, i);
             file_names{end+1} = file;
             % Obtain point cloud name
             if template_num ~= 0

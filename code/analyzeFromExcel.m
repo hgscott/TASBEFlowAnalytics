@@ -3,9 +3,6 @@
 % file path and type of analysis that needs to be run.
 function analyzeFromExcel(file, type)
     try
-        % Editing file to get path
-        [filepath, name, ext] = fileparts(file);
-        path = end_with_slash(filepath);
         % Setting up TASBESession log key
         TASBESession.warn('analyzeFromExcel', 'ExampleWarning', 'This is what a warning looks like.');
         TASBESession.succeed('analyzeFromExcel', 'ExampleSuccess', 'This is what a success/ notification looks like.');
@@ -17,22 +14,24 @@ function analyzeFromExcel(file, type)
             % establishing key for TASBESession log
         end
         
-        extractor = TemplateExtraction([path name ext]);
+        % Editing file to get path
+        [filepath, name, ext] = fileparts(file);
+        extractor = TemplateExtraction([end_with_slash(filepath) name ext]);
         
         % Running the actual analysis
         switch type
             case {'colormodel', 'CM', 'Colormodel'}
                 % Make color model
-                make_color_model_excel(path, extractor);
+                make_color_model_excel(extractor);
             case {'batch', 'BA', 'Batch'}
                 % Run batch analysis
-                batch_analysis_excel(path, extractor);
+                batch_analysis_excel(extractor);
             case {'plusminus', 'PM', 'Plusminus', 'comparativeanalysis', 'companalysis', 'comparative'}
                 % Run plus minus analysis
-                plusminus_analysis_excel(path, extractor);
+                plusminus_analysis_excel(extractor);
             case {'transfercurve', 'TC', 'Transfercurve'}
                 % Run transfer curve analysis 
-                transfercurve_analysis_excel(path, extractor);
+                transfercurve_analysis_excel(extractor);
             otherwise
                 TASBESession.error('analyzeFromExcel', 'InvalidType', 'Input type of %s is invalid. The choices are colormodel, batch, plusminus, and transfercurve.', type);
         end

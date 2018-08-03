@@ -8,9 +8,9 @@ function test_suite = test_colormodel_excel
 
 function test_colormodel_excel_endtoend
     % Create TemplateExtraction object
-    extractor = TemplateExtraction('test_templates/test_batch_template1.xlsx');
     [filepath, ~, ~] = fileparts(mfilename('fullpath'));
-    CM = make_color_model_excel([end_with_slash(filepath) '../'], extractor);
+    extractor = TemplateExtraction('test_templates/test_batch_template1.xlsx', [end_with_slash(filepath) '../']);
+    CM = make_color_model_excel(extractor);
     
     % Check that bead files are identical 
     log = TASBESession.list();
@@ -54,9 +54,9 @@ function test_colormodel_excel_endtoend
 
 function test_colormodel_excel_singlered
     % Create TemplateExtraction object
-    extractor = TemplateExtraction('test_templates/test_batch_template2.xlsx');
     [filepath, ~, ~] = fileparts(mfilename('fullpath'));
-    CM = make_color_model_excel([end_with_slash(filepath) '../'], extractor);
+    extractor = TemplateExtraction('test_templates/test_batch_template2.xlsx', [end_with_slash(filepath) '../']);
+    CM = make_color_model_excel(extractor);
     % Check results in CM:
     CMS = struct(CM);
 
@@ -78,9 +78,9 @@ function test_colormodel_excel_singlered
 
 function test_colormodel_excel_singlered_nocolorfile
     % Create TemplateExtraction object
-    extractor = TemplateExtraction('test_templates/test_batch_template3.xlsx');
     [filepath, ~, ~] = fileparts(mfilename('fullpath'));
-    CM = make_color_model_excel([end_with_slash(filepath) '../'], extractor);
+    extractor = TemplateExtraction('test_templates/test_batch_template3.xlsx', [end_with_slash(filepath) '../']);
+    CM = make_color_model_excel(extractor);
     % Check results in CM:
     CMS = struct(CM);
 

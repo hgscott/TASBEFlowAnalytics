@@ -7,11 +7,11 @@ function test_suite = test_transfercurve_excel
     initTestSuite;
 
 function test_batch_excel_endtoend
-% Create TemplateExtraction object
-    extractor = TemplateExtraction('test_templates/test_batch_template1.xlsx');
+    % Create TemplateExtraction object
     [filepath, ~, ~] = fileparts(mfilename('fullpath'));
+    extractor = TemplateExtraction('test_templates/test_batch_template1.xlsx', [end_with_slash(filepath) '../']);
     CM = load_or_make_testing_colormodel();
-    all_results = transfercurve_analysis_excel([end_with_slash(filepath) '../'], extractor, CM);
+    all_results = transfercurve_analysis_excel(extractor, CM);
     results = all_results{1};
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

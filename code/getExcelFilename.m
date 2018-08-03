@@ -1,10 +1,17 @@
 % Helper function that obtains the correct filename for a given row in the
 % "Samples" sheet with an Excel object and row number as inputs. 
-function [filename] = getExcelFilename(extractor, row, path)
+function [filename] = getExcelFilename(extractor, row)
     % Take filenames from Excel and throw error if no filename is found
+    path = extractor.path;
     sh_num1 = extractor.getSheetNum('first_sample_num');
-    exclude_col = extractor.getColNum('first_sample_exclude');
-    template_col = extractor.getColNum('first_sample_template');
+    exclude_col = find(ismember(extractor.col_names, 'Exclude from Batch Analysis'), 1);
+    if isempty(exclude_col)
+        TASBESession.error('getExcelFilename', 'InvalidHeaderName', 'The header, Exclude from Batch Analysis, does not match with any column titles in "Samples" sheet.');
+    end
+    template_col = find(ismember(extractor.col_names, 'Template #'), 1);
+    if isempty(template_col)
+        TASBESession.error('getExcelFilename', 'InvalidHeaderName', 'The header, Template #, does not match with any column titles in "Samples" sheet.');
+    end
     TASBEConfig.set('template.displayErrors', 1);
     template_num = extractor.getExcelValuePos(sh_num1, row, template_col, 'numeric');
     filename_templates = extractor.getExcelCoordinates('filename_templates');

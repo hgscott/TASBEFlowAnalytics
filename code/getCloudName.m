@@ -36,44 +36,36 @@ function [filename] = getCloudName(extractor, row, template_num)
 
         try
             extractor.getExcelValuePos(sh_num2, i, variable_col, 'char');
-            % Variable, look through columns in samples sheet
-            checkError = true;
+            % Find the matching section name in filename template
+            % and column header in "Samples"
             header = section;
-            for j=sample_start_col:size(extractor.sheets{sh_num1},2)
-                try 
-                    ref_header = extractor.getExcelValuePos(sh_num1, sample_start_row, j, 'char');
-                catch
-                    try
-                        ref_header = num2str(extractor.getExcelValuePos(sh_num1, sample_start_row, j, 'numeric'));
-                        if isempty(ref_header)
-                            continue
-                        end
-                    catch 
-                        continue
-                    end
+            j = find(ismember(extractor.col_names, header), 1);
+            if isempty(j)
+                TASBESession.error('getCloudName', 'InvalidHeaderName', 'The header, %s, does not match with any column titles in "Samples" sheet.', header);
+            end
+            try
+                section = extractor.getExcelValuePos(sh_num1, row, j, 'char');
+                % If the contents is an array, split into
+                % subsections and make filenames for all
+                if ~isempty(strfind(section, ',')) 
+                    sub_sections = strsplit(section, ',');
+                    sections{end+1} = sub_sections;
+                    multiple = numel(sub_sections);
+                else
+                    sections{end+1} = {section};
                 end
-                % Find the matching section name in filename template
-                % and column header in "Samples"
-                if strcmp(header, ref_header)
-                    checkError = false;
-                    section = extractor.getExcelValuePos(sh_num1, row, j, 'char');
-                    % If the contents is an array, split into
-                    % subsections and make filenames for all
-                    if ~isempty(strfind(section, ',')) 
-                        sub_sections = strsplit(section, ',');
-                        sections{end+1} = sub_sections;
-                        multiple = numel(sub_sections);
+            catch
+                try
+                    section = num2str(extractor.getExcelValuePos(sh_num1, row, j, 'numeric'));
+                    if isempty(section)
+                        TASBESession.warn('getCloudName', 'NoValueFound', 'No value at row %s was found for column, %s in "Samples".', row, header);
                     else
                         sections{end+1} = {section};
                     end
-                    break
+                catch
+                    TASBESession.warn('getCloudName', 'NoValueFound', 'No value at row %s was found for column, %s in "Samples".', row, header);
                 end
-            end
-            
-            if checkError
-                TASBESession.error('getFilename', 'InvalidHeaderName', 'The header, %s, does not match with any column titles in "Samples" sheet.', header);
-            end
-
+            end     
         catch
             % Not variable so just add to sections
             sections{end+1} = {section};

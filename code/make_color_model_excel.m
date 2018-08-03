@@ -1,9 +1,9 @@
 % Function that uses a template spreadsheet to create and save a Color Model. 
 % Inputs include an Excel object.  
-function [CM] = make_color_model_excel(path, extractor)
+function [CM] = make_color_model_excel(extractor)
     % Reset and update TASBEConfig 
     extractor.TASBEConfig_updates();
-    
+    path = extractor.path;
     % Set TASBEConfigs and create variables needed to generate the CM
     TASBEConfig.set('template.displayErrors', 1);
     experimentName = extractor.getExcelValue('experimentName', 'char');
@@ -73,12 +73,12 @@ function [CM] = make_color_model_excel(path, extractor)
         end
         for j=1:numel(ref_filenames)
             if strcmpi(name, ref_filenames{j})
-                file = getExcelFilename(extractor, i, path);
+                file = getExcelFilename(extractor, i);
                 output_filenames{j} = file{1};
             end
         end
     end
-    bead_files = getBeadFile(extractor, path);
+    bead_files = getBeadFile(extractor);
     beads_file = bead_files{1};
     blank_file = output_filenames{1};
     all_file = output_filenames{2};
@@ -150,7 +150,7 @@ function [CM] = make_color_model_excel(path, extractor)
         end
         for j=1:numel(sample_ids)
             if strcmpi(name, sample_ids{j})
-                file = getExcelFilename(extractor, i, path);
+                file = getExcelFilename(extractor, i);
                 colorfiles{j} = file{1};
             end
         end
