@@ -45,7 +45,7 @@ function all_results = transfercurve_analysis_excel(extractor, CM)
     end
 
     % Load the color model
-    if nargin < 3
+    if nargin < 2
         % Obtain the CM_name
         try
             coords = extractor.getExcelCoordinates('inputName_CM', 3);

@@ -27,7 +27,7 @@ function [all_results, all_batch_descrips] = plusminus_analysis_excel(extractor,
     TASBEConfig.set('template.displayErrors', 0);
 
     % Load the color model
-    if nargin < 3
+    if nargin < 2
         % Obtain the CM_name
         try
             coords = extractor.getExcelCoordinates('inputName_CM', 2);
