@@ -8,14 +8,21 @@ classdef TemplateExtraction
         coordinates;
         % Sheets is an array of raw data from four main sheets in template
         sheets;
-        % Save the inputted filepath
-        filepath;
+        % Save the inputted template filepath and filename
+        file;
+        % The path of the template used to for relative filepath inputs
+        path;
     end
     methods
         % Constuctor with filepath of template and optional coordinates
         % property as inputs
-        function obj = TemplateExtraction(file, coords)
-            obj.filepath = file;
+        function obj = TemplateExtraction(file, path, coords)
+            obj.file = file;
+            if exist('path', 'var')
+                obj.path = path;
+            else
+                [obj.path, ~, ~] = fileparts(file);
+            end
             % Read in Excel for information, Experiment sheet
             [~,~,s1] = xlsread(file, 'Experiment');
             % Read in Excel for information, Samples sheet
@@ -29,7 +36,7 @@ classdef TemplateExtraction
             % Read in Excel for information, Additional Settings sheet
             [~,~,s6] = xlsread(file, 'Optional Settings');
             obj.sheets = {s1, s2, s3, s4, s5, s6};
-            if nargin < 2
+            if nargin < 3
                 obj.coordinates = {...
                     % Coords for variables in "Experiment"
                     {'experimentName'; {1, 5, 1}};
@@ -194,7 +201,7 @@ classdef TemplateExtraction
             for i=1:numel(obj.coordinates)
                 if strcmp(name, obj.coordinates{i}{1})
                     new_coords{i}{2} = coords;
-                    new_obj = TemplateExtraction(obj.filepath, new_coords);
+                    new_obj = TemplateExtraction(obj.file, obj.path, new_coords);
                     return
                 end
             end

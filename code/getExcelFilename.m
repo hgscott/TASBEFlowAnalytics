@@ -1,7 +1,8 @@
 % Helper function that obtains the correct filename for a given row in the
 % "Samples" sheet with an Excel object and row number as inputs. 
-function [filename] = getExcelFilename(extractor, row, path)
+function [filename] = getExcelFilename(extractor, row)
     % Take filenames from Excel and throw error if no filename is found
+    path = extractor.path;
     sh_num1 = extractor.getSheetNum('first_sample_num');
     exclude_col = extractor.getColNum('first_sample_exclude');
     template_col = extractor.getColNum('first_sample_template');

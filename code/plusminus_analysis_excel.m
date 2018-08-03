@@ -1,8 +1,9 @@
 % Function that runs plusminus analysis given a template spreadsheet. An Excel
 % object and optional Color Model are inputs
-function [all_results, all_batch_descrips] = plusminus_analysis_excel(path, extractor, CM)
+function [all_results, all_batch_descrips] = plusminus_analysis_excel(extractor, CM)
     % Reset and update TASBEConfig and get exp name
     extractor.TASBEConfig_updates();
+    path = extractor.path;
     TASBEConfig.set('template.displayErrors', 1);
     experimentName = extractor.getExcelValue('experimentName', 'char'); 
     % Find preference_row
@@ -66,7 +67,7 @@ function [all_results, all_batch_descrips] = plusminus_analysis_excel(path, extr
             load(CM_file);
         catch
             TASBESession.warn('plusminus_analysis_excel', 'MissingPreference', 'Could not load CM file, creating a new one.');
-            CM = make_color_model_excel(path, extractor);
+            CM = make_color_model_excel(extractor);
         end
     end
 
@@ -442,7 +443,7 @@ function [all_results, all_batch_descrips] = plusminus_analysis_excel(path, extr
                             end
                             if ~isempty(ind)
                                 ordered_set{ind,1} = value;
-                                ordered_set{ind,2} = getExcelFilename(extractor, set{k}, path);
+                                ordered_set{ind,2} = getExcelFilename(extractor, set{k});
                             end
                         catch
                             continue
@@ -463,7 +464,7 @@ function [all_results, all_batch_descrips] = plusminus_analysis_excel(path, extr
                             try
                                 value = extractor.getExcelValuePos(sh_num2, set{k}, col_num{2});
                                 ordered_set{end+1,1} = value;
-                                ordered_set{end,2} = getExcelFilename(extractor, set{k}, path);
+                                ordered_set{end,2} = getExcelFilename(extractor, set{k});
                             catch
                                 continue
                             end
@@ -472,7 +473,7 @@ function [all_results, all_batch_descrips] = plusminus_analysis_excel(path, extr
                             try
                                 value = extractor.getExcelValuePos(sh_num2, set{k}, col_num{1});
                                 ordered_set{end+1,1} = k; % default to just index
-                                ordered_set{end,2} = getExcelFilename(extractor, set{k}, path);
+                                ordered_set{end,2} = getExcelFilename(extractor, set{k});
                             catch
                                 continue
                             end

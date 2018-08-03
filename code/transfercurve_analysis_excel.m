@@ -1,8 +1,9 @@
 % Function that runs transfer curve analysis given a template spreadsheet. An Excel
 % object and optional Color Model are inputs
-function all_results = transfercurve_analysis_excel(path, extractor, CM)
+function all_results = transfercurve_analysis_excel(extractor, CM)
     % Reset and update TASBEConfig and get exp name
     extractor.TASBEConfig_updates();
+    path = extractor.path;
     TASBEConfig.set('template.displayErrors', 1);
     experimentName = extractor.getExcelValue('experimentName', 'char');
     TASBEConfig.set('template.displayErrors', 0);
@@ -84,7 +85,7 @@ function all_results = transfercurve_analysis_excel(path, extractor, CM)
             load(CM_file);
         catch
             TASBESession.warn('transfercurve_analysis_excel', 'MissingPreference', 'Could not load CM file, creating a new one.');
-            CM = make_color_model_excel(path, extractor);
+            CM = make_color_model_excel(extractor);
         end
     end
 
@@ -296,15 +297,15 @@ function all_results = transfercurve_analysis_excel(path, extractor, CM)
                 end
                 if isempty(comp_groups{i})
                     sample_names{end+1} = value;
-                    file = getExcelFilename(extractor, j, path);
+                    file = getExcelFilename(extractor, j);
                     file_names{end+1} = file;
                 elseif isa(extractor.getExcelValuePos(sh_num2, j, comp_groups{i}{1}), 'numeric') && (extractor.getExcelValuePos(sh_num2, j, comp_groups{i}{1}) == comp_groups{i}{2})
                     sample_names{end+1} = value;
-                    file = getExcelFilename(extractor, j, path);
+                    file = getExcelFilename(extractor, j);
                     file_names{end+1} = file;
                 elseif isa(extractor.getExcelValuePos(sh_num2, j, comp_groups{i}{1}), 'char') && strcmp(extractor.getExcelValuePos(sh_num2, j, comp_groups{i}{1}), comp_groups{i}{2})
                     sample_names{end+1} = value;
-                    file = getExcelFilename(extractor, j, path);
+                    file = getExcelFilename(extractor, j);
                     file_names{end+1} = file;
                 end
             catch
