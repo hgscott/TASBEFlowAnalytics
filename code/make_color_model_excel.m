@@ -32,7 +32,6 @@ function [CM] = make_color_model_excel(extractor)
         transChannelMin = {};
     end
     
-    extractor.setTASBEConfig('beads.rangeMax', 'numeric');
     try
         plot_path = extractor.getExcelValue('plots.plotPath', 'char', 1);
         plot_path = make_filename_absolute(plot_path, path);
@@ -45,6 +44,7 @@ function [CM] = make_color_model_excel(extractor)
     extractor.setTASBEConfig('beads.beadModel', 'char');
     extractor.setTASBEConfig('beads.beadBatch', 'char');
     extractor.setTASBEConfig('beads.rangeMin', 'numeric');
+    extractor.setTASBEConfig('beads.rangeMax', 'numeric');
     extractor.setTASBEConfig('beads.peakThreshold', 'numeric');
     extractor.setTASBEConfig('beads.beadChannel', 'char');
     extractor.setTASBEConfig('beads.secondaryBeadChannel', 'char');
@@ -58,7 +58,10 @@ function [CM] = make_color_model_excel(extractor)
     sh_num1 = extractor.getSheetNum('first_sample_num');
     first_sample_row = extractor.getRowNum('first_sample_num');
     sample_num_col = extractor.getColNum('first_sample_num');
-    sample_name_col = extractor.getColNum('first_sample_name');
+    sample_name_col = find(ismember(extractor.col_names, 'SAMPLE NAME'), 1);
+    if isempty(sample_name_col)
+        TASBESession.error('make_color_model_excel', 'InvalidHeaderName', 'The header, SAMPLE NAME, does not match with any column titles in "Samples" sheet.');
+    end
     % Go through samples in "Samples" sheet and look for matches in name to
     % elements in ref_filenames
     for i=first_sample_row:size(extractor.sheets{sh_num1},1)

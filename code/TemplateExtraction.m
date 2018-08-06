@@ -41,78 +41,74 @@ classdef TemplateExtraction
             if nargin < 3
                 obj.coordinates = {...
                     % Coords for variables in "Experiment"
-                    {'experimentName'; {1, 5, 1}};
-                    {'first_filename_template'; {1, 16, 5}};
-                    {'first_condition_key'; {1, 16, 1}};
+                    {'experimentName'; {1, 5, 1}}; % uses all three vals 
+                    {'first_filename_template'; {1, 16, 5}}; % uses sh & col vals
+                    {'first_condition_key'; {1, 16, 1}}; % uses sh & col vals
                     % Coords for variables in "Samples"
-                    {'first_sample_num'; {2, 5, 1}};
-                    {'first_sample_name'; {2, 5, 2}};
-                    {'inputName_CM'; {{2, 30, 3}, {4, 13, 2}, {5, 13, 2}}};
-                    {'inputPath_CM'; {{2, 30, 4}, {4, 13, 3}, {5, 13, 3}}};
-                    {'OutputSettings.StemName'; {{2, 30, 5}, {4, 5, 13}, {5, 5, 13}}};
-                    {'binseq_min'; {{2, 30, 15}, {4, 13, 7}, {5, 13, 7}}};
-                    {'binseq_pdecade'; {{2, 30, 16}, {4, 13, 8}, {5, 13, 8}}};
-                    {'binseq_max'; {{2, 30, 17}, {4, 13, 9}, {5, 13, 9}}};
-                    {'minValidCount'; {{2, 30, 12}, {4, 13, 4}, {5, 13, 4}}};
-                    {'autofluorescence'; {{2, 30, 13}, {4, 13, 5}, {5, 13, 5}}};
-                    {'minFracActive'; {{2, 30, 14}, {4, 13, 6}, {5, 13, 6}}};
-                    {'outputName_BA'; {2, 30, 6}};
-                    {'outputPath_BA'; {2, 30, 7}};
-                    {'statName_BA'; {2, 30, 8}};
-                    {'statPath_BA'; {2, 30, 9}};
-                    {'cloudName_BA'; {2, 30, 10}};
-                    {'cloudPath_BA'; {2, 30, 11}};
+                    {'plots.plotPath'; {{3, 28, 2}, {2, 30, 2}, {4, 5, 15}, {5, 5, 16}}}; % uses sh & col vals
+                    {'first_sample_num'; {2, 5, 1}}; % uses all three vals 
+                    {'inputName_CM'; {{2, 30, 3}, {4, 13, 2}, {5, 13, 2}}}; % uses sh & col vals
+                    {'inputPath_CM'; {{2, 30, 4}, {4, 13, 3}, {5, 13, 3}}}; % uses sh & col vals
+                    {'OutputSettings.StemName'; {{2, 30, 5}, {4, 5, 13}, {5, 5, 13}}}; % uses sh & col vals
+                    {'binseq_min'; {{2, 30, 15}, {4, 13, 7}, {5, 13, 7}}}; % uses sh & col vals
+                    {'binseq_pdecade'; {{2, 30, 16}, {4, 13, 8}, {5, 13, 8}}}; % uses sh & col vals
+                    {'binseq_max'; {{2, 30, 17}, {4, 13, 9}, {5, 13, 9}}}; % uses sh & col vals
+                    {'minValidCount'; {{2, 30, 12}, {4, 13, 4}, {5, 13, 4}}}; % uses sh & col vals
+                    {'autofluorescence'; {{2, 30, 13}, {4, 13, 5}, {5, 13, 5}}}; % uses sh & col vals
+                    {'minFracActive'; {{2, 30, 14}, {4, 13, 6}, {5, 13, 6}}}; % uses sh & col vals
+                    {'outputName_BA'; {2, 30, 6}}; % uses sh & col vals
+                    {'outputPath_BA'; {2, 30, 7}}; % uses sh & col vals
+                    {'statName_BA'; {2, 30, 8}}; % uses sh & col vals
+                    {'statPath_BA'; {2, 30, 9}}; % uses sh & col vals
+                    {'cloudName_BA'; {2, 30, 10}}; % uses sh & col vals
+                    {'cloudPath_BA'; {2, 30, 11}}; % uses sh & col vals
                     % Coords for variables in "Calibration"
-                    {'beads.beadModel'; {3, 5, 2}};
-                    {'plots.plotPath'; {{3, 28, 2}, {2, 30, 2}, {4, 5, 15}, {5, 5, 16}}};
-                    {'beads.beadBatch'; {3, 5, 1}};
-                    {'beads.rangeMin'; {3, 5, 3}};
-                    {'beads.rangeMax'; {3, 5, 4}};
-                    {'beads.peakThreshold'; {3, 5, 5}};
-                    {'beads.beadChannel'; {3, 5, 6}};
-                    {'beads.secondaryBeadChannel'; {3, 28, 3}};
-                    {'relevant_channels'; {3, 24, 2}};
-                    {'transChannelMin'; {3, 24, 3}};
-                    {'outputName_CM'; {3, 28, 4}};
-                    {'outputPath_CM'; {3, 28, 5}};
-                    {'first_flchrome_name'; {3, 13, 2}};
-                    {'first_flchrome_channel'; {3, 13, 3}};
-                    {'first_flchrome_type'; {3, 13, 4}}; % whether constitutive or input or output
-                    {'first_flchrome_wavlen'; {3, 13, 5}};
-                    {'first_flchrome_filter'; {3, 13, 6}};
-                    {'first_flchrome_color'; {3, 13, 7}};
-                    {'first_flchrome_id'; {3, 13, 8}};
-                    {'num_channels'; {3, 24, 1}};
-                    {'bead_name'; {3, 5, 7}};
-                    {'blank_name'; {3, 9, 2}};
-                    {'all_name'; {3, 24, 4}};
-                    {'bead_tolerance'; {3, 5, 8}};
+                    {'beads.beadModel'; {3, 5, 2}}; % uses all three vals 
+                    {'beads.beadBatch'; {3, 5, 1}}; % uses all three vals 
+                    {'beads.rangeMin'; {3, 5, 3}}; % uses all three vals 
+                    {'beads.rangeMax'; {3, 5, 4}}; % uses all three vals 
+                    {'beads.peakThreshold'; {3, 5, 5}}; % uses all three vals 
+                    {'beads.beadChannel'; {3, 5, 6}}; % uses all three vals 
+                    {'beads.secondaryBeadChannel'; {3, 28, 3}}; % uses all three vals 
+                    {'relevant_channels'; {3, 24, 2}}; % uses all three vals 
+                    {'transChannelMin'; {3, 24, 3}}; % uses all three vals 
+                    {'outputName_CM'; {3, 28, 4}}; % uses all three vals 
+                    {'outputPath_CM'; {3, 28, 5}}; % uses all three vals 
+                    {'first_flchrome_name'; {3, 13, 2}}; % uses all three vals 
+                    {'first_flchrome_channel'; {3, 13, 3}}; % uses all three vals 
+                    {'first_flchrome_type'; {3, 13, 4}}; % uses all three vals, whether constitutive or input or output
+                    {'first_flchrome_wavlen'; {3, 13, 5}}; % uses all three vals 
+                    {'first_flchrome_filter'; {3, 13, 6}}; % uses all three vals 
+                    {'first_flchrome_color'; {3, 13, 7}}; % uses all three vals 
+                    {'first_flchrome_id'; {3, 13, 8}}; % uses all three vals 
+                    {'num_channels'; {3, 24, 1}}; % uses all three vals 
+                    {'bead_name'; {3, 5, 7}}; % uses all three vals 
+                    {'blank_name'; {3, 9, 2}}; % uses all three vals 
+                    {'all_name'; {3, 24, 4}}; % uses all three vals 
+                    {'bead_tolerance'; {3, 5, 8}}; % uses all three vals 
                     % Coords for variables in "Comparative Analysis"
-                    % {'device_name'; {{4, 5, 16}, {5, 5, 16}}};
-                    {'outputName_PM'; {4, 5, 13}};
-                    {'outputPath_PM'; {4, 5, 14}};
-                    {'primary_sampleColName_PM'; {4, 5, 7}};
-                    {'secondary_sampleColName_PM'; {4, 5, 10}};
-                    {'first_sampleColName_PM'; {4, 5, 1}};
-                    {'first_sampleVal_PM'; {4, 5, 4}};
-                    {'last_row_PM'; {4, 4, 1}};
+                    {'outputName_PM'; {4, 5, 13}}; % uses sh & col vals
+                    {'outputPath_PM'; {4, 5, 14}}; % uses sh & col vals
+                    {'primary_sampleColName_PM'; {4, 5, 7}}; % uses sh & col vals
+                    {'secondary_sampleColName_PM'; {4, 5, 10}}; % uses sh & col vals
+                    {'first_sampleColName_PM'; {4, 5, 1}}; % uses sh & col vals
+                    {'first_sampleVal_PM'; {4, 5, 4}}; % uses sh & col vals
                     % Coords for variables in "Transfer Curve Analysis"
-                    {'outputName_TC'; {5, 5, 14}};
-                    {'outputPath_TC'; {5, 5, 15}};
-                    {'sampleColName_TC'; {5, 5, 7}};
-                    {'first_sampleColName_TC'; {5, 5, 1}};
-                    {'first_sampleVal_TC'; {5, 5, 4}};
+                    {'outputName_TC'; {5, 5, 14}}; % uses sh & col vals
+                    {'outputPath_TC'; {5, 5, 15}}; % uses sh & col vals
+                    {'sampleColName_TC'; {5, 5, 7}}; % uses sh & col vals
+                    {'first_sampleColName_TC'; {5, 5, 1}}; % uses sh & col vals
+                    {'first_sampleVal_TC'; {5, 5, 4}}; % uses sh & col vals
                     % Coords for variables in "Optional Settings"
-                    {'first_preference_name'; {6, 3, 1}};
-                    {'first_preference_value'; {6, 3, 3}};
+                    {'first_preference_name'; {6, 3, 1}}; % uses all three vals 
+                    {'first_preference_value'; {6, 3, 3}}; % uses sh & col vals
                     };
             else
                 obj.coordinates = coords;
             end
             % Find the number of templates and update coordinates with info
             obj.coordinates = obj.findTemplates();
-            % Find position of template # and exclude from batch analysis
-            % in "Samples"
+            % Find sample column names and save into col_names property
             obj.col_names = obj.findSampleCols();
             % Find last sample row
             obj.coordinates = obj.findLastSampleRow();
@@ -223,7 +219,7 @@ classdef TemplateExtraction
         function new_coords = findTemplates(obj)
             template_col = obj.getColNum('first_filename_template');
             template_sh = obj.getSheetNum('first_filename_template');
-            first_template_row = obj.getRowNum('first_filename_template');
+            first_template_row = 1;
             coords = {};
             for i=first_template_row:size(obj.sheets{template_sh}, 1)
                 try
@@ -243,7 +239,7 @@ classdef TemplateExtraction
         function checkConditions(obj)
             condition_col = obj.getColNum('first_condition_key');
             condition_sh = obj.getSheetNum('first_condition_key');
-            first_condition_row = obj.getRowNum('first_condition_key');
+            first_condition_row = 1;
             for i=first_condition_row:size(obj.sheets{condition_sh}, 1)
                 try
                     value = obj.getExcelValuePos(condition_sh, i, condition_col, 'char');
