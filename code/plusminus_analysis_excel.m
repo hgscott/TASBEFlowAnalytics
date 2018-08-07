@@ -401,7 +401,7 @@ function [all_results, all_batch_descrips] = plusminus_analysis_excel(extractor,
                         % Get value at col_num{2} and compare with keys{2}
                         try
                             value = extractor.getExcelValuePos(sh_num2, set{k}, col_num{2});
-                            ind = double.empty(0);
+                            ind = zeros(0,0);
                             if isa(value, 'numeric')
                                 for c=1:numel(keys{2})
                                     if keys{2}{c} == value
