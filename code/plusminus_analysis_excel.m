@@ -8,8 +8,8 @@ function [all_results, all_batch_descrips] = plusminus_analysis_excel(extractor,
     experimentName = extractor.getExcelValue('experimentName', 'char'); 
     % Find preference_row
     preference_row = 0;
-    col_num = extractor.getColNum('last_row_PM');
-    sh_num = extractor.getSheetNum('last_row_PM');
+    col_num = extractor.getColNum('first_sampleColName_PM');
+    sh_num = extractor.getSheetNum('first_sampleColName_PM');
     for i=1:size(extractor.sheets{sh_num},1)
         try
             value = extractor.getExcelValuePos(sh_num, i, col_num, 'char');
@@ -401,7 +401,7 @@ function [all_results, all_batch_descrips] = plusminus_analysis_excel(extractor,
                         % Get value at col_num{2} and compare with keys{2}
                         try
                             value = extractor.getExcelValuePos(sh_num2, set{k}, col_num{2});
-                            ind = double.empty(0);
+                            ind = zeros(0,0);
                             if isa(value, 'numeric')
                                 for c=1:numel(keys{2})
                                     if keys{2}{c} == value

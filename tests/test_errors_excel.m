@@ -12,6 +12,12 @@ function test_errors_excel_filenames
     extractor = TemplateExtraction('test_templates/faulty_batch_template1.xlsx', [end_with_slash(filepath) '../']);
     CM = load_or_make_testing_colormodel();
     assertExceptionThrown(@()batch_analysis_excel(extractor, CM), 'getExcelFilename:FilenameNotFound', 'No error was raised');
+    
+function test_errors_excel_conditions
+    [filepath, ~, ~] = fileparts(mfilename('fullpath'));
+    extractor = TemplateExtraction('test_templates/faulty_batch_template1.xlsx', [end_with_slash(filepath) '../']);
+    log = TASBESession.list();
+    assertEqual(log{end}.contents{end}.name, 'InvalidValue');
 
 function test_errors_excel_session
     assertExceptionThrown(@()analyzeFromExcel('', ''), 'Octave:invalid-index', 'No error was raised');   

@@ -12,7 +12,10 @@ function beadfiles = getBeadFile(extractor)
     sh_num1 = extractor.getSheetNum('first_sample_num');
     first_sample_row = extractor.getRowNum('first_sample_num');
     sample_num_col = extractor.getColNum('first_sample_num');
-    sample_name_col = extractor.getColNum('first_sample_name');
+    sample_name_col = find(ismember(extractor.col_names, 'SAMPLE NAME'), 1);
+    if isempty(sample_name_col)
+        TASBESession.error('getBeadFile', 'InvalidHeaderName', 'The header, SAMPLE NAME, does not match with any column titles in "Samples" sheet.');
+    end
     % Go through samples in "Samples" sheet and look for matches in name to
     % elements in ref_filenames
     for i=first_sample_row:size(extractor.sheets{sh_num1},1)
