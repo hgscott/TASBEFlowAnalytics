@@ -207,7 +207,7 @@ function [results, statisticsFile, histogramFile] = batch_analysis_excel(extract
         end
         
         if i > 1
-            outputName_parts = strsplit(outputName, '.');
+            outputName_parts = strtrim(strsplit(outputName, '.'));
             outputName = [outputName_parts{1} num2str(i) '.' outputName_parts{2}];
             stemName = [stemName num2str(i)];
             statName = [statName num2str(i)];

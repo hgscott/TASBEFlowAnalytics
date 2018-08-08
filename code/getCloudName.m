@@ -48,7 +48,7 @@ function [filename] = getCloudName(extractor, row, template_num)
                 % If the contents is an array, split into
                 % subsections and make filenames for all
                 if ~isempty(strfind(section, ',')) 
-                    sub_sections = strsplit(section, ',');
+                    sub_sections = strtrim(strsplit(section, ','));
                     sections{end+1} = sub_sections;
                     multiple = numel(sub_sections);
                 else

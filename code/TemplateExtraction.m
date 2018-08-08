@@ -91,14 +91,12 @@ classdef TemplateExtraction
                     {'outputPath_PM'; {4, 5, 14}}; % uses sh & col vals
                     {'primary_sampleColName_PM'; {4, 5, 7}}; % uses sh & col vals
                     {'secondary_sampleColName_PM'; {4, 5, 10}}; % uses sh & col vals
-                    {'first_sampleColName_PM'; {4, 5, 1}}; % uses sh & col vals
-                    {'first_sampleVal_PM'; {4, 5, 4}}; % uses sh & col vals
+                    {'first_compGroup_PM'; {4, 5, 1}}; % uses sh & col vals
                     % Coords for variables in "Transfer Curve Analysis"
                     {'outputName_TC'; {5, 5, 14}}; % uses sh & col vals
                     {'outputPath_TC'; {5, 5, 15}}; % uses sh & col vals
                     {'sampleColName_TC'; {5, 5, 7}}; % uses sh & col vals
-                    {'first_sampleColName_TC'; {5, 5, 1}}; % uses sh & col vals
-                    {'first_sampleVal_TC'; {5, 5, 4}}; % uses sh & col vals
+                    {'first_compGroup_TC'; {5, 5, 1}}; % uses sh & col vals
                     % Coords for variables in "Optional Settings"
                     {'first_preference_name'; {6, 3, 1}}; % uses all three vals 
                     {'first_preference_value'; {6, 3, 3}}; % uses sh & col vals
@@ -128,7 +126,7 @@ classdef TemplateExtraction
                 % row
                 if ~isnan(cell2mat(raw(i,val_col)))
                     if ~isempty(strfind(char(cell2mat(raw(i,name_col))), 'Size'))
-                        bounds = strsplit(char(cell2mat(raw(i,val_col))), ',');
+                        bounds = strtrim(strsplit(char(cell2mat(raw(i,val_col))), ','));
                         TASBEConfig.set(char(cell2mat(raw(i,name_col))), [str2double(bounds{1}), str2double(bounds{2})]);
                     else
                         TASBEConfig.set(char(cell2mat(raw(i,name_col))), cell2mat(raw(i,val_col)));
@@ -387,7 +385,7 @@ classdef TemplateExtraction
             end
             if exist('type', 'var')
                 if strcmp(type, 'cell') 
-                    bounds = strsplit(char(value), ',');
+                    bounds = strtrim(strsplit(char(value), ','));
                     if and(isnan(str2double(bounds)), TASBEConfig.get('template.displayErrors')) 
                         TASBESession.error('TemplateExtraction','IncorrectType','Value at (%s, %s, %s) does not make a numeric array. Make sure value is in the form of #,#,#.', num2str(sheet_num), num2str(row), num2str(col));
                     elseif isnan(str2double(bounds))
