@@ -123,7 +123,7 @@ function [CM] = make_color_model_excel(extractor)
             % Extract the rest of the information for the channel
             channel_name = extractor.getExcelValuePos(sh_num2, i, flchrome_channel_col, 'char');
             excit_wavelen = extractor.getExcelValuePos(sh_num2, i, flchrome_wavlen_col, 'numeric');
-            filter = strsplit(extractor.getExcelValuePos(sh_num2, i, flchrome_filter_col, 'char'), '/');
+            filter = strtrim(strsplit(extractor.getExcelValuePos(sh_num2, i, flchrome_filter_col, 'char'), '/'));
             color = extractor.getExcelValuePos(sh_num2, i, flchrome_color_col, 'char');
             print_names{ind} = print_name;
             channel_names{ind} = channel_name;

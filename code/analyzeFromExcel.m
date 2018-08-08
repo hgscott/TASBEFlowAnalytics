@@ -46,7 +46,7 @@ function analyzeFromExcel(file, type)
                 msg = strrep(sprintf(getReport(exception, 'extended', 'hyperlinks', 'off')), newline, '');
             end
             id = exception.identifier;
-            id_parts = strsplit(id, ':');
+            id_parts = strtrim(strsplit(id, ':'));
             if numel(id_parts) > 1
                 name = '';
                 for i=2:numel(id_parts)

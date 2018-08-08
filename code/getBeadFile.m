@@ -3,7 +3,7 @@ function beadfiles = getBeadFile(extractor)
     bead_name = {extractor.getExcelValue('bead_name', 'char')};
     TASBEConfig.set('template.displayErrors', 0);
     if ~isempty(strfind(bead_name{1}, ',')) 
-        bead_name = strsplit(bead_name{1}, ',');
+        bead_name = strtrim(strsplit(bead_name{1}, ','));
     end
 
     % Name contains a cell array of bead sample names
