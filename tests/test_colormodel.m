@@ -288,3 +288,71 @@ assertElementsAlmostEqual(COMP.matrix,      1.0000, 'absolute', 1e-3);
 
 CTM = struct(CMS.color_translation_model);
 assertElementsAlmostEqual(CTM.scales,   NaN);
+
+
+function test_colormodel_fsc_ssc
+
+stem0312 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_';
+
+beadfile = [stem0312 'Beads_P3.fcs'];
+blankfile = [stem0312 'blank_P3.fcs'];
+
+% Create one channel / colorfile pair for each color
+channels = {}; colorfiles = {};
+channels{1} = Channel('PE-Tx-Red-YG-A', 561, 610, 20);
+channels{1} = setPrintName(channels{1}, 'mKate');
+channels{1} = setLineSpec(channels{1}, 'r');
+colorfiles{1} = [stem0312 'mkate_P3.fcs'];
+
+channels{2} = Channel('FSC-A', 488, 488, 10);
+channels{2} = setPrintName(channels{2}, 'FSC');
+channels{2} = setLineSpec(channels{2}, 'k');
+
+channels{3} = Channel('SSC-A', 488, 488, 10);
+channels{3} = setPrintName(channels{3}, 'SSC');
+channels{3} = setLineSpec(channels{3}, 'b');
+
+% Multi-color controls are used for converting other colors into ERF units
+% Any channel without a control mapping it to ERF will be left in arbirary units.
+colorpairfiles = {};
+
+CM = ColorModel(beadfile, blankfile, channels, colorfiles, colorpairfiles);
+
+TASBEConfig.set('beads.beadModel','SpheroTech RCP-30-5A'); % Entry from BeadCatalog.xls matching your beads
+TASBEConfig.set('beads.beadBatch','Lot AA01, AA02, AA03, AA04, AB01, AB02, AC01, GAA01-R'); % Entry from BeadCatalog.xls containing your lot
+TASBEConfig.set('beads.beadChannel','PE-TR');
+
+% Ignore all bead data below 10^rangeMin as being too "smeared" with noise
+TASBEConfig.set('beads.rangeMin', 1.8);
+% The peak threshold determines the minumum count per bin for something to
+% be considered part of a peak.  Set if automated threshold finds too many or few peaks
+TASBEConfig.set('beads.peakThreshold', 600);
+CM=set_ERF_channel_name(CM, 'PE-Tx-Red-YG-A');
+
+TASBEConfig.set('plots.plotPath', '/tmp/plots');
+% Execute and save the model
+CM=resolve(CM);
+save('-V7','/tmp/CM120312.mat','CM');
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Check results in CM:
+CMS = struct(CM);
+
+UT = struct(CMS.unit_translation);
+assertElementsAlmostEqual(UT.k_ERF,        59.9971,  'relative', 1e-2);
+assertElementsAlmostEqual(UT.first_peak,    5);
+assertElementsAlmostEqual(UT.fit_error,     0.019232,   'absolute', 0.002);
+assertElementsAlmostEqual(UT.peak_sets{1},  [110.3949 227.5807 855.4849 2.4685e+03], 'relative', 1e-2);
+
+assertEqual(numel(CMS.autofluorescence_model), 3);
+assertEqual(sum(~isempty(CMS.autofluorescence_model)), 1);
+
+AFM_R = struct(CMS.autofluorescence_model{1});
+assertElementsAlmostEqual(AFM_R.af_mean,    3.6683,  'absolute', 0.5);
+assertElementsAlmostEqual(AFM_R.af_std,     17.5621, 'absolute', 0.5);
+
+COMP = struct(CMS.compensation_model);
+assertElementsAlmostEqual(COMP.matrix,      [1 0 0; 0 1 0; 0 0 1], 'absolute', 1e-3);
+
+CTM = struct(CMS.color_translation_model);
+assertElementsAlmostEqual(CTM.scales,   [NaN NaN NaN; NaN NaN NaN; NaN NaN NaN]);
