@@ -42,9 +42,9 @@ function C = Channel(name, laser, filterC, filterW, pseudo)
     C.LineSpec='';
     C.PrintName='';
     C.unprocessed=false; % set to true for FSC/SSC channels
-    if(strcmp(C.Name,'FSC') || strcmp(C.Name,'FSC-A') || strcmp(C.Name,'FSC-H') || strcmp(C.Name,'FSC-W') || ...
-        strcmp(C.Name,'SSC') || strcmp(C.Name,'SSC-A') || strcmp(C.Name,'SSC-H') || strcmp(C.Name,'SSC-W'))
-        TASBESession.notify('TASBE:Channel','UnprocessedChannel','Channel %s has been automatically detected as unprocessed from its name');
+    if(strcmp(C.name,'FSC') || strcmp(C.name,'FSC-A') || strcmp(C.name,'FSC-H') || strcmp(C.name,'FSC-W') || ...
+        strcmp(C.name,'SSC') || strcmp(C.name,'SSC-A') || strcmp(C.name,'SSC-H') || strcmp(C.name,'SSC-W'))
+        TASBESession.notify('TASBE:Channel','UnprocessedChannel','Channel %s has been automatically detected as unprocessed from its name',C.name);
         C.unprocessed=true;
     end
     C=class(C,'Channel');
