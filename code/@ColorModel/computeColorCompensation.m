@@ -14,9 +14,13 @@ n = numel(CM.Channels);
 matrix = zeros(n,n); error = zeros(n,n);
 
 for i=1:n
+    if(isUnprocessed(CM.Channels{i}))
+        TASBESession.notify('TASBE:Compensation','UnprocessedChannel','Skipping compensation computation for unprocessed channel %s',getName(CM.Channels{i}));
+        continue;
+    end
     for j=1:n
-        % Don't need to test self
-        if i==j, matrix(j,i) = 1; error(j,i) = 0; continue; end
+        % Don't need to compensate for self or for unprocessed
+        if (i==j || isUnprocessed(CM.Channels{j})), matrix(j,i) = 1; error(j,i) = 0; continue; end
         % Compute model
         [b_ij, b_ij_err] = make_linear_compensation_model(CM, CM.ColorFiles{i}, i, j);
         matrix(j,i) = b_ij; error(j,i) = b_ij_err;
