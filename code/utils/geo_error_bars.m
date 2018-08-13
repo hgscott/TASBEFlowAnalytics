@@ -10,10 +10,14 @@ function [LU L U] = geo_error_bars(val,err)
 % function [LU L U] = geo_error_bars(val,err)
 %
 % Function for turning geometric error into Lower/Upper error bar pairs
-% for graphing routines that assume arithmetic error
+% for graphing routines that assume arithmetic error.
 %
 % This function assumes that error is represented positively
 % in terms of fold, i.e. err >= 1.
+%
+% For example, geo_error_bars(10000,4) produces [7500; 30000]
+% Adding and subtracting these from 10000 yields [2500; 40000], 
+% i.e., 4-fold lower and higher than the original.
 
 U = val.*(err-1);
 L = val.*(1-(1./err));
