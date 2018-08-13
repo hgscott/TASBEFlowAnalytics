@@ -26,6 +26,8 @@ function data = readfcs_compensated_ERF(CM,filename,with_AF,floor)
     for i=1:numel(CM.Channels)
         if(~isUnprocessed(CM.Channels{i})) % only for processed channels
             data(:,i) = ERF_channel_data(:,i)*k_ERF;
+        else
+            data(:,i) = ERF_channel_data(:,i);
         end
     end
     
