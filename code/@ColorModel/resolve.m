@@ -7,7 +7,6 @@
 % package distribution's top directory.
 
 function CM=resolve(CM) % call after construction and configuration
-
     % fill in channel descriptors from designated file (default = beadfile)
     if TASBEConfig.isSet('flow.channel_template_file'), 
         template = TASBEConfig.get('flow.channel_template_file');
@@ -20,6 +19,7 @@ function CM=resolve(CM) % call after construction and configuration
         CM.Channels{i} = setDescription(CM.Channels{i},desc);
         % TODO: figure out how to add FSC and SSC channel descriptions (used by filters) for confirmation
     end
+    
     
     % build model
     % First, unit translation from beads
@@ -65,7 +65,7 @@ function CM=resolve(CM) % call after construction and configuration
             if(CM.Channels{i}==CM.ERF_channel) i_ERF = i; end;
         end
         for i=1:numel(CM.Channels),
-            if(CM.Channels{i}==CM.ERF_channel) continue; end;
+            if(CM.Channels{i}==CM.ERF_channel || isUnprocessed(CM.Channels{i})) continue; end;
             AFMi = CM.autofluorescence_model{i};
             k_ERF=getK_ERF(CM.unit_translation);
             CM.autofluorescence_model{i}=ERFize(AFMi,scales(i,i_ERF),k_ERF);

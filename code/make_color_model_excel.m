@@ -1,9 +1,9 @@
 % Function that uses a template spreadsheet to create and save a Color Model. 
 % Inputs include an Excel object.  
-function [CM] = make_color_model_excel(path, extractor)
+function [CM] = make_color_model_excel(extractor)
     % Reset and update TASBEConfig 
     extractor.TASBEConfig_updates();
-    
+    path = extractor.path;
     % Set TASBEConfigs and create variables needed to generate the CM
     TASBEConfig.set('template.displayErrors', 1);
     experimentName = extractor.getExcelValue('experimentName', 'char');
@@ -32,7 +32,6 @@ function [CM] = make_color_model_excel(path, extractor)
         transChannelMin = {};
     end
     
-    extractor.setTASBEConfig('beads.rangeMax', 'numeric');
     try
         plot_path = extractor.getExcelValue('plots.plotPath', 'char', 1);
         plot_path = make_filename_absolute(plot_path, path);
@@ -45,6 +44,7 @@ function [CM] = make_color_model_excel(path, extractor)
     extractor.setTASBEConfig('beads.beadModel', 'char');
     extractor.setTASBEConfig('beads.beadBatch', 'char');
     extractor.setTASBEConfig('beads.rangeMin', 'numeric');
+    extractor.setTASBEConfig('beads.rangeMax', 'numeric');
     extractor.setTASBEConfig('beads.peakThreshold', 'numeric');
     extractor.setTASBEConfig('beads.beadChannel', 'char');
     extractor.setTASBEConfig('beads.secondaryBeadChannel', 'char');
@@ -58,7 +58,10 @@ function [CM] = make_color_model_excel(path, extractor)
     sh_num1 = extractor.getSheetNum('first_sample_num');
     first_sample_row = extractor.getRowNum('first_sample_num');
     sample_num_col = extractor.getColNum('first_sample_num');
-    sample_name_col = extractor.getColNum('first_sample_name');
+    sample_name_col = find(ismember(extractor.col_names, 'SAMPLE NAME'), 1);
+    if isempty(sample_name_col)
+        TASBESession.error('make_color_model_excel', 'InvalidHeaderName', 'The header, SAMPLE NAME, does not match with any column titles in "Samples" sheet.');
+    end
     % Go through samples in "Samples" sheet and look for matches in name to
     % elements in ref_filenames
     for i=first_sample_row:size(extractor.sheets{sh_num1},1)
@@ -73,12 +76,12 @@ function [CM] = make_color_model_excel(path, extractor)
         end
         for j=1:numel(ref_filenames)
             if strcmpi(name, ref_filenames{j})
-                file = getExcelFilename(extractor, i, path);
+                file = getExcelFilename(extractor, i);
                 output_filenames{j} = file{1};
             end
         end
     end
-    bead_files = getBeadFile(extractor, path);
+    bead_files = getBeadFile(extractor);
     beads_file = bead_files{1};
     blank_file = output_filenames{1};
     all_file = output_filenames{2};
@@ -120,7 +123,7 @@ function [CM] = make_color_model_excel(path, extractor)
             % Extract the rest of the information for the channel
             channel_name = extractor.getExcelValuePos(sh_num2, i, flchrome_channel_col, 'char');
             excit_wavelen = extractor.getExcelValuePos(sh_num2, i, flchrome_wavlen_col, 'numeric');
-            filter = strsplit(extractor.getExcelValuePos(sh_num2, i, flchrome_filter_col, 'char'), '/');
+            filter = strtrim(strsplit(extractor.getExcelValuePos(sh_num2, i, flchrome_filter_col, 'char'), '/'));
             color = extractor.getExcelValuePos(sh_num2, i, flchrome_color_col, 'char');
             print_names{ind} = print_name;
             channel_names{ind} = channel_name;
@@ -150,7 +153,7 @@ function [CM] = make_color_model_excel(path, extractor)
         end
         for j=1:numel(sample_ids)
             if strcmpi(name, sample_ids{j})
-                file = getExcelFilename(extractor, i, path);
+                file = getExcelFilename(extractor, i);
                 colorfiles{j} = file{1};
             end
         end

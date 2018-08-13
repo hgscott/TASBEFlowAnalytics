@@ -15,8 +15,12 @@ path = TASBEConfig.get('plots.plotPath');
 
 autofluorescence_model = cell(numel(CM.Channels),1);
 for i=1:numel(CM.Channels)
-    found = false;
     name=getName(CM.Channels{i});
+    if(isUnprocessed(CM.Channels{i}))
+        TASBESession.notify('TASBE:Autofluorescence','UnprocessedChannel','Skipping autofluorescence computation for unprocessed channel %s',name);
+        continue;
+    end
+    found = false;
     for j=1:numel(fcshdr.par)
         if(strcmp(name,fcshdr.par(j).name) || strcmp(name,fcshdr.par(j).rawname))
             autofluorescence_model{i} = AutoFluorescenceModel(rawfcs(:,j));

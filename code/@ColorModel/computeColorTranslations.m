@@ -23,6 +23,9 @@ for i=1:numel(CM.ColorPairFiles)
     cCtrl = indexof(CM.Channels,cp{3});
     if(cCtrl==-1), TASBESession.error('TASBE:ColorTranslation','MissingTranslationChannel','Missing channel %s',getPrintName(cp{3})); end
     
+    if(isUnprocessed(CM.Channels{cX})), TASBESession.error('TASBE:ColorTranslation','UnprocessedChannel','Cannot translate unprocessed channel %s',getName(cX)); end;
+    if(isUnprocessed(CM.Channels{cY})), TASBESession.error('TASBE:ColorTranslation','UnprocessedChannel','Cannot translate unprocessed channel %s',getName(cY)); end;
+    
     data = readfcs_compensated_au(CM,cp{4},false,true); % Leave out AF, use floor
     if(cX==cCtrl || cY==cCtrl),
         [scales(cX,cY) CM] = compute_two_color_translation_scale(CM,data,cX,cY);

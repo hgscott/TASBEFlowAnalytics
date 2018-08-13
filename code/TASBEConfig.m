@@ -126,7 +126,7 @@ classdef TASBEConfig
             s.compensation.minimumBinCount = 10;        % ignore bins with less than this many elements
             doc.compensation.highBleedWarning = 'Warns about high bleed at this level';
             s.compensation.highBleedWarning = 0.1;      % Warn about high bleed at this level
-            doc.compensation.plot = 'Determines whether compensation plots should be created?';
+            doc.compensation.plot = 'Determines whether compensation plots should be created';
             s.compensation.plot = [];                   % Should compensation plots be created?
             defaults('compensation.plot') = 'calibration.plot';
             doc.compensation.visiblePlots = 'If true, compensation plots are visible; otherwise, they are hidden for later saving';

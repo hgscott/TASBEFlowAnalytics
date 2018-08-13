@@ -8,10 +8,10 @@ function test_suite = test_plusminus_excel
 
 function test_plusminus_excel_endtoend
     % Create TemplateExtraction object
-    extractor = TemplateExtraction('test_templates/test_batch_template4.xlsx');
     [filepath, ~, ~] = fileparts(mfilename('fullpath'));
+    extractor = TemplateExtraction('test_templates/test_batch_template4.xlsx', [end_with_slash(filepath) '../']);
     CM = load_or_make_testing_colormodel();
-    [all_results, all_batch_description] = plusminus_analysis_excel([end_with_slash(filepath) '../'], extractor, CM);
+    [all_results, all_batch_description] = plusminus_analysis_excel(extractor, CM);
     assertEqual(numel(all_results), 1);
     results = all_results{1};
     assertEqual(numel(all_batch_description), 1);
