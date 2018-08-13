@@ -41,6 +41,12 @@ function C = Channel(name, laser, filterC, filterW, pseudo)
     C.description = []; % file descriptor: will get filled in by colormodel resolution
     C.LineSpec='';
     C.PrintName='';
+    C.unprocessed=false; % set to true for FSC/SSC channels
+    if(strcmp(C.Name,'FSC') || strcmp(C.Name,'FSC-A') || strcmp(C.Name,'FSC-H') || strcmp(C.Name,'FSC-W') || ...
+        strcmp(C.Name,'SSC') || strcmp(C.Name,'SSC-A') || strcmp(C.Name,'SSC-H') || strcmp(C.Name,'SSC-W'))
+        TASBESession.notify('TASBE:Channel','UnprocessedChannel','Channel %s has been automatically detected as unprocessed from its name');
+        C.unprocessed=true;
+    end
     C=class(C,'Channel');
 
 
