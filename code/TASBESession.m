@@ -112,52 +112,93 @@ classdef TASBESession
     
     methods(Static)
         function out = error(classname,name,message,varargin)
-            event.name = name;
-            event.classname = classname;
+            % check if previous event is an abort, if so keep aborting
+            log = TASBESession.list();
+            if strcmp(log{end}.contents{end}.name, 'Abort')
+                abort();
+            else
+                event.name = name;
+                event.classname = classname;
+                event.type = 'error';
+                event.message = sprintf(message,varargin{:});
+                out = TASBESession.access('insert',classname,event);
+                errorStruct.message = strrep(event.message,'%','%%');
+                errorStruct.identifier = [classname ':' name];
+                error(errorStruct);
+            end
+        end
+        
+        function out = abort()
+            event.name = 'Abort';
+            event.classname = 'TASBESession';
             event.type = 'error';
-            event.message = sprintf(message,varargin{:});
-            out = TASBESession.access('insert',classname,event);
+            event.message = 'Exiting out of current analysis';
+            out = TASBESession.access('insert',event.classname,event);
             errorStruct.message = strrep(event.message,'%','%%');
-            errorStruct.identifier = [classname ':' name];
+            errorStruct.identifier = [event.classname ':' event.name];
             error(errorStruct);
         end
         
         function out = warn(classname,name,message,varargin)
-            % abort if warning is turned off
-            if TASBESession.checkIfWarningOff([classname ':' name]), return; end;
-            % otherwise, continue
-            event.name = name;
-            event.classname = classname;
-            event.type = 'failure';
-            event.message = sprintf(message,varargin{:});
-            out = TASBESession.access('insert',classname,event);
-            warning([classname ':' name],strrep(event.message,'%','%%'));
+            % check if previous event is an abort, if so keep aborting
+            log = TASBESession.list();
+            if strcmp(log{end}.contents{end}.name, 'Abort')
+                abort();
+            else
+                % abort if warning is turned off
+                if TASBESession.checkIfWarningOff([classname ':' name]), return; end;
+                % otherwise, continue
+                event.name = name;
+                event.classname = classname;
+                event.type = 'failure';
+                event.message = sprintf(message,varargin{:});
+                out = TASBESession.access('insert',classname,event);
+                warning([classname ':' name],strrep(event.message,'%','%%'));
+            end
         end
         
         function out = skip(classname,name,message,varargin)
-            event.name = name;
-            event.classname = classname;
-            event.type = 'skip';
-            event.message = sprintf(message,varargin{:});
-            out = TASBESession.access('insert',classname,event);
+            % check if previous event is an abort, if so keep aborting
+            log = TASBESession.list();
+            if strcmp(log{end}.contents{end}.name, 'Abort')
+                abort();
+            else
+                event.name = name;
+                event.classname = classname;
+                event.type = 'skip';
+                event.message = sprintf(message,varargin{:});
+                out = TASBESession.access('insert',classname,event);
+            end
         end
         
         function out = succeed(classname,name,message,varargin)
-            event.name = name;
-            event.classname = classname;
-            event.type = 'success';
-            event.message = sprintf(message,varargin{:});
-            out = TASBESession.access('insert',classname,event);
-            fprintf([strrep(event.message,'%','%%') '\n']);
+            % check if previous event is an abort, if so keep aborting
+            log = TASBESession.list();
+            if strcmp(log{end}.contents{end}.name, 'Abort')
+                abort();
+            else
+                event.name = name;
+                event.classname = classname;
+                event.type = 'success';
+                event.message = sprintf(message,varargin{:});
+                out = TASBESession.access('insert',classname,event);
+                fprintf([strrep(event.message,'%','%%') '\n']);
+            end
         end
         
         function out = notify(classname,name,message,varargin)
-            event.name = name;
-            event.classname = classname;
-            event.type = 'success';
-            event.message = sprintf(message,varargin{:});
-            out = TASBESession.access('insert',classname,event);
-            fprintf(['Note: ' strrep(event.message,'%','%%') '\n']);
+            % check if previous event is an abort, if so keep aborting
+            log = TASBESession.list();
+            if strcmp(log{end}.contents{end}.name, 'Abort')
+                abort();
+            else
+                event.name = name;
+                event.classname = classname;
+                event.type = 'success';
+                event.message = sprintf(message,varargin{:});
+                out = TASBESession.access('insert',classname,event);
+                fprintf(['Note: ' strrep(event.message,'%','%%') '\n']);
+            end
         end
         
         function reset()
