@@ -38,10 +38,22 @@ function all_results = transfercurve_analysis_excel(extractor, CM)
         end
     end
     
-    if num_runs > 4
-        preference_row = num_runs + 5;
-    else
-        preference_row = 13;
+    % Find preference_row
+    preference_row = 0;
+    col_num = extractor.getColNum('first_compGroup_TC');
+    for i=1:size(extractor.sheets{sh_num3},1)
+        try
+            value = extractor.getExcelValuePos(sh_num3, i, col_num, 'char');
+            if strcmp(value, 'Required: Instructions to use button below')
+                preference_row = i + 2;
+                break
+            end
+        catch
+            continue
+        end
+    end
+    if preference_row == 0
+        TASBESession.error('transfercurve_analysis_excel', 'MissingPreference', 'No end row number found for plusminus analysis. Make sure run button and instructions are in column A.')
     end
 
     % Load the color model
