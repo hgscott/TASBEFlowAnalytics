@@ -36,10 +36,10 @@ function test_batch_output_excel_endtoend
     offFracs = statsCell(:,30);
     
     % Check on/off frac mean and std values
-    assertElementsAlmostEqual(results{1}.on_fracMean, 0.5791, 'relative', 1e-2);
-    assertElementsAlmostEqual(results{1}.off_fracMean, 0.4209, 'relative', 1e-2);
-    assertElementsAlmostEqual(results{1}.on_fracStd, 0.0038, 'relative', 1e-2);
-    assertElementsAlmostEqual(results{1}.off_fracStd, 0.0038, 'relative', 1e-2);
+    assertElementsAlmostEqual(round(results{1}.on_fracMean, 4), 0.5791, 'relative', 1e-2);
+    assertElementsAlmostEqual(round(results{1}.off_fracMean, 4), 0.4209, 'relative', 1e-2);
+    assertElementsAlmostEqual(round(results{1}.on_fracStd, 4), 0.0038, 'relative', 1e-2);
+    assertElementsAlmostEqual(round(results{1}.off_fracStd, 4), 0.0038, 'relative', 1e-2);
 
     % Split the hist table
     binCounts = histCell(:,3:5);
