@@ -26,6 +26,7 @@ function statisticsFile = writeStatisticsCsv(colorModel, channels, sampleIds, sa
         totalCounts = cell(numConditions, 1);
         geoMeans = totalCounts; geoStdDev = totalCounts;
         gmmMeans = totalCounts; gmmStds = totalCounts; gmmWeights = totalCounts;
+        onFracs = totalCounts; offFracs = totalCounts;
 
         replicates = zeros(numConditions, 1);
 
@@ -33,7 +34,8 @@ function statisticsFile = writeStatisticsCsv(colorModel, channels, sampleIds, sa
             replicates(i) = numel(sampleresults{i});
             totalCounts{i} = cell(1,replicates(i));
             geoMeans{i} = totalCounts{i}; geoStdDev{i} = totalCounts{i};
-            gmmMeans{i} = totalCounts{i}; gmmStds{i} = totalCounts{i}; gmmWeights{i} = totalCounts{i};
+            gmmMeans{i} = totalCounts{i}; gmmStds{i} = totalCounts{i}; gmmWeights{i} = totalCounts{i}; 
+            onFracs{i} = totalCounts{i}; offFracs{i} = totalCounts{i};
             for j=1:replicates(i)
                 totalCounts{i}{j} = sum(sampleresults{i}{j}.BinCounts);
                 geoMeans{i}{j} = limitPrecision(sampleresults{i}{j}.Means,4);
@@ -42,6 +44,8 @@ function statisticsFile = writeStatisticsCsv(colorModel, channels, sampleIds, sa
                 gmmMeans{i}{j} = limitPrecision(sampleresults{i}{j}.PopComponentMeans,4);
                 gmmStds{i}{j} = limitPrecision(sampleresults{i}{j}.PopComponentStandardDevs,4);
                 gmmWeights{i}{j} = limitPrecision(sampleresults{i}{j}.PopComponentWeights,4);
+                onFracs{i}{j} = limitPrecision(sampleresults{i}{j}.on_frac,4);
+                offFracs{i}{j} = limitPrecision(sampleresults{i}{j}.off_frac,4);
             end
         end
 
@@ -64,7 +68,7 @@ function statisticsFile = writeStatisticsCsv(colorModel, channels, sampleIds, sa
         for i=1:numConditions
             startingRow = endingRow + 1;
             endingRow = startingRow + replicates(i) - 1;
-            statsTable(startingRow:endingRow,1:numColumns) = formatDataPerSampleIndivdualColumns(numel(channels), sampleIds{i}, totalCounts{i}, geoMeans{i}, geoStdDev{i}, gmmMeans{i}, gmmStds{i}, gmmWeights{i});
+            statsTable(startingRow:endingRow,1:numColumns) = formatDataPerSampleIndivdualColumns(numel(channels), sampleIds{i}, totalCounts{i}, geoMeans{i}, geoStdDev{i}, gmmMeans{i}, gmmStds{i}, gmmWeights{i}, onFracs{i}, offFracs{i});
         end
 
         % Needed to add column names when I created the tables due to conflicts
@@ -82,7 +86,7 @@ function statisticsFile = writeStatisticsCsv(colorModel, channels, sampleIds, sa
     end
 end
 
-function perSampleTable = formatDataPerSampleIndivdualColumns(numChannels, sampleId, totalCounts, means, stddevs, gmm_means, gmm_stds, gmm_weights)
+function perSampleTable = formatDataPerSampleIndivdualColumns(numChannels, sampleId, totalCounts, means, stddevs, gmm_means, gmm_stds, gmm_weights, on_fracs, off_fracs)
     % SampleId should just be a string. Means and stddevs should be a 1 by
     % number of channels matrix.  TotalCounts should be a 1 by number of
     % channels matrix.
@@ -119,7 +123,7 @@ function perSampleTable = formatDataPerSampleIndivdualColumns(numChannels, sampl
     % Pad the sampleId
     ID = [{sampleId}; sampleIdPadding];
     
-    perSampleTable = [ID, counts, geoMeans, geoStdDevs, gmmMeans, gmmStds, gmmWeights];
+    perSampleTable = [ID, counts, geoMeans, geoStdDevs, gmmMeans, gmmStds, gmmWeights, transpose(on_fracs), transpose(off_fracs)];
     
 end
 
@@ -147,6 +151,6 @@ function fileHeader = buildDefaultStatsFileHeader(channels, units, numComponents
     
     % Don't separate with commas. We want all the column names in a cell
     % array so we can pass them to a table.
-    fileHeader = {'Id', binNames{:}, meanNames{:}, stdDevNames{:}, gmmMeanNames{:}, gmmStdNames{:}, gmmWeightNames{:}};
+    fileHeader = {'Id', binNames{:}, meanNames{:}, stdDevNames{:}, gmmMeanNames{:}, gmmStdNames{:}, gmmWeightNames{:}, 'On Fraction', 'Off Fraction'};
 end
 

@@ -28,11 +28,13 @@
        % PopComponentMeans       % table of n_components X n_channels
        % PopComponentStandardDevs % table of n_components X n_channels
        % PopComponentWeights     % table of n_components X n_channels
+   % Frac of points in on group (determined by threshold)
+   % Frac of points in off group (determined by threshold)
 
 function SR = SampleResults(Experiment, File, AnalysisParameters, BinCounts, Means, StandardDevs, ...
     FractionActive, PlasmidEstimates, PlasmidModel, ...
     Histograms, PopMeans, PopStandardDevs, PopPeaks, Excluded, NonExpressing, ...
-    PopComponentMeans, PopComponentStandardDevs, PopComponentWeights)
+    PopComponentMeans, PopComponentStandardDevs, PopComponentWeights, on_frac, off_frac)
         SR.version = tasbe_version();
         SR.Experiment = Experiment();
         SR.File = File;
@@ -55,6 +57,8 @@ function SR = SampleResults(Experiment, File, AnalysisParameters, BinCounts, Mea
         SR.PopComponentMeans = [];
         SR.PopComponentStandardDevs = [];
         SR.PopComponentWeights = [];
+        SR.on_frac = 1;
+        SR.off_frac = 0;
    if nargin > 0
         SR.Experiment = Experiment;
         SR.File = File;
@@ -77,7 +81,11 @@ function SR = SampleResults(Experiment, File, AnalysisParameters, BinCounts, Mea
         SR.PopComponentMeans = PopComponentMeans;
         SR.PopComponentStandardDevs = PopComponentStandardDevs;
         SR.PopComponentWeights = PopComponentWeights;
-    end;
+        if nargin > 18
+            SR.on_frac = on_frac;
+            SR.off_frac = off_frac;
+        end
+   end
     
   %FY: I intentionally commented out the following class statement. 
   %There are no methods for this class thus it is as good as a struct.

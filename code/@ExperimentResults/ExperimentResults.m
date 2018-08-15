@@ -41,6 +41,10 @@
 %         StdOfPopComponentMeans      % table of {Channel,n_components x n_inductions}
 %         StdOfPopComponentStandardDevs % table of {Channel,n_components x n_inductions}
 %         StdOfPopComponentWeights    % table of {Channel,n_components x n_inductions}
+%         on_fracMean                 % arithmetic mean of frac of points in on group between replicates (determined by threshold)
+%         off_fracMean                % arithmetic mean of frac of points in off group between replicates (determined by threshold)
+%         on_fracStd                 % arithmetic std of frac of points in on group between replicates (determined by threshold)
+%         off_fracStd                % arithmetic std of frac of points in off group between replicates (determined by threshold)
 
 function ER = ExperimentResults(Exp, AP, ReplicateCounts, BinCounts, ...
                         Means, StandardDevs, PlasmidEstimates, FractionActive, ...
@@ -48,7 +52,7 @@ function ER = ExperimentResults(Exp, AP, ReplicateCounts, BinCounts, ...
                         PopComponentMeans, PopComponentStandardDevs, PopComponentWeights, ...
                         StdOfMeans, StdOfStandardDevs, StdOfPlasmidEstimates, StdOfFractionActive, ...
                         StdOfPopMeans, StdOfPopStandardDevs, StdOfHistograms, StdOfExcluded, StdOfNonExpressing, ...
-                        StdOfPopComponentMeans, StdOfPopComponentStandardDevs, StdOfPopComponentWeights)
+                        StdOfPopComponentMeans, StdOfPopComponentStandardDevs, StdOfPopComponentWeights, on_fracMean, off_fracMean, on_fracStd, off_fracStd)
                 ER.version = tasbe_version();
             ER.Experiment = Experiment();
                 ER.AnalysisParameters = AnalysisParameters();
@@ -110,6 +114,12 @@ function ER = ExperimentResults(Exp, AP, ReplicateCounts, BinCounts, ...
                 ER.StdOfPopComponentMeans = StdOfPopComponentMeans;
                 ER.StdOfPopComponentStandardDevs = StdOfPopComponentStandardDevs;
                 ER.StdOfPopComponentWeights = StdOfPopComponentWeights;
+                if nargin > 28
+                    ER.on_fracMean = on_fracMean;
+                    ER.off_fracMean = off_fracMean;
+                    ER.on_fracStd = on_fracStd;
+                    ER.off_fracStd = off_fracStd;
+                end
             end
             
             ER=class(ER,'ExperimentResults');

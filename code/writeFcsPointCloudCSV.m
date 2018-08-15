@@ -12,7 +12,6 @@
 function writeFcsPointCloudCSV(CM, filenames, data)
     if TASBEConfig.get('flow.outputPointCloud')
         n_conditions = numel(filenames);
-
         % Write each file for each condition
         for i=1:n_conditions
             perInducerFiles = filenames{i};
