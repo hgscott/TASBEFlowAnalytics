@@ -9,7 +9,26 @@ function [results, statisticsFile, histogramFile] = batch_analysis_excel(extract
     TASBEConfig.set('template.displayErrors', 0);
     
     path = extractor.path;
-
+    
+    % Double checking the preference_row
+    preference_row2 = 0;
+    col_num = extractor.getColNum('last_sample_num');
+    sh_num = extractor.getSheetNum('last_sample_num');
+    for i=1:size(extractor.sheets{sh_num},1)
+        try
+            value = extractor.getExcelValuePos(sh_num, i, col_num, 'char');
+            if strcmp(value, 'Required: Instructions to use button below')
+                preference_row2 = i + 2;
+                break
+            end
+        catch
+            continue
+        end
+    end
+    if preference_row ~= preference_row2
+        TASBESession.error('batch_analysis_excel', 'MissingPreference', 'Make sure there is an empty row between last sample and Preferences for Batch Analysis')
+    end
+   
     % Load the color model
     if nargin < 2
         % Obtain the CM_name
