@@ -10,6 +10,7 @@ function test_batchAnalysisEndtoend
 
 TASBEConfig.set('flow.outputPointCloud','true');
 TASBEConfig.set('flow.pointCloudPath','/tmp/CSV/');
+TASBEConfig.set('flow.onThreshold', 10^4);
 
 CM = load_or_make_testing_colormodel();
 stem1011 = '../TASBEFlowAnalytics-Tutorial/example_assay/LacI-CAGop_';
@@ -87,7 +88,14 @@ geoStdDevs = statsCell(:,8:10);
 gmmMeans = statsCell(:,11:16);
 gmmStds = statsCell(:,17:22);
 gmmWeights = statsCell(:,23:28);
+onFracs = statsCell(:,29);
+offFracs = statsCell(:,30);
 
+% Check on/off frac mean and std values
+assertElementsAlmostEqual(round(results{1}.on_fracMean.*10000)./10000, 0.5791, 'relative', 1e-2);
+assertElementsAlmostEqual(round(results{1}.off_fracMean.*10000)./10000, 0.4209, 'relative', 1e-2);
+assertElementsAlmostEqual(round(results{1}.on_fracStd.*10000)./10000, 0.0038, 'relative', 1e-2);
+assertElementsAlmostEqual(round(results{1}.off_fracStd.*10000)./10000, 0.0038, 'relative', 1e-2);
 
 % Split the hist table
 binCounts = histCell(:,3:5);
@@ -157,6 +165,24 @@ expected_gmm_weights = [...
     0.5000    0.5000    0.4195    0.5805    0.3215    0.6785; % row 1
     ];
 
+expected_on_fracs = [...
+    0.5818
+    0.5764
+    0.5793
+    0.5770
+    0.5815
+    0.5838
+    ];
+
+expected_off_fracs = [...
+    0.4182
+    0.4236
+    0.4207
+    0.4230
+    0.4185
+    0.4162
+    ];
+    
 assertEqual(numel(sampleIDs), 3);
 %assertEqual(numel(sampleIDs), 7);
 
@@ -178,6 +204,8 @@ end
 assertElementsAlmostEqual(cell2mat(gmmMeans(1,:)), expected_gmm_means, 'relative', 1e-2);
 assertElementsAlmostEqual(cell2mat(gmmStds(1,:)), expected_gmm_stds, 'relative', 1e-2);
 assertElementsAlmostEqual(cell2mat(gmmWeights(1,:)), expected_gmm_weights, 'relative', 1e-2);
+assertElementsAlmostEqual(cell2mat(onFracs), expected_on_fracs, 'relative', 1e-2);
+assertElementsAlmostEqual(cell2mat(offFracs), expected_off_fracs, 'relative', 1e-2);
 
 % Check the first five rows of the first point cloud file
 expected_pointCloud = [...

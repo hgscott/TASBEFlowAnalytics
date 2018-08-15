@@ -128,6 +128,9 @@ classdef TemplateExtraction
                     if ~isempty(strfind(char(cell2mat(raw(i,name_col))), 'Size'))
                         bounds = strtrim(strsplit(char(cell2mat(raw(i,val_col))), ','));
                         TASBEConfig.set(char(cell2mat(raw(i,name_col))), [str2double(bounds{1}), str2double(bounds{2})]);
+                    elseif ~isempty(strfind(char(cell2mat(raw(i,val_col))), '^'))
+                        val = str2num(char(cell2mat(raw(i,val_col))));
+                        TASBEConfig.set(char(cell2mat(raw(i,name_col))), val);
                     else
                         TASBEConfig.set(char(cell2mat(raw(i,name_col))), cell2mat(raw(i,val_col)));
                     end

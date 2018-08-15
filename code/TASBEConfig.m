@@ -29,6 +29,8 @@ classdef TASBEConfig
             s.flow.rangeMin = 0;                           
             doc.flow.rangeMax = 'bin maximum (log10 scale)';
             s.flow.rangeMax = 7;
+            doc.flow.onThreshold = 'Threshold to differentiate between on and off events. Points with values equal to threshold are placed in the on group.';
+            s.flow.onThreshold = 0;
             doc.flow.outputPointCloud = 'if true, output point-cloud for each calibrated read';
             s.flow.outputPointCloud = false;
             doc.flow.pointCloudPath = 'location for point-cloud outputs';
