@@ -64,7 +64,11 @@
             end
             
             % Seeded centers: [8], [5 8], [5 6.5 8], [5 6 7 8], ...
-            min_center =  log10(getMeanERF(CFP_af));
+            if(~isempty(CFP_af)),
+                min_center = log10(getMeanERF(CFP_af));
+            else
+                min_center = 1;
+            end
             if n_components == 1, 
                 initial_centers = 1;
             else

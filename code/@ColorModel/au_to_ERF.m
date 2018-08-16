@@ -9,10 +9,10 @@
 % package distribution's top directory.
 
 function data = au_to_ERF(CM,channel,audata)
-    ERF_channel_AU_data = zeros(size(audata));
-    for i=1:numel(CM.Channels)
-        ERF_channel_AU_data = translate(CM.color_translation_model,audata,channel,CM.ERF_channel);
-    end
+    % don't attempt to translate for unprocessed channels
+    if(isUnprocessed(channel)), data = audata; return; end
+    
+    ERF_channel_AU_data = translate(CM.color_translation_model,audata,channel,CM.ERF_channel);
     % Translate ERF channel AU to ERFs
     k_ERF= getK_ERF(CM.unit_translation);
     data = ERF_channel_AU_data*k_ERF;

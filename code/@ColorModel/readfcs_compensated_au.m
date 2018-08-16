@@ -14,9 +14,9 @@ function data = readfcs_compensated_au(CM,filename,with_AF,floor)
     if(CM.initialized<0.5), TASBESession.error('TASBE:ReadFCS','Unresolved','Cannot read a.u.: ColorModel not yet resolved'); end; % ensure initted
 
     % Acquire initial data, discarding likely contaminated portions
-    [rawfcs fcshdr] = read_filtered_au(CM,filename);
+    [rawfcs, fcshdr] = read_filtered_au(CM,filename);
 
-    [rawdata channel_desc] = select_channels(CM.Channels,rawfcs,fcshdr);
+    [rawdata, channel_desc] = select_channels(CM.Channels,rawfcs,fcshdr);
     
     % check if voltages are identical to those of the color model, warn if otherwise
     ok = true;
@@ -33,10 +33,14 @@ function data = readfcs_compensated_au(CM,filename,with_AF,floor)
         end
     end
 
-    % Remove autofluorescence
+    % Remove autofluorescence from processed channels
     no_AF_data = zeros(size(rawdata));
     for i=1:numel(CM.Channels)
-        no_AF_data(:,i) = rawdata(:,i)-getMean(CM.autofluorescence_model{i});
+        if(~isUnprocessed(CM.Channels{i}))
+            no_AF_data(:,i) = rawdata(:,i)-getMean(CM.autofluorescence_model{i});
+        else
+            no_AF_data(:,i) = rawdata(:,i);
+        end
     end
     % make sure nothing's below 1, for compensation and geometric statistics
     % (compensation can be badly thrown off by negative values)
@@ -46,7 +50,9 @@ function data = readfcs_compensated_au(CM,filename,with_AF,floor)
     % Return autofluorescence, if desired
     if(with_AF)
         for i=1:numel(CM.Channels)
-            data(:,i) = data(:,i)+getMean(CM.autofluorescence_model{i});
+            if(~isUnprocessed(CM.Channels{i})) % only adjust processed channels
+                data(:,i) = data(:,i)+getMean(CM.autofluorescence_model{i});
+            end
         end
     end
     % make sure nothing's below 1, for geometric statistics

@@ -21,6 +21,9 @@
 
 function [UT CM] = beads_to_ERF_model(CM, beadfile)
 ERF_channel = CM.ERF_channel;
+if(isUnprocessed(ERF_channel)) 
+    TASBESession.error('TASBE:Beads','ERFUnprocessed','ERF channel %s cannot be unprocessed',getName(ERF_Channel));
+end
 
 makePlots = TASBEConfig.get('beads.plot');
 visiblePlots = TASBEConfig.get('beads.visiblePlots');

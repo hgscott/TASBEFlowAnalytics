@@ -15,10 +15,11 @@ n = numel(CM.Channels);
 if n==1, return; end; % nothing to plot if there's only one channel
 
 for driven=1:n
+    if(isUnprocessed(CM.Channels{driven})), continue; end; % skip unprocessed channels
     data = readfcs_compensated_au(CM,CM.ColorFiles{driven},0,0);
 
     for passive=1:n,
-        if (passive == driven), continue; end;
+        if (passive == driven || isUnprocessed(CM.Channels{passive})), continue; end;
             
         h = figure('PaperPosition',[1 1 6 4]);
         set(h,'visible','off');

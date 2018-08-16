@@ -14,14 +14,25 @@ function data = readfcs_compensated_ERF(CM,filename,with_AF,floor)
     
     % Read to arbitrary units
     audata = readfcs_compensated_au(CM,filename,with_AF,floor);
-    % Translate each channel to ERF
+    
+    % Translate each (processed) channel to ERF channel 
     ERF_channel_data = zeros(size(audata));
     for i=1:numel(CM.Channels)
-        ERF_channel_data(:,i) = translate(CM.color_translation_model,audata(:,i),CM.Channels{i},CM.ERF_channel);
+        if(~isUnprocessed(CM.Channels{i}))
+            ERF_channel_data(:,i) = translate(CM.color_translation_model,audata(:,i),CM.Channels{i},CM.ERF_channel);
+        else
+            ERF_channel_data(:,i) = audata(:,i);
+        end
     end
     % Translate ERF AU to ERFs
     k_ERF= getK_ERF(CM.unit_translation);
-    data = ERF_channel_data*k_ERF;
+    for i=1:numel(CM.Channels)
+        if(~isUnprocessed(CM.Channels{i})) % only for processed channels
+            data(:,i) = ERF_channel_data(:,i)*k_ERF;
+        else
+            data(:,i) = ERF_channel_data(:,i);
+        end
+    end
     
     % optional discarding of filtered data (e.g., poorly transfected cells)
     for i=1:numel(CM.postfilters)

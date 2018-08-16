@@ -24,6 +24,7 @@ function CM=resolve(CM)
         % TODO: figure out how to add FSC and SSC channel descriptions (used by filters) for confirmation
     end
     
+    
     % build model
     % First, unit translation from beads
     if TASBEConfig.isSet('calibration.overrideUnits')
@@ -68,7 +69,7 @@ function CM=resolve(CM)
             if(CM.Channels{i}==CM.ERF_channel) i_ERF = i; end;
         end
         for i=1:numel(CM.Channels),
-            if(CM.Channels{i}==CM.ERF_channel) continue; end;
+            if(CM.Channels{i}==CM.ERF_channel || isUnprocessed(CM.Channels{i})) continue; end;
             AFMi = CM.autofluorescence_model{i};
             k_ERF=getK_ERF(CM.unit_translation);
             CM.autofluorescence_model{i}=ERFize(AFMi,scales(i,i_ERF),k_ERF);

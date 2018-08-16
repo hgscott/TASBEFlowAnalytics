@@ -13,7 +13,7 @@ function [ok CM] = confirm_ERF_translations(CM)
     ok = true;
     fi = indexof(CM.Channels,CM.ERF_channel);
     for i=1:numel(CM.Channels)
-        if(i==fi) continue; end;
+        if(i==fi || isUnprocessed(CM.Channels{i})) continue; end;
         if(isnan(scales(i,fi))), 
             ok = false;
             TASBESession.warn('TASBE:ColorModel','MissingTranslation','No pairwise translation for %s to %s; using pseudoERF',getPrintName(CM.Channels{i}),getPrintName(CM.ERF_channel));
