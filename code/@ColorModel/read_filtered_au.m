@@ -1,4 +1,7 @@
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed 
+% READ_FILTERED_AU reads in an inputted FCS filename and outputs the raw
+% data and header directory. 
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed 
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed

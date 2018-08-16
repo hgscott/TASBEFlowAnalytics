@@ -1,4 +1,3 @@
-function [ok ratios] = check_beads_identical(CM, file, tolerance)
 %  [ok ratios] = check_beads_identical(CM, file, tolerance)
 %  Loading 'file' as FCS data, tests whether the bead peaks found are
 %  within tolerance of the bead peaks for the color model.
@@ -6,15 +5,15 @@ function [ok ratios] = check_beads_identical(CM, file, tolerance)
 %
 %  Returns a boolean 'ok' indicating whether all chanels passed
 %  and a set 'ratios' of the relative shift between peak sets
-
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed 
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed 
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed
 % under the terms of the GNU General Public License, with a linking
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
-
+function [ok ratios] = check_beads_identical(CM, file, tolerance)
 if nargin < 4, tolerance = 0.05; end; % 5 percent tolerance by default
 alt_units = beads_to_ERF_model(CM, file);
 ok = true;

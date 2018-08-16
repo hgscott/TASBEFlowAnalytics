@@ -1,4 +1,8 @@
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed 
+% COMPUTECOLORTRANSLATIONS generates a model to use for color
+% translation. The model relates pairs of colors to a fit. The
+% transformation is of the form Color_j = scales(i,j)*Color_i 
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed 
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed
@@ -7,10 +11,6 @@
 % package distribution's top directory.
 
 function [colorTranslationModel CM] = computeColorTranslations(CM)
-% COMPUTECOLORTRANSLATIONS generates a model to use for color
-% translation. The model relates pairs of colors to a fit. The
-% transformation is of the form Color_j = scales(i,j)*Color_i 
-
 n = numel(CM.Channels);
 scales = zeros(n,n)*NaN;
 

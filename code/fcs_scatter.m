@@ -1,9 +1,8 @@
-function [data figh] = fcs_scatter(filename,xcolor,ycolor,density,range,visible,largeoutliers,linear,filters)
 % FCS_SCATTER(filename,xcolor,ycolor,density,range,visible): 
 %   Plot a log-log scatter graph of positive points in FCS file
 %   Defaults to non-visible, density 10, range = []
-
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed 
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed 
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed
@@ -11,6 +10,7 @@ function [data figh] = fcs_scatter(filename,xcolor,ycolor,density,range,visible,
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
+function [data figh] = fcs_scatter(filename,xcolor,ycolor,density,range,visible,largeoutliers,linear,filters)
 if nargin < 6, visible = false; end;
 if nargin < 7, largeoutliers = false; end;
 if nargin < 8 || isempty(linear), linear = [0 0]; end;

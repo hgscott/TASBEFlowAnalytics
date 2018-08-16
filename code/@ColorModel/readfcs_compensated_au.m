@@ -1,4 +1,8 @@
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed 
+% READFCS_COMPENSATED_AU reads in an inputted FCS filename by calling the
+% read_filtered_au function with additional corrections done regarding
+% autofluorescence and values below 1. 
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed 
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed

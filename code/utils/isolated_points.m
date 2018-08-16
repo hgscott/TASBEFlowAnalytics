@@ -1,4 +1,8 @@
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed
+% ISOLATED_POINTS returns an indicator set that is true for all locations in the sequence 
+% that will not plot properly without an explicit marker, being isolated 
+% by a NaN, infinity, or complex number
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed
@@ -7,9 +11,6 @@
 % package distribution's top directory.
 
 function which = isolated_points(sequence,log_scale)
-% return an indicator set that is true for all locations in the sequence 
-% that will not plot properly without an explicit marker, being isolated 
-% by a NaN, infinity, or complex number
 
 if nargin>1 && log_scale, sequence(sequence<=0) = NaN; end;
 

@@ -1,35 +1,35 @@
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed
+% Constructor for the SampleResults class with the following properties:
+% Experiment              % handle to object, which includes induction conditions
+% File                    % name of the file this came from
+% AnalysisParameters      % handle to object which was used for producing these results
+% Constitutive-correlated statistics
+% BinCounts               % table of n_bins
+% Means                   % table of n_bins X n_channels
+% StandardDevs            % table of n_bins X n_channels
+% FractionActive          % array of n_bins
+% PlasmidEstimates        % array of n_bins
+% PlasmidModel            % PlasmidExpressionModel for correlated
+% Bulk statistics
+% Histograms              % table of n_bins x n_channels Note: Histograms(:,constitutive) = BinCounts
+% PopMeans                % array of n_channels
+% PopStandardDevs         % array of n_channels
+% PopPeaks                % cell array of n_channels, each containing a sorted list of histogram peaks
+% Excluded                % array of n_channels: number of data points in sample not within bin range for each channel
+% NonExpressing           % events excluded on low end from all channels
+% k-component gaussian model
+% PopComponentMeans       % table of n_components X n_channels
+% PopComponentStandardDevs % table of n_components X n_channels
+% PopComponentWeights     % table of n_components X n_channels
+% Frac of points in on group (determined by threshold)
+% Frac of points in off group (determined by threshold)
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed
 % under the terms of the GNU General Public License, with a linking
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
-
-
-       % Experiment              % handle to object, which includes induction conditions
-       % File                    % name of the file this came from
-       % AnalysisParameters      % handle to object which was used for producing these results
-     % Constitutive-correlated statistics
-       % BinCounts               % table of n_bins
-       % Means                   % table of n_bins X n_channels
-       % StandardDevs            % table of n_bins X n_channels
-       % FractionActive          % array of n_bins
-       % PlasmidEstimates        % array of n_bins
-       % PlasmidModel            % PlasmidExpressionModel for correlated
-     % Bulk statistics
-       % Histograms              % table of n_bins x n_channels Note: Histograms(:,constitutive) = BinCounts
-       % PopMeans                % array of n_channels
-       % PopStandardDevs         % array of n_channels
-       % PopPeaks                % cell array of n_channels, each containing a sorted list of histogram peaks
-       % Excluded                % array of n_channels: number of data points in sample not within bin range for each channel
-       % NonExpressing           % events excluded on low end from all channels
-     % k-component gaussian model
-       % PopComponentMeans       % table of n_components X n_channels
-       % PopComponentStandardDevs % table of n_components X n_channels
-       % PopComponentWeights     % table of n_components X n_channels
-   % Frac of points in on group (determined by threshold)
-   % Frac of points in off group (determined by threshold)
 
 function SR = SampleResults(Experiment, File, AnalysisParameters, BinCounts, Means, StandardDevs, ...
     FractionActive, PlasmidEstimates, PlasmidModel, ...

@@ -1,4 +1,8 @@
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed
+% SAMPLE_AUTOFLUORESCENCE computes autofluorescence from an
+% AutoFluorescenceModel object. Also truncates values less than 1 to 1 if
+% specified.
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed

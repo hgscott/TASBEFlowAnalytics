@@ -1,4 +1,8 @@
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed 
+% RESOLVE is called after the construction and configuration of a
+% ColorModel object. It includes unit translation from beads and 
+% autofluorescence, compensation, and color translation model generation.   
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed 
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed
@@ -6,8 +10,7 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function CM=resolve(CM) % call after construction and configuration
-
+function CM=resolve(CM)
     % fill in channel descriptors from designated file (default = beadfile)
     if TASBEConfig.isSet('flow.channel_template_file'), 
         template = TASBEConfig.get('flow.channel_template_file');

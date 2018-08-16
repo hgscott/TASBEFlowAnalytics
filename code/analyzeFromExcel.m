@@ -1,6 +1,13 @@
-% Wrapper function that creates an Excel object and calls the color model
-% and batch analysis functions. The only needed inputs are the template
-% file path and type of analysis that needs to be run.
+% ANALYZEFROMEXCEL: wrapper function that creates a TemplateExtraction object and calls the correct analysis. 
+% The only needed inputs are the template file path and type of analysis that needs to be run.
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
+% in the AUTHORS file in TASBE analytics package distribution's top directory.
+%
+% This file is part of the TASBE analytics package, and is distributed
+% under the terms of the GNU General Public License, with a linking
+% exception, as described in the file LICENSE in the TASBE analytics
+% package distribution's top directory.
 function analyzeFromExcel(file, type)
     try
         % Setting up TASBESession log key
@@ -14,7 +21,7 @@ function analyzeFromExcel(file, type)
             % establishing key for TASBESession log
         end
         
-        % Editing file to get path
+        % Editing file to get path, used for relative paths
         [filepath, name, ext] = fileparts(file);
         extractor = TemplateExtraction([end_with_slash(filepath) name ext]);
         

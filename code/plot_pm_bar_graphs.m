@@ -1,4 +1,9 @@
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed
+% Given a dataset make of plus/minus results, plot two bar graphs giving the mean behaviors:
+% 1. single bar with ratios
+% 2. two bars, one with plus the other with minus
+% Dataset is cells of: {condition_name, pm_result, index into pm_result}
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed
@@ -7,11 +12,6 @@
 % package distribution's top directory.
 
 function plot_pm_bar_graphs(dataset,plus_high,count_threshold,low_threshold)
-% Given a dataset make of plus/minus results, plot two bar graphs giving the mean behaviors:
-% 1. single bar with ratios
-% 2. two bars, one with plus the other with minus
-% Dataset is cells of: {condition_name, pm_result, index into pm_result}
-
 if (nargin < 3 || isempty(plus_high)), plus_high = 1; end;
 if (nargin < 4 || isempty(count_threshold)), count_threshold = 100; end;
 if (nargin < 5 || isempty(low_threshold)), low_threshold = 1; end;

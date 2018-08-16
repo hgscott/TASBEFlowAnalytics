@@ -1,4 +1,7 @@
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed 
+% COMPUTECOLORCOMPENSATION produces an NxN matrix of linear compensation models
+% Row j, column i is the fraction of channel i that bleeds into channel j
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed 
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed
@@ -7,9 +10,6 @@
 % package distribution's top directory.
 
 function compensation_model = computeColorCompensation(CM)
-% Produce an NxN matrix of linear compensation models
-% Row j, column i is the fraction of channel i that bleeds into channel j
-
 n = numel(CM.Channels);
 matrix = zeros(n,n); error = zeros(n,n);
 

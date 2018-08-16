@@ -1,8 +1,8 @@
-% function version = tasbe_version()
+% function VERSION = tasbe_version()
 %   returns a cell array of {major minor patch}
 %   major and minor are numbers, patch is a string
 %
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed

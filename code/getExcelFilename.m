@@ -1,5 +1,12 @@
 % Helper function that obtains the correct filename for a given row in the
-% "Samples" sheet with an Excel object and row number as inputs. 
+% "Samples" sheet with a TemplateExtraction object and row number as inputs. 
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
+% in the AUTHORS file in TASBE analytics package distribution's top directory.
+%
+% This file is part of the TASBE analytics package, and is distributed
+% under the terms of the GNU General Public License, with a linking
+% exception, as described in the file LICENSE in the TASBE analytics
 function [filename] = getExcelFilename(extractor, row)
     % Take filenames from Excel and throw error if no filename is found
     path = extractor.path;
