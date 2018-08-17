@@ -1,4 +1,7 @@
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed
+% In READ_DATA, the structure of processed data mirrors that of the filenames in the
+% experiment. 
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed
@@ -7,10 +10,6 @@
 % package distribution's top directory.
 
 function data = read_data( colorModel, experiment, analysisParams)
-%Here the structure of processed data mirrors that of the filenames in the
-%experiment. 
-
-
 filenames = getInducerLevelsToFiles(experiment); % array of file names
 n_conditions = numel(filenames);
 

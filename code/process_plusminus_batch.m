@@ -1,4 +1,11 @@
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed
+% PROCESS_PLUSMINUS_BATCH analyzes the batch_description for plusminus
+% analysis, conducts comparisons between batches and plots some of the
+% results
+%
+% batch_description is a cell-array of: {condition_name, inducer_name, batch_names, plus_level_file_pairs, minus_level_file_pairs}
+% pm_results is a cell-array of PlusMinusResults
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed
@@ -7,9 +14,6 @@
 % package distribution's top directory.
 
 function [pm_results, pm_sampleresults] = process_plusminus_batch(colorModel, batch_description, analysisParams)
-% batch_description is a cell-array of: {condition_name, inducer_name, batch_names, plus_level_file_pairs, minus_level_file_pairs}
-% pm_results is a cell-array of PlusMinusResults
-
 batch_size = numel(batch_description);
 
 % check to make sure batch_description has the correct dimensions

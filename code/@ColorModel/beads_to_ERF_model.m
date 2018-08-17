@@ -1,7 +1,6 @@
-function [UT CM] = beads_to_ERF_model(CM, beadfile)
 % BEADS_TO_ERF_MODEL: Computes a linear function for transforming FACS 
 % measurements on the ERF channel into ERFs, using a calibration run of
-% RCP-30-5A.
+% the bead model.
 % 
 % Takes the name of the FACS file of bead measurements, plus optionally the
 % name of the channel to be used (if not FITC-A) and a flag for whether to
@@ -11,8 +10,8 @@ function [UT CM] = beads_to_ERF_model(CM, beadfile)
 % * k_ERF:  ERF = k_ERF * ERF_channel_AU
 % * first_peak: what is the first peak visible?
 % * fit_error: residual from the linear fit
-
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed 
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed 
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed
@@ -20,6 +19,7 @@ function [UT CM] = beads_to_ERF_model(CM, beadfile)
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
+function [UT CM] = beads_to_ERF_model(CM, beadfile)
 ERF_channel = CM.ERF_channel;
 if(isUnprocessed(ERF_channel)) 
     TASBESession.error('TASBE:Beads','ERFUnprocessed','ERF channel %s cannot be unprocessed',getName(ERF_Channel));

@@ -1,4 +1,8 @@
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed
+% PROCESS_CONSTITUTIVE_BATCH processes FCS data contained in each condition for batch analysis.
+% batch_description is a cell-array of: {condition_name, filenames}
+% results is a cell-array of {ExperimentResults, {SampleResults}}
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed
@@ -7,9 +11,6 @@
 % package distribution's top directory.
 
 function results = process_constitutive_batch( colorModel, batch_description, analysisParams, data)
-% batch_description is a cell-array of: {condition_name, filenames}
-% results is a cell-array of {ExperimentResults, {SampleResults}}
-
 batch_size = size(batch_description,1);
 
 % Begin by scanning to make sure all expected files are present

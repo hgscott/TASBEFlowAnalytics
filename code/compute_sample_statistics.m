@@ -1,4 +1,9 @@
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed
+% COMPUTE_SAMPLE_STATISTICS computes distribution structure of a data sample
+% This can be applied to either real data (from FCS files) or simulated
+% data.
+% Data is an array of ERF levels (events x channels), in colormodel order of channels
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed
@@ -7,10 +12,6 @@
 % package distribution's top directory.
 
 function sampleresults = compute_sample_statistics(colorModel,experiment,samplename,analysisParams,data)
-% Compute distribution structure of a data sample
-% This can be applied to either real data (from FCS files) or simulated data
-% data is an array of ERF levels (events x channels), in colormodel order of channels
-
 n_components = getNumGaussianComponents(analysisParams);
 n_channels = numel(getChannels(colorModel));
 

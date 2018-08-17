@@ -1,15 +1,6 @@
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed 
-% in the AUTHORS file in TASBE analytics package distribution's top directory.
-%
-% This file is part of the TASBE analytics package, and is distributed
-% under the terms of the GNU General Public License, with a linking
-% exception, as described in the file LICENSE in the TASBE analytics
-% package distribution's top directory.
-
-% EXPERIMENTRESULTS Summarizes the results of the experiment across all
-% induction conditions and replications
+% EXPERIMENTRESULTS summarizes the results of the experiment across all
+% induction conditions and replications, contains the following properties:
 %   
-%  
 %         Experiment              % handle to object, which includes induction conditions
 %         AnalysisParameters      % handle to object which was used for producing these results
 %         % Means across all replications
@@ -45,6 +36,14 @@
 %         off_fracMean                % arithmetic mean of frac of points in off group between replicates (determined by threshold)
 %         on_fracStd                 % arithmetic std of frac of points in on group between replicates (determined by threshold)
 %         off_fracStd                % arithmetic std of frac of points in off group between replicates (determined by threshold)
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed 
+% in the AUTHORS file in TASBE analytics package distribution's top directory.
+%
+% This file is part of the TASBE analytics package, and is distributed
+% under the terms of the GNU General Public License, with a linking
+% exception, as described in the file LICENSE in the TASBE analytics
+% package distribution's top directory.
 
 function ER = ExperimentResults(Exp, AP, ReplicateCounts, BinCounts, ...
                         Means, StandardDevs, PlasmidEstimates, FractionActive, ...

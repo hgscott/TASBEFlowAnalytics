@@ -1,5 +1,12 @@
 % Excel class with objects representing the information for a given template
 % spreadsheet
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
+% in the AUTHORS file in TASBE analytics package distribution's top directory.
+%
+% This file is part of the TASBE analytics package, and is distributed
+% under the terms of the GNU General Public License, with a linking
+% exception, as described in the file LICENSE in the TASBE analytics
 classdef TemplateExtraction
     properties
         % Coordinates is a cell array of different template variable names
@@ -114,9 +121,9 @@ classdef TemplateExtraction
             obj.checkConditions();
         end
 
-        % Update any relevant TASBEConfig from the Additional Settings sheet in the
-        % template spreadsheet
         function TASBEConfig_updates(obj)
+        % Update any relevant TASBEConfig preferences from the Optional Settings sheet in the
+        % template spreadsheet
             TASBEConfig.checkpoint(TASBEConfig.checkpoints());
             raw = obj.sheets{obj.getSheetNum('first_preference_name')};
             name_col = obj.getColNum('first_preference_name');
@@ -138,9 +145,9 @@ classdef TemplateExtraction
             end
         end
         
+        function new_value = sanitizeFromExcel(obj, value)
         % Cleans up the Excel cell values by calling trim function is value
         % is a string
-        function new_value = sanitizeFromExcel(obj, value)
             try 
                 new_value = strtrim(value);
             catch
@@ -148,9 +155,10 @@ classdef TemplateExtraction
             end    
         end
         
-        % Returns the ExcelCoordinates stored within obj.coordinates with
-        % name of variable as input
         function position = getExcelCoordinates(obj, name, index)
+        % Returns the ExcelCoordinates stored within obj.coordinates with
+        % name of variable as input and optional index if multiple
+        % coordinates are stored for a single variable
             for i=1:numel(obj.coordinates)
                 if strcmp(name, obj.coordinates{i}{1})
                     position = obj.coordinates{i}{2};
@@ -163,8 +171,8 @@ classdef TemplateExtraction
             TASBESession.error('TemplateExtraction','CoordNotFound','Inputted name, %s, not valid. No match found in coordinates.', name);
         end
         
-        % Returns the first coordinate value (sheet number) of a given variable
         function sheet_num = getSheetNum(obj, name, index)
+        % Returns the first coordinate value (sheet number) of a given variable
             if exist('index', 'var')
                 pos = obj.getExcelCoordinates(name, index);
             else
@@ -173,8 +181,8 @@ classdef TemplateExtraction
             sheet_num = pos{1};
         end
         
-        % Returns the second coordinate value (row number) of a given variable
         function row = getRowNum(obj, name, index)
+        % Returns the second coordinate value (row number) of a given variable
             if exist('index', 'var')
                 pos = obj.getExcelCoordinates(name, index);
             else
@@ -183,8 +191,8 @@ classdef TemplateExtraction
             row = pos{2};
         end
         
-        % Returns the third coordinate value (col number) of a given variable
         function col = getColNum(obj, name, index)
+        % Returns the third coordinate value (col number) of a given variable
             if exist('index', 'var')
                 pos = obj.getExcelCoordinates(name, index);
             else
@@ -193,9 +201,9 @@ classdef TemplateExtraction
             col = pos{3};
         end
         
-        % Returns a new Excel object with updated coordinates. Takes the
-        % name of the variable to change and new coords as inputs
         function new_obj = setExcelCoordinates(obj, name, coords)
+        % Returns a new Excel object with updated coordinates. Takes the
+        % name of the variable to change and new coords as inputs.
             new_coords = obj.coordinates;
             for i=1:numel(obj.coordinates)
                 if strcmp(name, obj.coordinates{i}{1})
@@ -207,17 +215,18 @@ classdef TemplateExtraction
             TASBESession.error('TemplateExtraction','CoordNotFound','Inputted name, %s, not valid. No match found in coordinates.', name);
         end
         
-        % Returns a new obj.coordinates with updated coordinates. Takes the
-        % name of the variable to add and its coords as inputs
         function new_coords = addExcelCoordinates(obj, names, coords)
+        % Returns a new obj.coordinates with updated coordinates. Takes the
+        % name of the variable to add and its coords as inputs.
             new_coords = obj.coordinates;
             for i=1:numel(names)
                 new_coords{end+1} = {names{i}; coords{i}};
             end
         end
         
-        % Finds the coordinates for all of the filename templates
         function new_coords = findTemplates(obj)
+        % Finds the coordinates for all of the filename templates and adds
+        % to coordinates property
             template_col = obj.getColNum('first_filename_template');
             template_sh = obj.getSheetNum('first_filename_template');
             first_template_row = 1;
@@ -235,9 +244,9 @@ classdef TemplateExtraction
             new_coords = obj.addExcelCoordinates({'filename_templates'}, {coords});
         end
         
+        function checkConditions(obj)
         % Looks through the condition keys in "Experiment" and raises a
         % warning if a value in "Samples" has a value that is not in the key
-        function checkConditions(obj)
             condition_col = obj.getColNum('first_condition_key');
             condition_sh = obj.getSheetNum('first_condition_key');
             first_condition_row = 1;
@@ -269,8 +278,8 @@ classdef TemplateExtraction
             end
         end
         
-        % Helper function for checkConditions
         function checkConditions_helper(obj, i, column_name)
+        % Helper function for checkConditions
             condition_col = obj.getColNum('first_condition_key');
             condition_sh = obj.getSheetNum('first_condition_key');
             sh_num1 = obj.getSheetNum('first_sample_num');
@@ -327,8 +336,8 @@ classdef TemplateExtraction
             end
         end
         
-        % Find column names in "Samples" sheet and add to cell array
         function col_names = findSampleCols(obj)
+        % Find column names in "Samples" sheet and add to cell array
             sh_num1 = obj.getSheetNum('first_sample_num');
             sample_start_col = obj.getColNum('first_sample_num');
             sample_start_row = obj.getRowNum('first_sample_num') - 1;
@@ -351,8 +360,9 @@ classdef TemplateExtraction
             end
         end
         
-        % Finds the last sample row
         function new_coords = findLastSampleRow(obj)
+        % Finds the last sample row in Samples sheet and adds info to
+        % coordinates property 
             sh_num1 = obj.getSheetNum('first_sample_num');
             sample_start_col = obj.getColNum('first_sample_num');
             sample_start_row = obj.getRowNum('first_sample_num');
@@ -376,9 +386,9 @@ classdef TemplateExtraction
             new_coords = obj.addExcelCoordinates({'last_sample_num'}, coords);
         end
         
+        function value = getExcelValuePos(obj, sheet_num, row, col, type)
         % Returns the value at an inputted position. Error checks make sure
         % that the value is of the correct type
-        function value = getExcelValuePos(obj, sheet_num, row, col, type)
             sheet = obj.sheets{sheet_num};
             value = cell2mat(sheet(row,col));
             if and(isnan(value), TASBEConfig.get('template.displayErrors')) 
@@ -406,9 +416,10 @@ classdef TemplateExtraction
             value = obj.sanitizeFromExcel(value);
         end
         
-        % Returns the value of an inputted variable name using
-        % getExcelValuePos
         function value = getExcelValue(obj, name, type, index)
+        % Returns the value of an inputted variable name using
+        % getExcelValuePos. Also takes optional index for variables with
+        % multiple coordinates.
             pos = obj.getExcelCoordinates(name);
             % index is considered for variables with more than one
             % coordinates
@@ -422,11 +433,11 @@ classdef TemplateExtraction
             end
         end
         
+        function setTASBEConfig(obj, name, type, index)
         % Sets a TASBEConfig given a variable name. getExcelValue is used
         % extensively in this function. Warnings/ errors are placed to make
         % sure there is a value found and that the variable is a
         % TASBEConfig. 
-        function setTASBEConfig(obj, name, type, index)
             try
                 if exist('index', 'var')
                     value = obj.getExcelValue(name, type, index);
@@ -444,9 +455,7 @@ classdef TemplateExtraction
             catch
                 TASBESession.error('TemplateExtraction', 'NotTASBEConfig', 'Could not get any preference for: %s', name);
             end
-            
             TASBEConfig.set(name, value);
-            
         end
     end
 end

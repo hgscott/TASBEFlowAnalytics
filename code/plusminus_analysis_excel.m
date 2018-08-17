@@ -1,5 +1,13 @@
-% Function that runs plusminus analysis given a template spreadsheet. An Excel
-% object and optional Color Model are inputs
+% Function that runs plusminus analysis given a template spreadsheet. A
+% TemplateExtraction object and optional Color Model are inputs. Outputs
+% results and batch descriptions used for test functions. 
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
+% in the AUTHORS file in TASBE analytics package distribution's top directory.
+%
+% This file is part of the TASBE analytics package, and is distributed
+% under the terms of the GNU General Public License, with a linking
+% exception, as described in the file LICENSE in the TASBE analytics
 function [all_results, all_batch_descrips] = plusminus_analysis_excel(extractor, CM)
     % Reset and update TASBEConfig and get exp name
     extractor.TASBEConfig_updates();
@@ -537,7 +545,7 @@ function [all_results, all_batch_descrips] = plusminus_analysis_excel(extractor,
     end
 end
 
-% Returns cell array of sample column names and their corresponding values
+% Helper function that returns cell array of sample column names and their corresponding values
 % for row in Comparison Groups
 function [group_names, values] = getCompGroups(group)
     group_names = {};

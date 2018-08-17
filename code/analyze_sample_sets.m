@@ -1,11 +1,13 @@
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed
+% ANALYZE_SAMPLE_SETS processes inputted batch_description and returns ExperimentResults and
+% SampleResults objects for each condition in batch_description.
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed
 % under the terms of the GNU General Public License, with a linking
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
-
 function results = analyze_sample_sets( colorModel, batch_description, analysisParams, data)
 % batch_description is a n x 2cell-array of: {condition_name, filenames}
 % results is a cell-array of {ExperimentResults, {SampleResults}}

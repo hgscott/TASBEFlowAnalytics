@@ -1,4 +1,7 @@
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed
+% GET_BEAD_PEAKS returns the bead peak information (peaks, units, and
+% batch) from an inputted bead model and batch using bead catalog.
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed
@@ -6,7 +9,7 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function [peaks units batch] = get_bead_peaks(model,channel,batch)
+function [peaks, units, batch] = get_bead_peaks(model,channel,batch)
     % Model must be a precise string match with the catalog, e.g., "SpheroTech RCP-30-5A"
     % Channel can either be a Channel matched to laser/filter, or a name matched to the name in the catalog
     % Batch is an optional parameter: if no batch is specified (or spec is empty), the first listed batch will be used

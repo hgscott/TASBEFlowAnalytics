@@ -1,15 +1,6 @@
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed 
-% in the AUTHORS file in TASBE analytics package distribution's top directory.
-%
-% This file is part of the TASBE analytics package, and is distributed
-% under the terms of the GNU General Public License, with a linking
-% exception, as described in the file LICENSE in the TASBE analytics
-% package distribution's top directory.
-
 % PlasmidExpressionModel is the class that maps ERFs to constitutive
-% fluorescence to plasmid count
+% fluorescence to plasmid count with the following properties:
 
-  
         %plot_pem = false
         %CFP_counts              % source for model
         % piecewise-gaussian model of plasmid distribution
@@ -22,8 +13,14 @@
         % ERF -> plasmid function
         %bins                    % ERF bins
         %estimated_plasmids      % corresponding estimates per bin
-
-        
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed 
+% in the AUTHORS file in TASBE analytics package distribution's top directory.
+%
+% This file is part of the TASBE analytics package, and is distributed
+% under the terms of the GNU General Public License, with a linking
+% exception, as described in the file LICENSE in the TASBE analytics
+% package distribution's top directory.
 
  function PEM = PlasmidExpressionModel(cfp_data,CFP_af,CFP_noise,ERF_per_plasmid,drop_threshold,n_components)
         

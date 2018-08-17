@@ -1,4 +1,8 @@
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed
+% P_GAUSSIAN(low,high,mean,std): compute the probability of falling into the interval
+%  [low,high] on a gaussian distribution with the specifiec mean
+%  and standard deviation (default 0,1)
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed
@@ -7,10 +11,6 @@
 % package distribution's top directory.
 
 function prob = p_gaussian(low,high,mean,std) 
-%P_GAUSSIAN(low,high,mean,std): compute the probability of falling into the interval
-%  [low,high] on a gaussian distribution with the specifiec mean
-%  and standard deviation (default 0,1)
-
 if nargin <= 2, mean=0; end;
 if nargin <= 3, std=1; end;
 

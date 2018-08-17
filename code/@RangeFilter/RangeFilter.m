@@ -1,4 +1,10 @@
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed
+% Constructor of RangeFilter class
+% Optional discarding of data outside of a certain range
+% Specified as a sequence of 'ChannelA',[minA maxA],'ChannelB',[minB maxB]
+% Also, argument 'Mode' can be 'And' (a value is excluded if any channel is outside), or 'Or' (a value is excluded if all are outside
+% The default mode is 'And'
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed
@@ -7,11 +13,6 @@
 % package distribution's top directory.
 
 function RF = RangeFilter(varargin)
-% Optional discarding of data outside of a certain range
-% Specified as a sequence of 'ChannelA',[minA maxA],'ChannelB',[minB maxB]
-% Also, argument 'Mode' can be 'And' (a value is excluded if any channel is outside), or 'Or' (a value is excluded if all are outside
-% The default mode is 'And'
-
 RF.mode = 'And';
 RF.channels = {};
 RF.ranges = [];

@@ -1,12 +1,11 @@
-function [b,b_err] = make_linear_compensation_model(CM, filename, driven, passive)
-%MAKE_LINEAR COMPENSATION_MODEL: create a color compensation model from 
+% MAKE_LINEAR COMPENSATION_MODEL: create a color compensation model from 
 %   FCS data under the assumption that interference is all linear bleed
 %   plus autofluorescence (an assumption that typically holds well):
 %      passive = b*driven + autofluorescence
 %   returns b and the error in the estimate (expressed as a multiple,
 %   since estimation is done on the log scale)
-
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed 
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed 
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed
@@ -14,6 +13,7 @@ function [b,b_err] = make_linear_compensation_model(CM, filename, driven, passiv
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
+function [b,b_err] = make_linear_compensation_model(CM, filename, driven, passive)
 flowMin = TASBEConfig.get('flow.rangeMin');
 flowMax = TASBEConfig.get('flow.rangeMax');
 minDrivenThreshold = TASBEConfig.get('compensation.minimumDrivenLevel');

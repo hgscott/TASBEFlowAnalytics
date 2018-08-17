@@ -1,4 +1,8 @@
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed
+% PLOT_BIN_STATISTICS_ALL creates bincount plots by CFP level and fraction
+% active per bin for plusminus and transfer curve analysis with results from 
+% all condition levels combined into one plot.
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed

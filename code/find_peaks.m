@@ -1,4 +1,7 @@
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed
+% FIND_PEAKS returns peak statistics (maxima, means, and counts) obtained
+% from bead histogram.
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed
@@ -6,7 +9,7 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function [peak_maxima peak_means peak_counts] = find_peaks(bin_counts,bin_centers,peak_min_threshold,peak_ratio_threshold)
+function [peak_maxima, peak_means, peak_counts] = find_peaks(bin_counts,bin_centers,peak_min_threshold,peak_ratio_threshold)
 
 if nargin<4, peak_ratio_threshold = 2; end;
 if nargin<3, peak_min_threshold = 100; end;
