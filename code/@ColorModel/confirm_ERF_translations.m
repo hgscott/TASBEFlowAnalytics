@@ -1,7 +1,6 @@
-function [ok CM] = confirm_ERF_translations(CM)
-% Checks to see that all channels can be translated to ERF
-
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed 
+% CONFIRM_ERF_TRANSLATIONS checks to see that all channels can be translated to ERF
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed 
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed
@@ -9,6 +8,7 @@ function [ok CM] = confirm_ERF_translations(CM)
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
+function [ok CM] = confirm_ERF_translations(CM)
     scales = getScales(CM.color_translation_model);
     ok = true;
     fi = indexof(CM.Channels,CM.ERF_channel);

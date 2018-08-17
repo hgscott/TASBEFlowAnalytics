@@ -1,4 +1,6 @@
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed
+% GEOMEAN returns the geometric mean of inputted data with optional weights
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed

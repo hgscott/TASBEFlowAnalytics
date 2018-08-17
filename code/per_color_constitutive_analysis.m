@@ -1,4 +1,7 @@
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed
+% PER_COLOR_CONSTITUTIVE analyzes the inputted batch_description for batch
+% analysis and outputs the results and sampleresults for further plotting. 
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed
@@ -32,7 +35,7 @@ end
 
 % first do all the processing
 rawresults = cell(size(colors));
-for i=1:numel(colors),
+for i=1:numel(colors)
     fprintf(['Processing for color ' colors{i} '...\n']);
     AP = setChannelLabels(AP,{'constitutive',channel_named(colorModel,colors{i})});
     rawresults{i} = process_constitutive_batch( colorModel, batch_description, AP, data);
@@ -42,14 +45,15 @@ n_conditions = size(batch_description,1);
 bincenters = get_bin_centers(getBins(AP));
 
 results = cell(n_conditions,1); sampleresults = results;
-for i=1:n_conditions,
+threshold = TASBEConfig.get('flow.onThreshold');
+for i=1:n_conditions
     replicatecounts = numel(rawresults{1}{i,2});
     samplebincounts = cell(replicatecounts,1);
     sample_gmm_means = samplebincounts; sample_gmm_stds = samplebincounts; sample_gmm_weights = samplebincounts;
     samplemeans = zeros(replicatecounts,numel(colors)); samplestds = samplemeans;
     results{i}.condition = batch_description{i,1};
     results{i}.bincenters = bincenters;
-    for j=1:numel(colors),
+    for j=1:numel(colors)
         ER = rawresults{j}{i,1};
         SR = rawresults{j}{i,2};
         rawbincounts = getBinCounts(ER);
@@ -58,7 +62,7 @@ for i=1:n_conditions,
         results{i}.stds(j) =  geostd(bincenters',rawbincounts);
         [results{i}.gmm_means(:,j), results{i}.gmm_stds(:,j), results{i}.gmm_weights(:,j)] = get_channel_gmm_results(rawresults{j}{i,1},'constitutive');
         % per-sample histograms
-        for k=1:replicatecounts,
+        for k=1:replicatecounts
             samplebincounts{k}(:,j) = SR{k}.BinCounts;
             samplemeans(k,j) = geomean(bincenters',SR{k}.BinCounts);
             samplestds(k,j) = geostd(bincenters',SR{k}.BinCounts);
@@ -70,9 +74,23 @@ for i=1:n_conditions,
         results{i}.stdofmeans(j) = geostd(samplemeans(:,j));
         results{i}.stdofstds(j) = mean(samplestds(:,j));
     end
-    for k=1:replicatecounts,
+    on_fracs = {};
+    off_fracs = {};
+    for k=1:replicatecounts
+        on_counts = sum(data{i}{1}{k} >= threshold);
+        off_counts = sum(data{i}{1}{k} < threshold);
+        on_total_count = sum(on_counts);
+        off_total_count = sum(off_counts);
+        on_frac = on_total_count/(on_total_count+off_total_count);
+        off_frac = off_total_count/(on_total_count+off_total_count);
+        on_fracs{end+1} = on_frac;
+        off_fracs{end+1} = off_frac;
         sampleresults{i}{k} = SampleResults([], batch_description{i,2}{k}, setChannelLabels(AP,colors'), samplebincounts{k}, samplemeans(k,:), samplestds(k,:), ...
-            [], [], [], [], [], [], [], [], [], sample_gmm_means{k}, sample_gmm_stds{k}, sample_gmm_weights{k});
+            [], [], [], [], [], [], [], [], [], sample_gmm_means{k}, sample_gmm_stds{k}, sample_gmm_weights{k}, on_frac, off_frac);
     end
+    results{i}.on_fracMean = mean(cell2mat(on_fracs));
+    results{i}.on_fracStd = std(cell2mat(on_fracs));
+    results{i}.off_fracMean = mean(cell2mat(off_fracs));
+    results{i}.off_fracStd = std(cell2mat(off_fracs));
 end
 

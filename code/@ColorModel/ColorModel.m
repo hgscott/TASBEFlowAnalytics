@@ -1,4 +1,9 @@
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed 
+% ColorModel is the class that allows
+% a) Colors to be mapped to standard units (ERF)
+% b) Autofluorescence removal
+% c) Spectral overlap compensation
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed 
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed
@@ -6,11 +11,6 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-
-% ColorModel is the class that allows
-% a) Colors to be mapped to standard units (ERF)
-% b) Autofluorescence removal
-% c) Spectral overlap compensation
 function CM = ColorModel(beadfile, blankfile, channels, colorfiles, pairfiles)
         CM.version = tasbe_version();
         %public settings

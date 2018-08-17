@@ -1,4 +1,7 @@
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed
+% OUTPUTFIG is an indirection that allows us to swap around the preferred
+% output format with little effort
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed
@@ -7,9 +10,6 @@
 % package distribution's top directory.
 
 function outputfig(h,name,path)
-% outputfig is an indirection that allows us to swap around the preferred
-% output format with little effort
-
 % Default path is current path
 if nargin < 3, path = './'; end; % Note: frontslash works for both Windows and Mac/Unix
 if path(numel(path)) ~= '/', path(numel(path)+1) = '/'; end; % ensure path ends in slash

@@ -1,5 +1,14 @@
-% Function that runs batch analysis given a template spreadsheet. An Excel
-% object and optional Color Model are inputs
+% BATCH_ANALYSIS_EXCEL runs batch analysis given a template spreadsheet. A
+% TemplateExtraction object and optional Color Model are inputs. Outputs
+% results, stats file, and histogram file used in test functions.
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
+% in the AUTHORS file in TASBE analytics package distribution's top directory.
+%
+% This file is part of the TASBE analytics package, and is distributed
+% under the terms of the GNU General Public License, with a linking
+% exception, as described in the file LICENSE in the TASBE analytics
+% package distribution's top directory.
 function [results, statisticsFile, histogramFile] = batch_analysis_excel(extractor, CM)
     % Reset and update TASBEConfig and obtain experiment name
     extractor.TASBEConfig_updates();

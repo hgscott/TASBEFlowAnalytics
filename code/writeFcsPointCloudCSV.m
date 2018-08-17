@@ -1,4 +1,7 @@
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed 
+% WRITEFCSPOINTCLOUDCSV calls readfsc_compensated_MEFL to convert the data. Write the data to a
+% CSV file and return the data.  This will overwrite any existing data.
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed 
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed
@@ -6,13 +9,9 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-% Call readfsc_compensated_MEFL to convert the data. Write the data to a
-% CSV file and return the data.  This will overwrite any existing data.
-
 function writeFcsPointCloudCSV(CM, filenames, data)
     if TASBEConfig.get('flow.outputPointCloud')
         n_conditions = numel(filenames);
-
         % Write each file for each condition
         for i=1:n_conditions
             perInducerFiles = filenames{i};

@@ -1,4 +1,13 @@
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed
+% AutoFluorescenceModel constructs an AutoFluorescenceModel object
+%
+% It is assumed that an array is used to associate this with channels
+%  af_mean          % linear mean in arbitrary FACS units
+%  af_std           % linear std.dev. in arbitrary FACS units
+%  af_mean_ERF=NaN % linear mean in ERF
+%  af_std_ERF=NaN  % linear std.dev. in ERF
+%  n                % number of points used in this computation
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed
@@ -6,13 +15,6 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-
-% It is assumed that an array is used to associated this with channels
-%  af_mean          % linear mean in arbitrary FACS units
-%  af_std           % linear std.dev. in arbitrary FACS units
-%  af_mean_ERF=NaN % linear mean in ERF
-%  af_std_ERF=NaN  % linear std.dev. in ERF
-%  n                % number of points used in this computation
 function AFM = AutoFluorescenceModel(data)
     if nargin == 0
         AFM.af_mean = 0;

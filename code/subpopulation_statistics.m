@@ -1,4 +1,7 @@
-% Copyright (C) 2010-2017, Raytheon BBN Technologies and contributors listed
+% SUBPOPULATION_STATISTICS returns the stats (counts, means, stds, and excluded) of a certain subset of
+% inputted data determined by the selector input. 
+%
+% Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
 %
 % This file is part of the TASBE analytics package, and is distributed
@@ -6,7 +9,7 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function [counts means stds excluded] = subpopulation_statistics(BSeq,data,selector,mode)
+function [counts, means, stds, excluded] = subpopulation_statistics(BSeq,data,selector,mode)
 
 bedges = get_bin_edges(BSeq);
 
