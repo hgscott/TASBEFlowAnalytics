@@ -39,9 +39,19 @@ classdef TemplateExtraction
             % Read in Excel for information, Calibration sheet
             [~,~,s3] = xlsread(file, 'Calibration');
             % Read in Excel for information, Comparative Analysis sheet
-            [~,~,s4] = xlsread(file, 'Comparative Analysis');
+            try
+                [~,~,s4] = xlsread(file, 'Comparative Analysis');
+            catch
+                TASBESession.warn('TemplateExtraction', 'MissingAnalysisSheet', 'Comparative Analysis sheet is missing. Add if want to run comparative analysis.');
+                s4 = {};
+            end
             % Read in Excel for information, Transfer Curve Analysis sheet
-            [~,~,s5] = xlsread(file, 'Transfer Curve Analysis');
+            try
+                [~,~,s5] = xlsread(file, 'Transfer Curve Analysis');
+            catch
+                TASBESession.warn('TemplateExtraction', 'MissingAnalysisSheet', 'Transfer Curve Analysis sheet is missing. Add if want to run transfer curve analysis.');
+                s5 = {};
+            end
             % Read in Excel for information, Additional Settings sheet
             [~,~,s6] = xlsread(file, 'Optional Settings');
             obj.sheets = {s1, s2, s3, s4, s5, s6};
