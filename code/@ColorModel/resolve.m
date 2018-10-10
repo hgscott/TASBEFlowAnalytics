@@ -38,7 +38,7 @@ function CM=resolve(CM)
     end
     
     % Next, unit translation from size beads, if there are any
-    if isEmpty(CM.uM_channel_name)
+    if isempty(CM.uM_channel_name)
         CM.size_unit_translation = [];
         CM.sizeUnits = 'no size channel defined';
         TASBESession.warn('TASBE:ColorModel','NoSizeChannel','No size bead calibration configured');

@@ -1,4 +1,4 @@
-% BEADS_TO_ERF_MODEL: Computes a linear function for transforming FACS 
+% BEADS_TO_uM_MODEL: Computes a linear function for transforming FACS 
 % measurements on the uM channel into uM equivalent diameter, using a 
 % calibration run of the size bead model.
 % 
@@ -7,7 +7,7 @@
 % record the calibration plot.
 %
 % Returns:
-% * k_uM:  UM = 10.^polyval(ERF_channel_AU,uM_model)
+% * k_uM:  UM = 10.^polyval(uM_channel_AU,uM_model)
 % * first_peak: what is the first peak visible?
 % * fit_error: residual from the linear fit
 %
@@ -21,9 +21,6 @@
 
 function [UT, CM] = beads_to_uM_model(CM, beadfile)
 uM_channel = CM.uM_channel;
-if(isUnprocessed(uM_channel))
-    TASBESession.error('TASBE:SizeBeads','uMUnprocessed','Size channel %s cannot be unprocessed',getName(uM_Channel));
-end
 
 makePlots = TASBEConfig.get('sizebeads.plot');
 visiblePlots = TASBEConfig.get('sizebeads.visiblePlots');
@@ -31,7 +28,7 @@ plotPath = TASBEConfig.get('sizebeads.plotPath');
 plotSize = TASBEConfig.get('sizebeads.plotSize');
 beadModel = TASBEConfig.get('sizebeads.beadModel');
 beadChannel = TASBEConfig.get('sizebeads.beadChannel');
-beadBatch = TASBEConfig.get('sizebeads.beadBatch');
+beadBatch = TASBEConfig.getexact('sizebeads.beadBatch',[]);
 
 force_peak = TASBEConfig.getexact('sizebeads.forceFirstPeak',[]);
 if ~isempty(force_peak)
@@ -46,7 +43,6 @@ bin_increment = TASBEConfig.get('sizebeads.binIncrement');
 
 
 uMChannelName=getName(uM_channel);
-i_uM = find(CM,uM_channel);
 
 [PeakuMs,units,actualBatch] = get_bead_peaks(beadModel,beadChannel,beadBatch);
 CM.sizeUnits = units;
@@ -61,7 +57,7 @@ CM.sizeUnits = units;
 % numQuantifiedPeaks in messages and labels. Do not add it to num_peaks.
 totalNumPeaks = numel(PeakuMs);
 numQuantifiedPeaks = sum(~isnan(PeakuMs));
-quantifiedPeakERFs = PeakuMs((end-numQuantifiedPeaks+1):end);
+quantifiedPeakuMs = PeakuMs((end-numQuantifiedPeaks+1):end);
 peakOffset = totalNumPeaks - numQuantifiedPeaks;
 
 TASBESession.succeed('TASBE:SizeBeads','ObtainBeadPeaks','Found specified size bead model and lot');
@@ -73,10 +69,10 @@ n = (size(bin_edges,2)-1);
 bin_centers = bin_edges(1:n)*10.^(bin_increment/2);
 
 % no secondary channel segmentation here
-segmentName = erfChannelName;
+segmentName = uMChannelName;
 
 [~, fcshdr, fcsdat] = fca_readfcs(beadfile);
-bead_data = get_fcs_color(fcsdat,fcshdr,erfChannelName);
+bead_data = get_fcs_color(fcsdat,fcshdr,uMChannelName);
 segment_data = get_fcs_color(fcsdat,fcshdr,segmentName);
 
 TASBESession.succeed('TASBE:SizeBeads','ObtainBeadData','Successfully read size bead data');
@@ -112,12 +108,12 @@ end
 in_peak = 0;
 for i=1:n
     if in_peak==0 % outside a peak: look for start
-        if(bin_counts(i) >= peak_threshold(i_ERF))
+        if(bin_counts(i) >= peak_threshold)
             peak_min = bin_edges(i);
             in_peak=1;
         end
     else % inside a peak: look for end
-        if(bin_counts(i) < peak_threshold(i_ERF))
+        if(bin_counts(i) < peak_threshold)
             peak_max = bin_edges(i);
             in_peak=0;
             % compute peak statistics
@@ -145,7 +141,7 @@ end
 % Use log scale for fitting to avoid distortions from highest point
 if(n_peaks>=1)
     i = numQuantifiedPeaks-n_peaks; % always assume using top peaks
-    [uM_poly,S] = polyfit(log10(peak_means),log10(quantifiedPeakERFs((1:n_peaks)+i)),1);
+    [uM_poly,S] = polyfit(log10(peak_means),log10(quantifiedPeakuMs((1:n_peaks)+i)),1);
     fit_error = S.normr;
     first_peak = i+1;
     if ~isempty(force_peak), first_peak = force_peak-peakOffset; end
@@ -182,13 +178,13 @@ if makePlots
     text(10.^(bin_min),graph_max/2,'peak search min value','Rotation',90,'FontSize',7,'VerticalAlignment','top','FontAngle','italic');
     plot(10.^[bin_max bin_max],[0 graph_max],'k:');
     text(10.^(bin_max),graph_max/2,'peak search max value','Rotation',90,'FontSize',7,'VerticalAlignment','bottom','FontAngle','italic');
-    plot(10.^[0 range_max],[peak_threshold(i_ERF) peak_threshold(i_ERF)],'k:');
-    text(1,peak_threshold(i_ERF),'clutter threshold','FontSize',7,'HorizontalAlignment','left','VerticalAlignment','bottom','FontAngle','italic');
+    plot(10.^[0 range_max],[peak_threshold peak_threshold],'k:');
+    text(1,peak_threshold,'clutter threshold','FontSize',7,'HorizontalAlignment','left','VerticalAlignment','bottom','FontAngle','italic');
     title(sprintf('Peak identification for %s beads', clean_for_latex(beadModel)));
     xlim(10.^[0 range_max]);
     ylabel('Beads');
     xlabel([clean_for_latex(beadChannel) ' a.u.']); 
-    outputfig(h,'bead-peak-identification',plotPath);
+    outputfig(h,'size-bead-peak-identification',plotPath);
 end
 
 
@@ -196,17 +192,19 @@ end
 if makePlots
     h = figure('PaperPosition',[1 1 plotSize]);
     if(~visiblePlots), set(h,'visible','off'); end;
-    loglog(peak_means,quantifiedPeakERFs((1:n_peaks)+first_peak-1),'b*-'); hold on;
+    loglog(peak_means,quantifiedPeakuMs((1:n_peaks)+first_peak-1),'b*-'); hold on;
     %loglog([1 peak_means],[1 peak_means]*(10.^model(2)),'r+--');
-    loglog([1 peak_means],[1 peak_means]*k_ERF,'go--');
+    model_range = floor(log10(min(peak_means))-0.5):0.1:(log10(max(peak_means))+0.5);
+    loglog(10.^model_range,10.^(polyval(uM_poly,model_range)),'g--');
+    loglog(peak_means,10.^(polyval(uM_poly,log10(peak_means))),'go');
     for i=1:n_peaks
-        text(peak_means(i),quantifiedPeakERFs(i+first_peak-1)*1.3,sprintf('%i',i+first_peak-1+peakOffset));
+        text(peak_means(i),quantifiedPeakuMs(i+first_peak-1)*1.3,sprintf('%i',i+first_peak-1+peakOffset));
     end
-    xlabel(clean_for_latex([beadChannel ' a.u.'])); ylabel('Beads ERFs');
+    xlabel(clean_for_latex([beadChannel ' a.u.'])); ylabel('Beads uMs');
     title(sprintf('Peak identification for %s beads', beadModel));
     %legend('Location','NorthWest','Observed','Linear Fit','Constrained Fit');
     legend('Observed','Log-Linear Fit','Location','NorthWest');
-    outputfig(h,'bead-fit-curve',plotPath);
+    outputfig(h,'size-bead-fit-curve',plotPath);
 end
 
 UT = SizeUnitTranslation([beadModel ':' beadChannel ':' actualBatch],uM_poly, first_peak+peakOffset, fit_error, peak_sets);

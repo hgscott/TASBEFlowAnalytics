@@ -31,7 +31,7 @@ plotPath = TASBEConfig.get('beads.plotPath');
 plotSize = TASBEConfig.get('beads.plotSize');
 beadModel = TASBEConfig.get('beads.beadModel');
 beadChannel = TASBEConfig.get('beads.beadChannel');
-beadBatch = TASBEConfig.get('beads.beadBatch');
+beadBatch = TASBEConfig.getexact('beads.beadBatch',[]);
 
 force_peak = TASBEConfig.getexact('beads.forceFirstPeak',[]);
 if ~isempty(force_peak)

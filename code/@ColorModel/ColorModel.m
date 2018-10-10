@@ -57,11 +57,15 @@ function CM = ColorModel(beadfile, blankfile, channels, colorfiles, pairfiles, s
             CM.ColorFiles = colorfiles;
             CM.ColorPairFiles = colorpairfiles;
                 
-        elseif nargin == 5
+        elseif nargin == 5 || nargin == 6
             % constructor initialized fields
             % same FPs in the same order
             CM.BeadFile = beadfile;
-            CM.SizeBeadFile = sizebeadfile;
+            if nargin == 6, 
+                CM.SizeBeadFile = sizebeadfile;
+            else 
+                CM.SizeBeadFile = [];
+            end
             CM.BlankFile = blankfile;
             % check if colorfiles match processed channels
             channels_ok = true;
