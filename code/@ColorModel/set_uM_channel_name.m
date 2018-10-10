@@ -13,7 +13,10 @@ function CM=set_uM_channel_name(CM, v)
     found=false;
     for i=1:numel(CM.Channels), 
         if(strcmp(CM.uM_channel_name,getName(CM.Channels{i}))), 
-            CM.uM_channel = CM.Channels{i}; found=true; break; 
+            CM.uM_channel = CM.Channels{i}; 
+            CM.Channels{i} = setUnits(CM.Channels{i},'EuM');
+            found=true; 
+            break; 
         end;
     end;
     if(~found), TASBESession.error('TASBE:ColorModel','MissinguMChannel','Unable to find uM channel %s',CM.uM_channel_name); end;

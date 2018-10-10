@@ -23,6 +23,7 @@ function C = Channel(name, laser, filterC, filterW, pseudo)
         C.FilterCenter = 0;
         C.FilterWidth = 0;
         C.PseudoUnits = 0;
+        C.Units = 'ERF';
     elseif nargin >= 4
         C.name = name;
         C.Laser = laser;
@@ -33,6 +34,7 @@ function C = Channel(name, laser, filterC, filterW, pseudo)
         else
             C.PseudoUnits = 0;
         end
+        C.Units = 'ERF';
         % Warn if we're seeing unspecified channels
         if(C.Laser==0 || C.FilterCenter==0 || C.FilterWidth==0),
             TASBESession.warn('TASBE:Channel','Underspecified','Channel %s has unspecified laser and/or filter.  Unspecified channels may be confused together.',C.name);

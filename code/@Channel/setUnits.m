@@ -1,5 +1,5 @@
-% getUnits is a getter function for the Channel class. (either 'a.u.' or
-% ERF or EuM)
+% setUnits is a getter function for the Channel class. (either pseudoERF or
+% ERF)
 %
 % Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
@@ -9,9 +9,12 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function units = getUnits(C)
-    if isPseudo(C)
-        units = 'a.u.';
-    else
-        units = C.Units;
+function C = setUnits(C,name)
+    allowed = {'a.u.','ERF','EuM'};
+    for i=1:numel(allowed),
+        if(strcmp(name,allowed{i}))
+            C.Units = name;
+            return
+        end
     end
+    TASBESession.error('TASBE:Channel','UnknownUnits','Unit named %s is not a known permitted type',name);

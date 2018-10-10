@@ -33,6 +33,11 @@ function data = readfcs_compensated_ERF(CM,filename,with_AF,floor)
             data(:,i) = ERF_channel_data(:,i);
         end
     end
+    % if possible, translate uM channel AU to uM
+    if ~isempty(CM.size_unit_translation)
+        i_uM = find(CM, CM.uM_channel);
+        data(:,i_uM) = uM_channel_AU_to_uM(CM.size_unit_translation,data(:,i_uM));
+    end
     
     % optional discarding of filtered data (e.g., poorly transfected cells)
     for i=1:numel(CM.postfilters)
