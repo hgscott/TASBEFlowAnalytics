@@ -14,16 +14,16 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
     
-function UT = SizeUnitTranslation(beadtype, uM_poly, first_peak, fit_error, peak_sets)
+function UT = SizeUnitTranslation(beadtype, um_poly, first_peak, fit_error, peak_sets)
   if nargin == 0
       UT.beadtype = '';
-      UT.uM_poly = [0 0];
+      UT.um_poly = [0 0];
       UT.first_peak = 0;
       UT.fit_error = 0;
       UT.peak_sets = {};
   elseif nargin == 5
       UT.beadtype = beadtype;
-      UT.uM_poly = uM_poly;
+      UT.um_poly = um_poly;
       UT.first_peak = first_peak;
       UT.fit_error = fit_error;
       UT.peak_sets = peak_sets;

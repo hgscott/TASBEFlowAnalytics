@@ -1,5 +1,5 @@
-% BEADS_TO_uM_MODEL: Computes a linear function for transforming FACS 
-% measurements on the uM channel into uM equivalent diameter, using a 
+% BEADS_TO_um_MODEL: Computes a linear function for transforming FACS 
+% measurements on the um channel into um equivalent diameter, using a 
 % calibration run of the size bead model.
 % 
 % Takes the name of the FACS file of bead measurements, plus optionally the
@@ -7,7 +7,7 @@
 % record the calibration plot.
 %
 % Returns:
-% * k_uM:  UM = 10.^polyval(uM_channel_AU,uM_model)
+% * k_um:  UM = 10.^polyval(um_channel_AU,um_model)
 % * first_peak: what is the first peak visible?
 % * fit_error: residual from the linear fit
 %
@@ -19,8 +19,8 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function [UT, CM] = beads_to_uM_model(CM, beadfile)
-uM_channel = CM.uM_channel;
+function [UT, CM] = beads_to_um_model(CM, beadfile)
+um_channel = CM.um_channel;
 
 makePlots = TASBEConfig.get('sizebeads.plot');
 visiblePlots = TASBEConfig.get('sizebeads.visiblePlots');
@@ -42,22 +42,22 @@ bin_max = TASBEConfig.get('sizebeads.rangeMax');
 bin_increment = TASBEConfig.get('sizebeads.binIncrement');
 
 
-uMChannelName=getName(uM_channel);
+umChannelName=getName(um_channel);
 
-[PeakuMs,units,actualBatch] = get_bead_peaks(beadModel,beadChannel,beadBatch);
+[Peakums,units,actualBatch] = get_bead_peaks(beadModel,beadChannel,beadBatch);
 CM.sizeUnits = units;
 
-% NOTE: Calculations are done against the QuantifiedPeaks not PeakuMs.
+% NOTE: Calculations are done against the QuantifiedPeaks not Peakums.
 % The value of first_peak is the first valid peak in QuantifiedPeaks not
-% PeakuMs.  At the end of function, the peakOffset is added to first_peak
+% Peakums.  At the end of function, the peakOffset is added to first_peak
 % and is used in calculation of UnitTranslation.
 
 % NOTE: Thus, if reported messages or labels on plots are supposed to be
-% based on PeakuMs, then add peakOffset to first_peak and
+% based on Peakums, then add peakOffset to first_peak and
 % numQuantifiedPeaks in messages and labels. Do not add it to num_peaks.
-totalNumPeaks = numel(PeakuMs);
-numQuantifiedPeaks = sum(~isnan(PeakuMs));
-quantifiedPeakuMs = PeakuMs((end-numQuantifiedPeaks+1):end);
+totalNumPeaks = numel(Peakums);
+numQuantifiedPeaks = sum(~isnan(Peakums));
+quantifiedPeakums = Peakums((end-numQuantifiedPeaks+1):end);
 peakOffset = totalNumPeaks - numQuantifiedPeaks;
 
 TASBESession.succeed('TASBE:SizeBeads','ObtainBeadPeaks','Found specified size bead model and lot');
@@ -69,10 +69,10 @@ n = (size(bin_edges,2)-1);
 bin_centers = bin_edges(1:n)*10.^(bin_increment/2);
 
 % no secondary channel segmentation here
-segmentName = uMChannelName;
+segmentName = umChannelName;
 
 [~, fcshdr, fcsdat] = fca_readfcs(beadfile);
-bead_data = get_fcs_color(fcsdat,fcshdr,uMChannelName);
+bead_data = get_fcs_color(fcsdat,fcshdr,umChannelName);
 segment_data = get_fcs_color(fcsdat,fcshdr,segmentName);
 
 TASBESession.succeed('TASBE:SizeBeads','ObtainBeadData','Successfully read size bead data');
@@ -96,7 +96,7 @@ for i=1:range_n
 end
 
 n_peaks = 0;
-segment_peak_means = []; % segmentation channel (always uM channel)
+segment_peak_means = []; % segmentation channel (always um channel)
 peak_means = [];
 peak_counts = [];
 if (isempty(peak_threshold)),
@@ -127,7 +127,7 @@ for i=1:n
 end
 peak_sets{i} = peak_means;
 
-% look for the best linear fit of log10(peak_means) vs. log10(PeakuMs)
+% look for the best linear fit of log10(peak_means) vs. log10(Peakums)
 if(n_peaks>numQuantifiedPeaks)
     TASBESession.warn('TASBE:SizeBeads','PeakDetection','Size bead calibration found unexpectedly many bead peaks: truncating to use top peaks only');
     n_peaks = numQuantifiedPeaks;
@@ -141,7 +141,7 @@ end
 % Use log scale for fitting to avoid distortions from highest point
 if(n_peaks>=1)
     i = numQuantifiedPeaks-n_peaks; % always assume using top peaks
-    [uM_poly,S] = polyfit(log10(peak_means),log10(quantifiedPeakuMs((1:n_peaks)+i)),1);
+    [um_poly,S] = polyfit(log10(peak_means),log10(quantifiedPeakums((1:n_peaks)+i)),1);
     fit_error = S.normr;
     first_peak = i+1;
     if ~isempty(force_peak), first_peak = force_peak-peakOffset; end
@@ -156,7 +156,7 @@ if(n_peaks>=1)
 else % n_peaks = 0
     TASBESession.warn('TASBE:SizeBeads','PeakIdentification','Size bead calibration failed: found no bead peaks; using single dummy peak');
     TASBESession.skip('TASBE:SizeBeads','PeakFitQuality','Fit quality irrelevant for single peak');
-    uM_poly = [NaN, NaN];
+    um_poly = [NaN, NaN];
     fit_error = Inf;
     first_peak = NaN;
     CM.standardUnits = 'arbitrary units';
@@ -192,22 +192,22 @@ end
 if makePlots
     h = figure('PaperPosition',[1 1 plotSize]);
     if(~visiblePlots), set(h,'visible','off'); end;
-    loglog(peak_means,quantifiedPeakuMs((1:n_peaks)+first_peak-1),'b*-'); hold on;
+    loglog(peak_means,quantifiedPeakums((1:n_peaks)+first_peak-1),'b*-'); hold on;
     %loglog([1 peak_means],[1 peak_means]*(10.^model(2)),'r+--');
     model_range = floor(log10(min(peak_means))-0.5):0.1:(log10(max(peak_means))+0.5);
-    loglog(10.^model_range,10.^(polyval(uM_poly,model_range)),'g--');
-    loglog(peak_means,10.^(polyval(uM_poly,log10(peak_means))),'go');
+    loglog(10.^model_range,10.^(polyval(um_poly,model_range)),'g--');
+    loglog(peak_means,10.^(polyval(um_poly,log10(peak_means))),'go');
     for i=1:n_peaks
-        text(peak_means(i),quantifiedPeakuMs(i+first_peak-1)*1.3,sprintf('%i',i+first_peak-1+peakOffset));
+        text(peak_means(i),quantifiedPeakums(i+first_peak-1)*1.3,sprintf('%i',i+first_peak-1+peakOffset));
     end
-    xlabel(clean_for_latex([beadChannel ' a.u.'])); ylabel('Beads uMs');
+    xlabel(clean_for_latex([beadChannel ' a.u.'])); ylabel('Beads ums');
     title(sprintf('Peak identification for %s beads', beadModel));
     %legend('Location','NorthWest','Observed','Linear Fit','Constrained Fit');
     legend('Observed','Log-Linear Fit','Location','NorthWest');
     outputfig(h,'size-bead-fit-curve',plotPath);
 end
 
-UT = SizeUnitTranslation([beadModel ':' beadChannel ':' actualBatch],uM_poly, first_peak+peakOffset, fit_error, peak_sets);
+UT = SizeUnitTranslation([beadModel ':' beadChannel ':' actualBatch],um_poly, first_peak+peakOffset, fit_error, peak_sets);
 
 end
 

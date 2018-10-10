@@ -10,7 +10,7 @@
 % package distribution's top directory.
 
 function C = setUnits(C,name)
-    allowed = {'a.u.','ERF','EuM'};
+    allowed = {'a.u.','ERF','Eum'};
     for i=1:numel(allowed),
         if(strcmp(name,allowed{i}))
             C.Units = name;

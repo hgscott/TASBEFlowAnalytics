@@ -8,5 +8,5 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
     
-function uM = uM_channel_AU_to_uM(UT, data)
-  uM = 10.^polyval(UT.uM_poly,log10(data));
+function um = um_channel_AU_to_um(UT, data)
+  um = 10.^polyval(UT.um_poly,log10(data));

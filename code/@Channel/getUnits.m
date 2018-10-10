@@ -1,5 +1,5 @@
 % getUnits is a getter function for the Channel class. (either 'a.u.' or
-% ERF or EuM)
+% ERF or Eum)
 %
 % Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
 % in the AUTHORS file in TASBE analytics package distribution's top directory.

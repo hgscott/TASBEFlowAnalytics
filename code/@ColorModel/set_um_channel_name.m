@@ -8,16 +8,16 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function CM=set_uM_channel_name(CM, v)
-    CM.uM_channel_name=v;
+function CM=set_um_channel_name(CM, v)
+    CM.um_channel_name=v;
     found=false;
     for i=1:numel(CM.Channels), 
-        if(strcmp(CM.uM_channel_name,getName(CM.Channels{i}))), 
-            CM.uM_channel = CM.Channels{i}; 
-            CM.Channels{i} = setUnits(CM.Channels{i},'EuM');
+        if(strcmp(CM.um_channel_name,getName(CM.Channels{i}))), 
+            CM.um_channel = CM.Channels{i}; 
+            CM.Channels{i} = setUnits(CM.Channels{i},'Eum');
             found=true; 
             break; 
         end;
     end;
-    if(~found), TASBESession.error('TASBE:ColorModel','MissinguMChannel','Unable to find uM channel %s',CM.uM_channel_name); end;
+    if(~found), TASBESession.error('TASBE:ColorModel','MissingumChannel','Unable to find um channel %s',CM.um_channel_name); end;
 

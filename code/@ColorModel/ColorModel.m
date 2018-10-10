@@ -16,8 +16,8 @@ function CM = ColorModel(beadfile, blankfile, channels, colorfiles, pairfiles, s
         %public settings
         CM.ERF_channel_name = 'FITC-A'; % Which channel are ERFs on?  Default is FITC-A
         CM.ERF_channel=[];
-        CM.uM_channel_name = []; % Which channel is size on?  Normal is FSC-A; default is blank (meaning no such channel)
-        CM.uM_channel=[];
+        CM.um_channel_name = []; % Which channel is size on?  Normal is FSC-A; default is blank (meaning no such channel)
+        CM.um_channel=[];
         CM.autofluorescence_plot = 1; % Should the autofluorescence calibration plots be produced?
         CM.compensation_plot = 1;   % Should the color compenation calibration plots be produced?
         CM.translation_plot = 1 ;   % Should the color translation calibration plots be produced?
@@ -32,7 +32,7 @@ function CM = ColorModel(beadfile, blankfile, channels, colorfiles, pairfiles, s
         %%% NOT SURE if we need to initialize these properties
         
         CM.unit_translation=[]  ;      % conversion of ERF channel au to ERF
-        CM.size_unit_translation=[]  ;      % conversion of uM channel au to uM
+        CM.size_unit_translation=[]  ;      % conversion of um channel au to um
         CM.autofluorescence_model=[];  % array, one per channel, for removing autofluorescence
         CM.compensation_model=[]     ; % For compensating for spectral overlap
         CM.color_translation_model=[] ;% For converting other channels to ERF channel AU equiv
