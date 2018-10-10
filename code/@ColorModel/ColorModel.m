@@ -11,11 +11,13 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function CM = ColorModel(beadfile, blankfile, channels, colorfiles, pairfiles)
+function CM = ColorModel(beadfile, blankfile, channels, colorfiles, pairfiles, sizebeadfile)
         CM.version = tasbe_version();
         %public settings
         CM.ERF_channel_name = 'FITC-A'; % Which channel are ERFs on?  Default is FITC-A
         CM.ERF_channel=[];
+        CM.uM_channel_name = []; % Which channel is size on?  Normal is FSC-A; default is blank (meaning no such channel)
+        CM.uM_channel=[];
         CM.autofluorescence_plot = 1; % Should the autofluorescence calibration plots be produced?
         CM.compensation_plot = 1;   % Should the color compenation calibration plots be produced?
         CM.translation_plot = 1 ;   % Should the color translation calibration plots be produced?
@@ -30,13 +32,15 @@ function CM = ColorModel(beadfile, blankfile, channels, colorfiles, pairfiles)
         %%% NOT SURE if we need to initialize these properties
         
         CM.unit_translation=[]  ;      % conversion of ERF channel au to ERF
+        CM.size_unit_translation=[]  ;      % conversion of uM channel au to uM
         CM.autofluorescence_model=[];  % array, one per channel, for removing autofluorescence
         CM.compensation_model=[]     ; % For compensating for spectral overlap
         CM.color_translation_model=[] ;% For converting other channels to ERF channel AU equiv
         CM.noise_model=[]             ;% For understanding the expected constitutive expression noise
         CM.prefilters={};             % filters to remove problematic data in a.u. (e.g. debris, time-contamination)
         CM.postfilters={};            % filters to remove problematic data in ERF (e.g. poorly transfected cells)
-        CM.standardUnits = 'not yet set';  % Should instead be the value from column E in BeadCatalog.xlsx
+        CM.standardUnits = 'not yet set';  % Should become a value from column E in BeadCatalog.xlsx
+        CM.sizeUnits = 'not yet set';  % Should become a value from column E in BeadCatalog.xlsx
 
         % The time filter is not necessarily trustworthy, since units and scales are uncertain
         %CM.filters{1} = TimeFilter(); % add default quarter second data exclusion
@@ -47,6 +51,7 @@ function CM = ColorModel(beadfile, blankfile, channels, colorfiles, pairfiles)
             colorpairfiles{1} = {channels{1}, channels{1}, channels{1}, ''};
             
             CM.BeadFile = '';
+            CM.SizeBeadFile = '';
             CM.BlankFile = '';
             CM.Channels = channels;
             CM.ColorFiles = colorfiles;
@@ -56,6 +61,7 @@ function CM = ColorModel(beadfile, blankfile, channels, colorfiles, pairfiles)
             % constructor initialized fields
             % same FPs in the same order
             CM.BeadFile = beadfile;
+            CM.SizeBeadFile = sizebeadfile;
             CM.BlankFile = blankfile;
             % check if colorfiles match processed channels
             channels_ok = true;

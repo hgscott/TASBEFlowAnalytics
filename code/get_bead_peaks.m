@@ -20,7 +20,7 @@ function [peaks, units, batch] = get_bead_peaks(model,channel,batch)
     batch2 = strrep(batch, 'Lot', '');
     batch2 = strrep(batch2, 'lot', '');
     % also, trim any whitespace left
-    batch2 = strtrim(batch2);
+    if(~isempty(batch2)), batch2 = strtrim(batch2); end;
     
     % search for a matching model of bead (e.g., 'SpheroTech RCP-30-5A')
     for i=1:numel(catalog)

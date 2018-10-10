@@ -37,6 +37,16 @@ function CM=resolve(CM)
         CM.unit_translation = UT;
     end
     
+    % Next, unit translation from size beads, if there are any
+    if isEmpty(CM.uM_channel_name)
+        CM.size_unit_translation = [];
+        CM.sizeUnits = 'no size channel defined';
+        TASBESession.warn('TASBE:ColorModel','NoSizeChannel','No size bead calibration configured');
+    else
+        [UT, CM] = beads_to_uM_model(CM,CM.SizeBeadFile);
+        CM.size_unit_translation = UT;
+    end
+    
     % Next, autofluorescence and compensation model
     if TASBEConfig.isSet('calibration.overrideAutofluorescence')
         afmean = TASBEConfig.get('calibration.overrideAutofluorescence');
