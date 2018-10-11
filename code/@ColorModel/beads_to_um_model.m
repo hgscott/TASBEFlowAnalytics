@@ -125,7 +125,7 @@ for i=1:n
         end
     end
 end
-peak_sets{i} = peak_means;
+peak_sets{1} = peak_means;
 
 % look for the best linear fit of log10(peak_means) vs. log10(Peakums)
 if(n_peaks>numQuantifiedPeaks)
