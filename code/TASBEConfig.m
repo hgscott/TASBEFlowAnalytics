@@ -178,7 +178,39 @@ classdef TASBEConfig
             defaults('beads.plotSize') = 'calibration.graphPlotSize';
             doc.beads.validateAllChannels = 'If true, check all channels for likely bead problems; otherwise, check only ERF channel';
             s.beads.validateAllChannels = false;
-            
+
+            % Size Beads (for forward scatter calibration)
+            s.sizebeads = struct(); doc.sizebeads = struct();
+            doc.sizebeads.about = 'Settings controlling the interpretation of size calibration beads';
+            doc.sizebeads.peakThreshold = 'Manual minimum threshold for size bead peaks; set automatically if empty';
+            s.sizebeads.peakThreshold = [];
+            doc.sizebeads.rangeMin = 'Minimum value considered for size bead peaks (log scale: 10^rangeMin)';
+            s.sizebeads.rangeMin = 2;
+            doc.beads.rangeMax = 'Maximum value considered for size bead peaks (log scale: 10^rangeMax)';
+            s.sizebeads.rangeMax = 7;
+            doc.sizebeads.binIncrement = 'Resolution of histogram bins used for finding size bead peaks';
+            s.sizebeads.binIncrement = 0.02;
+            doc.sizebeads.beadModel = 'Model of size beads that are being used. Should match an option in BeadCatalog.xlsx';
+            s.sizebeads.beadModel = 'SpheroTech PPS-6K';
+            doc.sizebeads.beadChannel = 'Laser/filter channel being used, defaults to FSC. Should match an option in BeadCatalog.xlsx';
+            s.sizebeads.beadChannel = 'FSC';
+            doc.sizebeads.beadBatch = 'Batch of size beads that are being used. If set, should match an option in BeadCatalog.xlsx';
+            s.sizebeads.beadBatch = [];
+            doc.sizebeads.forceFirstPeak = 'If set to N, lowest observed size bead peak is forced to be interpreted as Nth peak';
+            s.sizebeads.forceFirstPeak = [];
+            doc.sizebeads.plot = 'When true, make diagnostic plots while computing size bead unit calibration';
+            s.sizebeads.plot = [];
+            defaults('sizebeads.plot') = 'calibration.plot';
+            doc.sizebeads.visiblePlots = 'If true, size bead unit calibration plots are visible; otherwise, they are hidden for later saving';
+            s.sizebeads.visiblePlots = [];
+            defaults('sizebeads.visiblePlots') = 'calibration.visiblePlots';
+            doc.sizebeads.plotPath = 'Location for size bead unit calibration plots';
+            s.sizebeads.plotPath = [];
+            defaults('sizebeads.plotPath') = 'calibration.plotPath';
+            doc.sizebeads.plotSize = 'Size (in inches) [X Y] for size bead unit calibration figures';
+            s.sizebeads.plotSize = [5 3.66];
+            defaults('sizebeads.plotSize') = 'calibration.graphPlotSize';
+
             % OutputSettings migration
             doc.OutputSettings = struct();
             doc.OutputSettings.about = 'Settings controlling batch plotting';

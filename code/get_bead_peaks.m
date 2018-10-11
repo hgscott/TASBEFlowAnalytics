@@ -17,10 +17,10 @@ function [peaks, units, batch] = get_bead_peaks(model,channel,batch)
 
     catalog = getBeadCatalog();
     % remove instances of 'Lot' or 'lot' from the input batch
-    batch2 = strrep(batch, 'Lot', '');
-    batch2 = strrep(batch2, 'lot', '');
+    if ~isempty(batch), batch2 = strrep(batch, 'Lot', ''); else batch2 = []; end;
+    if ~isempty(batch), batch2 = strrep(batch2, 'lot', ''); end;
     % also, trim any whitespace left
-    batch2 = strtrim(batch2);
+    if(~isempty(batch2)), batch2 = strtrim(batch2); end;
     
     % search for a matching model of bead (e.g., 'SpheroTech RCP-30-5A')
     for i=1:numel(catalog)

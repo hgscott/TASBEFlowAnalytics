@@ -23,11 +23,10 @@ maxDrivenThreshold = TASBEConfig.get('compensation.maximumDrivenLevel');
 [rawfcs fcshdr] = read_filtered_au(CM,filename);
 
 rawdata = select_channels(CM.Channels,rawfcs,fcshdr);
-% Remove autofluorescence
+% Remove autofluorescence from selected channels (ignoring others that may be unprocessed)
 no_AF_data = zeros(size(rawdata));
-for i=1:numel(CM.Channels)
-    no_AF_data(:,i) = rawdata(:,i)-getMean(CM.autofluorescence_model{i});
-end
+no_AF_data(:,driven) = rawdata(:,driven)-getMean(CM.autofluorescence_model{driven});
+no_AF_data(:,passive) = rawdata(:,passive)-getMean(CM.autofluorescence_model{passive});
 % make sure nothing's below 1, for compensation and geometric statistics
 % (compensation can be badly thrown off by negative values)
 no_AF_data(no_AF_data<1) = 1;
