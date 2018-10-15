@@ -9,6 +9,6 @@
 % package distribution's top directory.
 
 function value = percentile(data,n)
-sorted = sort(data); % sort low to high
-index = ceil((n/100)*numel(data));
+sorted = sort(data(~isnan(data))); % sort low to high
+index = ceil((n/100)*numel(sorted));
 value = sorted(index);
