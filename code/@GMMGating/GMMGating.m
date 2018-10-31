@@ -66,26 +66,13 @@ GMMG.fraction_kept = frac_kept;
 % Find and adjust gaussian fit
 % Control random seed if fixedSeed TASBEConfig is true
 if TASBEConfig.get('gating.fixedSeed')
-    % Create vector with n sections and assign the values in each section as the section number
-    % Split size of data by number of components
-    partition = round(size(channel_data,1)/AGP.k_components);
-    vec = [];
-    % For each component make array of partition size and add to main vec
-    for i=1:AGP.k_components
-        % Making sure length of vec is same as size of data
-        if i == AGP.k_components && i ~= 1
-            temp_vec = ones(size(channel_data,1) - (partition*(i-1)),1).*i;
-        else
-            temp_vec = ones(partition,1).*i;
-        end
-        vec = vertcat(vec, temp_vec);
-    end
-    % Calling fitgmdist with vector of initial guesses
-    dist = fitgmdist(channel_data,AGP.k_components,'Start',vec,'Regularize',1e-5);
+    rng(10); % For reproducibility
+    dist = fitgmdist(channel_data,AGP.k_components,'Regularize',1e-5);
+else
+    % If fixedSeed is false, call fitgmdist as normal
+    dist = fitgmdist(channel_data,AGP.k_components,'Regularize',1e-5);
 end
 
-% If fixedSeed is false, call fitgmdist as normal
-dist = fitgmdist(channel_data,AGP.k_components,'Regularize',1e-5);
 % assignin('base','GMMdist',dist);
 dss = struct(dist); %% Terrible kludge: should actually make accessors
 % sort component identities by eigenvalue size
