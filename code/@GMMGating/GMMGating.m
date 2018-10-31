@@ -66,8 +66,13 @@ GMMG.fraction_kept = frac_kept;
 % Find and adjust gaussian fit
 % Control random seed if fixedSeed TASBEConfig is true
 if TASBEConfig.get('gating.fixedSeed')
-    rng(10); % For reproducibility
-    dist = fitgmdist(channel_data,AGP.k_components,'Regularize',1e-5);
+    if is_octave
+        rand ("seed", 10);
+        dist = fitgmdist(channel_data,AGP.k_components,'Regularize',1e-5);
+    else
+        rng(10); % For reproducibility
+        dist = fitgmdist(channel_data,AGP.k_components,'Regularize',1e-5);
+    end
 else
     % If fixedSeed is false, call fitgmdist as normal
     dist = fitgmdist(channel_data,AGP.k_components,'Regularize',1e-5);
