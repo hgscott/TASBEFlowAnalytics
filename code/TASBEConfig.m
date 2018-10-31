@@ -88,7 +88,11 @@ classdef TASBEConfig
             defaults('calibration.heatmapPlotSize') = 'plots.heatmapPlotSize';
             
             % Gating
-%             s.gating = struct();
+            s.gating = struct(); doc.gating = struct();
+            doc.gating.about = 'General settings for GMM Gating';
+            doc.gating.fixedSeed = 'When true, controls the random seed for GMM Gating';
+            s.gating.fixedSeed = true;
+            
 %             s.gating.fractionFromExtrema = 0.95;    % Fraction of range considered not-saturated and thus included in gating
 %             s.gating.saturationWarning = 0.3;       % Warn about saturation distorting gates if fraction non-extrema less than this level
 %             s.gating.numComponents = 2;             % number of gaussian components searched for
