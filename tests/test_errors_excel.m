@@ -20,7 +20,11 @@ function test_errors_excel_conditions
     assertEqual(log{end}.contents{end}.name, 'InvalidValue');
 
 function test_errors_excel_session
-    assertExceptionThrown(@()analyzeFromExcel('', ''), 'Octave:invalid-index', 'No error was raised');   
+    if is_octave()
+        assertExceptionThrown(@()analyzeFromExcel('', ''), 'Octave:invalid-index', 'No error was raised');   
+    else
+        assertExceptionThrown(@()analyzeFromExcel('', ''), 'MATLAB:badsubscript', 'No error was raised'); 
+    end
     try
         assertExceptionThrown(@()analyzeFromExcel('test_templates/faulty_batch_template1.xlsx', 'comparative'), 'TASBE:Analysis:ColumnDimensionMismatch', 'No error was raised');
     catch
