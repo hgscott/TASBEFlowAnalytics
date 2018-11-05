@@ -168,10 +168,10 @@ TASBEConfig.set('beads.peakThreshold', 100);
 TASBEConfig.set('beads.rangeMin', 1);
 CM = resolve(CM);
 log = TASBESession.list();
-assertEqual(log{end}.contents{3}.name, 'PeaksNotAscending');
-assertEqual(log{end}.contents{4}.name, 'HighestPeakUndetected');
-assertEqual(log{end}.contents{5}.name, 'QuestionableFirstPeak');
-assertEqual(log{end}.contents{7}.name, 'PotentialBeadClump');
+assertEqual(log{end-1}.contents{3}.name, 'PeaksNotAscending');
+assertEqual(log{end-1}.contents{4}.name, 'HighestPeakUndetected');
+assertEqual(log{end-1}.contents{5}.name, 'QuestionableFirstPeak');
+assertEqual(log{end-1}.contents{7}.name, 'PotentialBeadClump');
 
 
 

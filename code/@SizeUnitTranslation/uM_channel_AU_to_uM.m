@@ -1,5 +1,4 @@
-% getUnits is a getter function for the Channel class. (either 'a.u.' or
-% ERF or Eum)
+% ERF_CHANNEL_AU_TO_ERF converts ERF channel arbitrary units into standard ERF units
 %
 % Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
@@ -8,10 +7,6 @@
 % under the terms of the GNU General Public License, with a linking
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
-
-function units = getUnits(C)
-    if isPseudo(C)
-        units = 'a.u.';
-    else
-        units = C.Units;
-    end
+    
+function um = um_channel_AU_to_um(UT, data)
+  um = 10.^polyval(UT.um_poly,log10(data));

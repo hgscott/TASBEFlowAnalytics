@@ -44,7 +44,7 @@ function data = readfcs_compensated_au(CM,filename,with_AF,floor)
     end
     % make sure nothing's below 1, for compensation and geometric statistics
     % (compensation can be badly thrown off by negative values)
-    if(floor), no_AF_data(no_AF_data<1) = 1; end
+    if(floor && numel(CM.Channels)>1), no_AF_data(no_AF_data<1) = 1; end
     % Compensate for spectral bleed
     data = color_compensate(CM.compensation_model,no_AF_data);
     % Return autofluorescence, if desired

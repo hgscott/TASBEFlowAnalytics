@@ -40,14 +40,14 @@ n_channels = numel(AGP.channel_names);
 % gather channel data
 unfiltered_channel_data = cell(n_channels,1);
 unfiltered_channel_data_arith = unfiltered_channel_data;
-for i=1:n_channels, 
+for i=1:n_channels 
     unfiltered_channel_data_arith{i} = get_fcs_color(rawfcs,fcshdr,AGP.channel_names{i});
     unfiltered_channel_data{i} = log10(unfiltered_channel_data_arith{i});
-end;
+end
 
 % filter channel data away from saturation points
 which = ones(numel(unfiltered_channel_data{1}),1);
-for i=1:n_channels,
+for i=1:n_channels
     valid = ~isinf(unfiltered_channel_data{i}) & ~isnan(unfiltered_channel_data{i}) & (unfiltered_channel_data_arith{i}>0);
     bound = [min(unfiltered_channel_data{i}(valid)) max(unfiltered_channel_data{i}(valid))];
     span = bound(2)-bound(1);
@@ -55,27 +55,40 @@ for i=1:n_channels,
     which = which & valid & unfiltered_channel_data{i}>range(1) & unfiltered_channel_data{i}<range(2);
 end
 channel_data = zeros(sum(which),n_channels);
-for i=1:n_channels, 
+for i=1:n_channels 
     channel_data(:,i) = unfiltered_channel_data{i}(which);
-end;
+end
 frac_kept = sum(which)/numel(which);
 fprintf('Gating autodetect using %.2f%% valid and non-saturated data\n',100*frac_kept);
 GMMG.fraction_kept = frac_kept;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Find and adjust gaussian fit
+% Control random seed if fixedSeed TASBEConfig is true
+if TASBEConfig.get('gating.fixedSeed')
+    if is_octave
+        rand ("seed", 10);
+        dist = fitgmdist(channel_data,AGP.k_components,'Regularize',1e-5);
+    else
+        rng(10); % For reproducibility
+        dist = fitgmdist(channel_data,AGP.k_components,'Regularize',1e-5);
+    end
+else
+    % If fixedSeed is false, call fitgmdist as normal
+    dist = fitgmdist(channel_data,AGP.k_components,'Regularize',1e-5);
+end
 
-dist = fitgmdist(channel_data,AGP.k_components,'Regularize',1e-5);
+% assignin('base','GMMdist',dist);
 dss = struct(dist); %% Terrible kludge: should actually make accessors
 % sort component identities by eigenvalue size
 maxeigs = zeros(AGP.k_components,1);
-for i=1:AGP.k_components,
+for i=1:AGP.k_components
     maxeigs(i) = max(eig(dss.Sigma(:,:,i)));
 end
 sorted_eigs = sortrows([maxeigs'; 1:AGP.k_components]');
 eigsort = sorted_eigs(:,2);
 
-if isempty(AGP.selected_components),
+if isempty(AGP.selected_components)
     AGP.selected_components = 1;
 end
 GMMG.selected_components = eigsort(AGP.selected_components);
