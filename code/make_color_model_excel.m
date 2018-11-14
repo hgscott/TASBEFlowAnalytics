@@ -49,6 +49,7 @@ function [CM] = make_color_model_excel(extractor)
         plot_path = end_with_slash(fullfile(path, 'plots/'));
         TASBEConfig.set('plots.plotPath', plot_path);
     end
+    
     extractor.setTASBEConfig('beads.beadModel', 'char');
     extractor.setTASBEConfig('beads.beadBatch', 'char');
     extractor.setTASBEConfig('beads.rangeMin', 'numeric');
@@ -56,12 +57,21 @@ function [CM] = make_color_model_excel(extractor)
     extractor.setTASBEConfig('beads.peakThreshold', 'numeric');
     extractor.setTASBEConfig('beads.beadChannel', 'char');
     extractor.setTASBEConfig('beads.secondaryBeadChannel', 'char');
-   
-    % Extract bead, blank, and all files
-    % ref_filenames = {'blank','beads','all'};
+    
+    % Extract bead, blank, and all files (and size bead file if applicable)
+    % ref_filenames = {'blank','beads','all','sizebead'};
+    sizebeadfile = [];
     TASBEConfig.set('template.displayErrors', 1);
     ref_filenames = {extractor.getExcelValue('blank_name', 'char'), extractor.getExcelValue('all_name', 'char')};
     TASBEConfig.set('template.displayErrors', 0);
+    size_bead = false;
+    try
+        size_bead_name = extractor.getExcelValue('size_bead_name', 'char');
+        ref_filenames{end+1} = size_bead_name;
+        size_bead = true;
+    catch
+        TASBESession.notify('make_color_model_excel', 'NoSizeBeads', 'Size bead feature not being used.');
+    end
     output_filenames = {};
     sh_num1 = extractor.getSheetNum('first_sample_num');
     first_sample_row = extractor.getRowNum('first_sample_num');
@@ -93,6 +103,9 @@ function [CM] = make_color_model_excel(extractor)
     beads_file = bead_files{1};
     blank_file = output_filenames{1};
     all_file = output_filenames{2};
+    if size_bead
+        sizebeadfile = output_filenames{3};
+    end
     
     % Autodetect gating with an N-dimensional gaussian-mixture-model
     AGP = AutogateParameters();
@@ -147,6 +160,39 @@ function [CM] = make_color_model_excel(extractor)
         end
     end
     
+    % Create all non-fluorescence channels
+    num_nonflr = 0;
+    first_nonflr_row = extractor.getRowNum('first_nonflr_name');
+    nonflr_name_col = extractor.getColNum('first_nonflr_name');
+    nonflr_channel_col = extractor.getColNum('first_nonflr_channel');
+    nonflr_wavlen_col = extractor.getColNum('first_nonflr_wavlen');
+    nonflr_filter_col = extractor.getColNum('first_nonflr_filter');
+    nonflr_color_col = extractor.getColNum('first_nonflr_color');
+    for i=first_nonflr_row:size(extractor.sheets{sh_num2},1)
+        try
+            print_name = extractor.getExcelValuePos(sh_num2, i, nonflr_name_col, 'char');
+        catch
+            break
+        end
+        % Extract the rest of the information for the channel
+        channel_name = extractor.getExcelValuePos(sh_num2, i, nonflr_channel_col, 'char');
+        excit_wavelen = extractor.getExcelValuePos(sh_num2, i, nonflr_wavlen_col, 'numeric');
+        filter = strtrim(strsplit(extractor.getExcelValuePos(sh_num2, i, nonflr_filter_col, 'char'), '/'));
+        color = extractor.getExcelValuePos(sh_num2, i, nonflr_color_col, 'char');
+        % FSC and SSC channels can be added to be read unprocessed to MEFL
+        channels{end+1} = Channel(channel_name, excit_wavelen, str2double(filter{1}), str2double(filter{2}));
+        channels{end} = setPrintName(channels{end}, print_name); % Name to print on charts
+        channels{end} = setLineSpec(channels{end}, color); % Color for lines, when needed
+        % If the name is FSC or SSC (or one of those with '-A', '-H', or '-W') it will automatically be unprocessed; otherwise, set it 
+        channels{end} = setIsUnprocessed(channels{end}, true);
+        num_nonflr = num_nonflr + 1;
+    end
+    
+    % Make sure non-fluorescence channel made if size_bead is true
+    if size_bead && num_nonflr == 0
+        TASBESession.warn('make_color_model_excel', 'NoSizeBeadChannel', 'Size bead feature requires at least one non-fluorescence channel.');
+    end
+    
     % Obtain channel filenames using sample_ids
     colorfiles = {};
     for i=first_sample_row:size(extractor.sheets{sh_num1},1)
@@ -178,7 +224,12 @@ function [CM] = make_color_model_excel(extractor)
     % Entries are: channel1, channel2, constitutive channel, filename
     % This allows channel1 and channel2 to be converted into one another.
     % If you only have two colors, you can set consitutive-channel to equal channel1 or channel2
-    n_channels = numel(channels);
+    if size_bead
+        n_channels = numel(channels) - num_nonflr;
+    else
+        n_channels = numel(channels);
+    end
+    
     if n_channels == 2
         colorpairfiles{1} = {channels{1}, channels{2}, channels{2}, all_file};
     else
@@ -192,12 +243,23 @@ function [CM] = make_color_model_excel(extractor)
     end
 
     % Making the color model
-    CM = ColorModel(beads_file, blank_file, channels, colorfiles, colorpairfiles);
+    CM = ColorModel(beads_file, blank_file, channels, colorfiles, colorpairfiles, sizebeadfile);
     CM = set_ERF_channel_name(CM, channel_names{1});
     CM = add_prefilter(CM,autogate);
     
     if ~isempty(transChannelMin) 
         CM = set_translation_channel_min(CM,cell2mat(transChannelMin));
+    end
+    
+    if size_bead
+        % Setting size bead configs
+        CM=set_um_channel_name(CM, 'FSC-A');
+        extractor.setTASBEConfig('sizebeads.beadModel', 'char');
+        extractor.setTASBEConfig('sizebeads.beadBatch', 'char');
+        extractor.setTASBEConfig('sizebeads.rangeMin', 'numeric');
+        extractor.setTASBEConfig('sizebeads.rangeMax', 'numeric');
+        extractor.setTASBEConfig('sizebeads.peakThreshold', 'numeric');
+        extractor.setTASBEConfig('sizebeads.beadChannel', 'char');
     end
     
     % Execute and save the model
