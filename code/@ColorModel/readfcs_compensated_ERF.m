@@ -36,7 +36,7 @@ function data = readfcs_compensated_ERF(CM,filename,with_AF,floor)
     % if possible, translate um channel AU to um
     if ~isempty(CM.size_unit_translation)
         i_um = find(CM, CM.um_channel);
-        data(:,i_um) = uM_channel_AU_to_uM(CM.size_unit_translation,data(:,i_um));
+        data(:,i_um) = um_channel_AU_to_um(CM.size_unit_translation,data(:,i_um));
     end
     
     % optional discarding of filtered data (e.g., poorly transfected cells)
