@@ -62,7 +62,7 @@ classdef TemplateExtraction
                     {'first_filename_template'; {1, 16, 5}}; % uses sh & col vals
                     {'first_condition_key'; {1, 16, 1}}; % uses sh & col vals
                     % Coords for variables in "Samples"
-                    {'plots.plotPath'; {{3, 28, 2}, {2, 30, 2}, {4, 5, 15}, {5, 5, 16}}}; % uses sh & col vals
+                    {'plots.plotPath'; {{3, 33, 2}, {2, 30, 2}, {4, 5, 15}, {5, 5, 16}}}; % uses sh & col vals
                     {'first_sample_num'; {2, 5, 1}}; % uses all three vals 
                     {'inputName_CM'; {{2, 30, 3}, {4, 13, 2}, {5, 13, 2}}}; % uses sh & col vals
                     {'inputPath_CM'; {{2, 30, 4}, {4, 13, 3}, {5, 13, 3}}}; % uses sh & col vals
@@ -86,23 +86,35 @@ classdef TemplateExtraction
                     {'beads.rangeMax'; {3, 5, 4}}; % uses all three vals 
                     {'beads.peakThreshold'; {3, 5, 5}}; % uses all three vals 
                     {'beads.beadChannel'; {3, 5, 6}}; % uses all three vals 
-                    {'beads.secondaryBeadChannel'; {3, 28, 3}}; % uses all three vals 
-                    {'relevant_channels'; {3, 24, 2}}; % uses all three vals 
-                    {'transChannelMin'; {3, 24, 3}}; % uses all three vals 
-                    {'outputName_CM'; {3, 28, 4}}; % uses all three vals 
-                    {'outputPath_CM'; {3, 28, 5}}; % uses all three vals 
+                    {'beads.secondaryBeadChannel'; {3, 33, 3}}; % uses all three vals 
+                    {'relevant_channels'; {3, 25, 2}}; % uses all three vals 
+                    {'transChannelMin'; {3, 25, 3}}; % uses all three vals 
+                    {'outputName_CM'; {3, 33, 4}}; % uses all three vals 
+                    {'outputPath_CM'; {3, 33, 5}}; % uses all three vals 
                     {'first_flchrome_name'; {3, 13, 2}}; % uses all three vals 
                     {'first_flchrome_channel'; {3, 13, 3}}; % uses all three vals 
                     {'first_flchrome_type'; {3, 13, 4}}; % uses all three vals, whether constitutive or input or output
                     {'first_flchrome_wavlen'; {3, 13, 5}}; % uses all three vals 
                     {'first_flchrome_filter'; {3, 13, 6}}; % uses all three vals 
                     {'first_flchrome_color'; {3, 13, 7}}; % uses all three vals 
-                    {'first_flchrome_id'; {3, 13, 8}}; % uses all three vals 
-                    {'num_channels'; {3, 24, 1}}; % uses all three vals 
+                    {'first_flchrome_id'; {3, 13, 8}}; % uses all three vals  
+                    {'first_nonflr_name'; {3, 20, 2}}; % uses all three vals 
+                    {'first_nonflr_channel'; {3, 20, 3}}; % uses all three vals 
+                    {'first_nonflr_wavlen'; {3, 20, 4}}; % uses all three vals 
+                    {'first_nonflr_filter'; {3, 20, 5}}; % uses all three vals 
+                    {'first_nonflr_color'; {3, 20, 6}}; % uses all three vals 
+                    {'num_channels'; {3, 25, 1}}; % uses all three vals 
                     {'bead_name'; {3, 5, 7}}; % uses all three vals 
                     {'blank_name'; {3, 9, 2}}; % uses all three vals 
-                    {'all_name'; {3, 24, 4}}; % uses all three vals 
+                    {'all_name'; {3, 25, 4}}; % uses all three vals 
                     {'bead_tolerance'; {3, 5, 8}}; % uses all three vals 
+                    {'size_bead_name'; {3, 29, 7}}; % uses all three vals
+                    {'sizebeads.beadModel'; {3, 29, 2}}; % uses all three vals
+                    {'sizebeads.rangeMin'; {3, 29, 3}}; % uses all three vals
+                    {'sizebeads.rangeMax'; {3, 29, 4}}; % uses all three vals
+                    {'sizebeads.peakThreshold'; {3, 29, 5}}; % uses all three vals
+                    {'sizebeads.beadChannel'; {3, 29, 6}}; % uses all three vals
+                    {'sizebeads.beadBatch'; {3, 29, 1}}; % uses all three vals
                     % Coords for variables in "Comparative Analysis"
                     {'outputName_PM'; {4, 5, 13}}; % uses sh & col vals
                     {'outputPath_PM'; {4, 5, 14}}; % uses sh & col vals
