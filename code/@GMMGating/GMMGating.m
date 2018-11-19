@@ -67,7 +67,7 @@ GMMG.fraction_kept = frac_kept;
 % Control random seed if fixedSeed TASBEConfig is true
 if TASBEConfig.get('gating.fixedSeed')
     if is_octave
-        rand ("seed", 10);
+        rand ('seed', 10);
         dist = fitgmdist(channel_data,AGP.k_components,'Regularize',1e-5);
     else
         rng(10); % For reproducibility
