@@ -45,7 +45,7 @@ function test_colormodel_excel_endtoend
     assertElementsAlmostEqual(COMP.matrix,      expected_matrix, 'absolute', 1e-3);
     
     % Check results for sizeBeads:
-    assertTrue(strcmp(CMS.sizeUnits,'EumPBD'));
+    assertTrue(strcmp(CMS.sizeUnits,'Eum'));
     expected_peaks = 1e5*[0.1257    0.2574    0.6506    1.3908    1.9087    3.1596];
     UT = struct(CMS.size_unit_translation);
     assertElementsAlmostEqual(UT.um_poly,       [0.5865 -2.0798],  'relative', 1e-2);
