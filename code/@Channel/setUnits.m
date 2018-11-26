@@ -10,9 +10,11 @@
 % package distribution's top directory.
 
 function C = setUnits(C,name)
-    allowed = {'a.u.','ERF','Eum'};
-    for i=1:numel(allowed),
-        if(strcmp(name,allowed{i}))
+    allowed_pattern = {'a\.u\.','ERF','Eum','M\w*'};
+    % check for pattern matches
+    for i=1:numel(allowed_pattern)
+        matches = regexp(name,allowed_pattern{i},'match');
+        if(numel(matches)==1 && strcmp(name,matches{1}))
             C.Units = name;
             return
         end

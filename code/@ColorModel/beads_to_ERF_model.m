@@ -50,6 +50,9 @@ i_ERF = find(CM,ERF_channel);
 
 [PeakERFs,units,actualBatch] = get_bead_peaks(beadModel,beadChannel,beadBatch);
 CM.standardUnits = units;
+ERF_channel_idx = indexof(CM.Channels,CM.ERF_channel);
+CM.Channels{ERF_channel_idx} = setUnits(CM.Channels{ERF_channel_idx},units);
+
 
 % NOTE: Calculations are done against the QuantifiedPeaks not PeakERFs.
 % The value of first_peak is the first valid peak in QuantifiedPeaks not

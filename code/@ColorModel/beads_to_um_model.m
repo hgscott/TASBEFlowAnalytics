@@ -45,7 +45,9 @@ bin_increment = TASBEConfig.get('sizebeads.binIncrement');
 umChannelName=getName(um_channel);
 
 [Peakums,units,actualBatch] = get_bead_peaks(beadModel,beadChannel,beadBatch);
-CM.sizeUnits = units;
+CM.sizeUnits = units; % should always be Eum, for the forseeable future
+um_channel_idx = indexof(CM.Channels,CM.um_channel);
+CM.Channels{um_channel_idx} = setUnits(CM.Channels{um_channel_idx},units);
 
 % NOTE: Calculations are done against the QuantifiedPeaks not Peakums.
 % The value of first_peak is the first valid peak in QuantifiedPeaks not

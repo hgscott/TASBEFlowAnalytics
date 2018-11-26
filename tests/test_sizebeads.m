@@ -27,6 +27,10 @@ channels{2} = Channel('FSC-A', 488, 488, 10);
 channels{2} = setPrintName(channels{2}, 'FSC');
 channels{2} = setLineSpec(channels{2}, 'k');
 
+channels{3} = Channel('SSC-A', 488, 488, 0); % should be 10, not 0, but waiting for issue #361 fix
+channels{3} = setPrintName(channels{2}, 'SSC');
+channels{3} = setLineSpec(channels{2}, 'r');
+
 % Multi-color controls are used for converting other colors into ERF units
 % Any channel without a control mapping it to ERF will be left in arbirary units.
 colorpairfiles = {};
@@ -60,7 +64,7 @@ CM=resolve(CM);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Check results in CM:
 CMS = struct(CM);
-assertTrue(strcmp(CMS.sizeUnits,'EumPBD'));
+assertTrue(strcmp(CMS.sizeUnits,'Eum'));
 expected_peaks = 1e5*[0.1257    0.2574    0.6506    1.3908    1.9087    3.1596];
 UT = struct(CMS.size_unit_translation);
 assertElementsAlmostEqual(UT.um_poly,       [0.5865 -2.0798],  'relative', 1e-2);
@@ -68,3 +72,7 @@ assertElementsAlmostEqual(UT.first_peak,    1);
 assertElementsAlmostEqual(UT.fit_error,     0.0784,   'absolute', 0.01);
 assertElementsAlmostEqual(UT.peak_sets{1},  expected_peaks, 'relative', 1e-2);
 
+channels = getChannels(CM);
+assertEqual(getUnits(channels{1}),'MEFL');
+assertEqual(getUnits(channels{2}),'Eum');
+assertEqual(getUnits(channels{3}),'a.u.');

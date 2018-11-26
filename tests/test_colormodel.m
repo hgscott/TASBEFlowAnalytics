@@ -71,6 +71,11 @@ CM=resolve(CM);
 % Check results in CM:
 CMS = struct(CM);
 
+channels = getChannels(CM);
+assertEqual(getUnits(channels{1}),'MEFL');
+assertEqual(getUnits(channels{2}),'MEFL');
+assertEqual(getUnits(channels{3}),'MEFL');
+
 UT = struct(CMS.unit_translation);
 assertElementsAlmostEqual(UT.k_ERF,        2267.3,   'relative', 1e-2);
 assertElementsAlmostEqual(UT.first_peak,    8);
