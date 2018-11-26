@@ -25,7 +25,7 @@ function [ok CM] = confirm_ERF_translations(CM)
             k_ERF=getK_ERF(CM.unit_translation);
             CM.autofluorescence_model{i}=ERFize(AFMi,scales(i,fi),k_ERF);
         else
-            CM.Channels{i} = setUnits(CM.Channels{i},getUnits(CM.ERF_channel));
+            CM.Channels{i} = setUnits(CM.Channels{i},getUnits(CM.Channels{fi}));
         end
     end
     

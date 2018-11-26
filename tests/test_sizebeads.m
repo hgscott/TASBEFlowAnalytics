@@ -23,17 +23,23 @@ channels{1} = setPrintName(channels{1}, 'EYFP'); % Name to print on charts
 channels{1} = setLineSpec(channels{1}, 'y'); % Color for lines, when needed
 colorfiles{1} = [stem0312 'EYFP_P3.fcs']; % If there is only one channel, the color file is optional
 
-channels{2} = Channel('FSC-A', 488, 488, 10);
-channels{2} = setPrintName(channels{2}, 'FSC');
-channels{2} = setLineSpec(channels{2}, 'k');
+channels{2} = Channel('Pacific Blue-A', 405, 450, 50);
+channels{2} = setPrintName(channels{2}, 'EBFP2');
+channels{2} = setLineSpec(channels{2}, 'b');
+colorfiles{2} = [stem0312 'ebfp2_P3.fcs'];
 
-channels{3} = Channel('SSC-A', 488, 488, 0); % should be 10, not 0, but waiting for issue #361 fix
-channels{3} = setPrintName(channels{2}, 'SSC');
-channels{3} = setLineSpec(channels{2}, 'r');
+channels{3} = Channel('FSC-A', 488, 488, 10);
+channels{3} = setPrintName(channels{3}, 'FSC');
+channels{3} = setLineSpec(channels{3}, 'k');
+
+channels{4} = Channel('SSC-A', 488, 488, 0); % should be 10, not 0, but waiting for issue #361 fix
+channels{4} = setPrintName(channels{4}, 'SSC');
+channels{4} = setLineSpec(channels{4}, 'r');
 
 % Multi-color controls are used for converting other colors into ERF units
 % Any channel without a control mapping it to ERF will be left in arbirary units.
 colorpairfiles = {};
+colorpairfiles{1} = {channels{1}, channels{2}, channels{2}, [stem0312 'mkate_EBFP2_EYFP_P3.fcs']};
 
 sizebeadfile = '../TASBEFlowAnalytics-Tutorial/example_controls/180614_PPS6K_A02.fcs';
 
@@ -74,5 +80,6 @@ assertElementsAlmostEqual(UT.peak_sets{1},  expected_peaks, 'relative', 1e-2);
 
 channels = getChannels(CM);
 assertEqual(getUnits(channels{1}),'MEFL');
-assertEqual(getUnits(channels{2}),'Eum');
-assertEqual(getUnits(channels{3}),'a.u.');
+assertEqual(getUnits(channels{2}),'MEFL');
+assertEqual(getUnits(channels{3}),'Eum');
+assertEqual(getUnits(channels{4}),'a.u.');
