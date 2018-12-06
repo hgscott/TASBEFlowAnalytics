@@ -361,3 +361,30 @@ assertElementsAlmostEqual(COMP.matrix,      [1 0 0; 0 1 0; 0 0 1], 'absolute', 1
 
 CTM = struct(CMS.color_translation_model);
 assertElementsAlmostEqual(CTM.scales,   [NaN NaN NaN; NaN NaN NaN; NaN NaN NaN]);
+
+
+
+function test_colormodel_error_missing_colorfiles
+
+stem0312 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_';
+
+beadfile = [stem0312 'Beads_P3.fcs'];
+blankfile = [stem0312 'blank_P3.fcs'];
+
+% Create one channel / colorfile pair for each color
+channels = {}; colorfiles = {};
+channels{1} = Channel('FITC-A', 488, 515, 20);
+channels{1} = setPrintName(channels{1}, 'EYFP'); % Name to print on charts
+channels{1} = setLineSpec(channels{1}, 'y'); % Color for lines, when needed
+
+channels{2} = Channel('PE-Tx-Red-YG-A', 561, 610, 20);
+channels{2} = setPrintName(channels{2}, 'mKate');
+channels{2} = setLineSpec(channels{2}, 'r');
+colorfiles{2} = [stem0312 'mkate_P3.fcs'];
+
+% Multi-color controls are used for converting other colors into ERF units
+% Any channel without a control mapping it to ERF will be left in arbirary units.
+colorpairfiles = {};
+
+assertExceptionThrown(@()(ColorModel(beadfile, blankfile, channels, colorfiles, colorpairfiles)),...
+    'TASBE:ColorModel:OneColorfilePerChannel', 'No error was raised');
