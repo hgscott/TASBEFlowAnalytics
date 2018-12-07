@@ -12,7 +12,9 @@
 function plot_compensated_controls(CM)
 n = numel(CM.Channels);
 
-if n==1, return; end; % nothing to plot if there's only one channel
+n_processed = 0;
+for i=1:n, if(~isUnprocessed(CM.Channels{i})), n_processed=n_processed+1; end; end;
+if n_processed<=1, return; end; % nothing to plot if there's only one channel
 
 for driven=1:n
     if(isUnprocessed(CM.Channels{driven})), continue; end; % skip unprocessed channels
