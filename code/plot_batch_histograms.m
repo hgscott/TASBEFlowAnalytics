@@ -17,7 +17,7 @@ function plot_batch_histograms(results,sampleresults,CM,linespecs)
 if (~exist('linespecs', 'var'))
     % Build linespecs from sampleresults
     channels = getChannelNames(sampleresults{1}{1}.AnalysisParameters); % channel names are same across conditions and replicates
-    linespecs = {1, numel(channels)};
+    linespecs = cell(numel(channels),1);
     for i=1:numel(channels)
         if isempty(getLineSpec(channel_named(CM, channels{i})))
             linespecs{i} = 'k';

@@ -151,7 +151,7 @@ function test_batch_excel_endtoend
     assertEqual(results{14}.condition, 'Dox 2000');
     assertElementsAlmostEqual(log10(results{14}.bincenters([1 10 40 end])), [4.0500    4.9500    7.9500    9.9500], 'relative', 1e-2);
 
-    for i=1:14,
+    for i=1:14
         assertElementsAlmostEqual(results{i}.means, result_expected_means(i,:), 'relative', 1e-2);
         assertElementsAlmostEqual(results{i}.stds,  result_expected_stds(i,:),  'relative', 1e-2);
     end

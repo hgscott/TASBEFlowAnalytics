@@ -271,3 +271,58 @@ plot_batch_histograms(results,sampleresults,CM2);
 log = TASBESession.list();
 assertEqual(log{end}.contents{end}.name, 'NoLineSpecs');
 [~, ~] = serializeBatchOutput(file_pairs, CM2, AP, sampleresults); % should not error
+
+
+function test_singlecolor_batch_analysis
+
+stem0312 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_';
+
+beadfile = [stem0312 'Beads_P3.fcs'];
+blankfile = [stem0312 'blank_P3.fcs'];
+
+% Create one channel / colorfile pair for each color
+channels = {}; colorfiles = {};
+channels{1} = Channel('FITC-A', 488, 515, 20);
+channels{1} = setPrintName(channels{1}, 'EYFP'); % Name to print on charts
+channels{1} = setLineSpec(channels{1}, 'y'); % Color for lines, when needed
+
+% Multi-color controls are used for converting other colors into ERF units
+% Any channel without a control mapping it to ERF will be left in arbirary units.
+colorpairfiles = {};
+
+CM = ColorModel(beadfile, blankfile, channels, colorfiles, colorpairfiles);
+
+TASBEConfig.set('beads.beadModel','SpheroTech RCP-30-5A'); % Entry from BeadCatalog.xls matching your beads
+TASBEConfig.set('beads.beadBatch','Lot AA01, AA02, AA03, AA04, AB01, AB02, AC01, GAA01-R'); % Entry from BeadCatalog.xls containing your lot
+TASBEConfig.set('beads.rangeMin', 2);
+CM=set_ERF_channel_name(CM, 'FITC-A');
+TASBEConfig.set('plots.plotPath', '/tmp/plots');
+% Execute the model
+CM=resolve(CM);
+
+stem1011 = '../TASBEFlowAnalytics-Tutorial/example_assay/LacI-CAGop_';
+% set up metadata
+experimentName = 'LacI Transfer Curve';
+% Configure the analysis
+bins = BinSequence(4,0.1,10,'log_bins');
+AP = AnalysisParameters(bins,{});
+AP=setMinValidCount(AP,100');
+AP=setPemDropThreshold(AP,5');
+AP=setUseAutoFluorescence(AP,false');
+
+% Make a map of condition names to file sets
+file_pairs = {...
+  'Dox 0.1',    {[stem1011 'B3_P3.fcs']};
+  'Dox 0.2',    {[stem1011 'B4_P3.fcs']};
+  };
+
+% Execute the actual analysis
+[results, sampleresults] = per_color_constitutive_analysis(CM,file_pairs,{'EYFP'},AP);
+
+% Make output plots
+TASBEConfig.set('OutputSettings.StemName','LacI-CAGop');
+TASBEConfig.set('plots.plotPath','/tmp/plots');
+TASBEConfig.set('OutputSettings.FixedInputAxis',[1e4 1e10]);
+plot_batch_histograms(results,sampleresults,CM);
+
+save('/tmp/LacI-CAGop-batch-single.mat','AP','bins','file_pairs','results','sampleresults');
