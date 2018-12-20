@@ -42,6 +42,10 @@ else
     shortname = name;
 end
 
+% Change from opengl to 'painters' rendering, which is faster
+set(h,'RendererMode','manual');
+set(h,'Renderer','painters');
+% Now output
 if (is_octave)
     % Prettify the fonts
     FN = findall(h,'-property','FontName');
@@ -52,9 +56,9 @@ if (is_octave)
     % print PDFs
     print(h,'-dpdfwrite',[path shortname]);
 else
-    print(h,'-depsc2',[path shortname]); % Still produce a vector format when invoked by hand via Matlab
+    saveas(h,[path shortname '.eps'],'epsc');
 end
-print(h,'-dpng',[path shortname]);
+saveas(h,[path shortname '.png'],'png');
 saveas(h,[path shortname '.fig']);
 
 if(strcmp(get(h,'visible'),'off'))
