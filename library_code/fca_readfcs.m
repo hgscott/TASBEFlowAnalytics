@@ -336,7 +336,8 @@ function mneval = get_mnemonic_value(mnemonic_name,fcsheader,mnemonic_separator)
 
 if strcmp(mnemonic_separator,'\')  || strcmp(mnemonic_separator,'!') ...
         || strcmp(mnemonic_separator,'|') || strcmp(mnemonic_separator,'@')...
-        || strcmp(mnemonic_separator, '/') % added by GAP 1/22/08
+        || strcmp(mnemonic_separator, '/') ... % added by GAP 1/22/08
+        || strcmp(mnemonic_separator, '*') % added by JSB 1/7/19. TODO: generalize to any delimiter
     mnemonic_startpos = findstr(char(fcsheader'),mnemonic_name);
     if isempty(mnemonic_startpos)
         mneval = [];
