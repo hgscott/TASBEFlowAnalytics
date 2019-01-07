@@ -10,12 +10,25 @@
 % package distribution's top directory.
 
 function index = find(CM, channel)
-    found=false;
-    for i=1:numel(CM.Channels)
-        if(CM.Channels{i} == channel)
-            index = i; found = true; break;
-        end;
-    end;
-    if(~found), TASBESession.error('TASBE:ColorModel','MissingChannel','Unable to find channel %s',getName(channel)); end;
 
-        
+foundset=[]; nameeqset=[];
+for i=1:numel(CM.Channels)
+    if(CM.Channels{i} == channel)
+        foundset(end+1) = i; 
+        if(strcmp(getName(CM.Channels{i}),getName(channel)))
+            nameeqset(end+1) = i;
+        end
+    end;
+end;
+
+if(isempty(foundset)), 
+    TASBESession.error('TASBE:ColorModel','MissingChannel','Unable to find channel %s',getName(channel)); 
+elseif numel(foundset)==1
+    index = foundset(1);
+elseif numel(nameeqset)==1 % more than one match, but only one matches name precisely
+    TASBESession.warn('TASBE:ColorModel','DisambiguateChannel','Multiple channels match %s, discriminating by name',getName(channel)); 
+    index = nameeqset(1);
+else
+    TASBESession.error('TASBE:ColorModel','MultipleChannels','Multiple channels match %s, and cannot discriminate by name',getName(channel));
+end;
+       
