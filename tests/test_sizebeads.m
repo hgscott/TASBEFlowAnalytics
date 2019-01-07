@@ -32,7 +32,7 @@ channels{3} = Channel('FSC-A', 488, 488, 10);
 channels{3} = setPrintName(channels{3}, 'FSC');
 channels{3} = setLineSpec(channels{3}, 'k');
 
-channels{4} = Channel('SSC-A', 488, 488, 0); % should be 10, not 0, but waiting for issue #361 fix
+channels{4} = Channel('SSC-A', 488, 488, 10);
 channels{4} = setPrintName(channels{4}, 'SSC');
 channels{4} = setLineSpec(channels{4}, 'r');
 
