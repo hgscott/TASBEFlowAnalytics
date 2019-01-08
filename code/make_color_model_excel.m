@@ -42,6 +42,7 @@ function [CM] = make_color_model_excel(extractor)
     
     try
         plot_path = extractor.getExcelValue('plots.plotPath', 'char', 1);
+        display(plot_path);
         plot_path = make_filename_absolute(plot_path, path);
         TASBEConfig.set('plots.plotPath', plot_path);
     catch
