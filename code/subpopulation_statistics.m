@@ -9,7 +9,8 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function [counts, means, stds, excluded] = subpopulation_statistics(BSeq,data,selector,mode)
+function [counts, means, stds, excluded] = subpopulation_statistics(BSeq,data,selector,mode,drop_thresholds)
+if nargin<5, drop_thresholds = []; end;
 
 bedges = get_bin_edges(BSeq);
 
@@ -24,7 +25,9 @@ counts = zeros(nbins,1); means = counts; stds = counts; % create zero sets
 switch(mode)
     case 'geometric'
         for i=1:n
-            which = find(data(:,selector)>bedges(i) & data(:,selector)<=bedges(i+1));
+            selection = data(:,selector)>bedges(i) & data(:,selector)<=bedges(i+1);
+            if ~isempty(drop_thresholds), selection = selection & data(:,selector)>drop_thresholds(selector); end;
+            which = find(selection);
             counts(i) = numel(which);
 
             for j=1:ncol
