@@ -207,6 +207,11 @@ assertElementsAlmostEqual(results{14}.gmm_means,  result_expected14_gmm_means,  
 assertElementsAlmostEqual(results{14}.gmm_stds,  result_expected14_gmm_stds,  'relative', 1e-2);
 assertElementsAlmostEqual(results{14}.gmm_weights,  result_expected14_gmm_weights,  'relative', 1e-2);
 
+% raw, filtered
+firstlast_event_counts = [220379 183753; 161222 145854];
+assertEqual(results{1}.n_removed,  firstlast_event_counts(1,1)-firstlast_event_counts(2,1) );
+assertEqual(results{14}.n_removed, firstlast_event_counts(1,2)-firstlast_event_counts(2,2) );
+
 function test_batch_analysis_plot_warnings
 % Test for warnings in plot_batch_histograms
 CM2 = load_or_make_testing_colormodel2();

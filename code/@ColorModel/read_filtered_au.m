@@ -9,7 +9,7 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function [data fcshdr] = read_filtered_au(CM,filename)
+function [data,fcshdr,n_removed] = read_filtered_au(CM,filename)
     % Get read FCS file and select channels of interest
     [fcsunscaled fcshdr rawfcs] = fca_readfcs(filename);
     if (isempty(fcshdr))
@@ -28,3 +28,7 @@ function [data fcshdr] = read_filtered_au(CM,filename)
     
     % if requested to dequantize, add a random value in [-0.5, 0.5]
     if(CM.dequantize), data = data + rand(size(data)) - 0.5; end;
+
+    % count how many have been removed, all told
+    n_removed = size(rawfcs,1) - size(data,1);
+    

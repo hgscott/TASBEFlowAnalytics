@@ -13,18 +13,21 @@ function [results, sampleresults] = per_color_constitutive_analysis(colorModel,b
 % The 'results' here is not a standard ExperimentResults, but a similar scratch structure
 
 TASBESession.warn('TASBE:Analysis','UpdateNeeded','Need to update per_color_constitutive_analysis to use new samplestatistics');
-batch_size = size(batch_description,1);
+n_conditions = size(batch_description,1);
 
 % check to make sure batch_file has the correct dimensions
 if size(batch_description, 2) ~= 2
     TASBESession.error('TASBE:Analysis', 'DimensionMismatch', 'Batch analysis invoked with incorrect number of columns. Make sure batch_file is a n X 2 matrix.');
 end
 
-for i = 1:batch_size
+data = cell(n_conditions,1);
+n_removed = data;
+for i = 1:n_conditions
     condition_name = batch_description{i,1};
     fileset = batch_description{i,2};
     experiment = Experiment(condition_name,'', {0,fileset});
-    data{i} = read_data(colorModel, experiment, AP);
+    [data{i},n_removed_sub] = read_data(colorModel, experiment, AP);
+    n_removed{i} = [n_removed_sub{1}{:}];
     if exist('cloudNames', 'var')
         filenames = {cloudNames{i}};
     else
@@ -41,7 +44,6 @@ for i=1:numel(colors)
     rawresults{i} = process_constitutive_batch( colorModel, batch_description, AP, data);
 end
 
-n_conditions = size(batch_description,1);
 bincenters = get_bin_centers(getBins(AP));
 
 results = cell(n_conditions,1); sampleresults = results;
@@ -92,5 +94,6 @@ for i=1:n_conditions
     results{i}.on_fracStd = std(cell2mat(on_fracs));
     results{i}.off_fracMean = mean(cell2mat(off_fracs));
     results{i}.off_fracStd = std(cell2mat(off_fracs));
+    results{i}.n_removed = n_removed{i};
 end
 

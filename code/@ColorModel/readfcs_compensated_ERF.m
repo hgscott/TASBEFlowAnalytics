@@ -9,11 +9,11 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function data = readfcs_compensated_ERF(CM,filename,with_AF,floor)
+function [data,n_removed] = readfcs_compensated_ERF(CM,filename,with_AF,floor)
     if(CM.initialized<1), TASBESession.error('TASBE:ReadFCS','Unresolved','Cannot read ERF: ColorModel not yet resolved'); end; % ensure initted
     
     % Read to arbitrary units
-    audata = readfcs_compensated_au(CM,filename,with_AF,floor);
+    [audata,n_preremoved] = readfcs_compensated_au(CM,filename,with_AF,floor);
     
     % Translate each (processed) channel to ERF channel 
     ERF_channel_data = zeros(size(audata));
@@ -47,3 +47,5 @@ function data = readfcs_compensated_ERF(CM,filename,with_AF,floor)
     if numel(data)<numel(audata)*0.1 % Threshold: at least 10% retained
         TASBESession.warn('TASBE:ReadFCS','TooMuchDataDiscarded','ERF (post)filters may be discarding too much data: only %d%% retained in %s',numel(data)/numel(audata)*100,filename);
     end
+    
+    n_removed = n_preremoved + (size(audata,1)-size(data,1));
