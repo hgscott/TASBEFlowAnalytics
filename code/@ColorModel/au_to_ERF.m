@@ -1,4 +1,4 @@
-% AU_TO_ERF translates arbitrary units of a particular channel in a ColorModel object to ERF
+% AU_TO_ERF translates arbitrary units of a particular channel in a ColorModel object to ERF (or Eum)
 %
 % Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
@@ -9,7 +9,15 @@
 % package distribution's top directory.
 
 function data = au_to_ERF(CM,channel,audata)
-    % don't attempt to translate for unprocessed channels
+    % first check if it's the size channel
+    if ~isempty(CM.size_unit_translation)
+        if(find(CM,channel)==find(CM,CM.um_channel))
+            data = um_channel_AU_to_um(CM.size_unit_translation,audata);
+            return;
+        end
+    end
+
+    % otherwise, don't attempt to translate for unprocessed channels
     if(isUnprocessed(channel)), data = audata; return; end
     
     ERF_channel_AU_data = translate(CM.color_translation_model,audata,channel,CM.ERF_channel);

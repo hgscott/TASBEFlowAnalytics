@@ -9,13 +9,14 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function data = read_data( colorModel, experiment, analysisParams)
+function [data,n_removed] = read_data( colorModel, experiment, analysisParams)
 filenames = getInducerLevelsToFiles(experiment); % array of file names
 n_conditions = numel(filenames);
 
 % Process each file for each condition in turn, computing results
 % incrementally
 data = cell(size(filenames));
+n_removed = data;
 for i=1:n_conditions
     perInducerFiles = filenames{i};
     numberOfPerInducerFiles = numel(perInducerFiles);
@@ -23,6 +24,6 @@ for i=1:n_conditions
     for j = 1:numberOfPerInducerFiles
         fileName = perInducerFiles{j};
         % Read data and extract statistics
-        data{i}{j} = readfcs_compensated_ERF(colorModel, fileName, getUseAutoFluorescence(analysisParams), true);
+        [data{i}{j},n_removed{i}{j}] = readfcs_compensated_ERF(colorModel, fileName, getUseAutoFluorescence(analysisParams), true);
     end
 end
