@@ -79,7 +79,7 @@ save('-V7','/tmp/LacI-CAGop-Fine.mat','experiment','AP','sampleresults','results
 ers = struct(results);
 
 result123_expected_bincounts = [...
-        1373        1117        1047;
+           0           0           0;
         2706        2113        2088;
         2637        2204        1992;
         2623        2132        1995;

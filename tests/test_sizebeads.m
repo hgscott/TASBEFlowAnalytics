@@ -83,3 +83,9 @@ assertEqual(getUnits(channels{1}),'MEFL');
 assertEqual(getUnits(channels{2}),'MEFL');
 assertEqual(getUnits(channels{3}),'Eum');
 assertEqual(getUnits(channels{4}),'a.u.');
+
+
+function test_size_bead_reading
+
+need to test size channel reading and make sure it doesn't get screwed up by PEM drop
+
