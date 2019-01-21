@@ -87,5 +87,174 @@ assertEqual(getUnits(channels{4}),'a.u.');
 
 function test_size_bead_reading
 
-need to test size channel reading and make sure it doesn't get screwed up by PEM drop
+CM = setupSizePeakCM();
+% Execute and save the model
+CM=resolve(CM);
+
+% make sure size channel isn't messed up by PEM drop
+stem1011 = '../TASBEFlowAnalytics-Tutorial/example_assay/LacI-CAGop_';
+experimentName = 'LacI Transfer Curve';
+bins = BinSequence(-3,0.1,10,'log_bins');
+
+AP = AnalysisParameters(bins,{});
+AP=setMinValidCount(AP,100');
+AP=setPemDropThreshold(AP,5');
+AP=setUseAutoFluorescence(AP,false');
+
+% Make a map of condition names to file sets
+file_pairs = {...
+  'Dox 0.1',    {[stem1011 'B3_P3.fcs']};
+  'Dox 2000.0', {[stem1011 'C4_P3.fcs']};
+    };
+
+[results, sampleresults] = per_color_constitutive_analysis(CM,file_pairs,{'EBFP2','EYFP','FSC','SSC'},AP);
+save('/tmp/size-batch.mat','AP','bins','file_pairs','results','sampleresults');
+
+%%%%%%%%%%%%%%%%%%%%%%
+% Run all comparisons
+
+expectedBinCounts = [...
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0         351           0
+           0           0         988           0
+           0           0        1369           0
+           0           0        1558           0
+           0           0        1287           0
+           0           0        1808           0
+           0           0        5069           0
+           0           0       16126           0
+           0           0       54323           0
+           0           0      113083           0
+           0           0       24407           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0         362
+           0           0           0        2039
+           0           0           0        6089
+           0           0           0       10663
+           0           0           0       19672
+           0           0           0       33667
+           0           0           0       43173
+           0           0           0       43585
+           0           0           0       32119
+           0           0           0       17692
+        6920           0           0        7481
+        6645           0           0        2635
+        9624           0           0         846
+        8838        4595           0         242
+       10886        4695           0           0
+       13706        6742           0           0
+       10660        6478           0           0
+       11065        7951           0           0
+        7683        8270           0           0
+        4219        8006           0           0
+        1843        7968           0           0
+         568        6619           0           0
+         135        4127           0           0
+           0        3371           0           0
+           0        3108           0           0
+           0        3519           0           0
+           0        3672           0           0
+           0        4319           0           0
+           0        4803           0           0
+           0        5217           0           0
+           0        5254           0           0
+           0        5568           0           0
+           0        5631           0           0
+           0        5470           0           0
+           0        5085           0           0
+           0        4593           0           0
+           0        4243           0           0
+           0        3588           0           0
+           0        2948           0           0
+           0        2428           0           0
+           0        1989           0           0
+           0        1484           0           0
+           0        1168           0           0
+           0         782           0           0
+           0         622           0           0
+           0         387           0           0
+           0         249           0           0
+           0         191           0           0
+           0         124           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+           0           0           0           0
+    ];
+
+expectedMeans = [...
+    2.0661e+04 2.5131e+05 7.8537 3.0293e+03;
+    1.7136e+05 1.4958e+05 8.2587 2.5810e+03;
+    ];
+
+
+for i=1:numel(results)
+    assertElementsAlmostEqual(expectedMeans(i,:),results{i}.means,'relative',1e-2);
+end
+
+assertElementsAlmostEqual(expectedBinCounts,results{1}.bincounts,'relative',1e-2);
 
