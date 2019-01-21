@@ -79,10 +79,16 @@ assertElementsAlmostEqual(UT.fit_error,     0.0784,   'absolute', 0.01);
 assertElementsAlmostEqual(UT.peak_sets{1},  expected_peaks, 'relative', 1e-2);
 
 channels = getChannels(CM);
+% make sure units are right
 assertEqual(getUnits(channels{1}),'MEFL');
 assertEqual(getUnits(channels{2}),'MEFL');
 assertEqual(getUnits(channels{3}),'Eum');
 assertEqual(getUnits(channels{4}),'a.u.');
+% make sure translations are right
+assertElementsAlmostEqual(au_to_ERF(CM,getChannel(CM,1),1),2267.3, 'relative', 1e-2);
+assertElementsAlmostEqual(au_to_ERF(CM,getChannel(CM,2),1),1163.3, 'relative', 1e-2);
+assertElementsAlmostEqual(au_to_ERF(CM,getChannel(CM,3),1),0.0083, 'relative', 1e-2);
+assertElementsAlmostEqual(au_to_ERF(CM,getChannel(CM,4),1),1, 'relative', 1e-2);
 
 
 function test_size_bead_reading

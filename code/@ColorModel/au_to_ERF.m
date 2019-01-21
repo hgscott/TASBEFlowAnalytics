@@ -11,7 +11,7 @@
 function data = au_to_ERF(CM,channel,audata)
     % first check if it's the size channel
     if ~isempty(CM.size_unit_translation)
-        if(eq(channel,CM.um_channel))
+        if(find(CM,channel)==find(CM,CM.um_channel))
             data = um_channel_AU_to_um(CM.size_unit_translation,audata);
             return;
         end
