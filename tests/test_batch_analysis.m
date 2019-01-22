@@ -212,6 +212,113 @@ firstlast_event_counts = [220379 183753; 161222 145854];
 assertElementsAlmostEqual(results{1}.n_removed,  firstlast_event_counts(1,1)-firstlast_event_counts(2,1),  'relative', 1e-2);
 assertElementsAlmostEqual(results{14}.n_removed, firstlast_event_counts(1,2)-firstlast_event_counts(2,2),  'relative', 1e-2);
 
+function test_batch_analysis_nodrops
+
+CM = load_or_make_testing_colormodel();
+stem1011 = '../TASBEFlowAnalytics-Tutorial/example_assay/LacI-CAGop_';
+
+% Configure the analysis
+% Analyze on a histogram of 10^[first] to 10^[third] ERF, with bins every 10^[second]
+bins = BinSequence(4,0.1,10,'log_bins');
+
+% Designate which channels have which roles
+AP = AnalysisParameters(bins,{});
+% Ignore any bins with less than valid count as noise
+AP=setMinValidCount(AP,100');
+% Ignore any raw fluorescence values less than this threshold as too contaminated by instrument noise
+AP=setPemDropThreshold(AP,0);
+% Add autofluorescence back in after removing for compensation?
+AP=setUseAutoFluorescence(AP,false');
+
+% Make a map of condition names to file sets
+file_pairs = {...
+  'Dox 0.1',    {[stem1011 'B3_P3.fcs']};
+  'Dox 2000.0', {[stem1011 'C4_P3.fcs']};
+  };
+
+% Execute the actual analysis
+[results, sampleresults] = per_color_constitutive_analysis(CM,file_pairs,{'EBFP2','EYFP','mKate'},AP);
+
+% Make output plots
+TASBEConfig.set('OutputSettings.StemName','LacI-CAGop');
+TASBEConfig.set('plots.plotPath','/tmp/plots');
+TASBEConfig.set('OutputSettings.FixedInputAxis',[1e4 1e10]);
+plot_batch_histograms(results,sampleresults,CM,{'b','g','r'});
+
+save('/tmp/LacI-CAGop-nodrop.mat','AP','bins','file_pairs','results','sampleresults');
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Check results in results:
+
+result1_expected_bincounts = [...
+        6806        2178        1373; % not clipped by the drop threshold
+        8017        2753        2706;
+        8782        3323        2637;
+        8558        4640        2623;
+        7617        4624        3739;
+        6343        5595        4714;
+        3931        5937        5304;
+        1817        6282        5434;
+         511        5747        5801;
+         124        4272        4683;
+           0        3097        4012;
+           0        2284        3469;
+           0        2340        2917;
+           0        2545        3200;
+           0        2845        3612;
+           0        3390        3985;
+           0        3755        4034;
+           0        4031        3985;
+           0        4246        4135;
+           0        4436        4179;
+           0        4502        4199;
+           0        4289        4095;
+           0        4007        3890;
+           0        3630        3817;
+           0        3244        3685;
+           0        2738        3509;
+           0        2203        3248;
+           0        1731        3032;
+           0        1406        2598;
+           0         989        2401;
+           0         769        1920;
+           0         493        1626;
+           0         391        1353;
+           0         214         995;
+           0         150         808;
+           0         101         634;
+           0           0         428;
+           0           0         272;
+           0           0         176;
+           0           0         122;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           ];
+       
+% spot-check name, bincenter, bin-count
+assertEqual(results{1}.condition, 'Dox 0.1');
+assertElementsAlmostEqual(log10(results{1}.bincenters([1 10 40 end])), [4.0500    4.9500    7.9500    9.9500], 'relative', 1e-2);
+assertElementsAlmostEqual(results{1}.bincounts, result1_expected_bincounts,     'relative', 1e-2);
+
+
 function test_batch_analysis_plot_warnings
 % Test for warnings in plot_batch_histograms
 CM2 = load_or_make_testing_colormodel2();
