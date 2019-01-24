@@ -203,7 +203,7 @@ if makePlots
         text(peak_means(i),quantifiedPeakums(i+first_peak-1)*1.3,sprintf('%i',i+first_peak-1+peakOffset));
     end
     xlabel(clean_for_latex([beadChannel ' a.u.'])); ylabel('Beads ums');
-    title(sprintf('Peak identification for %s beads', beadModel));
+    title(sprintf('Peak identification for %s beads', clean_for_latex(beadModel)));
     %legend('Location','NorthWest','Observed','Linear Fit','Constrained Fit');
     legend('Observed','Log-Linear Fit','Location','NorthWest');
     outputfig(h,'size-bead-fit-curve',plotPath);
