@@ -28,3 +28,20 @@ function test_fcs_scatter
     [data, h] = fcs_scatter(f2,'FITC-A','Pacific Blue-A',1,[],0);
     assert(all(size(data) == [114929 2]));
     outputfig(h,'fcs_test',TASBEConfig.get('plots.plotPath'));
+
+function test_fcs_too_small
+
+CM = load_or_make_testing_colormodel();
+
+stem1011 = '../TASBEFlowAnalytics-Tutorial/example_assay/LacI-CAGop_';
+
+% First read without warning
+data = readfcs_compensated_ERF(CM,[stem1011 'B4_P3.fcs'],0,1);
+log = TASBESession.list();
+assertFalse(strcmp(log{end}.contents{end}.name, 'UnusuallySmallFile'));
+
+% now make everything too small and get a warning when reading
+TASBEConfig.set('flow.smallFileWarning',1e8);
+data = readfcs_compensated_ERF(CM,[stem1011 'B4_P3.fcs'],0,1);
+log = TASBESession.list();
+assertEqual(log{end}.contents{end}.name, 'UnusuallySmallFile');

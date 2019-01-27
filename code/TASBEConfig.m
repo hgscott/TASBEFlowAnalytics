@@ -37,13 +37,14 @@ classdef TASBEConfig
             s.flow.pointCloudPath = 'CSV/';
             doc.flow.dataCSVPath = 'location for data summary CSVs';
             s.flow.dataCSVPath = 'CSV/';
+            doc.flow.smallFileWarning = 'Threshold for warning that event count is unusually low';
+            s.flow.smallFileWarning = 10000;
             doc.flow.outputHistogramFile = 'if true, output histogram file for batch analysis';
             s.flow.outputHistogramFile = true;
             doc.flow.outputStatisticsFile = 'if true, output statistics file for batch analysis';
             s.flow.outputStatisticsFile = true;
-            % TASBE Setting migration
-            doc.flow.channel_template_file = 'TASBE setting migration';
-            s.flow.channel_template_file = '';     
+            doc.flow.channel_template_file = 'File to check laser/filter settings against (defaults to bead file)';
+            s.flow.channel_template_file = [];
 
             % generic plots
             s.plots = struct(); doc.plots = struct();

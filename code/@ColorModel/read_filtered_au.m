@@ -13,10 +13,15 @@ function [data,fcshdr,n_removed] = read_filtered_au(CM,filename)
     % Get read FCS file and select channels of interest
     [fcsunscaled fcshdr rawfcs] = fca_readfcs(filename);
     if (isempty(fcshdr))
-        TASBESession.error('TASBE:ReadFCS','CannotReadFile','Could not process FACS file %s', filename);
+        TASBESession.error('TASBE:ReadFCS','CannotReadFile','Could not process FCS file %s', filename);
     end;
-
+    
     data = rawfcs;
+    n_raw_events = size(data,1);
+    if n_raw_events<TASBEConfig.get('flow.smallFileWarning')
+        TASBESession.warn('TASBE:ReadFCS','UnusuallySmallFile','FCS file "%s" is unusually small: only %i events', filename, n_raw_events);
+    end
+
     % optional discarding of filtered data (e.g., debris, time contamination)
     for i=1:numel(CM.prefilters)
         data = applyFilter(CM.prefilters{i},fcshdr,data);
@@ -30,5 +35,5 @@ function [data,fcshdr,n_removed] = read_filtered_au(CM,filename)
     if(CM.dequantize), data = data + rand(size(data)) - 0.5; end;
 
     % count how many have been removed, all told
-    n_removed = size(rawfcs,1) - size(data,1);
+    n_removed = n_raw_events - size(data,1);
     
