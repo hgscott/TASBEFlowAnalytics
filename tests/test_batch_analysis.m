@@ -209,8 +209,16 @@ assertElementsAlmostEqual(results{14}.gmm_weights,  result_expected14_gmm_weight
 
 % raw, filtered
 firstlast_event_counts = [220379 183753; 161222 145854];
-assertElementsAlmostEqual(results{1}.n_removed,  firstlast_event_counts(1,1)-firstlast_event_counts(2,1),  'relative', 1e-2);
-assertElementsAlmostEqual(results{14}.n_removed, firstlast_event_counts(1,2)-firstlast_event_counts(2,2),  'relative', 1e-2);
+firstlast_events_used = [52544 107765 118200; 102451 98339 118601];
+firstlast_events_outofrange = [108678 53457 43022; 43403 47515 27253];
+assertElementsAlmostEqual(results{1}.n_events,  firstlast_event_counts(2,1),  'relative', 1e-2);
+assertElementsAlmostEqual(results{14}.n_events, firstlast_event_counts(2,2),  'relative', 1e-2);
+assertElementsAlmostEqual(results{1}.n_events_removed,  firstlast_event_counts(1,1)-firstlast_event_counts(2,1),  'relative', 1e-2);
+assertElementsAlmostEqual(results{14}.n_events_removed, firstlast_event_counts(1,2)-firstlast_event_counts(2,2),  'relative', 1e-2);
+assertElementsAlmostEqual(results{1}.n_events_used,  firstlast_events_used(1,:),  'relative', 1e-2);
+assertElementsAlmostEqual(results{14}.n_events_used, firstlast_events_used(2,:),  'relative', 1e-2);
+assertElementsAlmostEqual(results{1}.n_events_outofrange,  firstlast_events_outofrange(1,:),  'relative', 1e-2);
+assertElementsAlmostEqual(results{14}.n_events_outofrange, firstlast_events_outofrange(2,:),  'relative', 1e-2);
 
 function test_batch_analysis_nodrops
 
