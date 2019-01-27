@@ -87,8 +87,10 @@ else
     fraction_active = [];
     PEM = [];
 end
+n_out_of_range = size(data,1)-sum(counts);
 
 sampleresults = SampleResults(experiment, samplename, analysisParams, counts, means, stds, ...
     fraction_active, plasmid_counts, PEM, ...
     histograms, popmeans, popstds, poppeaks, excluded, nonexpressing, ...
     popcmeans, popcstds, popcweights);
+sampleresults.OutOfRange = n_out_of_range;
