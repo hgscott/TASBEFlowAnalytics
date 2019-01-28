@@ -37,14 +37,31 @@ classdef TASBEConfig
             s.flow.pointCloudPath = 'CSV/';
             doc.flow.dataCSVPath = 'location for data summary CSVs';
             s.flow.dataCSVPath = 'CSV/';
-            doc.flow.smallFileWarning = 'Threshold for warning that event count is unusually low';
-            s.flow.smallFileWarning = 10000;
             doc.flow.outputHistogramFile = 'if true, output histogram file for batch analysis';
             s.flow.outputHistogramFile = true;
             doc.flow.outputStatisticsFile = 'if true, output statistics file for batch analysis';
             s.flow.outputStatisticsFile = true;
             doc.flow.channel_template_file = 'File to check laser/filter settings against (defaults to bead file)';
             s.flow.channel_template_file = [];
+            % sample size/gating warning thresholds
+            doc.flow.smallFileWarning = 'Threshold for warning that event count is unusually low';
+            s.flow.smallFileWarning = 10000;
+            doc.flow.gateDiscardsWarning = 'Threshold for warning gates are discarding too high a fraction of events';
+            s.flow.gateDiscardsWarning = 0.1;
+            doc.flow.preGateDiscardsWarning = 'Threshold for warning pre-gates are discarding too high a fraction of events';
+            s.flow.preGateDiscardsWarning = [];
+            defaults('flow.preGateDiscardsWarning') = 'flow.gateDiscardsWarning';
+            doc.flow.postGateDiscardsWarning = 'Threshold for warning post-gates are discarding too high a fraction of events';
+            s.flow.postGateDiscardsWarning = [];
+            defaults('flow.postGateDiscardsWarning') = 'flow.gateDiscardsWarning';
+            doc.flow.eventRatioWarning = 'Generic threshold for warning about different event counts.';
+            s.flow.eventRatioWarning = 10;
+            doc.flow.replicateEventRatioWarning = 'Threshold to warn on variation in replicate event counts.';
+            s.flow.replicateEventRatioWarning = [];
+            defaults('flow.replicateEventRatioWarning') = 'flow.eventRatioWarning';
+            doc.flow.conditionEventRatioWarning = 'Threshold to warn on variation in condition event counts.';
+            s.flow.conditionEventRatioWarning = [];
+            defaults('flow.conditionEventRatioWarning') = 'flow.eventRatioWarning';
 
             % generic plots
             s.plots = struct(); doc.plots = struct();

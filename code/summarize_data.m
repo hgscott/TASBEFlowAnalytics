@@ -146,7 +146,7 @@ for i=1:n_conditions,
 end
 
 % Test for sanity on variation in sample/sample event counts - should be less than 10x
-if max_events/min_events > 10
+if max_events/min_events > TASBEConfig.get('flow.replicateEventRatioWarning')
     TASBESession.warn('TASBE:SummarizeData','HighSampleSizeVariation','High variation in events per sample:\n  Condition %i, sample %i = %i\n  Condition %i, sample %i = %i',...
         max_sample(1), max_sample(2), max_events, min_sample(1), min_sample(2), min_events);
 end

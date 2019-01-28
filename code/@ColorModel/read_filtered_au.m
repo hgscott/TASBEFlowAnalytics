@@ -27,7 +27,7 @@ function [data,fcshdr,n_removed] = read_filtered_au(CM,filename)
         data = applyFilter(CM.prefilters{i},fcshdr,data);
     end
     % make sure we didn't throw away huge amounts...
-    if numel(data)<numel(rawfcs)*0.1 % Threshold: at least 10% retained
+    if numel(data)<numel(rawfcs)*TASBEConfig.get('flow.preGateDiscardsWarning')
         TASBESession.warn('TASBE:ReadFCS','TooMuchDataDiscarded','a.u. (pre)filters may be discarding too much data: only %d%% retained in %s',numel(data)/numel(rawfcs)*100,filename);
     end
     
