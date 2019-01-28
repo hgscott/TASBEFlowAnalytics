@@ -143,10 +143,11 @@ end
 % Use log scale for fitting to avoid distortions from highest point
 if(n_peaks>=1)
     i = numQuantifiedPeaks-n_peaks; % always assume using top peaks
+    first_peak = i+1;
+    % if forcing, do it before fitting the polynomial
+    if ~isempty(force_peak), first_peak = force_peak-peakOffset; i = first_peak-1; end
     [um_poly,S] = polyfit(log10(peak_means),log10(quantifiedPeakums((1:n_peaks)+i)),1);
     fit_error = S.normr;
-    first_peak = i+1;
-    if ~isempty(force_peak), first_peak = force_peak-peakOffset; end
     
     fprintf('Bead peaks identified as %i to %i of %i\n',first_peak+peakOffset,first_peak+n_peaks-1+peakOffset,numQuantifiedPeaks+peakOffset);
     % Final fit_error should be close to zero / 1-fold
