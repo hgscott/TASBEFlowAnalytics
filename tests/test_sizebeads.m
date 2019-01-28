@@ -264,3 +264,34 @@ end
 
 assertElementsAlmostEqual(expectedBinCounts,results{1}.bincounts,'relative',1e-2);
 
+
+function test_size_peak_forcing
+
+CM = setupSizePeakCM();
+TASBEConfig.set('sizebeads.forceFirstPeak',1);
+TASBEConfig.set('sizebeads.rangeMax', 5);
+% Execute and save the model
+CM=resolve(CM);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Check results in CM:
+CMS = struct(CM);
+assertTrue(strcmp(CMS.sizeUnits,'Eum'));
+expected_peaks = 1e5*[0.1257    0.2574    0.6506];
+UT = struct(CMS.size_unit_translation);
+assertElementsAlmostEqual(UT.um_poly,       [0.5565 -1.9418],  'relative', 1e-2);
+assertElementsAlmostEqual(UT.first_peak,    1);
+assertElementsAlmostEqual(UT.fit_error,     0.0099,   'absolute', 0.01);
+assertElementsAlmostEqual(UT.peak_sets{1},  expected_peaks, 'relative', 1e-2);
+
+channels = getChannels(CM);
+% make sure units are right
+assertEqual(getUnits(channels{1}),'MEFL');
+assertEqual(getUnits(channels{2}),'MEFL');
+assertEqual(getUnits(channels{3}),'Eum');
+assertEqual(getUnits(channels{4}),'a.u.');
+% make sure translations are right
+assertElementsAlmostEqual(au_to_ERF(CM,getChannel(CM,1),1),2267.3, 'relative', 1e-2);
+assertElementsAlmostEqual(au_to_ERF(CM,getChannel(CM,2),1),1163.3, 'relative', 1e-2);
+assertElementsAlmostEqual(au_to_ERF(CM,getChannel(CM,3),1),0.0114, 'relative', 1e-2);
+assertElementsAlmostEqual(au_to_ERF(CM,getChannel(CM,4),1),1, 'relative', 1e-2);
