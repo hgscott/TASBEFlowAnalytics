@@ -99,7 +99,6 @@ CM=resolve(CM);
 
 % make sure size channel isn't messed up by PEM drop
 stem1011 = '../TASBEFlowAnalytics-Tutorial/example_assay/LacI-CAGop_';
-experimentName = 'LacI Transfer Curve';
 bins = BinSequence(-3,0.1,10,'log_bins');
 
 AP = AnalysisParameters(bins,{});
@@ -114,6 +113,13 @@ file_pairs = {...
     };
 
 [results, sampleresults] = per_color_constitutive_analysis(CM,file_pairs,{'EBFP2','EYFP','FSC','SSC'},AP);
+
+% Make output plots
+TASBEConfig.set('OutputSettings.StemName','LacI-CAGop');
+TASBEConfig.set('plots.plotPath','/tmp/plots');
+TASBEConfig.set('OutputSettings.FixedInputAxis',[1e4 1e10]);
+plot_batch_histograms(results,sampleresults,CM,{'b','g','r','k'});
+
 save('/tmp/size-batch.mat','AP','bins','file_pairs','results','sampleresults');
 
 %%%%%%%%%%%%%%%%%%%%%%
