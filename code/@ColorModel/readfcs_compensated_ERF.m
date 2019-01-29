@@ -44,7 +44,7 @@ function [data,n_removed] = readfcs_compensated_ERF(CM,filename,with_AF,floor)
         data = applyFilter(CM.postfilters{i},CM.Channels,data);
     end
     % make sure we didn't throw away huge amounts...
-    if numel(data)<numel(audata)*0.1 % Threshold: at least 10% retained
+    if numel(data)<numel(audata)*TASBEConfig.get('flow.postGateDiscardsWarning');
         TASBESession.warn('TASBE:ReadFCS','TooMuchDataDiscarded','ERF (post)filters may be discarding too much data: only %d%% retained in %s',numel(data)/numel(audata)*100,filename);
     end
     

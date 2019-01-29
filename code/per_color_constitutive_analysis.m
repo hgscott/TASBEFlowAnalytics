@@ -101,3 +101,18 @@ for i=1:n_conditions
     results{i}.n_events_removed = n_removed{i};
 end
 
+%%%%%%%%%%%%%%%%%%
+% walk through all results and see if there's reason for statistical concern
+max_events = 0;
+for i=1:n_conditions
+    if ~isempty(results{i}.n_events)
+        max_events = max(max_events,max(results{i}.n_events));
+    end
+end
+for i=1:n_conditions
+    cur_events = min(results{i}.n_events);
+    if ~isempty(cur_events) && (max_events/cur_events > TASBEConfig.get('flow.conditionEventRatioWarning'))
+        TASBESession.warn('TASBE:Analysis','HighConditionSizeVariation','High variation in events per condition:\n  max=%i, Condition "%s" = %i',...
+            max_events, results{i}.condtion, cur_events);
+    end
+end
