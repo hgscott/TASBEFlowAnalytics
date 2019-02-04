@@ -163,6 +163,9 @@ classdef TASBESession
             if strcmp(log{end}.contents{end}.name, 'Abort')
                 abort();
             else
+                % abort if warning is turned off
+                if TASBESession.checkIfWarningOff([classname ':' name]), return; end;
+                % otherwise, continue
                 event.name = name;
                 event.classname = classname;
                 event.type = 'skip';
@@ -177,6 +180,9 @@ classdef TASBESession
             if strcmp(log{end}.contents{end}.name, 'Abort')
                 abort();
             else
+                % abort if warning is turned off
+                if TASBESession.checkIfWarningOff([classname ':' name]), return; end;
+                % otherwise, continue
                 event.name = name;
                 event.classname = classname;
                 event.type = 'success';
@@ -192,6 +198,9 @@ classdef TASBESession
             if strcmp(log{end}.contents{end}.name, 'Abort')
                 abort();
             else
+                % abort if warning is turned off
+                if TASBESession.checkIfWarningOff([classname ':' name]), return; end;
+                % otherwise, continue
                 event.name = name;
                 event.classname = classname;
                 event.type = 'success';
