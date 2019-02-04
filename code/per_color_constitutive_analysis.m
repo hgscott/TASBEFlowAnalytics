@@ -113,6 +113,6 @@ for i=1:n_conditions
     cur_events = min(results{i}.n_events);
     if ~isempty(cur_events) && (max_events/cur_events > TASBEConfig.get('flow.conditionEventRatioWarning'))
         TASBESession.warn('TASBE:Analysis','HighConditionSizeVariation','High variation in events per condition:\n  max=%i, Condition "%s" = %i',...
-            max_events, results{i}.condtion, cur_events);
+            max_events, results{i}.condition, cur_events);
     end
 end
