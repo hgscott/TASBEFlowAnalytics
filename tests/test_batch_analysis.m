@@ -62,7 +62,7 @@ save('/tmp/LacI-CAGop-batch.mat','AP','bins','file_pairs','results','sampleresul
 % Check results in results:
 
 result1_expected_bincounts = [...
-        6806        2178        1373;
+        6806         637           0; % clipped by the drop threshold
         8017        2753        2706;
         8782        3323        2637;
         8558        4640        2623;
@@ -125,37 +125,37 @@ result1_expected_bincounts = [...
            ];
        
 result_expected_means = 1e5 * [...
-    0.2213      2.4796      4.0832
-    0.2217      2.4605      4.0592
-    0.2201      2.5462      4.2334
-    0.2192      2.5524      4.2831
-    0.2202      2.4833      4.2658
-    0.2230      2.4613      4.2593
-    0.2246      2.5221      4.2116
-    0.2488      2.5455      4.3739
-    0.3723      2.3947      4.5774
-    0.4764      2.2973      4.6921
-    0.6808      2.0812      4.6243
-    1.0768      1.7335      5.6471
-    1.5798      1.5283      6.6706
-    1.9350      1.4045      7.4507
+    0.2214    2.5920    4.2576
+    0.2217    2.5773    4.2344
+    0.2201    2.6618    4.4116
+    0.2193    2.6768    4.4791
+    0.2202    2.5979    4.4447
+    0.2230    2.5794    4.4459
+    0.2246    2.6410    4.3857
+    0.2489    2.6600    4.5635
+    0.3723    2.5019    4.7657
+    0.4765    2.3962    4.8756
+    0.6809    2.1736    4.8155
+    1.0768    1.8055    5.8724
+    1.5798    1.5830    6.9178
+    1.9350    1.4546    7.6877
     ];
 
 result_expected_stds = [...
-    1.5964      6.7127      8.0237
-    1.5955      6.7718      8.0481
-    1.5855      6.7734      8.0462
-    1.5881      6.8054      8.0832
-    1.5876      6.6713      7.9815
-    1.6027      6.7166      8.1935
-    1.6348      6.6764      7.9794
-    1.8831      6.6863      8.2016
-    2.9448      6.3741      8.2915
-    3.5238      6.0771      8.3279
-    4.3923      5.7805      8.1472
-    5.1748      5.2045      8.6548
-    5.5516      4.6337      8.5021
-    5.5331      4.3324      8.3937
+    1.5964    6.5596    7.8289
+    1.5955    6.6127    7.8521
+    1.5856    6.6173    7.8504
+    1.5881    6.6379    7.8693
+    1.5876    6.5152    7.7858
+    1.6027    6.5557    7.9894
+    1.6348    6.5152    7.7879
+    1.8831    6.5316    7.9963
+    2.9448    6.2255    8.0919
+    3.5238    5.9371    8.1359
+    4.3923    5.6446    7.9458
+    5.1748    5.0904    8.4391
+    5.5515    4.5412    8.2867
+    5.5330    4.2440    8.2005
     ];
 
 % Blue, Yellow, Red
@@ -206,6 +206,126 @@ assertElementsAlmostEqual(results{1}.gmm_weights,  result_expected1_gmm_weights,
 assertElementsAlmostEqual(results{14}.gmm_means,  result_expected14_gmm_means,  'relative', 1e-2);
 assertElementsAlmostEqual(results{14}.gmm_stds,  result_expected14_gmm_stds,  'relative', 1e-2);
 assertElementsAlmostEqual(results{14}.gmm_weights,  result_expected14_gmm_weights,  'relative', 1e-2);
+
+% raw, filtered
+firstlast_event_counts = [220379 183753; 161222 145854];
+firstlast_events_used = [52544 107765 118200; 102451 98339 118601];
+firstlast_events_outofrange = [108678 53457 43022; 43403 47515 27253];
+assertElementsAlmostEqual(results{1}.n_events,  firstlast_event_counts(2,1),  'relative', 1e-2);
+assertElementsAlmostEqual(results{14}.n_events, firstlast_event_counts(2,2),  'relative', 1e-2);
+assertElementsAlmostEqual(results{1}.n_events_removed,  firstlast_event_counts(1,1)-firstlast_event_counts(2,1),  'relative', 1e-2);
+assertElementsAlmostEqual(results{14}.n_events_removed, firstlast_event_counts(1,2)-firstlast_event_counts(2,2),  'relative', 1e-2);
+assertElementsAlmostEqual(results{1}.n_events_used,  firstlast_events_used(1,:),  'relative', 1e-2);
+assertElementsAlmostEqual(results{14}.n_events_used, firstlast_events_used(2,:),  'relative', 1e-2);
+assertElementsAlmostEqual(results{1}.n_events_outofrange,  firstlast_events_outofrange(1,:),  'relative', 1e-2);
+assertElementsAlmostEqual(results{14}.n_events_outofrange, firstlast_events_outofrange(2,:),  'relative', 1e-2);
+
+function test_batch_analysis_nodrops
+
+CM = load_or_make_testing_colormodel();
+stem1011 = '../TASBEFlowAnalytics-Tutorial/example_assay/LacI-CAGop_';
+
+% Configure the analysis
+% Analyze on a histogram of 10^[first] to 10^[third] ERF, with bins every 10^[second]
+bins = BinSequence(4,0.1,10,'log_bins');
+
+% Designate which channels have which roles
+AP = AnalysisParameters(bins,{});
+% Ignore any bins with less than valid count as noise
+AP=setMinValidCount(AP,100');
+% Ignore any raw fluorescence values less than this threshold as too contaminated by instrument noise
+AP=setPemDropThreshold(AP,0);
+% Add autofluorescence back in after removing for compensation?
+AP=setUseAutoFluorescence(AP,false');
+
+% Make a map of condition names to file sets
+file_pairs = {...
+  'Dox 0.1',    {[stem1011 'B3_P3.fcs']};
+  'Dox 2000.0', {[stem1011 'C4_P3.fcs']};
+  };
+
+% Execute the actual analysis
+[results, sampleresults] = per_color_constitutive_analysis(CM,file_pairs,{'EBFP2','EYFP','mKate'},AP);
+
+% Make output plots
+TASBEConfig.set('OutputSettings.StemName','LacI-CAGop');
+TASBEConfig.set('plots.plotPath','/tmp/plots');
+TASBEConfig.set('OutputSettings.FixedInputAxis',[1e4 1e10]);
+plot_batch_histograms(results,sampleresults,CM,{'b','g','r'});
+
+save('/tmp/LacI-CAGop-nodrop.mat','AP','bins','file_pairs','results','sampleresults');
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Check results in results:
+
+result1_expected_bincounts = [...
+        6806        2178        1373; % not clipped by the drop threshold
+        8017        2753        2706;
+        8782        3323        2637;
+        8558        4640        2623;
+        7617        4624        3739;
+        6343        5595        4714;
+        3931        5937        5304;
+        1817        6282        5434;
+         511        5747        5801;
+         124        4272        4683;
+           0        3097        4012;
+           0        2284        3469;
+           0        2340        2917;
+           0        2545        3200;
+           0        2845        3612;
+           0        3390        3985;
+           0        3755        4034;
+           0        4031        3985;
+           0        4246        4135;
+           0        4436        4179;
+           0        4502        4199;
+           0        4289        4095;
+           0        4007        3890;
+           0        3630        3817;
+           0        3244        3685;
+           0        2738        3509;
+           0        2203        3248;
+           0        1731        3032;
+           0        1406        2598;
+           0         989        2401;
+           0         769        1920;
+           0         493        1626;
+           0         391        1353;
+           0         214         995;
+           0         150         808;
+           0         101         634;
+           0           0         428;
+           0           0         272;
+           0           0         176;
+           0           0         122;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           0           0           0;
+           ];
+       
+% spot-check name, bincenter, bin-count
+assertEqual(results{1}.condition, 'Dox 0.1');
+assertElementsAlmostEqual(log10(results{1}.bincenters([1 10 40 end])), [4.0500    4.9500    7.9500    9.9500], 'relative', 1e-2);
+assertElementsAlmostEqual(results{1}.bincounts, result1_expected_bincounts,     'relative', 1e-2);
+
 
 function test_batch_analysis_plot_warnings
 % Test for warnings in plot_batch_histograms

@@ -9,7 +9,7 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function statisticsFile = writeStatisticsCsv(colorModel, channels, sampleIds, sampleresults, units)
+function statisticsFile = writeStatisticsCsv(colorModel, channels, sampleIds, sampleresults)
     if TASBEConfig.get('flow.outputStatisticsFile')
         baseName = sanitize_filename(TASBEConfig.get('OutputSettings.StemName'));
 
@@ -59,7 +59,7 @@ function statisticsFile = writeStatisticsCsv(colorModel, channels, sampleIds, sa
             effective_channels{i} = channels{color_column};
         end
 
-        columnNames = buildDefaultStatsFileHeader(effective_channels, units, numComponents);
+        columnNames = buildDefaultStatsFileHeader(effective_channels, numComponents);
         numColumns = numel(columnNames);
         totalReplicates = sum(replicates);
 
@@ -130,7 +130,7 @@ function perSampleTable = formatDataPerSampleIndivdualColumns(numChannels, sampl
     
 end
 
-function fileHeader = buildDefaultStatsFileHeader(channels, units, numComponents)
+function fileHeader = buildDefaultStatsFileHeader(channels, numComponents)
     % Default file header to match the default file format.
     numChannels = numel(channels);
     
@@ -141,7 +141,7 @@ function fileHeader = buildDefaultStatsFileHeader(channels, units, numComponents
     
     % Not elegant, but it gets the job done.
     for i=1:numChannels
-        channelName = sanitizeColumnName([getPrintName(channels{i}) '_' units]);
+        channelName = sanitizeColumnName([getPrintName(channels{i}) '_' getUnits(channels{i})]);
         binNames{i} = ['BinCount_' channelName];
         meanNames{i} = ['GeoMean_' channelName];
         stdDevNames{i} = ['GeoStdDev_' channelName];

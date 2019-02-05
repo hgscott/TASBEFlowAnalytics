@@ -10,11 +10,11 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function data = readfcs_compensated_au(CM,filename,with_AF,floor)
+function [data,n_removed] = readfcs_compensated_au(CM,filename,with_AF,floor)
     if(CM.initialized<0.5), TASBESession.error('TASBE:ReadFCS','Unresolved','Cannot read a.u.: ColorModel not yet resolved'); end; % ensure initted
 
     % Acquire initial data, discarding likely contaminated portions
-    [rawfcs, fcshdr] = read_filtered_au(CM,filename);
+    [rawfcs, fcshdr, n_preremoved] = read_filtered_au(CM,filename);
 
     [rawdata, channel_desc] = select_channels(CM.Channels,rawfcs,fcshdr);
     
@@ -57,4 +57,6 @@ function data = readfcs_compensated_au(CM,filename,with_AF,floor)
     end
     % make sure nothing's below 1, for geometric statistics
     if(floor), data(data<1) = 1; end
+    
+    n_removed = n_preremoved + (size(rawfcs,1)-size(data,1));
     

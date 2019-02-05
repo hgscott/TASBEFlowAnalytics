@@ -14,9 +14,9 @@ function plot_batch_histograms(results,sampleresults,CM,linespecs)
 % color linespecs are properly handled.
 
 % Obtain channel names in order to generate linespecs
+channels = getChannelNames(sampleresults{1}{1}.AnalysisParameters); % channel names are same across conditions and replicates
 if (~exist('linespecs', 'var'))
     % Build linespecs from sampleresults
-    channels = getChannelNames(sampleresults{1}{1}.AnalysisParameters); % channel names are same across conditions and replicates
     linespecs = cell(numel(channels),1);
     for i=1:numel(channels)
         if isempty(getLineSpec(channel_named(CM, channels{i})))
@@ -27,6 +27,18 @@ if (~exist('linespecs', 'var'))
         end
     end
 end
+% Build unit names for X axis label
+unitnames = {};
+unitlegend = [];
+for i=1:numel(channels)
+    units = getUnits(channel_named(CM, channels{i}));
+    if isempty(find(cellfun(@(u)(strcmp(u,units)),unitnames),1)) % if name is new
+        unitnames{end+1} = units;
+        if ~isempty(unitlegend), unitlegend = [unitlegend ' / ']; end;
+        unitlegend = [unitlegend clean_for_latex(units)];
+    end
+end
+
 
 if numel(linespecs) ~= numel(getChannelNames(sampleresults{1}{1}.AnalysisParameters))
     TASBESession.error('plot_batch_histograms','LineSpecDimensionMismatch', 'Size of linespecs does not match with number of channels');
@@ -82,7 +94,7 @@ for i=1:n_conditions
         end
     end
     
-    xlabel(clean_for_latex(getStandardUnits(CM))); ylabel('Count');
+    xlabel(unitlegend); ylabel('Count');
     legend(lines, legendentries,'Location','Best');
     if(TASBEConfig.isSet('OutputSettings.FixedBinningAxis')), xlim(TASBEConfig.get('OutputSettings.FixedBinningAxis')); end
     if(TASBEConfig.isSet('OutputSettings.FixedHistogramAxis')), ylim(TASBEConfig.get('OutputSettings.FixedHistogramAxis')); else ylim([1e0 10.^(ceil(log10(maxcount)))]); end

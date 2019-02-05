@@ -27,7 +27,7 @@ end
 
 function writeIndividualPointCloud(CM, filename, data)
     % create output filename for cloud
-    [~,name,ext] = fileparts(filename);
+    [~,name,~] = fileparts(filename);
     path = TASBEConfig.get('flow.pointCloudPath');
     path = end_with_slash(path);
     if ~isdir(path)
@@ -42,7 +42,7 @@ function writeIndividualPointCloud(CM, filename, data)
     sanitizedChannelName = cell(1, numel(channels));
 
     for i=1:numel(channels)
-        channelName = [getPrintName(channels{i}) '_' getStandardUnits(CM)];
+        channelName = [getPrintName(channels{i}) '_' getUnits(channels{i})];
         sanitizedChannelName{i} = sanitizeColumnName(channelName);
     end
 

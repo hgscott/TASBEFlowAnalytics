@@ -11,18 +11,17 @@
 
 function [statisticsFile, histogramFile] = serializeBatchOutput(file_pairs, CM, AP, sampleresults)
     channel_names = getChannelNames(sampleresults{1}{1}.AnalysisParameters); % channel names are same across conditions and replicates
-    channels = {};
+    channels = cell(numel(channel_names),1);
     for i=1:numel(channel_names)
-        channels{end+1} = channel_named(CM, channel_names{i});
+        channels{i} = channel_named(CM, channel_names{i});
     end
     sampleIds = file_pairs(:,1);
     binCenters = get_bin_centers(getBins(AP));
-    units = getStandardUnits(CM);
     
     % Formats and writes the output to the Statistics file.
-    statisticsFile = writeStatisticsCsv(CM, channels, sampleIds, sampleresults, units);
+    statisticsFile = writeStatisticsCsv(CM, channels, sampleIds, sampleresults);
     
     % Formats and writes the output to the Histogram file.
-    histogramFile = writeHistogramCsv(channels, sampleIds, sampleresults, binCenters, units);
+    histogramFile = writeHistogramCsv(channels, sampleIds, sampleresults, binCenters);
 end
 

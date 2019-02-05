@@ -13,18 +13,22 @@ function [results, sampleresults] = per_color_constitutive_analysis(colorModel,b
 % The 'results' here is not a standard ExperimentResults, but a similar scratch structure
 
 TASBESession.warn('TASBE:Analysis','UpdateNeeded','Need to update per_color_constitutive_analysis to use new samplestatistics');
-batch_size = size(batch_description,1);
+n_conditions = size(batch_description,1);
 
 % check to make sure batch_file has the correct dimensions
 if size(batch_description, 2) ~= 2
     TASBESession.error('TASBE:Analysis', 'DimensionMismatch', 'Batch analysis invoked with incorrect number of columns. Make sure batch_file is a n X 2 matrix.');
 end
 
-for i = 1:batch_size
+data = cell(n_conditions,1);
+n_removed = data; n_events = data;
+for i = 1:n_conditions
     condition_name = batch_description{i,1};
     fileset = batch_description{i,2};
     experiment = Experiment(condition_name,'', {0,fileset});
-    data{i} = read_data(colorModel, experiment, AP);
+    [data{i},n_removed_sub] = read_data(colorModel, experiment, AP);
+    n_removed{i} = [n_removed_sub{1}{:}];
+    for j=1:numel(fileset), n_events{i}(j) = size(data{i}{1}{j},1); end;
     if exist('cloudNames', 'var')
         filenames = {cloudNames{i}};
     else
@@ -41,7 +45,6 @@ for i=1:numel(colors)
     rawresults{i} = process_constitutive_batch( colorModel, batch_description, AP, data);
 end
 
-n_conditions = size(batch_description,1);
 bincenters = get_bin_centers(getBins(AP));
 
 results = cell(n_conditions,1); sampleresults = results;
@@ -70,6 +73,8 @@ for i=1:n_conditions
             sample_gmm_means{k}(:,j) = SR{k}.PopComponentMeans(:,color_column);
             sample_gmm_stds{k}(:,j) = SR{k}.PopComponentStandardDevs(:,color_column);
             sample_gmm_weights{k}(:,j) = SR{k}.PopComponentWeights(:,color_column);
+            results{i}.n_events_used(k,j) = sum(SR{k}.BinCounts);
+            results{i}.n_events_outofrange(k,j) = SR{k}.OutOfRange;
         end
         results{i}.stdofmeans(j) = geostd(samplemeans(:,j));
         results{i}.stdofstds(j) = mean(samplestds(:,j));
@@ -92,5 +97,22 @@ for i=1:n_conditions
     results{i}.on_fracStd = std(cell2mat(on_fracs));
     results{i}.off_fracMean = mean(cell2mat(off_fracs));
     results{i}.off_fracStd = std(cell2mat(off_fracs));
+    results{i}.n_events = n_events{i};
+    results{i}.n_events_removed = n_removed{i};
 end
 
+%%%%%%%%%%%%%%%%%%
+% walk through all results and see if there's reason for statistical concern
+max_events = 0;
+for i=1:n_conditions
+    if ~isempty(results{i}.n_events)
+        max_events = max(max_events,max(results{i}.n_events));
+    end
+end
+for i=1:n_conditions
+    cur_events = min(results{i}.n_events);
+    if ~isempty(cur_events) && (max_events/cur_events > TASBEConfig.get('flow.conditionEventRatioWarning'))
+        TASBESession.warn('TASBE:Analysis','HighConditionSizeVariation','High variation in events per condition:\n  max=%i, Condition "%s" = %i',...
+            max_events, results{i}.condition, cur_events);
+    end
+end

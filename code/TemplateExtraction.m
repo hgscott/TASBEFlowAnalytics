@@ -55,6 +55,8 @@ classdef TemplateExtraction
             % Read in Excel for information, Additional Settings sheet
             [~,~,s6] = xlsread(file, 'Optional Settings');
             obj.sheets = {s1, s2, s3, s4, s5, s6};
+            % Find Calibration rows
+            rowCoordinates = obj.findCalibrationRows(3);
             if nargin < 3
                 obj.coordinates = {...
                     % Coords for variables in "Experiment"
@@ -62,7 +64,7 @@ classdef TemplateExtraction
                     {'first_filename_template'; {1, 16, 5}}; % uses sh & col vals
                     {'first_condition_key'; {1, 16, 1}}; % uses sh & col vals
                     % Coords for variables in "Samples"
-                    {'plots.plotPath'; {{3, 33, 2}, {2, 30, 2}, {4, 5, 15}, {5, 5, 16}}}; % uses sh & col vals
+                    {'plots.plotPath'; {{3, rowCoordinates{7}, 2}, {2, 30, 2}, {4, 5, 15}, {5, 5, 16}}}; % uses sh & col vals
                     {'first_sample_num'; {2, 5, 1}}; % uses all three vals 
                     {'inputName_CM'; {{2, 30, 3}, {4, 13, 2}, {5, 13, 2}}}; % uses sh & col vals
                     {'inputPath_CM'; {{2, 30, 4}, {4, 13, 3}, {5, 13, 3}}}; % uses sh & col vals
@@ -80,41 +82,41 @@ classdef TemplateExtraction
                     {'cloudName_BA'; {2, 30, 10}}; % uses sh & col vals
                     {'cloudPath_BA'; {2, 30, 11}}; % uses sh & col vals
                     % Coords for variables in "Calibration"
-                    {'beads.beadModel'; {3, 5, 2}}; % uses all three vals 
-                    {'beads.beadBatch'; {3, 5, 1}}; % uses all three vals 
-                    {'beads.rangeMin'; {3, 5, 3}}; % uses all three vals 
-                    {'beads.rangeMax'; {3, 5, 4}}; % uses all three vals 
-                    {'beads.peakThreshold'; {3, 5, 5}}; % uses all three vals 
-                    {'beads.beadChannel'; {3, 5, 6}}; % uses all three vals 
-                    {'beads.secondaryBeadChannel'; {3, 33, 3}}; % uses all three vals 
-                    {'relevant_channels'; {3, 25, 2}}; % uses all three vals 
-                    {'transChannelMin'; {3, 25, 3}}; % uses all three vals 
-                    {'outputName_CM'; {3, 33, 4}}; % uses all three vals 
-                    {'outputPath_CM'; {3, 33, 5}}; % uses all three vals 
-                    {'first_flchrome_name'; {3, 13, 2}}; % uses all three vals 
-                    {'first_flchrome_channel'; {3, 13, 3}}; % uses all three vals 
-                    {'first_flchrome_type'; {3, 13, 4}}; % uses all three vals, whether constitutive or input or output
-                    {'first_flchrome_wavlen'; {3, 13, 5}}; % uses all three vals 
-                    {'first_flchrome_filter'; {3, 13, 6}}; % uses all three vals 
-                    {'first_flchrome_color'; {3, 13, 7}}; % uses all three vals 
-                    {'first_flchrome_id'; {3, 13, 8}}; % uses all three vals  
-                    {'first_nonflr_name'; {3, 20, 2}}; % uses all three vals 
-                    {'first_nonflr_channel'; {3, 20, 3}}; % uses all three vals 
-                    {'first_nonflr_wavlen'; {3, 20, 4}}; % uses all three vals 
-                    {'first_nonflr_filter'; {3, 20, 5}}; % uses all three vals 
-                    {'first_nonflr_color'; {3, 20, 6}}; % uses all three vals 
-                    {'num_channels'; {3, 25, 1}}; % uses all three vals 
-                    {'bead_name'; {3, 5, 7}}; % uses all three vals 
-                    {'blank_name'; {3, 9, 2}}; % uses all three vals 
-                    {'all_name'; {3, 25, 4}}; % uses all three vals 
-                    {'bead_tolerance'; {3, 5, 8}}; % uses all three vals 
-                    {'size_bead_name'; {3, 29, 7}}; % uses all three vals
-                    {'sizebeads.beadModel'; {3, 29, 2}}; % uses all three vals
-                    {'sizebeads.rangeMin'; {3, 29, 3}}; % uses all three vals
-                    {'sizebeads.rangeMax'; {3, 29, 4}}; % uses all three vals
-                    {'sizebeads.peakThreshold'; {3, 29, 5}}; % uses all three vals
-                    {'sizebeads.beadChannel'; {3, 29, 6}}; % uses all three vals
-                    {'sizebeads.beadBatch'; {3, 29, 1}}; % uses all three vals
+                    {'beads.beadModel'; {3, rowCoordinates{1}, 2}}; % uses all three vals 
+                    {'beads.beadBatch'; {3, rowCoordinates{1}, 1}}; % uses all three vals 
+                    {'beads.rangeMin'; {3, rowCoordinates{1}, 3}}; % uses all three vals 
+                    {'beads.rangeMax'; {3, rowCoordinates{1}, 4}}; % uses all three vals 
+                    {'beads.peakThreshold'; {3, rowCoordinates{1}, 5}}; % uses all three vals 
+                    {'beads.beadChannel'; {3, rowCoordinates{1}, 6}}; % uses all three vals 
+                    {'bead_name'; {3, rowCoordinates{1}, 7}}; % uses all three vals 
+                    {'bead_tolerance'; {3, rowCoordinates{1}, 8}}; % uses all three vals 
+                    {'blank_name'; {3, rowCoordinates{2}, 2}}; % uses all three vals
+                    {'first_flchrome_name'; {3, rowCoordinates{3}, 2}}; % uses all three vals 
+                    {'first_flchrome_channel'; {3, rowCoordinates{3}, 3}}; % uses all three vals 
+                    {'first_flchrome_type'; {3, rowCoordinates{3}, 4}}; % uses all three vals, whether constitutive or input or output
+                    {'first_flchrome_wavlen'; {3, rowCoordinates{3}, 5}}; % uses all three vals 
+                    {'first_flchrome_filter'; {3, rowCoordinates{3}, 6}}; % uses all three vals 
+                    {'first_flchrome_color'; {3, rowCoordinates{3}, 7}}; % uses all three vals 
+                    {'first_flchrome_id'; {3, rowCoordinates{3}, 8}}; % uses all three vals
+                    {'first_nonflr_name'; {3, rowCoordinates{4}, 2}}; % uses all three vals 
+                    {'first_nonflr_channel'; {3, rowCoordinates{4}, 3}}; % uses all three vals 
+                    {'first_nonflr_wavlen'; {3, rowCoordinates{4}, 4}}; % uses all three vals 
+                    {'first_nonflr_filter'; {3, rowCoordinates{4}, 5}}; % uses all three vals 
+                    {'first_nonflr_color'; {3, rowCoordinates{4}, 6}}; % uses all three vals
+                    {'relevant_channels'; {3, rowCoordinates{5}, 2}}; % uses all three vals 
+                    {'transChannelMin'; {3, rowCoordinates{5}, 3}}; % uses all three vals
+                    {'num_channels'; {3, rowCoordinates{5}, 1}}; % uses all three vals  
+                    {'all_name'; {3, rowCoordinates{5}, 4}}; % uses all three vals 
+                    {'size_bead_name'; {3, rowCoordinates{6}, 7}}; % uses all three vals
+                    {'sizebeads.beadModel'; {3, rowCoordinates{6}, 2}}; % uses all three vals
+                    {'sizebeads.rangeMin'; {3, rowCoordinates{6}, 3}}; % uses all three vals
+                    {'sizebeads.rangeMax'; {3, rowCoordinates{6}, 4}}; % uses all three vals
+                    {'sizebeads.peakThreshold'; {3, rowCoordinates{6}, 5}}; % uses all three vals
+                    {'sizebeads.beadChannel'; {3, rowCoordinates{6}, 6}}; % uses all three vals
+                    {'sizebeads.beadBatch'; {3, rowCoordinates{6}, 1}}; % uses all three vals
+                    {'beads.secondaryBeadChannel'; {3, rowCoordinates{7}, 3}}; % uses all three vals 
+                    {'outputName_CM'; {3, rowCoordinates{7}, 4}}; % uses all three vals 
+                    {'outputPath_CM'; {3, rowCoordinates{7}, 5}}; % uses all three vals    
                     % Coords for variables in "Comparative Analysis"
                     {'outputName_PM'; {4, 5, 13}}; % uses sh & col vals
                     {'outputPath_PM'; {4, 5, 14}}; % uses sh & col vals
@@ -264,6 +266,24 @@ classdef TemplateExtraction
                 end
             end
             new_coords = obj.addExcelCoordinates({'filename_templates'}, {coords});
+        end
+        
+        function row_coords = findCalibrationRows(obj, sheet_num)
+        % Finds row numbers of Calibration parameters 
+            row_headers = {'Rainbow Beads', 'Autofluorescence', 'Fluorochromes', 'Non-fluorescence Channels (unprocessed)', 'Color Translation', 'Size Beads', 'Additional Preferences for Color Model'};
+            row_coords = {0};
+            for i=1:size(obj.sheets{sheet_num}, 1)
+                try
+                    value = obj.getExcelValuePos(sheet_num, i, 1, 'char');
+                    if ~isempty(find(strcmp(row_headers, value)))
+                        row_coords{find(strcmp(row_headers, value))} = i+3;
+                    end
+                catch
+                    continue
+                end
+            end
+            tf = cellfun('isempty', row_coords);
+            row_coords(tf) = {0};
         end
         
         function checkConditions(obj)

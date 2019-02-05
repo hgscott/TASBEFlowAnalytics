@@ -40,9 +40,11 @@ nonexpressing_set = ones(size(data,1),1);
 popcmeans = zeros(n_components,n_channels);
 popcstds = zeros(n_components,n_channels);
 popcweights = zeros(n_components,n_channels);
+drop_thresholds = zeros(n_channels,1);
 for k=1:n_channels
     % compute channel-specific drop threshold:
     drop_threshold = au_to_ERF(colorModel,getChannel(colorModel,k),get_pem_drop_threshold(analysisParams));
+    drop_thresholds(k) = drop_threshold;
 
     % divide into included/excluded set
     pos = data(:,k)>drop_threshold;
@@ -76,7 +78,7 @@ end
 nonexpressing = sum(nonexpressing_set);
 
 % Create (possibly filtered) subpopulation statistics [note: ignore excluded, as already calculated above]
-[counts means stds] = subpopulation_statistics(getBins(analysisParams), data, c_index, 'geometric');
+[counts,means,stds] = subpopulation_statistics(getBins(analysisParams), data, c_index, 'geometric', drop_thresholds);
 if numel(data)
     plasmid_counts = estimate_plasmids(PEM,means(:,c_index));
     fraction_active = estimate_fraction_active(PEM, means(:,c_index));
@@ -85,8 +87,10 @@ else
     fraction_active = [];
     PEM = [];
 end
+n_out_of_range = size(data,1)-sum(counts);
 
 sampleresults = SampleResults(experiment, samplename, analysisParams, counts, means, stds, ...
     fraction_active, plasmid_counts, PEM, ...
     histograms, popmeans, popstds, poppeaks, excluded, nonexpressing, ...
     popcmeans, popcstds, popcweights);
+sampleresults.OutOfRange = n_out_of_range;

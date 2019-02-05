@@ -9,7 +9,7 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function histogramFile = writeHistogramCsv(channels, sampleIds, sampleresults, binCenters, units)
+function histogramFile = writeHistogramCsv(channels, sampleIds, sampleresults, binCenters)
     if TASBEConfig.get('flow.outputHistogramFile')
         baseName = sanitize_filename(TASBEConfig.get('OutputSettings.StemName'));
 
@@ -37,7 +37,7 @@ function histogramFile = writeHistogramCsv(channels, sampleIds, sampleresults, b
             end
         end
 
-        columnNames = buildDefaultHistFileHeader(channels, units);
+        columnNames = buildDefaultHistFileHeader(channels);
         numColumns = numel(columnNames);
         totalReplicates = sum(replicates);
 
@@ -106,14 +106,14 @@ function perSampleTable = formatDataPerSample(channels, sampleId, binCenters, co
     perSampleTable = [sampleIdPadded, num2cell(binCentersForAllReplicates), num2cell(binCounts)];
 end
 
-function fileHeader = buildDefaultHistFileHeader(channels, units)
+function fileHeader = buildDefaultHistFileHeader(channels)
     % Default file header to match the default file format.
     numChannels = numel(channels);
     binHeaders = cell(1,numChannels);
     
     % Not elegant, but it gets the job done.
     for i=1:numChannels
-        channelName = [getPrintName(channels{i}) '_' units];
+        channelName = [getPrintName(channels{i}) '_' getUnits(channels{i})];
         binHeaders{i} = sanitizeColumnName(['BinCount_' channelName]);
     end
     
