@@ -218,6 +218,21 @@ classdef TASBESession
             out = TASBESession.access();
         end
         
+        function selected = getLast(classname,name)
+            warnings = fliplr(TASBESession.list());
+            selected = [];
+            for i=1:numel(warnings)
+                suite = fliplr(warnings{i}.contents);
+                for j=1:numel(suite)
+                    event = suite{j};
+                    if(strcmp(classname,event.classname) && strcmp(name,event.name))
+                        selected = event;
+                        return;
+                    end
+                end
+            end
+        end
+        
         function out = to_xml(filename)
             contents = TASBESession.list();
             suitestr = cell(numel(contents),1);

@@ -216,6 +216,8 @@ TASBEConfig.set('plots.plotPath', '/tmp/plots');
 CM=resolve(CM);
 save('-V7','/tmp/CM120312.mat','CM');
 
+assertEqual(TASBESession.getLast('TASBE:Beads','NonMEFL').message,'MEFL units are recommended, rather than MEPTR');
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Check results in CM:
 CMS = struct(CM);
