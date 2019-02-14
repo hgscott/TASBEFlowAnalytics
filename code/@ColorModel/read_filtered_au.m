@@ -11,7 +11,7 @@
 
 function [data,fcshdr,n_removed] = read_filtered_au(CM,filename)
     % Get read FCS file and select channels of interest
-    [~,fcshdr,rawfcs] = fca_readfcs(filename);
+    [~,fcshdr,rawfcs] = fca_readfcs(filename,TASBEConfig.get('flow.maxEvents'));
     if (isempty(fcshdr))
         TASBESession.error('TASBE:ReadFCS','CannotReadFile','Could not process FCS file %s', filename);
     end;
