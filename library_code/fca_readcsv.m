@@ -48,8 +48,17 @@ if  isempty(FileNameMain)
 end
 
 % Read in the data
-T = readtable(filename);
-VarNames = T.Properties.VariableNames;
+if is_octave()
+    T = csv2cell(filename);
+    VarNames = T(1,:);
+    % TotalEvents is number of rows
+    fcshdr.TotalEvents = size(T(2:end,:),1);
+else
+    T = readtable(filename);
+    VarNames = T.Properties.VariableNames;
+    % TotalEvents is number of rows
+    fcshdr.TotalEvents = height(T);
+end
 
 % Read in header info
 fcshdr.fcstype = 'CSV1.0';
@@ -57,16 +66,14 @@ fcshdr.filename = FileName;
 fcshdr.filepath = FilePath;
 % NumOfPar is number of cols
 fcshdr.NumOfPar = size(VarNames,2); % should this include image num/ object num cols
-% TotalEvents is number of rows
-fcshdr.TotalEvents = height(T);
 
-% % Not sure about par, should be channel structs (create leaving everything
-% % but name blank)
-% for i=1:fcshdr.NumOfPar
-%     fcshdr.par(i).name = VarNames{i};
-%     fcshdr.par(i).rawname = fcshdr.par(i).name;
-% end
-
+% % % Not sure about par, should be channel structs (create leaving everything
+% % % but name blank)
+% % for i=1:fcshdr.NumOfPar
+% %     fcshdr.par(i).name = VarNames{i};
+% %     fcshdr.par(i).rawname = fcshdr.par(i).name;
+% % end
+ 
 % Read in JSON header info to get fcshdr names
 if nargin > 1
     fid = fopen(headername); 
@@ -137,9 +144,8 @@ if nargin > 1
     if file_match ~= 1
         TASBESession.warn('fca_readcsv','FilenameMismatch','CSV file might not be documented in inputted JSON header');
     end
-    
 end
-
+ 
 % Optionally truncate events to avoid memory problems with extremely large FCS files -JSB
 if fcshdr.TotalEvents>clip_events
     TASBESession.warn('FCS:Read','TooManyEvents','FCS file has more than %i events; truncating to avoid memory problems',clip_events);
@@ -147,7 +153,12 @@ if fcshdr.TotalEvents>clip_events
 end
 
 % Reading the events by setting fcsdat
-fcsdat = double(T.Variables);
+if is_octave()
+    T2 = cell2mat(T(2:end,:));
+    fcsdat = double(T2);
+else
+    fcsdat = double(T.Variables);
+end
 % display(fcsdat);
 
 % I don't believe we need fcsdatscaled because we don't have any log scales
