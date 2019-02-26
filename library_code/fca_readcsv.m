@@ -73,7 +73,8 @@ if nargin > 1
     raw = fread(fid,inf); 
     string = char(raw'); 
     fclose(fid); 
-    header = jsondecode(string);
+    %header = jsondecode(string);
+    header = loadjson(string);
     if header{1} ~= fcshdr.NumOfPar
         TASBESession.error('fca_readcsv', 'NumParameterMismatch', 'Number of cols in CSV does not agree with number from JSON header file.');
     else
@@ -117,16 +118,20 @@ if nargin > 1
     end
     
     % Read in filenames
-    filenames = {};
+    %filenames = {};
     index = 2 + 3*fcshdr.NumOfPar;
     num_filenames = header{index};
     file_match = 0;
+    filename_to_compare = strrep(strrep(filename, '/', ''), '\', '');
     for i=1:num_filenames
         temp_filename = header{i+index};
-        if strcmp(strrep(temp_filename, '\', '/'), strrep(filename, '\', '/'))
+        temp_filename = strrep(temp_filename, '\', '');
+        temp_filename = strrep(temp_filename, '/', '');
+        if strcmp(temp_filename, filename_to_compare)
             file_match = 1;
+            break
         end
-        filenames{end+1} = temp_filename;
+        %filenames{end+1} = temp_filename;
     end
     
     if file_match ~= 1
