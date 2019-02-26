@@ -16,7 +16,7 @@ if nargin < 7, largeoutliers = false; end;
 if nargin < 8 || isempty(linear), linear = [0 0]; end;
 if nargin < 9, filters = {}; end;
 
-[fcsraw,fcshdr,fcsdat] = fca_readfcs(strtrim(filename));
+[fcsraw,fcshdr,fcsdat] = fca_read(strtrim(filename));
 % optional discarding of filtered data (e.g., debris, time contamination)
 for i=1:numel(filters)
     fcsdat = applyFilter(filters{i},fcshdr,fcsdat);

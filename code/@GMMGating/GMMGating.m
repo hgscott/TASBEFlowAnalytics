@@ -24,7 +24,7 @@ if nargin==0, return; end;
 % AGP = AutogateParameters
 % Model is a gmdistribution
 
-[~, fcshdr, rawfcs] = fca_readfcs(file);
+[~, fcshdr, rawfcs] = fca_read(file);
 
 if(nargin<2), AGP = AutogateParameters(); end;
 if (nargin < 3)

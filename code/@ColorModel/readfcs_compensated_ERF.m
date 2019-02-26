@@ -10,42 +10,46 @@
 % package distribution's top directory.
 
 function [data,n_removed] = readfcs_compensated_ERF(CM,filename,with_AF,floor)
-    if(CM.initialized<1), TASBESession.error('TASBE:ReadFCS','Unresolved','Cannot read ERF: ColorModel not yet resolved'); end; % ensure initted
+    if(CM.initialized<1), TASBESession.error('TASBE:ReadFCS','Unresolved','Cannot read ERF: ColorModel not yet resolved'); end % ensure initted
     
     % Read to arbitrary units
-    [audata,n_preremoved] = readfcs_compensated_au(CM,filename,with_AF,floor);
+    [audata,n_preremoved, non_au] = readfcs_compensated_au(CM,filename,with_AF,floor);
     
-    % Translate each (processed) channel to ERF channel 
-    ERF_channel_data = zeros(size(audata));
-    for i=1:numel(CM.Channels)
-        if(~isUnprocessed(CM.Channels{i}))
-            ERF_channel_data(:,i) = translate(CM.color_translation_model,audata(:,i),CM.Channels{i},CM.ERF_channel);
-        else
-            ERF_channel_data(:,i) = audata(:,i);
+    if non_au ~= 1 
+        % Translate each (processed) channel to ERF channel 
+        ERF_channel_data = zeros(size(audata));
+        for i=1:numel(CM.Channels)
+            if(~isUnprocessed(CM.Channels{i}))
+                ERF_channel_data(:,i) = translate(CM.color_translation_model,audata(:,i),CM.Channels{i},CM.ERF_channel);
+            else
+                ERF_channel_data(:,i) = audata(:,i);
+            end
         end
-    end
-    % Translate ERF AU to ERFs
-    k_ERF= getK_ERF(CM.unit_translation);
-    for i=1:numel(CM.Channels)
-        if(~isUnprocessed(CM.Channels{i})) % only for processed channels
-            data(:,i) = ERF_channel_data(:,i)*k_ERF;
-        else
-            data(:,i) = ERF_channel_data(:,i);
+        % Translate ERF AU to ERFs
+        k_ERF= getK_ERF(CM.unit_translation);
+        for i=1:numel(CM.Channels)
+            if(~isUnprocessed(CM.Channels{i})) % only for processed channels
+                data(:,i) = ERF_channel_data(:,i)*k_ERF;
+            else
+                data(:,i) = ERF_channel_data(:,i);
+            end
         end
+        % if possible, translate um channel AU to um
+        if ~isempty(CM.size_unit_translation)
+            i_um = find(CM, CM.um_channel);
+            data(:,i_um) = um_channel_AU_to_um(CM.size_unit_translation,data(:,i_um));
+        end
+
+        % optional discarding of filtered data (e.g., poorly transfected cells)
+        for i=1:numel(CM.postfilters)
+            data = applyFilter(CM.postfilters{i},CM.Channels,data);
+        end
+        % make sure we didn't throw away huge amounts...
+        if numel(data)<numel(audata)*TASBEConfig.get('flow.postGateDiscardsWarning')
+            TASBESession.warn('TASBE:ReadFCS','TooMuchDataDiscarded','ERF (post)filters may be discarding too much data: only %d%% retained in %s',numel(data)/numel(audata)*100,filename);
+        end
+        n_removed = n_preremoved + (size(audata,1)-size(data,1));
+    else
+        data = audata;
+        n_removed = n_preremoved;
     end
-    % if possible, translate um channel AU to um
-    if ~isempty(CM.size_unit_translation)
-        i_um = find(CM, CM.um_channel);
-        data(:,i_um) = um_channel_AU_to_um(CM.size_unit_translation,data(:,i_um));
-    end
-    
-    % optional discarding of filtered data (e.g., poorly transfected cells)
-    for i=1:numel(CM.postfilters)
-        data = applyFilter(CM.postfilters{i},CM.Channels,data);
-    end
-    % make sure we didn't throw away huge amounts...
-    if numel(data)<numel(audata)*TASBEConfig.get('flow.postGateDiscardsWarning');
-        TASBESession.warn('TASBE:ReadFCS','TooMuchDataDiscarded','ERF (post)filters may be discarding too much data: only %d%% retained in %s',numel(data)/numel(audata)*100,filename);
-    end
-    
-    n_removed = n_preremoved + (size(audata,1)-size(data,1));
