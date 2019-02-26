@@ -22,7 +22,11 @@ function writePointCloudHeader(CM, filenames)
     %display(units);
     string = savejson('', [{numel(channels)} channel_names print_names units {numel(filenames)} filenames]);
     %string = jsonencode([{numel(channels)} channel_names print_names units {numel(filenames)} filenames]);
-    filename = strcat(path, TASBEConfig.get('OutputSettings.StemName'), '.json');
+    stem_name = TASBEConfig.get('OutputSettings.StemName');
+    if isempty(stem_name)
+        stem_name = 'PointCloudHeader';
+    end
+    filename = strcat(path, stem_name, '.json');
     fid = fopen(filename, 'w');
     if fid == -1, error('Cannot create JSON file'); end
     fwrite(fid, string, 'char');
