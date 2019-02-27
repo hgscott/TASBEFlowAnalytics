@@ -1,4 +1,4 @@
-function [fcsdat, fcshdr, fcsdatscaled] = fca_readcsv(filename, headername)
+function [fcsdat, fcshdr, fcsdatscaled] = fca_readcsv(filename, headername, clip_events)
 % [fcsdat, fcshdr, fcsdatscaled] = fca_readcsv(filename);
 %
 % Read CSV of flow cytometry data file and put the list mode  

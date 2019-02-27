@@ -35,13 +35,14 @@ end
 
 if fext == '.csv'
     if ~exist('headername', 'var')
+        % kludge: must be removed
         headername = 'C:\Users\coverney\Documents\SynBio\Template\batch2\csv\LacI Transfer Curve.json';
         [fcsdat, fcshdr, fcsdatscaled] = fca_readcsv(filename, headername);
     else
-        [fcsdat, fcshdr, fcsdatscaled] = fca_readcsv(filename, headername);
+        [fcsdat, fcshdr, fcsdatscaled] = fca_readcsv(filename, headername, TASBEConfig.get('flow.maxEvents'));
     end
 elseif fext == '.fcs'
-    [fcsdat, fcshdr, fcsdatscaled] = fca_readfcs(filename);
+    [fcsdat, fcshdr, fcsdatscaled] = fca_readfcs(filename,TASBEConfig.get('flow.maxEvents'));
 else
     TASBESession.error('Read','InvalideExtension','Filename is not of type csv or fcs');
 
