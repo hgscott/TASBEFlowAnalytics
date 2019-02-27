@@ -6,7 +6,7 @@ function test_suite = test_fcs_reading
     end
     initTestSuite;
 
-function test_fca_readfcs
+function test_fca_read
     f1 = '../TASBEFlowAnalytics-Tutorial/example_controls/07-29-11_blank_P3.fcs';
     f2 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_Beads_P3.fcs';
 
@@ -71,4 +71,3 @@ log = TASBESession.list();
 assertEqual(log{end}.contents{end}.name, 'TooManyEvents');
 
 TASBEConfig.checkpoint('in_test');
-
