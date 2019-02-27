@@ -9,7 +9,8 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function writeFcsPointCloudCSV(CM, filenames, data)
+function csv_filenames = writeFcsPointCloudCSV(CM, filenames, data)
+    csv_filenames = {};
     if TASBEConfig.get('flow.outputPointCloud')
         n_conditions = numel(filenames);
         % Write each file for each condition
@@ -19,13 +20,14 @@ function writeFcsPointCloudCSV(CM, filenames, data)
             for j = 1:numberOfPerInducerFiles
                 fileName = perInducerFiles{j};
                 % Write data
-                writeIndividualPointCloud(CM, fileName, data{i}{j});
+                filename = writeIndividualPointCloud(CM, fileName, data{i}{j});
+                csv_filenames{end+1} = filename;
             end
         end
     end
 end
 
-function writeIndividualPointCloud(CM, filename, data)
+function csv_filename = writeIndividualPointCloud(CM, filename, data)
     % create output filename for cloud
     [~,name,~] = fileparts(filename);
     path = TASBEConfig.get('flow.pointCloudPath');
@@ -36,6 +38,12 @@ function writeIndividualPointCloud(CM, filename, data)
     end
     
     csvName = [path sanitize_filename(name) '_PointCloud.csv'];
+    if TASBEConfig.get('flow.pointCloudFileType')
+        % Store relative filename in JSON header
+        csv_filename = [sanitize_filename(name) '_PointCloud.csv'];
+    else
+        csv_filename = csvName;
+    end
     
     % sanitize the channel names
     channels = getChannels(CM);

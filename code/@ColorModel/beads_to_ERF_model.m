@@ -86,7 +86,7 @@ else
     segmentName = erfChannelName;
 end
 
-[fcsraw fcshdr fcsdat] = fca_readfcs(beadfile);
+[fcsraw fcshdr fcsdat] = fca_read(beadfile);
 bead_data = get_fcs_color(fcsdat,fcshdr,erfChannelName);
 segment_data = get_fcs_color(fcsdat,fcshdr,segmentName);
 

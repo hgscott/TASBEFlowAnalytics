@@ -17,7 +17,7 @@
 function descs = scan_facs_settings(fileset,channels,fields,csvout)
 % if no fields given, take fields from first file's first channel
 if nargin<3 || numel(fields) == 0
-    [dat hdr] = fca_readfcs(fileset{1}{1});
+    [dat hdr] = fca_read(fileset{1}{1});
     [ignored desc] = get_fcs_color(dat,hdr,channels{1}{1},true);
     allfields = fieldnames(desc);
     fields = cell(0);
@@ -37,7 +37,7 @@ nonnull = zeros(size(fields));
 descs = cell(numel(fileset),numel(channels));
 for f=1:numel(fileset)
     fprintf('.');
-    [dat hdr] = fca_readfcs(fileset{f}{1});
+    [dat hdr] = fca_read(fileset{f}{1});
     for c=1:numel(channels)
         [ignored desc] = get_fcs_color(dat,hdr,channels{c}{1},true);
         descs{f,c} = desc;

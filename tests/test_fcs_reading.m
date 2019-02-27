@@ -6,18 +6,18 @@ function test_suite = test_fcs_reading
     end
     initTestSuite;
 
-function test_fca_readfcs
+function test_fca_read
     f1 = '../TASBEFlowAnalytics-Tutorial/example_controls/07-29-11_blank_P3.fcs';
     f2 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_Beads_P3.fcs';
 
-    [data, hdr] = fca_readfcs(f1);
+    [data, hdr] = fca_read(f1);
 
     PACIFIC_BLUE_CHANNEL = 10;
     NUM_CHANNELS = 13;
     assert(strcmp(hdr.par(PACIFIC_BLUE_CHANNEL).name,'Pacific Blue-A'));
     assert(all(size(data) == [19865 NUM_CHANNELS]));
 
-    [data2, hdr2] = fca_readfcs(f2);
+    [data2, hdr2] = fca_read(f2);
     PACIFIC_BLUE_CHANNEL = 11;
     assert(strcmp(hdr2.par(PACIFIC_BLUE_CHANNEL).name,'Pacific Blue-A'));
     assert(all(size(data2) == [114929 NUM_CHANNELS]));
@@ -71,4 +71,3 @@ log = TASBESession.list();
 assertEqual(log{end}.contents{end}.name, 'TooManyEvents');
 
 TASBEConfig.checkpoint('in_test');
-
