@@ -26,7 +26,8 @@ if(isempty(foundset)),
 elseif numel(foundset)==1
     index = foundset(1);
 elseif numel(nameeqset)==1 % more than one match, but only one matches name precisely
-    TASBESession.warn('TASBE:ColorModel','DisambiguateChannel','Multiple channels match %s, discriminating by name',getName(channel)); 
+    % Turning this warning off, since it gets called too much and isn't very useful
+    %TASBESession.warn('TASBE:ColorModel','DisambiguateChannel','Multiple channels match %s, discriminating by name',getName(channel)); 
     index = nameeqset(1);
 else
     TASBESession.error('TASBE:ColorModel','MultipleChannels','Multiple channels match %s, and cannot discriminate by name',getName(channel));

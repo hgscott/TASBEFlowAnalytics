@@ -310,13 +310,13 @@ end
 % This appears to be triggered, with FACSdiva at least, when the FCS file is more than 100MB, which makes
 % the data stop position more than 8 characters and causes it to collide with the start field.   -JSB
 if FcsDataStartPos==0,
-    TASBESession.warn('FCS:Read','BadDataStart','FCS file has invalid data start position; guessing based on header end');
+    TASBESession.warn('FCS:Read','BadDataStart',[FileName,': FCS file has invalid data start position; guessing based on header end']);
     FcsDataStartPos = FcsHeaderStopPos+6;
 end
 
 % optionally truncate events to avoid memory problems with extremely large FCS files -JSB
 if fcshdr.TotalEvents>clip_events,
-    TASBESession.warn('FCS:Read','TooManyEvents','FCS file has more than %i events; truncating to avoid memory problems',clip_events);
+    TASBESession.warn('FCS:Read','TooManyEvents',[FileName,': FCS file has more than %i events (%i events); truncating to avoid memory problems'],clip_events,fcshdr.TotalEvents);
     fcshdr.TotalEvents = clip_events;
 end
 
@@ -399,7 +399,7 @@ elseif strcmp(fcsheader_type,'FCS3.0') || strcmp(fcsheader_type,'FCS3.1')
                 fcsdat = fread(fid,[fcshdr.NumOfPar fcshdr.TotalEvents],['uint',num2str(fcshdr.par(1).bit)],machineformat)';
             end
         else 
-            TASBESession.error('FCS:Read','UnsupportedDataType',['Unsupported FCS 3.0 data type: ' fcshdr.datatype]);
+            TASBESession.error('FCS:Read','UnsupportedDataType',[FileName,': Unsupported FCS 3.0 data type: ' fcshdr.datatype]);
         end
     end
     fclose(fid);

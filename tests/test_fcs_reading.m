@@ -31,6 +31,8 @@ function test_fcs_scatter
 
 function test_fcs_too_small
 
+TASBEConfig.checkpoint('in_test');
+
 CM = load_or_make_testing_colormodel();
 
 stem1011 = '../TASBEFlowAnalytics-Tutorial/example_assay/LacI-CAGop_';
@@ -45,3 +47,28 @@ TASBEConfig.set('flow.smallFileWarning',1e8);
 data = readfcs_compensated_ERF(CM,[stem1011 'B4_P3.fcs'],0,1);
 log = TASBESession.list();
 assertEqual(log{end}.contents{end}.name, 'UnusuallySmallFile');
+
+TASBEConfig.checkpoint('in_test');
+
+
+function test_fcs_too_large
+
+TASBEConfig.checkpoint('in_test');
+
+CM = load_or_make_testing_colormodel();
+
+stem1011 = '../TASBEFlowAnalytics-Tutorial/example_assay/LacI-CAGop_';
+
+% First read without warning
+data = readfcs_compensated_ERF(CM,[stem1011 'B4_P3.fcs'],0,1);
+log = TASBESession.list();
+assertFalse(strcmp(log{end}.contents{end}.name, 'TooManyEvents'));
+
+% now make the max-events threshold low and get a warning when reading
+TASBEConfig.set('flow.maxEvents',1e4);
+data = readfcs_compensated_ERF(CM,[stem1011 'B4_P3.fcs'],0,1);
+log = TASBESession.list();
+assertEqual(log{end}.contents{end}.name, 'TooManyEvents');
+
+TASBEConfig.checkpoint('in_test');
+
