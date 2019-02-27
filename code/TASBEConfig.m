@@ -25,7 +25,7 @@ classdef TASBEConfig
             % Generic flow data analysis
             s.flow = struct(); doc.flow = struct();
             doc.flow.about = 'General settings for flow cytometry data analysis';
-            doc.flow.maxEvents = 'Drop events abouve this count to avoid memory issues';
+            doc.flow.maxEvents = 'Drop events above this count to avoid memory issues';
             s.flow.maxEvents = 1e6;
             doc.flow.rangeMin = 'bin minimum (log10 scale)';
             s.flow.rangeMin = 0;                           
