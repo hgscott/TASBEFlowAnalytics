@@ -36,11 +36,20 @@ function csv_filename = writeIndividualPointCloud(CM, filename, data)
         TASBESession.notify('TASBE:Utilities','MakeDirectory','Directory does not exist, attempting to create it: %s',path);
         mkdir(path);
     end
-    
-    csvName = [path sanitize_filename(name) '_PointCloud.csv'];
+    name = sanitize_filename(name);
+    % If filename already has point cloud extension don't need to add it
+    if strcmp(name(end-10:end), '_PointCloud')
+        csvName = [path name '.csv'];
+    else
+        csvName = [path name '_PointCloud.csv'];
+    end
     if TASBEConfig.get('flow.pointCloudFileType')
         % Store relative filename in JSON header
-        csv_filename = [sanitize_filename(name) '_PointCloud.csv'];
+        if strcmp(name(end-10:end), '_PointCloud')
+            csv_filename = [name '.csv'];
+        else
+            csv_filename = [name '_PointCloud.csv'];
+        end
     else
         csv_filename = csvName;
     end

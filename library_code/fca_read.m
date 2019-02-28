@@ -35,9 +35,11 @@ end
 
 if fext == '.csv'
     if ~exist('headername', 'var')
-        % kludge: must be removed
-        headername = 'C:\Users\coverney\Documents\SynBio\Template\batch2\csv\LacI Transfer Curve.json';
-        [fcsdat, fcshdr, fcsdatscaled] = fca_readcsv(filename, headername);
+        headername = TASBEConfig.get('flow.defaultCSVReadHeader');
+        if isempty(headername)
+            TASBESession.error('Read','MissingCSVReadHeader','Header JSON for csv not given');
+        end
+        [fcsdat, fcshdr, fcsdatscaled] = fca_readcsv(filename, headername, TASBEConfig.get('flow.maxEvents'));
     else
         [fcsdat, fcshdr, fcsdatscaled] = fca_readcsv(filename, headername, TASBEConfig.get('flow.maxEvents'));
     end
