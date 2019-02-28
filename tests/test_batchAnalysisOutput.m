@@ -49,10 +49,10 @@ file_pairs = {...
 n_conditions = size(file_pairs,1);
 
 % Execute the actual analysis
+TASBEConfig.set('OutputSettings.StemName','LacI-CAGop');
 [results, sampleresults] = per_color_constitutive_analysis(CM,file_pairs,{'EBFP2','EYFP','mKate'},AP);
 
 % Make output plots
-TASBEConfig.set('OutputSettings.StemName','LacI-CAGop');
 TASBEConfig.set('plots.plotPath','/tmp/plots');
 TASBEConfig.set('OutputSettings.FixedInputAxis',[1e4 1e10]);
 plot_batch_histograms(results,sampleresults,CM,{'b','y','r'});

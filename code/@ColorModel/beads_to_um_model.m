@@ -73,7 +73,7 @@ bin_centers = bin_edges(1:n)*10.^(bin_increment/2);
 % no secondary channel segmentation here
 segmentName = umChannelName;
 
-[~, fcshdr, fcsdat] = fca_readfcs(beadfile);
+[~, fcshdr, fcsdat] = fca_read(beadfile);
 bead_data = get_fcs_color(fcsdat,fcshdr,umChannelName);
 segment_data = get_fcs_color(fcsdat,fcshdr,segmentName);
 

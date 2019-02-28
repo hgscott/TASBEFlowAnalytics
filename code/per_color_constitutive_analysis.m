@@ -22,6 +22,7 @@ end
 
 data = cell(n_conditions,1);
 n_removed = data; n_events = data;
+csv_filenames = {};
 for i = 1:n_conditions
     condition_name = batch_description{i,1};
     fileset = batch_description{i,2};
@@ -34,7 +35,15 @@ for i = 1:n_conditions
     else
         filenames = getInducerLevelsToFiles(experiment); % array of file names
     end
-    writeFcsPointCloudCSV(colorModel, filenames, data{i});
+    csv_filename = writeFcsPointCloudCSV(colorModel, filenames, data{i});
+    if ~isempty(csv_filename)
+        csv_filenames = [csv_filenames csv_filename];
+    end
+end
+
+% Create point cloud header
+if TASBEConfig.get('flow.outputPointCloud')
+    writePointCloudHeader(colorModel, csv_filenames);
 end
 
 % first do all the processing
