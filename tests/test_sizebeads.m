@@ -301,3 +301,16 @@ assertElementsAlmostEqual(au_to_ERF(CM,getChannel(CM,1),1),2267.3, 'relative', 1
 assertElementsAlmostEqual(au_to_ERF(CM,getChannel(CM,2),1),1163.3, 'relative', 1e-2);
 assertElementsAlmostEqual(au_to_ERF(CM,getChannel(CM,3),1),0.0114, 'relative', 1e-2);
 assertElementsAlmostEqual(au_to_ERF(CM,getChannel(CM,4),1),1, 'relative', 1e-2);
+
+
+
+function test_size_peak_multiple_required
+
+CM = setupSizePeakCM();
+TASBEConfig.set('sizebeads.rangeMin', 4.5);
+TASBEConfig.set('sizebeads.rangeMax', 5);
+% Execute and save the model
+CM=resolve(CM);
+
+log = TASBESession.list();
+assertEqual(log{end-3}.contents{end-1}.name, 'SinglePeak');
