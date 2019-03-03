@@ -142,6 +142,9 @@ end
 
 % Use log scale for fitting to avoid distortions from highest point
 if(n_peaks>=1)
+    if n_peaks==1
+        TASBESession.warn('TASBE:SizeBeads','SinglePeak','Size bead calibration requires at least two peaks, but only one is available.');
+    end
     i = numQuantifiedPeaks-n_peaks; % always assume using top peaks
     first_peak = i+1;
     % if forcing, do it before fitting the polynomial
