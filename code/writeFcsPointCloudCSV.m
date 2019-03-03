@@ -9,7 +9,8 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function writeFcsPointCloudCSV(CM, filenames, data)
+function csv_filenames = writeFcsPointCloudCSV(CM, filenames, data)
+    csv_filenames = {};
     if TASBEConfig.get('flow.outputPointCloud')
         n_conditions = numel(filenames);
         % Write each file for each condition
@@ -19,13 +20,14 @@ function writeFcsPointCloudCSV(CM, filenames, data)
             for j = 1:numberOfPerInducerFiles
                 fileName = perInducerFiles{j};
                 % Write data
-                writeIndividualPointCloud(CM, fileName, data{i}{j});
+                filename = writeIndividualPointCloud(CM, fileName, data{i}{j});
+                csv_filenames{end+1} = filename;
             end
         end
     end
 end
 
-function writeIndividualPointCloud(CM, filename, data)
+function csv_filename = writeIndividualPointCloud(CM, filename, data)
     % create output filename for cloud
     [~,name,~] = fileparts(filename);
     path = TASBEConfig.get('flow.pointCloudPath');
@@ -34,8 +36,23 @@ function writeIndividualPointCloud(CM, filename, data)
         TASBESession.notify('TASBE:Utilities','MakeDirectory','Directory does not exist, attempting to create it: %s',path);
         mkdir(path);
     end
-    
-    csvName = [path sanitize_filename(name) '_PointCloud.csv'];
+    name = sanitize_filename(name);
+    % If filename already has point cloud extension don't need to add it
+    if strcmp(name(end-10:end), '_PointCloud')
+        csvName = [path name '.csv'];
+    else
+        csvName = [path name '_PointCloud.csv'];
+    end
+    if TASBEConfig.get('flow.pointCloudFileType')
+        % Store relative filename in JSON header
+        if strcmp(name(end-10:end), '_PointCloud')
+            csv_filename = [name '.csv'];
+        else
+            csv_filename = [name '_PointCloud.csv'];
+        end
+    else
+        csv_filename = csvName;
+    end
     
     % sanitize the channel names
     channels = getChannels(CM);

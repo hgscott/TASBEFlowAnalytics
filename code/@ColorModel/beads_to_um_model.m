@@ -73,7 +73,7 @@ bin_centers = bin_edges(1:n)*10.^(bin_increment/2);
 % no secondary channel segmentation here
 segmentName = umChannelName;
 
-[~, fcshdr, fcsdat] = fca_readfcs(beadfile);
+[~, fcshdr, fcsdat] = fca_read(beadfile);
 bead_data = get_fcs_color(fcsdat,fcshdr,umChannelName);
 segment_data = get_fcs_color(fcsdat,fcshdr,segmentName);
 
@@ -142,6 +142,9 @@ end
 
 % Use log scale for fitting to avoid distortions from highest point
 if(n_peaks>=1)
+    if n_peaks==1
+        TASBESession.warn('TASBE:SizeBeads','SinglePeak','Size bead calibration requires at least two peaks, but only one is available.');
+    end
     i = numQuantifiedPeaks-n_peaks; % always assume using top peaks
     first_peak = i+1;
     % if forcing, do it before fitting the polynomial

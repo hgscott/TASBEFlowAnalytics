@@ -16,7 +16,7 @@ function CM=resolve(CM)
         template = TASBEConfig.get('flow.channel_template_file');
     else template = CM.BeadFile; 
     end;
-    [fcsdat fcshdr] = fca_readfcs(template);
+    [fcsdat fcshdr] = fca_read(template);
     % Remember channel descriptions, for later confirmation
     for i=1:numel(CM.Channels),
         [~, desc] = get_fcs_color(fcsdat,fcshdr,getName(CM.Channels{i}));

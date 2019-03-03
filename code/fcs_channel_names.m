@@ -11,6 +11,6 @@ function [names, hdr] = fcs_channel_names(filename)
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-[~, hdr] = fca_readfcs(filename);
+[~, hdr] = fca_read(filename);
 names = {hdr.par(:).name};
 

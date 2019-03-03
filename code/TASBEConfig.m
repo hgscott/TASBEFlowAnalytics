@@ -25,6 +25,8 @@ classdef TASBEConfig
             % Generic flow data analysis
             s.flow = struct(); doc.flow = struct();
             doc.flow.about = 'General settings for flow cytometry data analysis';
+            doc.flow.maxEvents = 'Drop events above this count to avoid memory issues';
+            s.flow.maxEvents = 1e6;
             doc.flow.rangeMin = 'bin minimum (log10 scale)';
             s.flow.rangeMin = 0;                           
             doc.flow.rangeMax = 'bin maximum (log10 scale)';
@@ -35,6 +37,10 @@ classdef TASBEConfig
             s.flow.outputPointCloud = false;
             doc.flow.pointCloudPath = 'location for point-cloud outputs';
             s.flow.pointCloudPath = 'CSV/';
+            doc.flow.pointCloudFileType = 'what type of pathname to write to point-cloud JSON header file. 0 stands for absolute, 1 stands for relative.';
+            s.flow.pointCloudFileType = 0;
+            doc.flow.defaultCSVReadHeader = 'what is absolute filename for the JSON header file needed to read in CSV files';
+            s.flow.defaultCSVReadHeader = '';
             doc.flow.dataCSVPath = 'location for data summary CSVs';
             s.flow.dataCSVPath = 'CSV/';
             doc.flow.outputHistogramFile = 'if true, output histogram file for batch analysis';

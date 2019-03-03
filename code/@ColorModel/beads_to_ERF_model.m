@@ -50,6 +50,9 @@ i_ERF = find(CM,ERF_channel);
 
 [PeakERFs,units,actualBatch] = get_bead_peaks(beadModel,beadChannel,beadBatch);
 CM.standardUnits = units;
+if ~strcmp(units,'MEFL')
+    TASBESession.warn('TASBE:Beads','NonMEFL','MEFL units are recommended, rather than %s',units);
+end
 ERF_channel_idx = indexof(CM.Channels,CM.ERF_channel);
 CM.Channels{ERF_channel_idx} = setUnits(CM.Channels{ERF_channel_idx},units);
 
@@ -83,7 +86,7 @@ else
     segmentName = erfChannelName;
 end
 
-[fcsraw fcshdr fcsdat] = fca_readfcs(beadfile);
+[fcsraw fcshdr fcsdat] = fca_read(beadfile);
 bead_data = get_fcs_color(fcsdat,fcshdr,erfChannelName);
 segment_data = get_fcs_color(fcsdat,fcshdr,segmentName);
 
