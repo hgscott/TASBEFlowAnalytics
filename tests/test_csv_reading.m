@@ -7,7 +7,7 @@ function test_suite = test_csv_reading
     initTestSuite;
 
 function test_fca_readcsv
-    f1 = '../../TASBEFlowAnalytics-Tutorial/template_analysis/csv/LacI-CAGop_Dox01_PointCloud.csv';
+    f1 = '../TASBEFlowAnalytics-Tutorial/template_analysis/csv/LacI-CAGop_Dox01_PointCloud.csv';
     header = 'LacI-CAGop.json';
 
     [data, hdr] = fca_read(f1, header);
