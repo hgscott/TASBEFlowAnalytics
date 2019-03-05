@@ -307,6 +307,18 @@ function all_results = transfercurve_analysis_excel(extractor, CM)
             catch
                 TASBESession.warn('transfercurve_analysis_excel', 'ImportantMissingPreference', 'Missing Min Valid Count in "Transfer Curve Analysis" sheet');
             end
+            
+            % Corresponds to pem_drop_threshold for histogram computation
+            try
+                coords = extractor.getExcelCoordinates('minValidau', 3);
+                minValidau = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'numeric');
+                if isempty(minValidau)
+                    error('empty preference');
+                end
+                AP=setPemDropThreshold(AP,minValidau);
+            catch
+                TASBESession.warn('transfercurve_analysis_excel', 'ImportantMissingPreference', 'Missing Min Valid au in "Samples" sheet');
+            end
 
             % Add autofluorescence back in after removing for compensation?
             try

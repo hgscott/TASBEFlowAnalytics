@@ -253,6 +253,15 @@ function [results, statisticsFile, histogramFile] = batch_analysis_excel(extract
         catch
             TASBESession.warn('batch_analysis_excel', 'ImportantMissingPreference', 'Missing Min Valid Count in "Samples" sheet');
         end
+        
+        % Corresponds to pem_drop_threshold for histogram computation
+        try
+            coords = extractor.getExcelCoordinates('minValidau', 1);
+            minValidau = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'numeric');
+            AP=setPemDropThreshold(AP,minValidau);
+        catch
+            TASBESession.warn('batch_analysis_excel', 'ImportantMissingPreference', 'Missing Min Valid au in "Samples" sheet');
+        end
 
         % Add autofluorescence back in after removing for compensation?
         try
