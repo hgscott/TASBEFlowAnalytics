@@ -9,19 +9,18 @@ function writePointCloudHeader(CM, filenames)
         mkdir(path);
     end
     channels = getChannels(CM);
-    channel_names = {};
-    print_names = {};
-    units = {};
+    channel_structs = {};
     for i=1:numel(channels)
-        channel_names{end+1} = getName(channels{i});
-        print_names{end+1} = getPrintName(channels{i});
-        units{end+1} = getUnits(channels{i});
+        channel_name = getName(channels{i});
+        print_name = getPrintName(channels{i});
+        unit = getUnits(channels{i});
+        temp_struct = struct('name', channel_name, 'print_name', print_name, 'unit', unit);
+        channel_structs{end+1} = temp_struct;
     end
-    %display(channel_names);
-    %display(print_names);
-    %display(units);
-    string = savejson('', [{numel(channels)} channel_names print_names units {numel(filenames)} filenames]);
-    %string = jsonencode([{numel(channels)} channel_names print_names units {numel(filenames)} filenames]);
+    s = struct;
+    s.channels = channel_structs;
+    s.filenames = filenames;
+    string = savejson('',s);
     stem_name = TASBEConfig.get('OutputSettings.StemName');
     if isempty(stem_name)
         stem_name = 'PointCloudHeader';
@@ -31,5 +30,4 @@ function writePointCloudHeader(CM, filenames)
     if fid == -1, error('Cannot create JSON file'); end
     fwrite(fid, string, 'char');
     fclose(fid);
-    %save(filename, 'string');
 end
