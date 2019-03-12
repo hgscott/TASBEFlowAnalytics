@@ -66,16 +66,24 @@ plot_batch_histograms(results,sampleresults,CM,{'b','g','r'});
 save('/tmp/LacI-CAGop-batch.mat','AP','bins','file_pairs','results','sampleresults');
 
 % Check the first five rows of the first point cloud file
+% expected_pointCloud = [...
+%     42801.34    40500.46    33567.67
+%     2456.10     42822.39    1039.11
+%     70903.34    68176.25    20623.25
+%     2830130.69  17561178.05   1039.11
+%     8742.07     2238.27     1039.11
+%     ];
+
 expected_pointCloud = [...
-    42801.34    40500.46    33567.67
-    2456.10     42822.39    1039.11
-    70903.34    68176.25    20623.25
-    2830130.69  17561178.05   1039.11
-    8742.07     2238.27     1039.11
+    42471.29    40352.2    37366.76
+    2452.02     42665.24    1156.15
+    70346.12    67919.83    22964.29
+    2807178.51  17492541.02   1156.15
+    8687.51     2229.52     1156.15
     ];
 
-% The first point cloud file: /tmp/LacI-CAGop_B3_B03_P3_PointCloud.csv
-firstPointCloudFile = '/tmp/CSV/LacI-CAGop_B3_P3_PointCloud.csv';
+% The first point cloud file: /tmp/CSV/LacI-CAGop_Dox01_PointCloud.csv
+firstPointCloudFile = '/tmp/CSV/LacI-CAGop_Dox01_PointCloud.csv';
 
 % Read the point cloud into matlab tables
 if (is_octave)
