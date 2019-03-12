@@ -8,12 +8,12 @@ function test_suite = test_csv_reading
 
 function test_fca_readcsv
     f1 = '../TASBEFlowAnalytics-Tutorial/template_analysis/csv/LacI-CAGop_Dox01_PointCloud.csv';
-    header = '../TASBEFlowAnalytics-Tutorial/template_analysis/csv/LacI Transfer Curve.json';
+    header = 'LacI-CAGop.json';
 
     [data, hdr] = fca_read(f1, header);
 
     PACIFIC_BLUE_CHANNEL = 3;
-    NUM_CHANNELS = 4;
+    NUM_CHANNELS = 3;
     assert(strcmp(hdr.par(PACIFIC_BLUE_CHANNEL).name,'Pacific Blue-A'));
     assert(all(size(data) == [161608 NUM_CHANNELS]));
 

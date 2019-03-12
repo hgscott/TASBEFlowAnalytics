@@ -65,14 +65,7 @@ fcshdr.fcstype = 'CSV1.0';
 fcshdr.filename = FileName;
 fcshdr.filepath = FilePath;
 % NumOfPar is number of cols
-fcshdr.NumOfPar = size(VarNames,2); % should this include image num/ object num cols
-
-% % % Not sure about par, should be channel structs (create leaving everything
-% % % but name blank)
-% % for i=1:fcshdr.NumOfPar
-% %     fcshdr.par(i).name = VarNames{i};
-% %     fcshdr.par(i).rawname = fcshdr.par(i).name;
-% % end
+fcshdr.NumOfPar = size(VarNames,2);
  
 % Read in JSON header info to get fcshdr names
 if nargin > 1
@@ -80,19 +73,20 @@ if nargin > 1
     raw = fread(fid,inf); 
     string = char(raw'); 
     fclose(fid); 
-    %header = jsondecode(string);
     header = loadjson(string);
-    if header{1} ~= fcshdr.NumOfPar
+    channels = header.channels;
+    filenames = header.filenames; 
+    units = {};
+    if numel(channels) ~= fcshdr.NumOfPar
         TASBESession.error('fca_readcsv', 'NumParameterMismatch', 'Number of cols in CSV does not agree with number from JSON header file.');
     else
-        units = {};
         for i=1:fcshdr.NumOfPar
-            fcshdr.par(i).name = header{i+1};
+            channel = channels{i};
+            fcshdr.par(i).name = channel.name;
             fcshdr.par(i).rawname = fcshdr.par(i).name;
-            index = i+1+fcshdr.NumOfPar;
-            fcshdr.par(i).pname = header{index};
-            fcshdr.par(i).unit = header{index+fcshdr.NumOfPar};
-            units{end+1} = fcshdr.par(i).unit;
+            fcshdr.par(i).pname = channel.print_name;
+            fcshdr.par(i).unit = channel.unit;
+            units{i} = channel.unit;
         end
     end
     
@@ -125,20 +119,16 @@ if nargin > 1
     end
     
     % Read in filenames
-    %filenames = {};
-    index = 2 + 3*fcshdr.NumOfPar;
-    num_filenames = header{index};
     file_match = 0;
     filename_to_compare = strrep(strrep(filename, '/', ''), '\', '');
-    for i=1:num_filenames
-        temp_filename = header{i+index};
+    for i=1:numel(filenames)
+        temp_filename = filenames{i};
         temp_filename = strrep(temp_filename, '\', '');
         temp_filename = strrep(temp_filename, '/', '');
         if strcmp(temp_filename, filename_to_compare)
             file_match = 1;
             break
         end
-        %filenames{end+1} = temp_filename;
     end
     
     if file_match ~= 1
@@ -159,7 +149,6 @@ if is_octave()
 else
     fcsdat = double(T.Variables);
 end
-% display(fcsdat);
 
 % I don't believe we need fcsdatscaled because we don't have any log scales
 fcsdatscaled = fcsdat;
