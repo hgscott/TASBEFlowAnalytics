@@ -249,6 +249,9 @@ function [results, statisticsFile, histogramFile] = batch_analysis_excel(extract
         try
             coords = extractor.getExcelCoordinates('minValidCount', 1);
             minValidCount = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'numeric');
+            if isempty(minValidCount)
+                error('empty preference');
+            end
             AP=setMinValidCount(AP,minValidCount);
         catch
             TASBESession.warn('batch_analysis_excel', 'ImportantMissingPreference', 'Missing Min Valid Count in "Samples" sheet');
@@ -258,6 +261,9 @@ function [results, statisticsFile, histogramFile] = batch_analysis_excel(extract
         try
             coords = extractor.getExcelCoordinates('minValidau', 1);
             minValidau = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'numeric');
+            if isempty(minValidau)
+                error('empty preference');
+            end
             AP=setPemDropThreshold(AP,minValidau);
         catch
             TASBESession.warn('batch_analysis_excel', 'ImportantMissingPreference', 'Missing Min Valid au in "Samples" sheet');
@@ -267,6 +273,9 @@ function [results, statisticsFile, histogramFile] = batch_analysis_excel(extract
         try
             coords = extractor.getExcelCoordinates('autofluorescence', 1);
             autofluorescence = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'numeric');
+            if isempty(autofluorescence)
+                error('empty preference');
+            end
             AP=setUseAutoFluorescence(AP,autofluorescence);
         catch
             TASBESession.warn('batch_analysis_excel', 'ImportantMissingPreference', 'Missing Use Auto Fluorescence in "Samples" sheet');
@@ -275,6 +284,9 @@ function [results, statisticsFile, histogramFile] = batch_analysis_excel(extract
         try
             coords = extractor.getExcelCoordinates('minFracActive', 1);
             minFracActive = extractor.getExcelValuePos(coords{1}, preference_row, coords{3}, 'numeric');
+            if isempty(minFracActive)
+                error('empty preference');
+            end
             AP=setMinFractionActive(AP,minFracActive);
         catch
             TASBESession.warn('batch_analysis_excel', 'ImportantMissingPreference', 'Missing Min Fraction Active in "Samples" sheet');
