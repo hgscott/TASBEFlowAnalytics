@@ -69,12 +69,13 @@ classdef TemplateExtraction
                     {'inputName_CM'; {{2, 30, 3}, {4, 13, 2}, {5, 13, 2}}}; % uses sh & col vals
                     {'inputPath_CM'; {{2, 30, 4}, {4, 13, 3}, {5, 13, 3}}}; % uses sh & col vals
                     {'OutputSettings.StemName'; {{2, 30, 5}, {4, 5, 13}, {5, 5, 13}}}; % uses sh & col vals
-                    {'binseq_min'; {{2, 30, 15}, {4, 13, 7}, {5, 13, 7}}}; % uses sh & col vals
-                    {'binseq_pdecade'; {{2, 30, 16}, {4, 13, 8}, {5, 13, 8}}}; % uses sh & col vals
-                    {'binseq_max'; {{2, 30, 17}, {4, 13, 9}, {5, 13, 9}}}; % uses sh & col vals
+                    {'binseq_min'; {{2, 30, 16}, {4, 13, 8}, {5, 13, 8}}}; % uses sh & col vals
+                    {'binseq_pdecade'; {{2, 30, 17}, {4, 13, 9}, {5, 13, 9}}}; % uses sh & col vals
+                    {'binseq_max'; {{2, 30, 18}, {4, 13, 10}, {5, 13, 10}}}; % uses sh & col vals
                     {'minValidCount'; {{2, 30, 12}, {4, 13, 4}, {5, 13, 4}}}; % uses sh & col vals
-                    {'autofluorescence'; {{2, 30, 13}, {4, 13, 5}, {5, 13, 5}}}; % uses sh & col vals
-                    {'minFracActive'; {{2, 30, 14}, {4, 13, 6}, {5, 13, 6}}}; % uses sh & col vals
+                    {'minValidau'; {{2, 30, 13}, {4, 13, 5}, {5, 13, 5}}}; % uses sh & col vals
+                    {'autofluorescence'; {{2, 30, 14}, {4, 13, 6}, {5, 13, 6}}}; % uses sh & col vals
+                    {'minFracActive'; {{2, 30, 15}, {4, 13, 7}, {5, 13, 7}}}; % uses sh & col vals
                     {'outputName_BA'; {2, 30, 6}}; % uses sh & col vals
                     {'outputPath_BA'; {2, 30, 7}}; % uses sh & col vals
                     {'statName_BA'; {2, 30, 8}}; % uses sh & col vals
