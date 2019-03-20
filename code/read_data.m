@@ -10,20 +10,20 @@
 % package distribution's top directory.
 
 function [data,n_removed] = read_data( colorModel, experiment, analysisParams)
-filenames = getInducerLevelsToFiles(experiment); % array of file names
-n_conditions = numel(filenames);
+datafiles = getInducerLevelsToFiles(experiment); % array of file names
+n_conditions = numel(datafiles);
 
 % Process each file for each condition in turn, computing results
 % incrementally
-data = cell(size(filenames));
+data = cell(size(datafiles));
 n_removed = data;
 for i=1:n_conditions
-    perInducerFiles = filenames{i};
+    perInducerFiles = datafiles{i};
     numberOfPerInducerFiles = numel(perInducerFiles);
     if (numberOfPerInducerFiles == 0), TASBESession.warn('TASBE:Analysis','MissingDataFile','An inducer level is missing a data file'); end;
     for j = 1:numberOfPerInducerFiles
-        fileName = perInducerFiles{j};
+        datafile = perInducerFiles{j};
         % Read data and extract statistics
-        [data{i}{j},n_removed{i}{j}] = readfcs_compensated_ERF(colorModel, fileName, getUseAutoFluorescence(analysisParams), true);
+        [data{i}{j},n_removed{i}{j}] = readfcs_compensated_ERF(colorModel, datafile, getUseAutoFluorescence(analysisParams), true);
     end
 end

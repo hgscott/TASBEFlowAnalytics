@@ -96,7 +96,7 @@ function [CM] = make_color_model_excel(extractor)
         for j=1:numel(ref_filenames)
             if strcmpi(name, ref_filenames{j})
                 file = getExcelFilename(extractor, i);
-                output_filenames{j} = file{1};
+                output_filenames{j} = DataFile(0, file{1}); % need to change when adding csv feature to excel
             end
         end
     end
@@ -209,7 +209,7 @@ function [CM] = make_color_model_excel(extractor)
         for j=1:numel(sample_ids)
             if strcmpi(name, sample_ids{j})
                 file = getExcelFilename(extractor, i);
-                colorfiles{j} = file{1};
+                colorfiles{j} = DataFile(0, file{1}); % change when adding csv feature
             end
         end
     end

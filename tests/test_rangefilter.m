@@ -9,8 +9,8 @@ function test_suite = test_rangefilter
 function test_range_filter
 
 stem0312 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_';
-blankfile = [stem0312 'blank_P3.fcs'];
-[~, hdr] = fca_readfcs(blankfile);
+blankfile = DataFile(0,[stem0312 'blank_P3.fcs']);
+[~, hdr] = fca_read(blankfile);
 
 hdr.par = hdr.par([7 10 11]); % 'FITC-A', 'PE-Tx-Red-YG-A', 'Pacific Blue-A'
 data = [[2:10 1]; 2:2:20; 3:3:30]'; % some fake data to play with

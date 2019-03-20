@@ -9,8 +9,10 @@ function test_suite = test_csv_reading
 function test_fca_readcsv
     f1 = '../TASBEFlowAnalytics-Tutorial/template_analysis/csv/LacI-CAGop_Dox01_PointCloud.csv';
     header = 'LacI-CAGop.json';
+    
+    datafile = DataFile(1, f1, header);
 
-    [data, hdr] = fca_read(f1, header);
+    [data, hdr] = fca_read(datafile);
 
     PACIFIC_BLUE_CHANNEL = 3;
     NUM_CHANNELS = 3;

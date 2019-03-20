@@ -9,7 +9,7 @@ function test_suite = test_autogating
 function test_autogate
 
 stem0312 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_';
-blankfile = [stem0312 'blank_P3.fcs'];
+blankfile = DataFile(0, [stem0312 'blank_P3.fcs']);
 
 % Autodetect gating with an N-dimensional gaussian-mixture-model
 AGP = AutogateParameters();
@@ -32,7 +32,7 @@ assertElementsAlmostEqual(GDS.Sigma,expected_sigma,'absolute',0.01);
 function test_6D_autogate
 
 stem0312 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_';
-blankfile = [stem0312 'blank_P3.fcs'];
+blankfile = DataFile(0, [stem0312 'blank_P3.fcs']);
 
 % Autodetect gating with an N-dimensional gaussian-mixture-model
 AGP = AutogateParameters();

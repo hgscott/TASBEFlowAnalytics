@@ -9,18 +9,13 @@ end
 
 function test_fca_read_nofile
     no_file = '';    
-    [fcsdat, fcshdr, fcsdatscaled] = fca_read(no_file);
-    log = TASBESession.list();
-    assertEqual(log{end}.contents{end}.name, 'NoFile');
-    assertEqual(fcsdat, []);
-    assertEqual(fcshdr, []);
-    assertEqual(fcsdatscaled, []);
+    assertExceptionThrown(@()DataFile(0, no_file), 'TASBE:DataFile:InvalidExtension', 'No error was raised.');
 end
 
 function test_fca_read_wrongfile
-    no_file = '';
     wrong_file = '../TASBEFlowAnalytics-Tutorial/example_controls/wrong.fcs';
-    [fcsdat, fcshdr, fcsdatscaled] = fca_read(wrong_file);
+    datafile = DataFile(0, wrong_file);
+    [fcsdat, fcshdr, fcsdatscaled] = fca_read(datafile);
     log = TASBESession.list();
     assertEqual(log{end}.contents{end}.name, 'NoFile');
     assertEqual(fcsdat, []);

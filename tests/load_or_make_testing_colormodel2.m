@@ -12,8 +12,8 @@ TASBEConfig.set('plots.plotPath',[tempdir 'plots']);
 stem0312 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_';
 
 
-beadfile = [stem0312 'Beads_P3.fcs'];
-blankfile = [stem0312 'blank_P3.fcs'];
+beadfile = DataFile(0, [stem0312 'Beads_P3.fcs']);
+blankfile = DataFile(0, [stem0312 'blank_P3.fcs']);
 
 % Autodetect gating with an N-dimensional gaussian-mixture-model
 AGP = AutogateParameters();
@@ -34,17 +34,17 @@ channels = {}; colorfiles = {};
 channels{1} = Channel('FITC-A', 488, 515, 20);
 channels{1} = setPrintName(channels{1}, 'EYFP'); % Name to print on charts
 % channels{1} = setLineSpec(channels{1}, 'y'); % Color for lines, when needed
-colorfiles{1} = [stem0312 'EYFP_P3.fcs']; % If there is only one channel, the color file is optional
+colorfiles{1} = DataFile(0, [stem0312 'EYFP_P3.fcs']); % If there is only one channel, the color file is optional
 
 channels{2} = Channel('PE-Tx-Red-YG-A', 561, 610, 20);
 channels{2} = setPrintName(channels{2}, 'mKate');
 channels{2} = setLineSpec(channels{2}, 'r');
-colorfiles{2} = [stem0312 'mkate_P3.fcs'];
+colorfiles{2} = DataFile(0, [stem0312 'mkate_P3.fcs']);
 
 channels{3} = Channel('Pacific Blue-A', 405, 450, 50);
 channels{3} = setPrintName(channels{3}, 'EBFP2');
 channels{3} = setLineSpec(channels{3}, 'b');
-colorfiles{3} = [stem0312 'ebfp2_P3.fcs'];
+colorfiles{3} = DataFile(0, [stem0312 'ebfp2_P3.fcs']);
 
 % Multi-color controls are used for converting other colors into ERF units
 % Any channel without a control mapping it to ERF will be left in arbirary units.
@@ -52,8 +52,8 @@ colorpairfiles = {};
 % Entries are: channel1, channel2, constitutive channel, filename
 % This allows channel1 and channel2 to be converted into one another.
 % If you only have two colors, you can set consitutive-channel to equal channel1 or channel2
-colorpairfiles{1} = {channels{1}, channels{2}, channels{3}, [stem0312 'mkate_EBFP2_EYFP_P3.fcs']};
-colorpairfiles{2} = {channels{1}, channels{3}, channels{2}, [stem0312 'mkate_EBFP2_EYFP_P3.fcs']};
+colorpairfiles{1} = {channels{1}, channels{2}, channels{3}, DataFile(0, [stem0312 'mkate_EBFP2_EYFP_P3.fcs'])};
+colorpairfiles{2} = {channels{1}, channels{3}, channels{2}, DataFile(0, [stem0312 'mkate_EBFP2_EYFP_P3.fcs'])};
 
 CM = ColorModel(beadfile, blankfile, channels, colorfiles, colorpairfiles);
 CM=set_translation_plot(CM, true);

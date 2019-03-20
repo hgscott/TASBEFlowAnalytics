@@ -9,11 +9,11 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function [data,n_removed] = readfcs_compensated_ERF(CM,filename,with_AF,floor)
+function [data,n_removed] = readfcs_compensated_ERF(CM,datafile,with_AF,floor)
     if(CM.initialized<1), TASBESession.error('TASBE:ReadFCS','Unresolved','Cannot read ERF: ColorModel not yet resolved'); end % ensure initted
     
     % Read to arbitrary units
-    [audata,n_preremoved, non_au] = readfcs_compensated_au(CM,filename,with_AF,floor);
+    [audata,n_preremoved, non_au] = readfcs_compensated_au(CM,datafile,with_AF,floor);
     
     if non_au ~= 1 
         % Translate each (processed) channel to ERF channel 
@@ -46,7 +46,7 @@ function [data,n_removed] = readfcs_compensated_ERF(CM,filename,with_AF,floor)
         end
         % make sure we didn't throw away huge amounts...
         if numel(data)<numel(audata)*TASBEConfig.get('flow.postGateDiscardsWarning')
-            TASBESession.warn('TASBE:ReadFCS','TooMuchDataDiscarded','ERF (post)filters may be discarding too much data: only %d%% retained in %s',numel(data)/numel(audata)*100,filename);
+            TASBESession.warn('TASBE:ReadFCS','TooMuchDataDiscarded','ERF (post)filters may be discarding too much data: only %d%% retained in %s',numel(data)/numel(audata)*100,getFile(datafile));
         end
         n_removed = n_preremoved + (size(audata,1)-size(data,1));
     else

@@ -57,5 +57,11 @@ function [filename] = getExcelFilename(extractor, row)
         names{i} = [stem names{i}];
     end
     
-    filename = names;
+    datafiles = {};
+    for p=1:numel(names)
+        datafile = DataFile(0, names{p}); % would need to change when adding csv feature
+        datafiles{end+1} = datafile;
+    end
+    
+    filename = datafiles;
 end

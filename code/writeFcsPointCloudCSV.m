@@ -18,7 +18,8 @@ function csv_filenames = writeFcsPointCloudCSV(CM, filenames, data)
             perInducerFiles = filenames{i};
             numberOfPerInducerFiles = numel(perInducerFiles);
             for j = 1:numberOfPerInducerFiles
-                fileName = perInducerFiles{j};
+                datafile = perInducerFiles{j};
+                fileName = getFile(datafile);
                 % Write data
                 filename = writeIndividualPointCloud(CM, fileName, data{i}{j});
                 csv_filenames{end+1} = filename;

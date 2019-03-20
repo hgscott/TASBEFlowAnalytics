@@ -41,7 +41,7 @@ function beadfiles = getBeadFile(extractor)
         ind = find(ismember(bead_name, name), 1);
         if ~isempty(ind)
             file = getExcelFilename(extractor, i);
-            beadfiles{ind} = file{1};
+            beadfiles{ind} = DataFile(0, file{1}); % need to change when adding csv feature
         end
     end
 end

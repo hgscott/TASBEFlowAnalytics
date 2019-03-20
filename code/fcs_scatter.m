@@ -10,13 +10,13 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function [data figh] = fcs_scatter(filename,xcolor,ycolor,density,range,visible,largeoutliers,linear,filters)
+function [data figh] = fcs_scatter(datafile,xcolor,ycolor,density,range,visible,largeoutliers,linear,filters)
 if nargin < 6, visible = false; end;
 if nargin < 7, largeoutliers = false; end;
 if nargin < 8 || isempty(linear), linear = [0 0]; end;
 if nargin < 9, filters = {}; end;
 
-[fcsraw,fcshdr,fcsdat] = fca_read(strtrim(filename));
+[fcsraw,fcshdr,fcsdat] = fca_read(datafile);
 % optional discarding of filtered data (e.g., debris, time contamination)
 for i=1:numel(filters)
     fcsdat = applyFilter(filters{i},fcshdr,fcsdat);
@@ -43,7 +43,7 @@ else
     if (nargin >= 5 && ~isempty(range)), xlim(range(:,1)); ylim(range(:,2)); end;
 end
 xlabel(clean_for_latex(['log_{10} ' xcolor ' a.u.'])); ylabel(clean_for_latex(['log_{10} ' ycolor ' a.u.']));
-title(clean_for_latex(sprintf('Scatter of %s vs. %s for %s',xcolor,ycolor,filename)));
+title(clean_for_latex(sprintf('Scatter of %s vs. %s for %s',xcolor,ycolor,getFile(datafile))));
 
 data = [xc yc];
 figh = h;

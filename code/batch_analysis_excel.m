@@ -159,8 +159,8 @@ function [results, statisticsFile, histogramFile] = batch_analysis_excel(extract
             extractor.getExcelValuePos(sh_num2, i, sample_exclude_col, 'char');
         catch
             sample_names{end+1} = extractor.getExcelValuePos(sh_num2, i, sample_name_col, 'char');
-            file = getExcelFilename(extractor, i);
-            file_names{end+1} = file;
+            datafiles = getExcelFilename(extractor, i);
+            file_names{end+1} = datafiles;
             % Obtain point cloud name
             if template_num ~= 0
                 name = getCloudName(extractor, i, template_num);
