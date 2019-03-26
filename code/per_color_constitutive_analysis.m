@@ -33,7 +33,17 @@ for i = 1:n_conditions
     if exist('cloudNames', 'var')
         filenames = {cloudNames{i}};
     else
-        filenames = getInducerLevelsToFiles(experiment); % array of file names
+        datafiles = getInducerLevelsToFiles(experiment); % returns array of datafiles
+        % convert datafiles to filenames
+        filenames = {};
+        for k=1:numel(datafiles)
+            perInducerDataFiles = datafiles{k};
+            perInducerFiles = {};
+            for p=1:numel(perInducerDataFiles)
+                perInducerFiles{end+1} = getFile(perInducerDataFiles{p});
+            end
+            filenames{end+1} = perInducerFiles;
+        end
     end
     csv_filename = writeFcsPointCloudCSV(colorModel, filenames, data{i});
     if ~isempty(csv_filename)
