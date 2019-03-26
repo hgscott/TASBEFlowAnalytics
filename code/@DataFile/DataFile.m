@@ -30,11 +30,11 @@ function DF = DataFile(type, file, header)
     [~, ~, fext] = fileparts(file);
     if isempty(fext)
         TASBESession.error('TASBE:DataFile','InvalidExtension','File is not of type csv or fcs');
-    elseif (fext ~= '.csv') && (fext ~= '.fcs')
+    elseif any(fext ~= '.csv') && any(fext ~= '.fcs')
         TASBESession.error('TASBE:DataFile','InvalidExtension','File is not of type csv or fcs');
-    elseif (fext == '.csv') && (type ~= 1)
+    elseif all(fext == '.csv') && any(type ~= 1)
         TASBESession.error('TASBE:DataFile','InvalidExtension','Type does not match with file extension');
-    elseif (fext == '.fcs') && (type ~= 0)
+    elseif all(fext == '.fcs') && any(type ~= 0)
         TASBESession.error('TASBE:DataFile','InvalidExtension','Type does not match with file extension');
     end
     
