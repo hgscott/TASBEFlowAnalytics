@@ -39,14 +39,14 @@ function csv_filename = writeIndividualPointCloud(CM, filename, data)
     end
     name = sanitize_filename(name);
     % If filename already has point cloud extension don't need to add it
-    if strcmp(name(end-10:end), '_PointCloud')
+    if numel(name)>10 && strcmp(name(end-10:end), '_PointCloud')
         csvName = [path name '.csv'];
     else
         csvName = [path name '_PointCloud.csv'];
     end
     if TASBEConfig.get('flow.pointCloudFileType')
         % Store relative filename in JSON header
-        if strcmp(name(end-10:end), '_PointCloud')
+        if numel(name)>10 && strcmp(name(end-10:end), '_PointCloud')
             csv_filename = [name '.csv'];
         else
             csv_filename = [name '_PointCloud.csv'];
