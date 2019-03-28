@@ -76,16 +76,33 @@ if nargin > 1
     header = loadjson(string);
     channels = header.channels;
     filenames = header.filenames; 
-    units = {};
+    units = cell(fcshdr.NumOfPar,1);
     if numel(channels) ~= fcshdr.NumOfPar
-        TASBESession.error('fca_readcsv', 'NumParameterMismatch', 'Number of cols in CSV does not agree with number from JSON header file.');
+        TASBESession.error('fca_readcsv', 'NumParameterMismatch', 'Number of columns in CSV %s not equal to number of channels specified in JSON header file %s',filename,headername);
     else
         for i=1:fcshdr.NumOfPar
             channel = channels{i};
-            fcshdr.par(i).name = channel.name;
-            fcshdr.par(i).rawname = fcshdr.par(i).name;
-            fcshdr.par(i).pname = channel.print_name;
-            fcshdr.par(i).unit = channel.unit;
+            channel_fields = fieldnames(channel);
+            % ensure all expected channel fields are populated, at least by defaults
+            fcshdr.par(i) = fcs_channel();
+            % make sure required fields are present in channel
+            required_fields = {'name','unit','print_name'};
+            for f=1:numel(required_fields)
+                if isempty(find(cellfun(@(cf)(strcmp(required_fields{f},cf)),channel_fields), 1))
+                    TASBESession.error('fca_readcsv', 'MissingRequiredHeaderField', 'Channel %i in %s missing required field %s',i,headername,required_fields{f});
+                end
+            end
+            % copy channel fields, making sure they match target
+            target_fields = fieldnames(fcshdr.par(i));
+            for f=1:numel(channel_fields)
+                % ensure the field is known
+                if ~isempty(find(cellfun(@(tf)(strcmp(channel_fields{f},tf)),target_fields), 1))
+                    fcshdr.par(i).(channel_fields{f}) = channel.(channel_fields{f});
+                else
+                    TASBESession.warn('fca_readcsv', 'UnknownHeaderField', 'Channel %i in %s contains unrecognized field %s',i,headername,channel_fields{f});
+                end
+            end
+            % TODO: consider just using the values in the hdr.par fields?
             units{i} = channel.unit;
         end
     end
@@ -111,12 +128,8 @@ if nargin > 1
             TASBESession.error('fca_readcsv','UnknownUnits','Unit named %s is not a known permitted type',unit);
         end
     end
-    % Make sure a.u. units consistent
-    if num_au > 0 && num_au ~= numel(units)
-        TASBESession.error('fca_readcsv','UnitMismatch','All units need to be a.u.');
-    elseif num_au > 0
-        fcshdr.non_au = 0;
-    end
+    % The file is a non-a.u. file if _any_ element is not a.u.
+    fcshdr.non_au = (num_au < numel(units));
     
     % Read in filenames
     file_match = 0;
@@ -132,7 +145,7 @@ if nargin > 1
     end
     
     if file_match ~= 1
-        TASBESession.warn('fca_readcsv','FilenameMismatch','CSV file might not be documented in inputted JSON header');
+        TASBESession.warn('fca_readcsv','FilenameMismatch','CSV file %s is not listed in JSON header %s',filename,headername);
     end
 end
  
@@ -147,7 +160,7 @@ if is_octave()
     T2 = cell2mat(T(2:end,:));
     fcsdat = double(T2);
 else
-    fcsdat = double(T.Variables);
+    fcsdat = double(table2array(T));
 end
 
 % I don't believe we need fcsdatscaled because we don't have any log scales
