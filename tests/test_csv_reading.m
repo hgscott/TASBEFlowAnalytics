@@ -16,6 +16,7 @@ function test_fca_readcsv
     NUM_CHANNELS = 3;
     assert(strcmp(hdr.par(PACIFIC_BLUE_CHANNEL).name,'Pacific Blue-A'));
     assert(all(size(data) == [161608 NUM_CHANNELS]));
+    assertElementsAlmostEqual(data(1,:),[4.2471e4 4.0352e4 3.7367e4],'absolute',1e0);
 
 function test_cm_read_csv
 
@@ -29,6 +30,8 @@ CM = clear_filters(CM); % got to drop the filters because there's no FSC and SSC
 data = readfcs_compensated_ERF(CM,f1,false,true);
 NUM_CHANNELS = 3;
 assert(all(size(data) == [161608 NUM_CHANNELS]));
+% numbers should change because all a.u. is treated as uncalibrated
+assertElementsAlmostEqual(data(1,:),[9.5741e7 9.0444e7 3.8822e7],'absolute',1e3);
 
 
 function test_cm_read_mixed_csv
@@ -41,8 +44,10 @@ TASBEConfig.set('flow.defaultCSVReadHeader',header);
 
 CM = clear_filters(CM); % got to drop the filters because there's no FSC and SSC
 data = readfcs_compensated_ERF(CM,f1,false,true);
+NUM_CHANNELS = 3;
 assert(all(size(data) == [161608 NUM_CHANNELS]));
-%TODO: also check that the values are being converted / not converted correctly
+% there is a non-a.u. channel, so it should all be treated as calibrated
+assertElementsAlmostEqual(data(1,:),[4.2471e4 4.0352e4 3.7367e4],'absolute',1e0);
 
 
 function test_cm_read_broken_csv

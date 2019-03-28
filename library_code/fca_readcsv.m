@@ -128,12 +128,8 @@ if nargin > 1
             TASBESession.error('fca_readcsv','UnknownUnits','Unit named %s is not a known permitted type',unit);
         end
     end
-    % Make sure a.u. units consistent
-    if num_au > 0 && num_au ~= numel(units)
-        TASBESession.error('fca_readcsv','UnitMismatch','All units need to be a.u.');
-    elseif num_au > 0
-        fcshdr.non_au = 0;
-    end
+    % The file is a non-a.u. file if _any_ element is not a.u.
+    fcshdr.non_au = (num_au < numel(units));
     
     % Read in filenames
     file_match = 0;
@@ -149,7 +145,7 @@ if nargin > 1
     end
     
     if file_match ~= 1
-        TASBESession.warn('fca_readcsv','FilenameMismatch','CSV file might not be documented in inputted JSON header');
+        TASBESession.warn('fca_readcsv','FilenameMismatch','CSV file %s is not listed in JSON header %s',filename,headername);
     end
 end
  
