@@ -147,7 +147,7 @@ if is_octave()
     T2 = cell2mat(T(2:end,:));
     fcsdat = double(T2);
 else
-    fcsdat = double(T.Variables);
+    fcsdat = double(table2array(T));
 end
 
 % I don't believe we need fcsdatscaled because we don't have any log scales
