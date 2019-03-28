@@ -27,6 +27,7 @@ c.detector = [];
 c.decade = [];
 c.log = [];
 c.logzero = [];
+c.calibration = []; % FCS 3.1 field not yet properly parsed by fca_readfcs. Might unify with unit later
 % Custom additions for harmonization with TASBE channels
 c.unit = '';
 c.print_name = '';
