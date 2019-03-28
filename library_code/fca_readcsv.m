@@ -76,16 +76,33 @@ if nargin > 1
     header = loadjson(string);
     channels = header.channels;
     filenames = header.filenames; 
-    units = {};
+    units = cell(fcshdr.NumOfPar,1);
     if numel(channels) ~= fcshdr.NumOfPar
-        TASBESession.error('fca_readcsv', 'NumParameterMismatch', 'Number of cols in CSV does not agree with number from JSON header file.');
+        TASBESession.error('fca_readcsv', 'NumParameterMismatch', 'Number of columns in CSV %s not equal to number of channels specified in JSON header file %s',filename,headername);
     else
         for i=1:fcshdr.NumOfPar
             channel = channels{i};
-            fcshdr.par(i).name = channel.name;
-            fcshdr.par(i).rawname = fcshdr.par(i).name;
-            fcshdr.par(i).pname = channel.print_name;
-            fcshdr.par(i).unit = channel.unit;
+            channel_fields = fieldnames(channel);
+            % ensure all expected channel fields are populated, at least by defaults
+            fcshdr.par(i) = fcs_channel();
+            % make sure required fields are present in channel
+            required_fields = {'name','unit','print_name'};
+            for f=1:numel(required_fields)
+                if isempty(find(cellfun(@(cf)(strcmp(required_fields{f},cf)),channel_fields), 1))
+                    TASBESession.error('fca_readcsv', 'MissingRequiredHeaderField', 'Channel %i in %s missing required field %s',i,headername,required_fields{f});
+                end
+            end
+            % copy channel fields, making sure they match target
+            target_fields = fieldnames(fcshdr.par(i));
+            for f=1:numel(channel_fields)
+                % ensure the field is known
+                if ~isempty(find(cellfun(@(tf)(strcmp(channel_fields{f},tf)),target_fields), 1))
+                    fcshdr.par(i).(channel_fields{f}) = channel.(channel_fields{f});
+                else
+                    TASBESession.warn('fca_readcsv', 'UnknownHeaderField', 'Channel %i in %s contains unrecognized field %s',i,headername,channel_fields{f});
+                end
+            end
+            % TODO: consider just using the values in the hdr.par fields?
             units{i} = channel.unit;
         end
     end

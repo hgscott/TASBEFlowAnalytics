@@ -208,6 +208,7 @@ elseif  strcmp(fcsheader_type,'FCS2.0') || strcmp(fcsheader_type,'FCS3.0') || st
     end
     
     for i=1:fcshdr.NumOfPar
+        fcsher.par(i) = fcs_channel();
         fcshdr.par(i).name = get_mnemonic_value(['$P',num2str(i),'N'],fcsheader_main, mnemonic_separator);
         fcshdr.par(i).rawname = fcshdr.par(i).name;
         fcshdr.par(i).range = str2num(get_mnemonic_value(['$P',num2str(i),'R'],fcsheader_main, mnemonic_separator));
