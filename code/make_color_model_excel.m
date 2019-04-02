@@ -95,8 +95,8 @@ function [CM] = make_color_model_excel(extractor)
         end
         for j=1:numel(ref_filenames)
             if strcmpi(name, ref_filenames{j})
-                file = getExcelFilename(extractor, i);
-                output_filenames{j} = file{1};
+                datafile = getExcelFilename(extractor, i);
+                output_filenames{j} = datafile{1};
             end
         end
     end
@@ -208,8 +208,8 @@ function [CM] = make_color_model_excel(extractor)
         end
         for j=1:numel(sample_ids)
             if strcmpi(name, sample_ids{j})
-                file = getExcelFilename(extractor, i);
-                colorfiles{j} = file{1};
+                datafile = getExcelFilename(extractor, i);
+                colorfiles{j} = datafile{1};
             end
         end
     end

@@ -39,8 +39,6 @@ classdef TASBEConfig
             s.flow.pointCloudPath = 'CSV/';
             doc.flow.pointCloudFileType = 'what type of pathname to write to point-cloud JSON header file. 0 stands for absolute, 1 stands for relative.';
             s.flow.pointCloudFileType = 0;
-            doc.flow.defaultCSVReadHeader = 'what is absolute filename for the JSON header file needed to read in CSV files';
-            s.flow.defaultCSVReadHeader = '';
             doc.flow.dataCSVPath = 'location for data summary CSVs';
             s.flow.dataCSVPath = 'CSV/';
             doc.flow.outputHistogramFile = 'if true, output histogram file for batch analysis';
