@@ -23,6 +23,7 @@ for i=1:n_conditions
     if (numberOfPerInducerFiles == 0), TASBESession.warn('TASBE:Analysis','MissingDataFile','An inducer level is missing a data file'); end;
     for j = 1:numberOfPerInducerFiles
         datafile = perInducerFiles{j};
+        datafile = ensureDataFile(datafile);
         % Read data and extract statistics
         [data{i}{j},n_removed{i}{j}] = readfcs_compensated_ERF(colorModel, datafile, getUseAutoFluorescence(analysisParams), true);
     end

@@ -9,7 +9,7 @@ function test_suite = test_rangefilter
 function test_range_filter
 
 stem0312 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_';
-blankfile = DataFile(0,[stem0312 'blank_P3.fcs']);
+blankfile = DataFile('fcs',[stem0312 'blank_P3.fcs']);
 [~, hdr] = fca_read(blankfile);
 
 hdr.par = hdr.par([7 10 11]); % 'FITC-A', 'PE-Tx-Red-YG-A', 'Pacific Blue-A'

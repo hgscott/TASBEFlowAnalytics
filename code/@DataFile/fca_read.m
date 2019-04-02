@@ -1,5 +1,5 @@
 function [fcsdat, fcshdr, fcsdatscaled] = fca_read(datafile)
-% [fcsdat, fcshdr, fcsdatscaled] = fca_readcsv(filename);
+% [fcsdat, fcshdr, fcsdatscaled] = fca_read(filename);
 %
 % Read CSV or FCS of flow cytometry data file and put the list mode  
 % parameters to the fcsdat array with size of [NumOfPar TotalEvents]. 
@@ -29,7 +29,7 @@ end
 % before issuing the uigetfile command. This is an option for the "fca"
 % tool
 
-if datafile.type == 1
+if strcmp(datafile.type, 'csv')
     [fcsdat, fcshdr, fcsdatscaled] = fca_readcsv(datafile.file, datafile.header, TASBEConfig.get('flow.maxEvents'));
 else
     [fcsdat, fcshdr, fcsdatscaled] = fca_readfcs(datafile.file, TASBEConfig.get('flow.maxEvents'));

@@ -10,7 +10,7 @@ function test_fca_readcsv
     f1 = '../TASBEFlowAnalytics-Tutorial/template_analysis/csv/LacI-CAGop_Dox01_PointCloud.csv';
     header = 'LacI-CAGop.json';
     
-    datafile = DataFile(1, f1, header);
+    datafile = DataFile('csv', f1, header);
 
     [data, hdr] = fca_read(datafile);
 

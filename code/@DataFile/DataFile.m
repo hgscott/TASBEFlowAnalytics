@@ -1,5 +1,5 @@
 % Constuctor for DataFile class with properties:
-% type (0 is fcs, and 1 is csv)
+% type ('fcs' and 'csv')
 % header
 % file
 %
@@ -12,30 +12,64 @@
 % package distribution's top directory.
 
 function DF = DataFile(type, file, header)
-    if nargin < 2
+    if nargin < 1
         TASBESession.error('TASBE:DataFile','Underspecified','DataFile object can not be created without type and file');
     end
     
-    DF.type = type;
-    DF.file = file;
-    DF.header = '';
+    key = {{'csv',{'.csv'}}, {'fcs',{'.fcs','.lmd'}}};
     
-    if (type == 1) && (nargin < 3)
-        TASBESession.error('TASBE:DataFile','Underspecified','DataFile object with csv type needs a header');
-    elseif type == 1
-        DF.header = header;
-    end
-    
-    % Check to make sure extension of file agrees with type
-    [~, ~, fext] = fileparts(file);
-    if isempty(fext)
-        TASBESession.error('TASBE:DataFile','InvalidExtension','File is not of type csv or fcs');
-    elseif any(fext ~= '.csv') && any(fext ~= '.fcs')
-        TASBESession.error('TASBE:DataFile','InvalidExtension','File is not of type csv or fcs');
-    elseif all(fext == '.csv') && any(type ~= 1)
-        TASBESession.error('TASBE:DataFile','InvalidExtension','Type does not match with file extension');
-    elseif all(fext == '.fcs') && any(type ~= 0)
-        TASBESession.error('TASBE:DataFile','InvalidExtension','Type does not match with file extension');
+    if nargin < 2
+        %Create obj with one arguement if file has an extension of 'fcs'
+        DF.type = 'fcs';
+        DF.file = type;
+        DF.header = '';
+        [~, ~, fext] = fileparts(DF.file);
+        for i=1:numel(key)
+            sub_key = key{i};
+            if strcmp(sub_key{1}, DF.type)
+                if isempty(find(strcmpi(sub_key{2}, fext), 1))
+                    TASBESession.error('TASBE:DataFile','Underspecified','Only files with a fcs extension can create a DataFile obj with no inputted type');
+                end
+            end
+        end
+        
+    else
+        DF.type = type;
+        DF.file = file;
+        DF.header = '';
+
+        % Make sure csv has header
+        if strcmp(type, 'csv') && (nargin < 3)
+            TASBESession.error('TASBE:DataFile','Underspecified','DataFile object with csv type needs a header');
+        elseif strcmp(type, 'csv')
+            DF.header = header;
+        end
+
+        % Make sure fcs doesn't have header
+        if strcmp(type, 'fcs') && (nargin > 2)
+            TASBESession.error('TASBE:DataFile','Overspecified','DataFile object with fcs type should not have a header');
+        end
+
+        % Check to make sure extension of file agrees with type
+        [~, ~, fext] = fileparts(DF.file);
+        error = 'InvalidType';
+        for i=1:numel(key)
+            sub_key = key{i};
+            if strcmp(sub_key{1}, type)
+                error = '';
+                if isempty(find(strcmpi(sub_key{2}, fext), 1))
+                    error = 'InvalidExtension';
+                end
+            end
+        end
+
+        if ~isempty(error)
+            if strcmp(error, 'InvalidType')
+                TASBESession.error('TASBE:DataFile',error,'File is not of type csv or fcs');
+            elseif strcmp(error, 'InvalidExtension')
+                TASBESession.error('TASBE:DataFile',error,'File extension does not match with possible file extensions');
+            end
+        end
     end
     
     DF=class(DF,'DataFile');

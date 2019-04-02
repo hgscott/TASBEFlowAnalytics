@@ -32,40 +32,40 @@ AP=setUseAutoFluorescence(AP,false');
 
 % Make a faulty map of condition names to file sets
 bad_file_pairs_batch1 = {...
-  'Dox 0.1',    {DataFile(0, [stem1011 'B3_P3.fcs'])}, DataFile(0, [stem1011 'B3_P3.fcs']); 
-  'Dox 0.2',    {DataFile(0, [stem1011 'B4_P3.fcs'])}, DataFile(0, [stem1011 'B3_P3.fcs']);
-  'Dox 0.5',    {DataFile(0, [stem1011 'B5_P3.fcs'])}, DataFile(0, [stem1011 'B3_P3.fcs']);
-  'Dox 1.0',    {DataFile(0, [stem1011 'B6_P3.fcs'])}, DataFile(0, [stem1011 'B3_P3.fcs']);
-  'Dox 2.0',    {DataFile(0, [stem1011 'B7_P3.fcs'])}, DataFile(0, [stem1011 'B3_P3.fcs']);
-  'Dox 5.0',    {DataFile(0, [stem1011 'B8_P3.fcs'])}, DataFile(0, [stem1011 'B3_P3.fcs']);
-  'Dox 10.0',   {DataFile(0, [stem1011 'B9_P3.fcs'])}, DataFile(0, [stem1011 'B3_P3.fcs']);
+  'Dox 0.1',    {DataFile('fcs', [stem1011 'B3_P3.fcs'])}, DataFile('fcs', [stem1011 'B3_P3.fcs']); 
+  'Dox 0.2',    {DataFile('fcs', [stem1011 'B4_P3.fcs'])}, DataFile('fcs', [stem1011 'B3_P3.fcs']);
+  'Dox 0.5',    {DataFile('fcs', [stem1011 'B5_P3.fcs'])}, DataFile('fcs', [stem1011 'B3_P3.fcs']);
+  'Dox 1.0',    {DataFile('fcs', [stem1011 'B6_P3.fcs'])}, DataFile('fcs', [stem1011 'B3_P3.fcs']);
+  'Dox 2.0',    {DataFile('fcs', [stem1011 'B7_P3.fcs'])}, DataFile('fcs', [stem1011 'B3_P3.fcs']);
+  'Dox 5.0',    {DataFile('fcs', [stem1011 'B8_P3.fcs'])}, DataFile('fcs', [stem1011 'B3_P3.fcs']);
+  'Dox 10.0',   {DataFile('fcs', [stem1011 'B9_P3.fcs'])}, DataFile('fcs', [stem1011 'B3_P3.fcs']);
   };
 
 bad_file_pairs_batch2 = {...
-  {DataFile(0, [stem1011 'B3_P3.fcs'])}; 
-  {DataFile(0, [stem1011 'B4_P3.fcs'])};
-  {DataFile(0, [stem1011 'B5_P3.fcs'])};
-  {DataFile(0, [stem1011 'B6_P3.fcs'])};
-  {DataFile(0, [stem1011 'B7_P3.fcs'])};
-  {DataFile(0, [stem1011 'B8_P3.fcs'])};
-  {DataFile(0, [stem1011 'B9_P3.fcs'])};
+  {DataFile('fcs', [stem1011 'B3_P3.fcs'])}; 
+  {DataFile('fcs', [stem1011 'B4_P3.fcs'])};
+  {DataFile('fcs', [stem1011 'B5_P3.fcs'])};
+  {DataFile('fcs', [stem1011 'B6_P3.fcs'])};
+  {DataFile('fcs', [stem1011 'B7_P3.fcs'])};
+  {DataFile('fcs', [stem1011 'B8_P3.fcs'])};
+  {DataFile('fcs', [stem1011 'B9_P3.fcs'])};
   };
 
 good_file_pairs_batch = {...
-  'Dox 0.1',    {DataFile(0, [stem1011 'B3_P3.fcs'])}; 
-  'Dox 0.2',    {DataFile(0, [stem1011 'B4_P3.fcs'])};
-  'Dox 0.5',    {DataFile(0, [stem1011 'B5_P3.fcs'])};
-  'Dox 1.0',    {DataFile(0, [stem1011 'B6_P3.fcs'])};
-  'Dox 2.0',    {DataFile(0, [stem1011 'B7_P3.fcs'])};
-  'Dox 5.0',    {DataFile(0, [stem1011 'B8_P3.fcs'])};
-  'Dox 10.0',   {DataFile(0, [stem1011 'B9_P3.fcs'])};
-  'Dox 20.0',   {DataFile(0, [stem1011 'B10_P3.fcs'])};
-  'Dox 50.0',   {DataFile(0, [stem1011 'B11_P3.fcs'])};
-  'Dox 100.0',  {DataFile(0, [stem1011 'B12_P3.fcs'])};
-  'Dox 200.0',  {DataFile(0, [stem1011 'C1_P3.fcs'])};
-  'Dox 500.0',  {DataFile(0, [stem1011 'C2_P3.fcs'])};
-  'Dox 1000.0', {DataFile(0, [stem1011 'C3_P3.fcs'])};
-  'Dox 2000.0', {DataFile(0, [stem1011 'C4_P3.fcs'])};
+  'Dox 0.1',    {DataFile('fcs', [stem1011 'B3_P3.fcs'])}; 
+  'Dox 0.2',    {DataFile('fcs', [stem1011 'B4_P3.fcs'])};
+  'Dox 0.5',    {DataFile('fcs', [stem1011 'B5_P3.fcs'])};
+  'Dox 1.0',    {DataFile('fcs', [stem1011 'B6_P3.fcs'])};
+  'Dox 2.0',    {DataFile('fcs', [stem1011 'B7_P3.fcs'])};
+  'Dox 5.0',    {DataFile('fcs', [stem1011 'B8_P3.fcs'])};
+  'Dox 10.0',   {DataFile('fcs', [stem1011 'B9_P3.fcs'])};
+  'Dox 20.0',   {DataFile('fcs', [stem1011 'B10_P3.fcs'])};
+  'Dox 50.0',   {DataFile('fcs', [stem1011 'B11_P3.fcs'])};
+  'Dox 100.0',  {DataFile('fcs', [stem1011 'B12_P3.fcs'])};
+  'Dox 200.0',  {DataFile('fcs', [stem1011 'C1_P3.fcs'])};
+  'Dox 500.0',  {DataFile('fcs', [stem1011 'C2_P3.fcs'])};
+  'Dox 1000.0', {DataFile('fcs', [stem1011 'C3_P3.fcs'])};
+  'Dox 2000.0', {DataFile('fcs', [stem1011 'C4_P3.fcs'])};
   };
 
 
@@ -100,33 +100,33 @@ AP=setUseAutoFluorescence(AP,false');
 % Make a faulty map of induction levels to file sets
 stem1011 = '../TASBEFlowAnalytics-Tutorial/example_assay/LacI-CAGop_';
 bad_file_pairs_tc1 = {...
-  0.1,    {DataFile(0, [stem1011 'B3_P3.fcs'])}, DataFile(0, [stem1011 'C4_P3.fcs']); % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
-  0.2,    {DataFile(0, [stem1011 'B4_P3.fcs'])}, DataFile(0, [stem1011 'C4_P3.fcs']);
-  0.5,    {DataFile(0, [stem1011 'B5_P3.fcs'])}, DataFile(0, [stem1011 'C4_P3.fcs']);
-  1.0,    {DataFile(0, [stem1011 'B6_P3.fcs'])}, DataFile(0, [stem1011 'C4_P3.fcs']);
-  2.0,    {DataFile(0, [stem1011 'B7_P3.fcs'])}, DataFile(0, [stem1011 'C4_P3.fcs']);
-  5.0,    {DataFile(0, [stem1011 'B8_P3.fcs'])}, DataFile(0, [stem1011 'C4_P3.fcs']);
-  10.0,   {DataFile(0, [stem1011 'B9_P3.fcs'])}, DataFile(0, [stem1011 'C4_P3.fcs']);
+  0.1,    {DataFile('fcs', [stem1011 'B3_P3.fcs'])}, DataFile('fcs', [stem1011 'C4_P3.fcs']); % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
+  0.2,    {DataFile('fcs', [stem1011 'B4_P3.fcs'])}, DataFile('fcs', [stem1011 'C4_P3.fcs']);
+  0.5,    {DataFile('fcs', [stem1011 'B5_P3.fcs'])}, DataFile('fcs', [stem1011 'C4_P3.fcs']);
+  1.0,    {DataFile('fcs', [stem1011 'B6_P3.fcs'])}, DataFile('fcs', [stem1011 'C4_P3.fcs']);
+  2.0,    {DataFile('fcs', [stem1011 'B7_P3.fcs'])}, DataFile('fcs', [stem1011 'C4_P3.fcs']);
+  5.0,    {DataFile('fcs', [stem1011 'B8_P3.fcs'])}, DataFile('fcs', [stem1011 'C4_P3.fcs']);
+  10.0,   {DataFile('fcs', [stem1011 'B9_P3.fcs'])}, DataFile('fcs', [stem1011 'C4_P3.fcs']);
   };
 
 bad_file_pairs_tc2 = {...
-  {DataFile(0, [stem1011 'B3_P3.fcs'])}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
-  {DataFile(0, [stem1011 'B4_P3.fcs'])};
-  {DataFile(0, [stem1011 'B5_P3.fcs'])};
-  {DataFile(0, [stem1011 'B6_P3.fcs'])};
-  {DataFile(0, [stem1011 'B7_P3.fcs'])};
-  {DataFile(0, [stem1011 'B8_P3.fcs'])};
-  {DataFile(0, [stem1011 'B9_P3.fcs'])};
+  {DataFile('fcs', [stem1011 'B3_P3.fcs'])}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
+  {DataFile('fcs', [stem1011 'B4_P3.fcs'])};
+  {DataFile('fcs', [stem1011 'B5_P3.fcs'])};
+  {DataFile('fcs', [stem1011 'B6_P3.fcs'])};
+  {DataFile('fcs', [stem1011 'B7_P3.fcs'])};
+  {DataFile('fcs', [stem1011 'B8_P3.fcs'])};
+  {DataFile('fcs', [stem1011 'B9_P3.fcs'])};
   };
 
 good_file_pairs_tc = {...
-  0.1,    {DataFile(0, [stem1011 'B3_P3.fcs'])}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
-  0.2,    {DataFile(0, [stem1011 'B4_P3.fcs'])};
-  0.5,    {DataFile(0, [stem1011 'B5_P3.fcs'])};
-  1.0,    {DataFile(0, [stem1011 'B6_P3.fcs'])};
-  2.0,    {DataFile(0, [stem1011 'B7_P3.fcs'])};
-  5.0,    {DataFile(0, [stem1011 'B8_P3.fcs'])};
-  10.0,   {DataFile(0, [stem1011 'B9_P3.fcs'])};
+  0.1,    {DataFile('fcs', [stem1011 'B3_P3.fcs'])}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
+  0.2,    {DataFile('fcs', [stem1011 'B4_P3.fcs'])};
+  0.5,    {DataFile('fcs', [stem1011 'B5_P3.fcs'])};
+  1.0,    {DataFile('fcs', [stem1011 'B6_P3.fcs'])};
+  2.0,    {DataFile('fcs', [stem1011 'B7_P3.fcs'])};
+  5.0,    {DataFile('fcs', [stem1011 'B8_P3.fcs'])};
+  10.0,   {DataFile('fcs', [stem1011 'B9_P3.fcs'])};
   };
 
 % Execute the actual analysis to see if an error gets thrown
@@ -163,123 +163,123 @@ stem1011 = '../TASBEFlowAnalytics-Tutorial/example_assay/LacI-CAGop_';
 bad_file_pairs_pm1 = {...
  {'Lows';'BaseDox';{'+', '-'};
   % First set is the matching "plus" conditions
-  {0.1,  {DataFile(0, [stem1011 'B9_P3.fcs'])}, DataFile(0, [stem1011 'B9_P3.fcs']); % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
-   0.2,  {DataFile(0, [stem1011 'B10_P3.fcs'])}, DataFile(0, [stem1011 'B9_P3.fcs'])};
+  {0.1,  {DataFile('fcs', [stem1011 'B9_P3.fcs'])}, DataFile('fcs', [stem1011 'B9_P3.fcs']); % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
+   0.2,  {DataFile('fcs', [stem1011 'B10_P3.fcs'])}, DataFile('fcs', [stem1011 'B9_P3.fcs'])};
   % Second set is the matching "minus" conditions 
-  {0.1,  {DataFile(0, [stem1011 'B3_P3.fcs'])}, DataFile(0, [stem1011 'B9_P3.fcs']);
-   0.2,  {DataFile(0, [stem1011 'B4_P3.fcs'])}, DataFile(0, [stem1011 'B9_P3.fcs'])}};
+  {0.1,  {DataFile('fcs', [stem1011 'B3_P3.fcs'])}, DataFile('fcs', [stem1011 'B9_P3.fcs']);
+   0.2,  {DataFile('fcs', [stem1011 'B4_P3.fcs'])}, DataFile('fcs', [stem1011 'B9_P3.fcs'])}};
  {'Highs';'BaseDox';{'+', '-'};
-  {10,   {DataFile(0, [stem1011 'C3_P3.fcs'])}, DataFile(0, [stem1011 'B9_P3.fcs']);
-   20,   {DataFile(0, [stem1011 'C4_P3.fcs'])}, DataFile(0, [stem1011 'B9_P3.fcs'])};
-  {10,   {DataFile(0, [stem1011 'B9_P3.fcs'])}, DataFile(0, [stem1011 'B9_P3.fcs']);
-   20,   {DataFile(0, [stem1011 'B10_P3.fcs'])}, DataFile(0, [stem1011 'B9_P3.fcs'])}};
+  {10,   {DataFile('fcs', [stem1011 'C3_P3.fcs'])}, DataFile('fcs', [stem1011 'B9_P3.fcs']);
+   20,   {DataFile('fcs', [stem1011 'C4_P3.fcs'])}, DataFile('fcs', [stem1011 'B9_P3.fcs'])};
+  {10,   {DataFile('fcs', [stem1011 'B9_P3.fcs'])}, DataFile('fcs', [stem1011 'B9_P3.fcs']);
+   20,   {DataFile('fcs', [stem1011 'B10_P3.fcs'])}, DataFile('fcs', [stem1011 'B9_P3.fcs'])}};
  };
 
 bad_file_pairs_pm2 = {...
  {'Lows';'BaseDox';{'+', '-'};
   % First set is the matching "plus" conditions
-  {{DataFile(0, [stem1011 'B9_P3.fcs'])}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
-   {DataFile(0, [stem1011 'B10_P3.fcs'])}};
+  {{DataFile('fcs', [stem1011 'B9_P3.fcs'])}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
+   {DataFile('fcs', [stem1011 'B10_P3.fcs'])}};
   % Second set is the matching "minus" conditions 
-  {{DataFile(0, [stem1011 'B3_P3.fcs'])};
-   {DataFile(0, [stem1011 'B4_P3.fcs'])}}};
+  {{DataFile('fcs', [stem1011 'B3_P3.fcs'])};
+   {DataFile('fcs', [stem1011 'B4_P3.fcs'])}}};
  {'Highs';'BaseDox';{'+', '-'};
-  {{DataFile(0, [stem1011 'C3_P3.fcs'])};
-   {DataFile(0, [stem1011 'C4_P3.fcs'])}};
-  {{DataFile(0, [stem1011 'B9_P3.fcs'])};
-   {DataFile(0, [stem1011 'B10_P3.fcs'])}}};
+  {{DataFile('fcs', [stem1011 'C3_P3.fcs'])};
+   {DataFile('fcs', [stem1011 'C4_P3.fcs'])}};
+  {{DataFile('fcs', [stem1011 'B9_P3.fcs'])};
+   {DataFile('fcs', [stem1011 'B10_P3.fcs'])}}};
  };
 
 bad_file_pairs_pm3 = {...
  {'Lows';'BaseDox';{'+', '-'};'Extra';
   % First set is the matching "plus" conditions
-  {0.1,  {DataFile(0, [stem1011 'B9_P3.fcs'])}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
-   0.2,  {DataFile(0, [stem1011 'B10_P3.fcs'])}};
+  {0.1,  {DataFile('fcs', [stem1011 'B9_P3.fcs'])}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
+   0.2,  {DataFile('fcs', [stem1011 'B10_P3.fcs'])}};
   % Second set is the matching "minus" conditions 
-  {0.1,  {DataFile(0, [stem1011 'B3_P3.fcs'])};
-   0.2,  {DataFile(0, [stem1011 'B4_P3.fcs'])}}};
+  {0.1,  {DataFile('fcs', [stem1011 'B3_P3.fcs'])};
+   0.2,  {DataFile('fcs', [stem1011 'B4_P3.fcs'])}}};
  {'Highs';'BaseDox';{'+', '-'};'Extra';
-  {10,   {DataFile(0, [stem1011 'C3_P3.fcs'])};
-   20,   {DataFile(0, [stem1011 'C4_P3.fcs'])}};
-  {10,   {DataFile(0, [stem1011 'B9_P3.fcs'])};
-   20,   {DataFile(0, [stem1011 'B10_P3.fcs'])}}};
+  {10,   {DataFile('fcs', [stem1011 'C3_P3.fcs'])};
+   20,   {DataFile('fcs', [stem1011 'C4_P3.fcs'])}};
+  {10,   {DataFile('fcs', [stem1011 'B9_P3.fcs'])};
+   20,   {DataFile('fcs', [stem1011 'B10_P3.fcs'])}}};
  };
 
 % Can become good if batch_names match:
 bad_file_pairs_pm4 = {...
  {'Lows';'BaseDox';{'+', '-'};
   % First set is the matching "plus" conditions
-  {0.1,  {DataFile(0, [stem1011 'B9_P3.fcs'])}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
-   0.2,  {DataFile(0, [stem1011 'B10_P3.fcs'])}};
+  {0.1,  {DataFile('fcs', [stem1011 'B9_P3.fcs'])}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
+   0.2,  {DataFile('fcs', [stem1011 'B10_P3.fcs'])}};
   % extra set
-  {0.1,  {DataFile(0, [stem1011 'B9_P3.fcs'])};
-   0.2,  {DataFile(0, [stem1011 'B10_P3.fcs'])}};
+  {0.1,  {DataFile('fcs', [stem1011 'B9_P3.fcs'])};
+   0.2,  {DataFile('fcs', [stem1011 'B10_P3.fcs'])}};
   % Second set is the matching "minus" conditions 
-  {0.1,  {DataFile(0, [stem1011 'B3_P3.fcs'])};
-   0.2,  {DataFile(0, [stem1011 'B4_P3.fcs'])}}};
+  {0.1,  {DataFile('fcs', [stem1011 'B3_P3.fcs'])};
+   0.2,  {DataFile('fcs', [stem1011 'B4_P3.fcs'])}}};
  {'Highs';'BaseDox';{'+', '-'};
-  {10,   {DataFile(0, [stem1011 'C3_P3.fcs'])};
-   20,   {DataFile(0, [stem1011 'C4_P3.fcs'])}};
-  {0.1,  {DataFile(0, [stem1011 'B9_P3.fcs'])};
-   0.2,  {DataFile(0, [stem1011 'B10_P3.fcs'])}};
-  {10,   {DataFile(0, [stem1011 'B9_P3.fcs'])};
-   20,   {DataFile(0, [stem1011 'B10_P3.fcs'])}}};
+  {10,   {DataFile('fcs', [stem1011 'C3_P3.fcs'])};
+   20,   {DataFile('fcs', [stem1011 'C4_P3.fcs'])}};
+  {0.1,  {DataFile('fcs', [stem1011 'B9_P3.fcs'])};
+   0.2,  {DataFile('fcs', [stem1011 'B10_P3.fcs'])}};
+  {10,   {DataFile('fcs', [stem1011 'B9_P3.fcs'])};
+   20,   {DataFile('fcs', [stem1011 'B10_P3.fcs'])}}};
  };
 
 good_file_pairs_pm1 = {...
  {'Lows';'BaseDox';{'+', '-'};
   % First set is the matching "plus" conditions
-  {0.1,  {DataFile(0, [stem1011 'B9_P3.fcs'])}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
-   0.2,  {DataFile(0, [stem1011 'B10_P3.fcs'])}};
+  {0.1,  {DataFile('fcs', [stem1011 'B9_P3.fcs'])}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
+   0.2,  {DataFile('fcs', [stem1011 'B10_P3.fcs'])}};
   % Second set is the matching "minus" conditions 
-  {0.1,  {DataFile(0, [stem1011 'B3_P3.fcs'])};
-   0.2,  {DataFile(0, [stem1011 'B4_P3.fcs'])}}};
+  {0.1,  {DataFile('fcs', [stem1011 'B3_P3.fcs'])};
+   0.2,  {DataFile('fcs', [stem1011 'B4_P3.fcs'])}}};
  {'Highs';'BaseDox';{'+', '-'};
-  {10,   {DataFile(0, [stem1011 'C3_P3.fcs'])};
-   20,   {DataFile(0, [stem1011 'C4_P3.fcs'])}};
-  {10,   {DataFile(0, [stem1011 'B9_P3.fcs'])};
-   20,   {DataFile(0, [stem1011 'B10_P3.fcs'])}}};
+  {10,   {DataFile('fcs', [stem1011 'C3_P3.fcs'])};
+   20,   {DataFile('fcs', [stem1011 'C4_P3.fcs'])}};
+  {10,   {DataFile('fcs', [stem1011 'B9_P3.fcs'])};
+   20,   {DataFile('fcs', [stem1011 'B10_P3.fcs'])}}};
  };
 
 good_file_pairs_pm2 = {...
  {'Lows';'BaseDox';{'+', '-'};
   % First set is the matching "plus" conditions
-  {0.1,  {DataFile(0, [stem1011 'B9_P3.fcs'])}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
-   0.2,  {DataFile(0, [stem1011 'B10_P3.fcs'])}};
+  {0.1,  {DataFile('fcs', [stem1011 'B9_P3.fcs'])}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
+   0.2,  {DataFile('fcs', [stem1011 'B10_P3.fcs'])}};
   % Second set is the matching "minus" conditions 
-  {0.1,  {DataFile(0, [stem1011 'B3_P3.fcs'])};
-   0.2,  {DataFile(0, [stem1011 'B4_P3.fcs'])}}};
+  {0.1,  {DataFile('fcs', [stem1011 'B3_P3.fcs'])};
+   0.2,  {DataFile('fcs', [stem1011 'B4_P3.fcs'])}}};
  {'Highs';'BaseDox';{'+', '-'};
-  {10,   {DataFile(0, [stem1011 'C3_P3.fcs'])};
-   20,   {DataFile(0, [stem1011 'C4_P3.fcs'])}};
-  {10,   {DataFile(0, [stem1011 'B9_P3.fcs'])};
-   20,   {DataFile(0, [stem1011 'B10_P3.fcs'])}}};
+  {10,   {DataFile('fcs', [stem1011 'C3_P3.fcs'])};
+   20,   {DataFile('fcs', [stem1011 'C4_P3.fcs'])}};
+  {10,   {DataFile('fcs', [stem1011 'B9_P3.fcs'])};
+   20,   {DataFile('fcs', [stem1011 'B10_P3.fcs'])}}};
  {'Extra';'BaseDox';{'+', '-'};
-  {10,   {DataFile(0, [stem1011 'C3_P3.fcs'])};
-   20,   {DataFile(0, [stem1011 'C4_P3.fcs'])}};
-  {10,   {DataFile(0, [stem1011 'B9_P3.fcs'])};
-   20,   {DataFile(0, [stem1011 'B10_P3.fcs'])}}};
+  {10,   {DataFile('fcs', [stem1011 'C3_P3.fcs'])};
+   20,   {DataFile('fcs', [stem1011 'C4_P3.fcs'])}};
+  {10,   {DataFile('fcs', [stem1011 'B9_P3.fcs'])};
+   20,   {DataFile('fcs', [stem1011 'B10_P3.fcs'])}}};
  };
 
 % Good if batch_names contains three elements
 good_file_pairs_pm3 = {...
  {'Lows';'BaseDox';{'+', '-', 'extra'};
   % First set is the matching "plus" conditions
-  {0.1,  {DataFile(0, [stem1011 'B9_P3.fcs'])}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
-   0.2,  {DataFile(0, [stem1011 'B10_P3.fcs'])}};
+  {0.1,  {DataFile('fcs', [stem1011 'B9_P3.fcs'])}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
+   0.2,  {DataFile('fcs', [stem1011 'B10_P3.fcs'])}};
   % extra set
-  {0.1,  {DataFile(0, [stem1011 'B9_P3.fcs'])};
-   0.2,  {DataFile(0, [stem1011 'B10_P3.fcs'])}};
+  {0.1,  {DataFile('fcs', [stem1011 'B9_P3.fcs'])};
+   0.2,  {DataFile('fcs', [stem1011 'B10_P3.fcs'])}};
   % Second set is the matching "minus" conditions 
-  {0.1,  {DataFile(0, [stem1011 'B3_P3.fcs'])};
-   0.2,  {DataFile(0, [stem1011 'B4_P3.fcs'])}}};
+  {0.1,  {DataFile('fcs', [stem1011 'B3_P3.fcs'])};
+   0.2,  {DataFile('fcs', [stem1011 'B4_P3.fcs'])}}};
  {'Highs';'BaseDox';{'+', '-', 'extra'};
-  {10,   {DataFile(0, [stem1011 'C3_P3.fcs'])};
-   20,   {DataFile(0, [stem1011 'C4_P3.fcs'])}};
-  {0.1,  {DataFile(0, [stem1011 'B9_P3.fcs'])};
-   0.2,  {DataFile(0, [stem1011 'B10_P3.fcs'])}};
-  {10,   {DataFile(0, [stem1011 'B9_P3.fcs'])};
-   20,   {DataFile(0, [stem1011 'B10_P3.fcs'])}}};
+  {10,   {DataFile('fcs', [stem1011 'C3_P3.fcs'])};
+   20,   {DataFile('fcs', [stem1011 'C4_P3.fcs'])}};
+  {0.1,  {DataFile('fcs', [stem1011 'B9_P3.fcs'])};
+   0.2,  {DataFile('fcs', [stem1011 'B10_P3.fcs'])}};
+  {10,   {DataFile('fcs', [stem1011 'B9_P3.fcs'])};
+   20,   {DataFile('fcs', [stem1011 'B10_P3.fcs'])}}};
  };
 
 % Execute the actual analysis to see if an error gets thrown

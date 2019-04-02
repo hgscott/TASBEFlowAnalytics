@@ -60,13 +60,13 @@ function CM = ColorModel(beadfile, blankfile, channels, colorfiles, pairfiles, s
         elseif nargin == 5 || nargin == 6
             % constructor initialized fields
             % same FPs in the same order
-            CM.BeadFile = beadfile;
-            if nargin == 6, 
-                CM.SizeBeadFile = sizebeadfile;
+            CM.BeadFile = ensureDataFile(beadfile);
+            if nargin == 6 
+                CM.SizeBeadFile = ensureDataFile(sizebeadfile);
             else 
                 CM.SizeBeadFile = [];
             end
-            CM.BlankFile = blankfile;
+            CM.BlankFile = ensureDataFile(blankfile);
             % check if colorfiles match processed channels
             channels_ok = true;
             if numel(colorfiles)>numel(channels), channels_ok = false;
@@ -86,7 +86,15 @@ function CM = ColorModel(beadfile, blankfile, channels, colorfiles, pairfiles, s
                 TASBESession.error('TASBE:ColorModel','OneColorfilePerChannel','Must have one-to-one match between colors and channels (unless there is no more than 1 processed channel)');
             end
             CM.Channels = channels;
+            for i=1:numel(colorfiles)
+                colorfiles{i} = ensureDataFile(colorfiles{i});
+            end
             CM.ColorFiles = colorfiles;
+            for i=1:numel(pairfiles)
+                pairfile = pairfiles{i};
+                pairfile{end} = ensureDataFile(pairfile{end});
+                pairfiles{i} = pairfile;
+            end
             CM.ColorPairFiles = pairfiles;
         end
         

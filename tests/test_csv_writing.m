@@ -16,7 +16,7 @@ CM = load_or_make_testing_colormodel();
 bins = BinSequence(4,0.1,10,'log_bins');
 AP = AnalysisParameters(bins,{});
 stem1011 = '../TASBEFlowAnalytics-Tutorial/example_assay/LacI-CAGop_';
-experiment = Experiment('test','', {0,{DataFile(0, [stem1011 'B3_P3.fcs'])}});
+experiment = Experiment('test','', {0,{DataFile('fcs', [stem1011 'B3_P3.fcs'])}});
 data = read_data(CM, experiment, AP);
 writeFcsPointCloudCSV(CM, {{'filename'}}, data);
 

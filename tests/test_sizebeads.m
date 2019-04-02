@@ -13,20 +13,20 @@ function [CM] = setupSizePeakCM()
 
 stem0312 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_';
 
-beadfile = DataFile(0,[stem0312 'Beads_P3.fcs']);
-blankfile = DataFile(0,[stem0312 'blank_P3.fcs']);
+beadfile = DataFile('fcs',[stem0312 'Beads_P3.fcs']);
+blankfile = DataFile('fcs',[stem0312 'blank_P3.fcs']);
 
 % Create one channel / colorfile pair for each color
 channels = {}; colorfiles = {};
 channels{1} = Channel('FITC-A', 488, 515, 20);
 channels{1} = setPrintName(channels{1}, 'EYFP'); % Name to print on charts
 channels{1} = setLineSpec(channels{1}, 'y'); % Color for lines, when needed
-colorfiles{1} = DataFile(0,[stem0312 'EYFP_P3.fcs']); % If there is only one channel, the color file is optional
+colorfiles{1} = DataFile('fcs',[stem0312 'EYFP_P3.fcs']); % If there is only one channel, the color file is optional
 
 channels{2} = Channel('Pacific Blue-A', 405, 450, 50);
 channels{2} = setPrintName(channels{2}, 'EBFP2');
 channels{2} = setLineSpec(channels{2}, 'b');
-colorfiles{2} = DataFile(0,[stem0312 'ebfp2_P3.fcs']);
+colorfiles{2} = DataFile('fcs',[stem0312 'ebfp2_P3.fcs']);
 
 channels{3} = Channel('FSC-A', 488, 488, 10);
 channels{3} = setPrintName(channels{3}, 'FSC');
@@ -39,10 +39,10 @@ channels{4} = setLineSpec(channels{4}, 'r');
 % Multi-color controls are used for converting other colors into ERF units
 % Any channel without a control mapping it to ERF will be left in arbirary units.
 colorpairfiles = {};
-colorpairfiles{1} = {channels{1}, channels{2}, channels{2}, DataFile(0,[stem0312 'mkate_EBFP2_EYFP_P3.fcs'])};
+colorpairfiles{1} = {channels{1}, channels{2}, channels{2}, DataFile('fcs',[stem0312 'mkate_EBFP2_EYFP_P3.fcs'])};
 
 sizebeadfile = '../TASBEFlowAnalytics-Tutorial/example_controls/180614_PPS6K_A02.fcs';
-sizedatafile = DataFile(0,sizebeadfile);
+sizedatafile = DataFile('fcs',sizebeadfile);
 
 CM = ColorModel(beadfile, blankfile, channels, colorfiles, colorpairfiles, sizedatafile);
 
@@ -109,8 +109,8 @@ AP=setUseAutoFluorescence(AP,false');
 
 % Make a map of condition names to file sets
 file_pairs = {...
-  'Dox 0.1',    {DataFile(0,[stem1011 'B3_P3.fcs'])};
-  'Dox 2000.0', {DataFile(0,[stem1011 'C4_P3.fcs'])};
+  'Dox 0.1',    {DataFile('fcs',[stem1011 'B3_P3.fcs'])};
+  'Dox 2000.0', {DataFile('fcs',[stem1011 'C4_P3.fcs'])};
     };
 
 [results, sampleresults] = per_color_constitutive_analysis(CM,file_pairs,{'EBFP2','EYFP','FSC','SSC'},AP);

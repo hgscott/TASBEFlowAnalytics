@@ -59,7 +59,7 @@ function [filename] = getExcelFilename(extractor, row)
     
     datafiles = {};
     for p=1:numel(names)
-        datafile = DataFile(0, names{p}); % would need to change when adding csv feature
+        datafile = DataFile('fcs', names{p}); % would need to change when adding csv feature
         datafiles{end+1} = datafile;
     end
     

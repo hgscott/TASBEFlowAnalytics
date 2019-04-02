@@ -36,9 +36,9 @@ AP=setUseAutoFluorescence(AP,false');
 
 % Make a map of condition names to file sets
 file_pairs = {...
-  'Dox 0.1/0.2',    {DataFile(0, [stem1011 'B3_P3.fcs']), DataFile(0, [stem1011 'B4_P3.fcs'])}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
-  'Dox 0.5/1.0',    {DataFile(0, [stem1011 'B5_P3.fcs']), DataFile(0, [stem1011 'B6_P3.fcs'])};
-  'Dox 2.0/5.0',    {DataFile(0, [stem1011 'B7_P3.fcs']), DataFile(0, [stem1011 'B8_P3.fcs'])};
+  'Dox 0.1/0.2',    {DataFile('fcs', [stem1011 'B3_P3.fcs']), DataFile('fcs', [stem1011 'B4_P3.fcs'])}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
+  'Dox 0.5/1.0',    {DataFile('fcs', [stem1011 'B5_P3.fcs']), DataFile('fcs', [stem1011 'B6_P3.fcs'])};
+  'Dox 2.0/5.0',    {DataFile('fcs', [stem1011 'B7_P3.fcs']), DataFile('fcs', [stem1011 'B8_P3.fcs'])};
 % Remove these to let it be faster:
 %  'Dox 10.0/20.0',   {[stem1011 'B9_B09_P3.fcs'], [stem1011 'B10_B10_P3.fcs']};
 %  'Dox 50.0/100.0',   {[stem1011 'B11_B11_P3.fcs'], [stem1011 'B12_B12_P3.fcs']};

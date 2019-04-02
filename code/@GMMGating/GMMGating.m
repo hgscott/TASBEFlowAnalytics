@@ -24,6 +24,8 @@ if nargin==0, return; end;
 % AGP = AutogateParameters
 % Model is a gmdistribution
 
+file = ensureDataFile(file);
+
 [~, fcshdr, rawfcs] = fca_read(file);
 
 if(nargin<2), AGP = AutogateParameters(); end;
