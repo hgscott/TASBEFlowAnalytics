@@ -13,7 +13,7 @@
 function CM=resolve(CM)
     % fill in channel descriptors from designated file (default = beadfile)
     if TASBEConfig.isSet('flow.channel_template_file'), 
-        template = TASBEConfig.get('flow.channel_template_file');
+        template = ensureDataFile(TASBEConfig.get('flow.channel_template_file'));
     else template = CM.BeadFile; 
     end;
     [fcsdat fcshdr] = fca_read(template);
