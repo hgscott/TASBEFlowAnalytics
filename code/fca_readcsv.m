@@ -133,11 +133,10 @@ if nargin > 1
     
     % Read in filenames
     file_match = 0;
-    filename_to_compare = strrep(strrep(filename, '/', ''), '\', '');
+    filename_to_compare = strrep(filename, '\', '/');
     for i=1:numel(filenames)
         temp_filename = filenames{i};
-        temp_filename = strrep(temp_filename, '\', '');
-        temp_filename = strrep(temp_filename, '/', '');
+        temp_filename = strrep(temp_filename, '\', '/');
         if strcmp(temp_filename, filename_to_compare)
             file_match = 1;
             break
