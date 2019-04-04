@@ -87,6 +87,7 @@ else
 end
 
 [fcsraw fcshdr fcsdat] = fca_read(beadfile);
+if(isempty(fcshdr)), TASBESession.error('TASBE:Beads','MissingBeadFile','Cannot calibrate without beads'); end;
 bead_data = get_fcs_color(fcsdat,fcshdr,erfChannelName);
 segment_data = get_fcs_color(fcsdat,fcshdr,segmentName);
 
