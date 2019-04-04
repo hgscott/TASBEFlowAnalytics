@@ -19,6 +19,8 @@ n_conditions = size(batch_description,1);
 if size(batch_description, 2) ~= 2
     TASBESession.error('TASBE:Analysis', 'DimensionMismatch', 'Batch analysis invoked with incorrect number of columns. Make sure batch_file is a n X 2 matrix.');
 end
+% ensure all files referenced are DataFiles
+batch_description(:,2) = cellfun(@(entry)({cellfun(@(f)({ensureDataFile(f)}),entry)}),batch_description(:,2));
 
 data = cell(n_conditions,1);
 n_removed = data; n_events = data;
