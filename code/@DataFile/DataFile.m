@@ -12,28 +12,28 @@
 % package distribution's top directory.
 
 function DF = DataFile(type, file, header)
-    if nargin < 1
-        TASBESession.error('TASBE:DataFile','Underspecified','DataFile object can not be created without type and file');
-    end
-    
+    % map of file types to CSVs
     key = {{'csv',{'.csv'}}, {'fcs',{'.fcs','.lmd'}}};
     
-    if nargin < 2
-        %Create obj with one arguement if file has an extension of 'fcs'
-        DF.type = 'fcs';
-        DF.file = type;
+    if nargin == 0 % blank initialization
+        DF.type = '';
+        DF.file = '';
         DF.header = '';
-        [~, ~, fext] = fileparts(DF.file);
-        for i=1:numel(key)
-            sub_key = key{i};
-            if strcmp(sub_key{1}, DF.type)
-                if isempty(find(strcmpi(sub_key{2}, fext), 1))
-                    TASBESession.error('TASBE:DataFile','Underspecified','Only files with a fcs extension can create a DataFile obj with no inputted type');
+    elseif nargin==1 % file name only
+            %Create obj with one arguement if file has an extension of 'fcs'
+            DF.type = 'fcs';
+            DF.file = type;
+            DF.header = '';
+            [~, ~, fext] = fileparts(DF.file);
+            for i=1:numel(key)
+                sub_key = key{i};
+                if strcmp(sub_key{1}, DF.type)
+                    if isempty(find(strcmpi(sub_key{2}, fext), 1))
+                        TASBESession.error('TASBE:DataFile','Underspecified','Only files with a fcs extension can create a DataFile obj with no inputted type');
+                    end
                 end
             end
-        end
-        
-    else
+    else % full constructor
         DF.type = type;
         DF.file = file;
         DF.header = '';
