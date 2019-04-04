@@ -74,6 +74,7 @@ bin_centers = bin_edges(1:n)*10.^(bin_increment/2);
 segmentName = umChannelName;
 
 [~, fcshdr, fcsdat] = fca_read(beadfile);
+if(isempty(fcshdr)), TASBESession.error('TASBE:SizeBeads','MissingBeadFile','Cannot calibrate without beads'); end;
 bead_data = get_fcs_color(fcsdat,fcshdr,umChannelName);
 segment_data = get_fcs_color(fcsdat,fcshdr,segmentName);
 
