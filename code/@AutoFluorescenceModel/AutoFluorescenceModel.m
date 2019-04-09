@@ -15,19 +15,24 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function AFM = AutoFluorescenceModel(data)
+function AFM = AutoFluorescenceModel(channel,data)
     if nargin == 0
         AFM.af_mean = 0;
         AFM.af_std = 0;
         AFM.n = 0;
-    elseif nargin == 1
-        % to exclude outliers, drop top and bottom 2.5% of data
+        AFM.channel = [];
+    elseif nargin >= 2
+        % to exclude outliers, drop top and bottom fractions of data
         sorted = sort(data);
-        dropsize = ceil(numel(sorted)*0.025);
+        dropFraction = TASBEConfig.get('autofluorescence.dropFraction');
+        dropsize = ceil(numel(sorted)*dropFraction);
         trimmed = sorted(dropsize:(numel(sorted)-dropsize));
         AFM.af_mean = mean(trimmed);
         AFM.af_std = std(trimmed);
         AFM.n = numel(trimmed);
+        AFM.channel = channel;
+    else
+        TASBESession.error('AutoFluorescence','MissingArgument','Autofluorescence Model constructor requires two arguments');
     end
     AFM.af_mean_ERF = [];
     AFM.af_std_ERF = [];

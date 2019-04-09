@@ -132,19 +132,25 @@ classdef TASBEConfig
 %             defaults('gating.plotSize') = 'calibration.heatmapPlotSize';
             
             % Autofluorescence removal
-%             s.autofluorescence = struct();
-%             s.autofluorescence.dropFractions = 0.025;   % What fraction of the extrema should be dropped before computing autofluorescence?
-%             s.autofluorescence.plot = [];               % Should an autofluorescence plot be created?
-%             defaults('autofluorescence.plot') = 'calibration.plot';
-%             s.autofluorescence.visiblePlots = [];       % should autofluorescence plot be visible, or just created?
-%             defaults('autofluorescence.visiblePlots') = 'calibration.visiblePlots';
-%             s.autofluorescence.plotPath = [];           % where should autofluorescence plot go?
-%             defaults('autofluorescence.plotPath') = 'calibration.plotPath';
-%             s.autofluorescence.plotSize = [];           % What size (in inches) should autofluorescence plot be?
-%             defaults('autofluorescence.plotSize') = 'calibration.graphPlotSize';
+            s.autofluorescence = struct(); doc.autofluorescence = struct();
+            doc.autofluorescence.about = 'Settings for autofluorescence models';
+            doc.autofluorescence.dropFraction = 'Fraction of extrema (high and low) to drop before computing autofluorescence';
+            s.autofluorescence.dropFraction = 0.025;
+            doc.autofluorescence.plot = 'Determines whether autofluorescence plots should be created';
+            s.autofluorescence.plot = [];
+            defaults('autofluorescence.plot') = 'calibration.plot';
+            doc.autofluorescence.visiblePlots = 'If true, autofluorescence plots are visible; otherwise, they are hidden for later saving';
+            s.autofluorescence.visiblePlots = [];
+            defaults('autofluorescence.visiblePlots') = 'calibration.visiblePlots';
+            doc.autofluorescence.plotPath = 'Location for autofluorescence plots';
+            s.autofluorescence.plotPath = [];
+            defaults('autofluorescence.plotPath') = 'calibration.plotPath';
+            doc.autofluorescence.plotSize = 'Size (in inches) [X Y] for autofluorescence figures';
+            s.autofluorescence.plotSize = [];
+            defaults('autofluorescence.plotSize') = 'calibration.graphPlotSize';
             
             % Spectral bleed compensation
-            s.compensation = struct();doc.compensation = struct();
+            s.compensation = struct(); doc.compensation = struct();
             doc.compensation.about = 'General settings for spectral bleed compensation plots';
             doc.compensation.minimumDrivenLevel = 'Uniformly ignores all less than this level of a.u.';
             s.compensation.minimumDrivenLevel = 1e2;    % uniformly ignore all less than this level of a.u. 
@@ -160,11 +166,11 @@ classdef TASBEConfig
             doc.compensation.visiblePlots = 'If true, compensation plots are visible; otherwise, they are hidden for later saving';
             s.compensation.visiblePlots = [];           % should compensation plot be visible, or just created?
             defaults('compensation.visiblePlots') = 'calibration.visiblePlots';
-            doc.compensation.plotPath = 'Default location for compensation plots';
+            doc.compensation.plotPath = 'Location for compensation plots';
             s.compensation.plotPath = [];               % where should compensation plot go?
             defaults('compensation.plotPath') = 'calibration.plotPath';
-            doc.compensation.plotSize = 'Default size (in inches) [X Y] for compensation figures';
-            s.compensation.plotSize = [];               % What size (in inches) should compensation figure be?
+            doc.compensation.plotSize = 'Size (in inches) [X Y] for compensation figures';
+            s.compensation.plotSize = [];
             defaults('compensation.plotSize') = 'calibration.heatmapPlotSize';
             
             % Beads

@@ -18,7 +18,6 @@ function CM = ColorModel(beadfile, blankfile, channels, colorfiles, pairfiles, s
         CM.ERF_channel=[];
         CM.um_channel_name = []; % Which channel is size on?  Normal is FSC-A; default is blank (meaning no such channel)
         CM.um_channel=[];
-        CM.autofluorescence_plot = 1; % Should the autofluorescence calibration plots be produced?
         CM.compensation_plot = 1;   % Should the color compenation calibration plots be produced?
         CM.translation_plot = 1 ;   % Should the color translation calibration plots be produced?
         CM.translation_channel_min = [];    % If set, all data below 10.^min(channel_id) is excluded from computation
