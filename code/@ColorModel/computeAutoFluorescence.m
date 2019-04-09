@@ -1,5 +1,5 @@
-% COMPUTEAUTOFLUORESCENCE returns an AutoFluorescenceModel object obtained
-% from an inputted ColorModel object.
+% COMPUTEAUTOFLUORESCENCE returns an array of AutoFluorescenceModel objects
+% obtained by processing channels on the ColorModel's blank control.
 %
 % Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
 % in the AUTHORS file in TASBE analytics package distribution's top directory.

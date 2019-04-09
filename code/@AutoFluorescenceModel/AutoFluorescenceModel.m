@@ -1,11 +1,13 @@
-% AutoFluorescenceModel constructs an AutoFluorescenceModel object
+% AutoFluorescenceModel constructs an AutoFluorescenceModel object for its
+% channel using statistics from the provided data.
 %
 % It is assumed that an array is used to associate this with channels
 %  af_mean          % linear mean in arbitrary FACS units
 %  af_std           % linear std.dev. in arbitrary FACS units
-%  af_mean_ERF=NaN % linear mean in ERF
-%  af_std_ERF=NaN  % linear std.dev. in ERF
+%  af_mean_ERF=NaN  % linear mean in ERF
+%  af_std_ERF=NaN   % linear std.dev. in ERF
 %  n                % number of points used in this computation
+%  channel          % pointer to the channel for which this is a model
 %
 % Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
 % in the AUTHORS file in TASBE analytics package distribution's top directory.

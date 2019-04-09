@@ -1,5 +1,5 @@
-% plot_autofluorescence_control returns an AutoFluorescenceModel object obtained
-% from an inputted ColorModel object.
+% plot_autofluorescence_control generates a histogram showing the 
+% how an AutoFluorescenceModel was generated from a non-fluorescent control
 %
 % Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
