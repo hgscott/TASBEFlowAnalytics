@@ -33,6 +33,16 @@ function [filename] = getExcelFilename(extractor, row)
         stem = '';
     end
     
+    % Get csv header (if applicable)
+    try
+        header = extractor.getExcelValuePos(template_pos{1}, template_pos{2}+1, template_pos{3}+5, 'char');
+        [filepath,name,ext] = fileparts(header);
+        filepath = make_filename_absolute(stem, filepath);
+        header = [filepath name ext];
+    catch
+        header = '';
+    end
+    
     names = {};
     
     % Extracting the filenames
@@ -59,7 +69,11 @@ function [filename] = getExcelFilename(extractor, row)
     
     datafiles = {};
     for p=1:numel(names)
-        datafile = DataFile('fcs', names{p}); % would need to change when adding csv feature
+        if ~isempty(header)
+            datafile = DataFile('csv', names{p}, header);
+        else
+            datafile = DataFile('fcs', names{p});
+        end
         datafiles{end+1} = datafile;
     end
     
