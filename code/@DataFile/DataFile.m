@@ -29,7 +29,7 @@ function DF = DataFile(type, file, header)
                 sub_key = key{i};
                 if strcmp(sub_key{1}, DF.type)
                     if isempty(find(strcmpi(sub_key{2}, fext), 1))
-                        TASBESession.error('TASBE:DataFile','Underspecified','Only files with a fcs extension can create a DataFile obj with no inputted type');
+                        TASBESession.error('TASBE:DataFile','Underspecified','Only files with a fcs extension can create a DataFile obj with no supplied type');
                     end
                 end
             end
