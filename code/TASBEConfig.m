@@ -114,6 +114,41 @@ classdef TASBEConfig
             doc.gating.about = 'General settings for GMM Gating';
             doc.gating.fixedSeed = 'When true, controls the random seed for GMM Gating';
             s.gating.fixedSeed = true;
+            % gating control parameters
+            doc.gating.deviations = 'Number of standard deviations within which gate selects data';
+            s.gating.deviations = 2.0;
+            doc.gating.tightening = 'Amount that selected gate components are further tightened (range: [0,1])';
+            s.gating.tightening = 0.0;
+            doc.gating.kComponents = 'Number of gaussian components in a gate';
+            s.gating.kComponents = 2;
+            doc.gating.channelNames = 'Channels to use for gating'; % used to also include 'FSC-H','FSC-W','SSC-H','SSC-W'
+            s.gating.channelNames = {'FSC-A','SSC-A'}; 
+            doc.gating.fraction = 'Fraction of range considered saturated and thus excluded from computation';
+            s.gating.fraction = 0.95;
+            doc.gating.selectedComponents = 'Set to force selection of particular components';
+            s.gating.selectedComponents = [];
+            % gating custom plotting parameters
+            doc.gating.showNonselected = 'When true, show all gate components; when false, selected components only.';
+            s.gating.showNonselected = true;
+            doc.gating.largeOutliers = 'When true, plot gate outliers with large dots';
+            s.gating.largeOutliers = true;
+            doc.gating.range = 'Force gate heatmap plotting range of [x_min y_min; x_max y_max]';
+            s.gating.range = [];
+            doc.gating.density = 'Gate heatmap style: set to 1 for image, 0 for contour';
+            s.gating.density = 1;
+            % gating standard plotting parameters
+            doc.gating.plot = 'Determines whether gating plots should be created';
+            s.gating.plot = [];
+            defaults('gating.plot') = 'calibration.plot';
+            doc.gating.visiblePlots = 'If true, gating plots are visible; otherwise, they are hidden for later saving';
+            s.gating.visiblePlots = [];
+            defaults('gating.visiblePlots') = 'calibration.visiblePlots';
+            doc.gating.plotPath = 'Location for gating plots';
+            s.gating.plotPath = [];                 % where should gating plot go?
+            defaults('gating.plotPath') = 'calibration.plotPath';
+            doc.gating.plotSize = 'Size (in inches) [X Y] for gating figures';
+            s.gating.plotSize = [];                 % What size (in inches) should gating plot be?
+            defaults('gating.plotSize') = 'calibration.heatmapPlotSize';
             
 %             s.gating.fractionFromExtrema = 0.95;    % Fraction of range considered not-saturated and thus included in gating
 %             s.gating.saturationWarning = 0.3;       % Warn about saturation distorting gates if fraction non-extrema less than this level
@@ -123,13 +158,6 @@ classdef TASBEConfig
 %             s.gating.tightening = [];               % If set, amount that selected components are further tightened (range: [0,1])
 %             s.gating.plot = [];                     % Should a gating plot be created?
 %             s.gating.showNonselected = true;        % Should plot show only the selected component(s), or all of them?
-%             defaults('gating.plot') = 'calibration.plot';
-%             s.gating.visiblePlots = [];             % should gating plot be visible, or just created?
-%             defaults('gating.visiblePlots') = 'calibration.visiblePlots';
-%             s.gating.plotPath = [];                 % where should gating plot go?
-%             defaults('gating.plotPath') = 'calibration.plotPath';
-%             s.gating.plotSize = [];                 % What size (in inches) should gating plot be?
-%             defaults('gating.plotSize') = 'calibration.heatmapPlotSize';
             
             % Autofluorescence removal
             s.autofluorescence = struct(); doc.autofluorescence = struct();

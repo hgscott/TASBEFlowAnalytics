@@ -109,8 +109,7 @@ function [CM] = make_color_model_excel(extractor)
     end
     
     % Autodetect gating with an N-dimensional gaussian-mixture-model
-    AGP = AutogateParameters();
-    autogate = GMMGating(blank_file,AGP,TASBEConfig.get('plots.plotPath'));
+    autogate = GMMGating(blank_file);
     
     % Dealing with channels 
     print_names = {};

@@ -14,8 +14,7 @@ beadfile = [stem0312 'Beads_P3.fcs'];
 blankfile = [stem0312 'blank_P3.fcs'];
 
 % Autodetect gating with an N-dimensional gaussian-mixture-model
-AGP = AutogateParameters();
-autogate = GMMGating(blankfile,AGP,'/tmp/plots');
+autogate = GMMGating(blankfile);
 
 % Create one channel / colorfile pair for each color
 channels = {}; colorfiles = {};
@@ -118,8 +117,7 @@ beadfile = DataFile([stem0312 'Beads_P3.fcs']);
 blankfile = DataFile([stem0312 'blank_P3.fcs']);
 
 % Autodetect gating with an N-dimensional gaussian-mixture-model
-AGP = AutogateParameters();
-autogate = GMMGating(blankfile,AGP,'/tmp/plots');
+autogate = GMMGating(blankfile);
 
 % Create one channel / colorfile pair for each color
 channels = {}; colorfiles = {};
