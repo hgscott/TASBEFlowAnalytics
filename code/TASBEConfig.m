@@ -315,7 +315,7 @@ classdef TASBEConfig
             doc.OutputSettings.PlotTickMarks = 'If true, displays tick marks';
             s.OutputSettings.PlotTickMarks = false;
             doc.OutputSettings.FigureSize = 'Size (in inches) [X Y] for figures';
-            s.OutputSettings.FigureSize = [];
+            s.OutputSettings.FigureSize = [5 3.66];
             doc.OutputSettings.csvfile = 'May be either a fid (file identifier) or a string';
             s.OutputSettings.csvfile = []; 
             

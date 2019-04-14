@@ -14,6 +14,7 @@ cfp_units = '';
 
 stemName = TASBEConfig.get('OutputSettings.StemName');
 directory = TASBEConfig.get('plots.plotPath');
+figsize = TASBEConfig.get('OutputSettings.FigureSize');
 
 AP = sampleresults{1}.AnalysisParameters;
 channel_set = getChannelNames(AP);
@@ -23,7 +24,7 @@ replicates = sampleresults; % rename, for historical reasons
 %%% Bin count plots:
 % Counts by CFP level:
 maxcount = 1e1;
-h = figure('PaperPosition',[1 1 5 3.66]);
+h = figure('PaperPosition',[1 1 figsize]);
 set(h,'visible','off');
 for i=1:n_colors
     color = getLineSpec(getChannel(AP,channel_set{i}));
