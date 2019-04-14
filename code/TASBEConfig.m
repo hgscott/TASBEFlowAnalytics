@@ -123,6 +123,7 @@ classdef TASBEConfig
             s.gating.kComponents = 2;
             doc.gating.channelNames = 'Channels to use for gating'; % used to also include 'FSC-H','FSC-W','SSC-H','SSC-W'
             s.gating.channelNames = {'FSC-A','SSC-A'}; 
+%             s.gating.saturationWarning = 0.3;       % Warn about saturation distorting gates if fraction non-extrema less than this level
             doc.gating.fraction = 'Fraction of range considered saturated and thus excluded from computation';
             s.gating.fraction = 0.95;
             doc.gating.selectedComponents = 'Set to force selection of particular components';
@@ -150,14 +151,6 @@ classdef TASBEConfig
             s.gating.plotSize = [];                 % What size (in inches) should gating plot be?
             defaults('gating.plotSize') = 'calibration.heatmapPlotSize';
             
-%             s.gating.fractionFromExtrema = 0.95;    % Fraction of range considered not-saturated and thus included in gating
-%             s.gating.saturationWarning = 0.3;       % Warn about saturation distorting gates if fraction non-extrema less than this level
-%             s.gating.numComponents = 2;             % number of gaussian components searched for
-%             s.gating.rankedComponents = 1;          % Array of which components will be selected, in order of tightness
-%             s.gating.deviations = 2.0;              % number of standard deviations out the gaussian that will be allowed
-%             s.gating.tightening = [];               % If set, amount that selected components are further tightened (range: [0,1])
-%             s.gating.plot = [];                     % Should a gating plot be created?
-%             s.gating.showNonselected = true;        % Should plot show only the selected component(s), or all of them?
             
             % Autofluorescence removal
             s.autofluorescence = struct(); doc.autofluorescence = struct();
@@ -198,7 +191,7 @@ classdef TASBEConfig
             s.compensation.plotPath = [];               % where should compensation plot go?
             defaults('compensation.plotPath') = 'calibration.plotPath';
             doc.compensation.plotSize = 'Size (in inches) [X Y] for compensation figures';
-            s.compensation.plotSize = [];
+            s.compensation.plotSize = [6 4];
             defaults('compensation.plotSize') = 'calibration.heatmapPlotSize';
             
             % Beads
