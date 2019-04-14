@@ -143,7 +143,8 @@ for i=1:2:n_channels,
     if ~AGP.visible, set(h,'visible','off'); end;
     %smoothhist2D([channel_data{1} channel_data{2}],10,[200, 200],[],type,range,largeoutliers);
     smoothhist2D([channel_data(:,i) channel_data(:,i+1)],5,[500, 500],[],type,AGP.range,AGP.largeoutliers);
-    xlabel(clean_for_latex(AGP.channel_names{i})); ylabel(clean_for_latex(AGP.channel_names{i+1}));
+    xlabel([clean_for_latex(AGP.channel_names{i}) ' a.u.']); 
+    ylabel([clean_for_latex(AGP.channel_names{i+1}) ' a.u.']);
     title('2D Gaussian Gate Fit');
     hold on;
 
