@@ -16,7 +16,7 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function C = Channel(name, laser, filterC, filterW, pseudo)
+function C = Channel(name, laser, filterC, filterW, pseudo,unprocessed)
     if nargin == 0 
         C.name ='';
         C.Laser = 0;
@@ -36,7 +36,7 @@ function C = Channel(name, laser, filterC, filterW, pseudo)
         end
         C.Units = 'a.u.';
         % Warn if we're seeing unspecified channels
-        if(C.Laser==0 || C.FilterCenter==0 || C.FilterWidth==0),
+        if((nargin<6 || ~unprocessed) && (C.Laser==0 || C.FilterCenter==0 || C.FilterWidth==0)),
             TASBESession.warn('TASBE:Channel','Underspecified','Channel %s has unspecified laser and/or filter.  Unspecified channels may be confused together.',C.name);
         end
     end
@@ -44,12 +44,17 @@ function C = Channel(name, laser, filterC, filterW, pseudo)
     C.description = []; % file descriptor: will get filled in by colormodel resolution
     C.LineSpec='';
     C.PrintName='';
-    C.unprocessed=false; % set to true for FSC/SSC channels
-    if(strcmp(C.name,'FSC') || strcmp(C.name,'FSC-A') || strcmp(C.name,'FSC-H') || strcmp(C.name,'FSC-W') || ...
-        strcmp(C.name,'SSC') || strcmp(C.name,'SSC-A') || strcmp(C.name,'SSC-H') || strcmp(C.name,'SSC-W'))
-        TASBESession.notify('TASBE:Channel','UnprocessedChannel','Channel %s has been automatically detected as unprocessed from its name',C.name);
-        C.unprocessed=true;
+    if nargin<6, 
+        C.unprocessed = false; 
+        if(strcmp(C.name,'FSC') || strcmp(C.name,'FSC-A') || strcmp(C.name,'FSC-H') || strcmp(C.name,'FSC-W') || ...
+            strcmp(C.name,'SSC') || strcmp(C.name,'SSC-A') || strcmp(C.name,'SSC-H') || strcmp(C.name,'SSC-W'))
+            TASBESession.notify('TASBE:Channel','UnprocessedChannel','Channel %s has been automatically detected as unprocessed from its name',C.name);
+            C.unprocessed=true;
+        end
+    else
+        C.unprocessed=unprocessed; % set to true for FSC/SSC channels
     end
+    
     C=class(C,'Channel');
 
 

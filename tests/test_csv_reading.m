@@ -143,10 +143,9 @@ function test_cm_extracolumn_used
     datafile = DataFile('csv', f1, header);
 
     CM = clear_filters(CM); % got to drop the filters because there's no FSC and SSC
-    Channel('Derived_Channel'
-    CM = add_derived_channel(CM,'Derived_Value');
+    CM = add_derived_channel(CM,'Derived_Value','Boolean');
     data = readfcs_compensated_ERF(CM,datafile,false,true);
-    NUM_CHANNELS = 3;
+    NUM_CHANNELS = 4;
     assert(all(size(data) == [50 NUM_CHANNELS]));
     % there is a non-a.u. channel, so it should all be treated as calibrated
-    assertElementsAlmostEqual(data(1,:),[4.2471e4 4.0352e4 3.7367e4],'absolute',1e0);
+    assertElementsAlmostEqual(data(1,:),[4.2471e4 4.0352e4 3.7367e4 1],'absolute',1e0);
