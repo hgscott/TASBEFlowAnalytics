@@ -89,7 +89,7 @@ for i=1:n_conditions
             results{i}.stds(j) =  geostd(bincenters',rawbincounts);
         else
             results{i}.means(j) = log10(get_bin_widths(getBins(AP)))/2+wmean(log10(bincenters'),rawbincounts); % KLUDGE FOR BOOLEAN
-            results{i}.stds(j) =  std(log10(bincenters'),rawbincounts);
+            results{i}.stds(j) =  wstd(log10(bincenters'),rawbincounts);
         end
         [results{i}.gmm_means(:,j), results{i}.gmm_stds(:,j), results{i}.gmm_weights(:,j)] = get_channel_gmm_results(rawresults{j}{i,1},'constitutive');
         % per-sample histograms
@@ -100,7 +100,7 @@ for i=1:n_conditions
                 samplestds(k,j) = geostd(bincenters',SR{k}.BinCounts);
             else
                 samplemeans(k,j) = log10(get_bin_widths(getBins(AP)))/2+wmean(log10(bincenters'),SR{k}.BinCounts);
-                samplestds(k,j) = std(log10(bincenters'),SR{k}.BinCounts);
+                samplestds(k,j) = wstd(log10(bincenters'),SR{k}.BinCounts);
             end
             color_column = find(colorModel,channel_named(colorModel,colors{j}));
             sample_gmm_means{k}(:,j) = SR{k}.PopComponentMeans(:,color_column);
