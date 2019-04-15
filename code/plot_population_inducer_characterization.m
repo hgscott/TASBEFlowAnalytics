@@ -14,6 +14,7 @@ ticks = TASBEConfig.get('OutputSettings.PlotTickMarks');
 stemName = TASBEConfig.get('OutputSettings.StemName');
 directory = TASBEConfig.get('plots.plotPath');
 deviceName = TASBEConfig.get('OutputSettings.DeviceName');
+figsize = TASBEConfig.get('OutputSettings.FigureSize');
 
 AP = getAnalysisParameters(results);
 n_components = getNumGaussianComponents(AP);
@@ -37,7 +38,7 @@ inducer_levels(which) = 10^lower_threshold;
 
 %%%% Inducer plots
 % Plain inducer plot:
-h = figure('PaperPosition',[1 1 5 3.66]);
+h = figure('PaperPosition',[1 1 figsize]);
 set(h,'visible','off');
 for i=1:n_components
     loglog(inducer_levels(:),10.^input_mean(i,:),'-','Color',hsv2rgb([hues(i) 1 0.9])); hold on;

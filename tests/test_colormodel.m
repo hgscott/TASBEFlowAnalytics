@@ -14,8 +14,7 @@ beadfile = [stem0312 'Beads_P3.fcs'];
 blankfile = [stem0312 'blank_P3.fcs'];
 
 % Autodetect gating with an N-dimensional gaussian-mixture-model
-AGP = AutogateParameters();
-autogate = GMMGating(blankfile,AGP,'/tmp/plots');
+autogate = GMMGating(blankfile);
 
 % Create one channel / colorfile pair for each color
 channels = {}; colorfiles = {};
@@ -46,8 +45,6 @@ colorpairfiles{1} = {channels{1}, channels{2}, channels{3}, [stem0312 'mkate_EBF
 colorpairfiles{2} = {channels{1}, channels{3}, channels{2}, [stem0312 'mkate_EBFP2_EYFP_P3.fcs']};
 
 CM = ColorModel(beadfile, blankfile, channels, colorfiles, colorpairfiles);
-CM=set_translation_plot(CM, true);
-CM=set_noise_plot(CM, true);
 
 TASBEConfig.set('beads.beadModel','SpheroTech RCP-30-5A'); % Entry from BeadCatalog.xls matching your beads
 TASBEConfig.set('beads.beadBatch','Lot AA01, AA02, AA03, AA04, AB01, AB02, AC01, GAA01-R'); % Entry from BeadCatalog.xls containing your lot
@@ -59,7 +56,7 @@ TASBEConfig.set('beads.rangeMin', 2);
 %TASBEConfig.set('beads.peakThreshold', 200);
 CM=set_ERF_channel_name(CM, 'FITC-A');
 % Ignore channel data for ith channel if below 10^[value(i)]
-CM=set_translation_channel_min(CM,[2,2,2]);
+TASBEConfig.set('colortranslation.channelMinimum',[2,2,2]);
 
 TASBEConfig.set('plots.plotPath', '/tmp/plots');
 CM = add_prefilter(CM,autogate);
@@ -118,8 +115,7 @@ beadfile = DataFile([stem0312 'Beads_P3.fcs']);
 blankfile = DataFile([stem0312 'blank_P3.fcs']);
 
 % Autodetect gating with an N-dimensional gaussian-mixture-model
-AGP = AutogateParameters();
-autogate = GMMGating(blankfile,AGP,'/tmp/plots');
+autogate = GMMGating(blankfile);
 
 % Create one channel / colorfile pair for each color
 channels = {}; colorfiles = {};
@@ -150,8 +146,6 @@ colorpairfiles{1} = {channels{1}, channels{2}, channels{3}, DataFile([stem0312 '
 colorpairfiles{2} = {channels{1}, channels{3}, channels{2}, DataFile([stem0312 'mkate_EBFP2_EYFP_P3.fcs'])};
 
 CM = ColorModel(beadfile, blankfile, channels, colorfiles, colorpairfiles);
-CM=set_translation_plot(CM, true);
-CM=set_noise_plot(CM, true);
 
 TASBEConfig.set('beads.beadModel','SpheroTech RCP-30-5A'); % Entry from BeadCatalog.xls matching your beads
 TASBEConfig.set('beads.beadBatch','Lot AA01, AA02, AA03, AA04, AB01, AB02, AC01, GAA01-R'); % Entry from BeadCatalog.xls containing your lot
@@ -163,7 +157,7 @@ TASBEConfig.set('beads.rangeMin', 2);
 %TASBEConfig.set('beads.peakThreshold', 200);
 CM=set_ERF_channel_name(CM, 'FITC-A');
 % Ignore channel data for ith channel if below 10^[value(i)]
-CM=set_translation_channel_min(CM,[2,2,2]);
+TASBEConfig.set('colortranslation.channelMinimum',[2,2,2]);
 
 TASBEConfig.set('plots.plotPath', '/tmp/plots');
 CM = add_prefilter(CM,autogate);

@@ -17,7 +17,6 @@ if (nargin < 4 || isempty(count_threshold)), count_threshold = 100; end;
 if (nargin < 5 || isempty(low_threshold)), low_threshold = 1; end;
 
 figsize = TASBEConfig.get('OutputSettings.FigureSize');
-if isempty(figsize), figsize = [1 1 6 4]; end;
 
 csvfile = TASBEConfig.get('OutputSettings.csvFile');
 description = TASBEConfig.get('OutputSettings.Description');
