@@ -69,7 +69,7 @@ function CM=resolve(CM)
         CM.compensation_model = computeColorCompensation(CM);
     end
     CM.initialized = 0.5; % enough to read in AU
-    if CM.compensation_plot, plot_compensated_controls(CM); end;
+    if TASBEConfig.get('compensation.plot'), plot_compensated_controls(CM); end;
     
     % finally, color translation model
     if TASBEConfig.isSet('calibration.overrideTranslation')

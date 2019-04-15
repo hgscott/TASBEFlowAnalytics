@@ -58,7 +58,7 @@ TASBEConfig.set('beads.rangeMin', 2);
 %TASBEConfig.set('beads.peakThreshold', 200);
 CM=set_ERF_channel_name(CM, 'FITC-A');
 % Ignore channel data for ith channel if below 10^[value(i)]
-CM=set_translation_channel_min(CM,[2,2,2]);
+TASBEConfig.set('colortranslation.channelMinimum',[2,2,2]);
 
 TASBEConfig.set('plots.plotPath', '/tmp/plots');
 CM = add_prefilter(CM,autogate);
@@ -161,7 +161,7 @@ TASBEConfig.set('beads.rangeMin', 2);
 %TASBEConfig.set('beads.peakThreshold', 200);
 CM=set_ERF_channel_name(CM, 'FITC-A');
 % Ignore channel data for ith channel if below 10^[value(i)]
-CM=set_translation_channel_min(CM,[2,2,2]);
+TASBEConfig.set('colortranslation.channelMinimum',[2,2,2]);
 
 TASBEConfig.set('plots.plotPath', '/tmp/plots');
 CM = add_prefilter(CM,autogate);

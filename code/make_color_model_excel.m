@@ -248,7 +248,7 @@ function [CM] = make_color_model_excel(extractor)
     CM = add_prefilter(CM,autogate);
     
     if ~isempty(transChannelMin) 
-        CM = set_translation_channel_min(CM,cell2mat(transChannelMin));
+        TASBEConfig.set('colortranslation.channelMinimum',cell2mat(transChannelMin));
     end
     
     if size_bead

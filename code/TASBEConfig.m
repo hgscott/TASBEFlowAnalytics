@@ -111,7 +111,7 @@ classdef TASBEConfig
             
             % Gating
             s.gating = struct(); doc.gating = struct();
-            doc.gating.about = 'General settings for GMM Gating';
+            doc.gating.about = 'Settings for GMM Gating';
             doc.gating.fixedSeed = 'When true, controls the random seed for GMM Gating';
             s.gating.fixedSeed = true;
             % gating control parameters
@@ -172,7 +172,7 @@ classdef TASBEConfig
             
             % Spectral bleed compensation
             s.compensation = struct(); doc.compensation = struct();
-            doc.compensation.about = 'General settings for spectral bleed compensation plots';
+            doc.compensation.about = 'Settings for spectral bleed compensation';
             doc.compensation.minimumDrivenLevel = 'Uniformly ignores all less than this level of a.u.';
             s.compensation.minimumDrivenLevel = 1e2;    % uniformly ignore all less than this level of a.u. 
             doc.compensation.maximumDrivenLevel = 'Uniformly ignores all greater than this level of a.u.';
@@ -194,6 +194,32 @@ classdef TASBEConfig
             s.compensation.plotSize = [6 4];
             defaults('compensation.plotSize') = 'calibration.heatmapPlotSize';
             
+            % Color translation
+            s.colortranslation = struct();
+            doc.colortranslation.about = 'Settings for color translation models';
+            doc.colortranslation.rangeMin = 'Minimum for color translation histogram range (log10 scale)';
+            s.colortranslation.rangeMin = 1;
+            doc.colortranslation.rangeMax = 'Maximum in histogram for computing color translation (log10 scale)';
+            s.colortranslation.rangeMax = 5.5;
+            doc.colortranslation.binIncrement = 'Resolution of histogram bins used for computing color translation (log10 scale)';
+            s.colortranslation.binIncrement = 0.1;
+            doc.colortranslation.minSamples = 'Minimum number of samples in a histogram bin for use in computing color translation';
+            s.colortranslation.minSamples = 100;
+            doc.colortranslation.channelMinimum = 'If set to [M1, M2, ...] trims channel i values below 10^Mi; otherwise drops those below 10^3';
+            s.colortranslation.channelMinimum = {};
+            doc.colortranslation.plot = 'Determines whether color translation plots should be created';
+            s.colortranslation.plot = [];
+            defaults('colortranslation.plot') = 'calibration.plot';
+            doc.colortranslation.visiblePlots = 'If true, color translation plots are visible; otherwise, they are hidden for later saving';
+            s.colortranslation.visiblePlots = [];
+            defaults('colortranslation.visiblePlots') = 'calibration.visiblePlots';
+            doc.colortranslation.plotPath = 'Location for color translation plots';
+            s.colortranslation.plotPath = [];
+            defaults('colortranslation.plotPath') = 'calibration.plotPath';
+            doc.colortranslation.plotSize = 'Size (in inches) [X Y] for color translation figures';
+            s.colortranslation.plotSize = [6 4];
+            defaults('colortranslation.plotSize') = 'calibration.heatmapPlotSize';
+
             % Beads
             s.beads = struct(); doc.beads = struct();
             doc.beads.about = 'Settings controlling the interpretation of color calibration beads';
@@ -207,7 +233,7 @@ classdef TASBEConfig
             s.beads.rangeMin = 2;
             doc.beads.rangeMax = 'Maximum value considered for bead peaks (log scale: 10^rangeMax)';
             s.beads.rangeMax = 7;
-            doc.beads.binIncrement = 'Resolution of histogram bins used for finding bead peaks';
+            doc.beads.binIncrement = 'Resolution of histogram bins used for finding bead peaks (log10 scale)';
             s.beads.binIncrement = 0.02;
             doc.beads.beadModel = 'Model of beads that are being used. Should match an option in BeadCatalog.xlsx';
             s.beads.beadModel = 'SpheroTech RCP-30-5A';
@@ -241,7 +267,7 @@ classdef TASBEConfig
             s.sizebeads.rangeMin = 2;
             doc.beads.rangeMax = 'Maximum value considered for size bead peaks (log scale: 10^rangeMax)';
             s.sizebeads.rangeMax = 7;
-            doc.sizebeads.binIncrement = 'Resolution of histogram bins used for finding size bead peaks';
+            doc.sizebeads.binIncrement = 'Resolution of histogram bins used for finding size bead peaks (log10 scale)';
             s.sizebeads.binIncrement = 0.02;
             doc.sizebeads.beadModel = 'Model of size beads that are being used. Should match an option in BeadCatalog.xlsx';
             s.sizebeads.beadModel = 'SpheroTech PPS-6K';
@@ -333,22 +359,6 @@ classdef TASBEConfig
             doc.template.displayErrors = 'If true, will display ALL of the TASBE warnings and errors from TemplateExtraction';
             s.template.displayErrors = false;
             
-            % Color translation
-%             s.colortranslation = struct();
-%             s.colortranslation.rangeMin = 3;                % bin minimum (log10 scale), universal minimum trim
-%             s.colortranslation.rangeMax = 5.5;              % bin maximum (log10 scale)
-%             s.colortranslation.binIncrement = 0.1;          % resolution of binning
-%             s.colortranslation.minSamples = 100;            % How many samples are needed for a bin's data to be used?
-%             s.colortranslation.trimMinimum = {};            % If set, trims individual channels via {{Channel,log10(min)} ...}
-%             s.colortranslation.plot = [];                   % Should an autofluorescence plot be created?
-%             defaults('colortranslation.plot') = 'calibration.plot';
-%             s.colortranslation.visiblePlots = [];           % should autofluorescence plot be visible, or just created?
-%             defaults('colortranslation.visiblePlots') = 'calibration.visiblePlots';
-%             s.colortranslation.plotPath = [];               % where should autofluorescence plot go?
-%             defaults('colortranslation.plotPath') = 'calibration.plotPath';
-%             s.colortranslation.plotSize = [];               % What size (in inches) should autofluorescence plot be?
-%             defaults('colortranslation.plotSize') = 'calibration.heatmapPlotSize';
-
             % Last of all, bundle it in a cell array to return
             state = {s defaults doc};
         end

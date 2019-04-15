@@ -62,7 +62,7 @@ if b>0.1
 end
 
 % Optional plot
-if CM.compensation_plot
+if TASBEConfig.get('compensation.plot')
     figsize = TASBEConfig.get('compensation.plotSize');
     h = figure('PaperPosition',[1 1 figsize]);
     set(h,'visible','off');
