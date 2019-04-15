@@ -30,7 +30,7 @@ switch(mode)
             which = find(selection);
             counts(i) = numel(which);
 
-            if count(i)==0,
+            if counts(i)==0,
                 means(i,:) = NaN;
                 stds(i,:) = NaN;
             else
@@ -48,7 +48,7 @@ switch(mode)
             which = find(data(:,selector)>bedges(i) & data(:,selector)<=bedges(i+1));
             counts(i) = numel(which);
             
-            if count(i)==0,
+            if counts(i)==0,
                 means(i,:) = NaN;
                 stds(i,:) = NaN;
             else
