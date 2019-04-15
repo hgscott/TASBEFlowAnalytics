@@ -53,7 +53,7 @@ function CM=resolve(CM)
         if numel(afmean)==1, afmean = afmean*ones(numel(CM.Channels),1); end;
         TASBESession.warn('TASBE:ColorModel','OverrideAutofluorescence','Overriding autofluorescence model with specified values.');
         for i=1:numel(afmean),
-            CM.autofluorescence_model{i} = AutoFluorescenceModel(afmean(i)*ones(10,1));
+            CM.autofluorescence_model{i} = AutoFluorescenceModel(CM.Channels{i},afmean(i)*ones(10,1));
             if(CM.Channels{i} == CM.ERF_channel)
                 CM.autofluorescence_model{i}=ERFize(CM.autofluorescence_model{i},1,getK_ERF(CM.unit_translation));
             end
