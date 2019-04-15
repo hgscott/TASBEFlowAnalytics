@@ -7,29 +7,29 @@ function test_suite = test_csv_reading
     initTestSuite;
 
 function test_fca_readcsv
-    f1 = '../TASBEFlowAnalytics-Tutorial/template_analysis/csv/LacI-CAGop_Dox01_PointCloud.csv';
-    header = 'LacI-CAGop.json';
-    
-    datafile = DataFile('csv', f1, header);
+f1 = '../TASBEFlowAnalytics-Tutorial/template_analysis/csv/LacI-CAGop_Dox01_PointCloud.csv';
+header = 'tests/LacI-CAGop.json';
 
-    [data, hdr] = fca_read(datafile);
+datafile = DataFile('csv', f1, header);
 
-    PACIFIC_BLUE_CHANNEL = 3;
-    NUM_CHANNELS = 3;
-    assert(strcmp(hdr.par(PACIFIC_BLUE_CHANNEL).name,'Pacific Blue-A'));
-    assert(all(size(data) == [161608 NUM_CHANNELS]));
-    assertElementsAlmostEqual(data(1,:),[4.2471e4 4.0352e4 3.7367e4],'absolute',1e0);
+[data, hdr] = fca_read(datafile);
+
+PACIFIC_BLUE_CHANNEL = 3;
+NUM_CHANNELS = 3;
+assert(strcmp(hdr.par(PACIFIC_BLUE_CHANNEL).name,'Pacific Blue-A'));
+assert(all(size(data) == [161608 NUM_CHANNELS]));
+assertElementsAlmostEqual(data(1,:),[4.2471e4 4.0352e4 3.7367e4],'absolute',1e0);
 
 function test_cm_read_csv
 
 CM = load_or_make_testing_colormodel();
 f1 = '../TASBEFlowAnalytics-Tutorial/template_analysis/csv/LacI-CAGop_Dox01_PointCloud.csv';
 % kludge to read as a.u. rather than MEFL
-header = 'LacI-CAGop-au.json';
+header = 'tests/LacI-CAGop-au.json';
 
 datafile = DataFile('csv', f1, header);
 
-CM = clear_filters(CM); % got to drop the filters because there's no FSC and SSC
+CM = clear_filters(CM); % got to drop the filters because it's a.u. and there's no FSC and SSC
 data = readfcs_compensated_ERF(CM,datafile,false,true);
 NUM_CHANNELS = 3;
 assert(all(size(data) == [161608 NUM_CHANNELS]));
@@ -42,11 +42,10 @@ function test_cm_read_mixed_csv
 CM = load_or_make_testing_colormodel();
 f1 = '../TASBEFlowAnalytics-Tutorial/template_analysis/csv/LacI-CAGop_Dox01_PointCloud.csv';
 % kludge to read as a mix of a.u. and MEFL rather than all MEFL
-header = 'LacI-CAGop-mixed.json';
+header = 'tests/LacI-CAGop-mixed.json';
 
 datafile = DataFile('csv', f1, header);
 
-CM = clear_filters(CM); % got to drop the filters because there's no FSC and SSC
 data = readfcs_compensated_ERF(CM,datafile,false,true);
 NUM_CHANNELS = 3;
 assert(all(size(data) == [161608 NUM_CHANNELS]));
@@ -57,7 +56,7 @@ assertElementsAlmostEqual(data(1,:),[4.2471e4 4.0352e4 3.7367e4],'absolute',1e0)
 function test_cm_read_broken_csv
 
 f1 = '../TASBEFlowAnalytics-Tutorial/template_analysis/csv/LacI-CAGop_Dox01_PointCloud.csv';
-header = 'LacI-CAGop-broken.json';
+header = 'tests/LacI-CAGop-broken.json';
 
 datafile = DataFile('csv', f1, header);
 
@@ -67,7 +66,7 @@ assertExceptionThrown(@()fca_read(datafile), 'fca_readcsv:NumParameterMismatch',
 function test_cm_read_broken_csv2
 
 f1 = '../TASBEFlowAnalytics-Tutorial/template_analysis/csv/LacI-CAGop_Dox01_PointCloud.csv';
-header = 'LacI-CAGop-broken2.json';
+header = 'tests/LacI-CAGop-broken2.json';
 
 datafile = DataFile('csv', f1, header);
 
@@ -79,7 +78,7 @@ assertEqual(log{end}.contents{end-1}.name, 'UnknownHeaderField');
 function test_cm_read_broken_csv3
 
 f1 = '../TASBEFlowAnalytics-Tutorial/template_analysis/csv/LacI-CAGop_Dox01_PointCloud.csv';
-header = 'LacI-CAGop-broken3.json';
+header = 'tests/LacI-CAGop-broken3.json';
 
 datafile = DataFile('csv', f1, header);
 
@@ -127,7 +126,6 @@ function test_cm_extracolumn_ignored
     
     datafile = DataFile('csv', f1, header);
 
-    CM = clear_filters(CM); % got to drop the filters because there's no FSC and SSC
     data = readfcs_compensated_ERF(CM,datafile,false,true);
     NUM_CHANNELS = 3;
     assert(all(size(data) == [50 NUM_CHANNELS]));
@@ -142,10 +140,10 @@ function test_cm_extracolumn_used
     
     datafile = DataFile('csv', f1, header);
 
-    CM = clear_filters(CM); % got to drop the filters because there's no FSC and SSC
-    CM = add_derived_channel(CM,'Derived_Value','Boolean');
+    CM = add_derived_channel(CM,'Derived_Value','Derived','Boolean');
     data = readfcs_compensated_ERF(CM,datafile,false,true);
     NUM_CHANNELS = 4;
     assert(all(size(data) == [50 NUM_CHANNELS]));
     % there is a non-a.u. channel, so it should all be treated as calibrated
     assertElementsAlmostEqual(data(1,:),[4.2471e4 4.0352e4 3.7367e4 1],'absolute',1e0);
+
