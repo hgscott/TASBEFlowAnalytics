@@ -88,3 +88,65 @@ log = TASBESession.list();
 assertEqual(log{end}.contents{end-1}.name, 'UnknownHeaderField');
 assertEqual(log{end}.contents{end}.name, 'FilenameMismatch');
 
+function test_fca_extracolumn
+    f1 = 'tests/LacI-extra-column.csv';
+    header = 'tests/LacI-extra.json';
+    
+    datafile = DataFile('csv', f1, header);
+
+    [data, hdr] = fca_read(datafile);
+
+    DERIVED_CHANNEL = 4;
+    NUM_CHANNELS = 4;
+    assert(strcmp(hdr.par(DERIVED_CHANNEL).name,'Derived_Value'));
+    assert(all(size(data) == [50 NUM_CHANNELS]));
+    assert(hdr.non_au);
+    assertElementsAlmostEqual(data(1,:),[4.2471e4 4.0352e4 3.7367e4 1],'absolute',1e0);
+
+function test_fca_extracolumn_au
+    f1 = 'tests/LacI-extra-column.csv';
+    header = 'tests/LacI-extra-au.json';
+    
+    datafile = DataFile('csv', f1, header);
+
+    [data, hdr] = fca_read(datafile);
+
+    DERIVED_CHANNEL = 4;
+    NUM_CHANNELS = 4;
+    assert(strcmp(hdr.par(DERIVED_CHANNEL).name,'Derived_Value'));
+    assert(all(size(data) == [50 NUM_CHANNELS]));
+    assert(~hdr.non_au);
+    assertElementsAlmostEqual(data(1,:),[4.2471e4 4.0352e4 3.7367e4 1],'absolute',1e0);
+
+
+function test_cm_extracolumn_ignored
+    CM = load_or_make_testing_colormodel();
+    
+    f1 = 'tests/LacI-extra-column.csv';
+    header = 'tests/LacI-extra.json';
+    
+    datafile = DataFile('csv', f1, header);
+
+    CM = clear_filters(CM); % got to drop the filters because there's no FSC and SSC
+    data = readfcs_compensated_ERF(CM,datafile,false,true);
+    NUM_CHANNELS = 3;
+    assert(all(size(data) == [50 NUM_CHANNELS]));
+    % there is a non-a.u. channel, so it should all be treated as calibrated
+    assertElementsAlmostEqual(data(1,:),[4.2471e4 4.0352e4 3.7367e4],'absolute',1e0);
+
+function test_cm_extracolumn_used
+    CM = load_or_make_testing_colormodel();
+    
+    f1 = 'tests/LacI-extra-column.csv';
+    header = 'tests/LacI-extra.json';
+    
+    datafile = DataFile('csv', f1, header);
+
+    CM = clear_filters(CM); % got to drop the filters because there's no FSC and SSC
+    Channel('Derived_Channel'
+    CM = add_derived_channel(CM,'Derived_Value');
+    data = readfcs_compensated_ERF(CM,datafile,false,true);
+    NUM_CHANNELS = 3;
+    assert(all(size(data) == [50 NUM_CHANNELS]));
+    % there is a non-a.u. channel, so it should all be treated as calibrated
+    assertElementsAlmostEqual(data(1,:),[4.2471e4 4.0352e4 3.7367e4],'absolute',1e0);
