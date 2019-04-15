@@ -6,26 +6,22 @@ function [fcsdat, fcshdr, fcsdatscaled] = fca_readcsv(filename, headername, clip
 % Some important header data are stored in the fcshdr structure:
 % TotalEvents, NumOfPar, name
 
-% If noarg was supplied
-if nargin == 0
-     [FileName, FilePath] = uigetfile('*.*','Select csv file');
-     filename = [FilePath,FileName];
-     if FileName == 0
-          fcsdat = []; fcshdr = []; fcsdatscaled = [];
-          return;
-     end
-else
-    if isempty(filename)
-        TASBESession.warn('CSV:Read','NoFile','No file provided! Returning empty dataset.'); 
-        fcsdat = []; fcshdr = []; fcsdatscaled = [];
-        return;
-    end
-    filecheck = dir(filename);
-    if size(filecheck,1) == 0
-        TASBESession.warn('CSV:Read','NoFile',[filename,': The file does not exist! Returning empty dataset.']); 
-        fcsdat = []; fcshdr = []; fcsdatscaled = [];
-        return;
-    end
+if isempty(filename)
+    TASBESession.warn('CSV:Read','NoFile','No file provided! Returning empty dataset.'); 
+    fcsdat = []; fcshdr = []; fcsdatscaled = [];
+    return;
+end
+filecheck = dir(filename);
+if size(filecheck,1) == 0
+    TASBESession.warn('CSV:Read','NoFile',[filename,': The file does not exist! Returning empty dataset.']); 
+    fcsdat = []; fcshdr = []; fcsdatscaled = [];
+    return;
+end
+filecheck = dir(headername);
+if size(filecheck,1) == 0
+    TASBESession.warn('CSV:Read','NoHeaderFile',[headername,': The header file does not exist! Returning empty dataset.']); 
+    fcsdat = []; fcshdr = []; fcsdatscaled = [];
+    return;
 end
 if nargin<3, clip_events = 1e6; end
 
@@ -108,8 +104,9 @@ if nargin > 1
     end
     
     % Double check units
-    allowed_pattern = {'a\.u\.','ERF','Eum','M\w*'};
-    num_au = 0;
+    allowed_pattern = {'a\.u\.','ERF','Eum','M\w*','Boolean'};
+    calibrated_unit_pattern = {'ERF','Eum','M\w*'};
+    non_calibrated = 0;
     fcshdr.non_au = 1;
     for i = 1:numel(units)
         unit = units{i};
@@ -118,8 +115,8 @@ if nargin > 1
             matches = regexp(unit,allowed_pattern{j},'match');
             if(numel(matches)==1 && strcmp(unit,matches{1}))
                 valid_unit = 1;
-                if j == 1
-                    num_au = num_au + 1;
+                if isempty(find(cellfun(@(p)(~isempty(regexp(unit,p,'match'))),calibrated_unit_pattern), 1));
+                    non_calibrated = non_calibrated + 1;
                 end
                 break
             end
@@ -129,15 +126,17 @@ if nargin > 1
         end
     end
     % The file is a non-a.u. file if _any_ element is not a.u.
-    fcshdr.non_au = (num_au < numel(units));
+    fcshdr.non_au = (non_calibrated < numel(units));
     
+    % consider both absolute and relative in comparing with filenames
+    [HdrPath, ~,~] = fileparts(headername);
     % Read in filenames
     file_match = 0;
     filename_to_compare = strrep(filename, '\', '/');
     for i=1:numel(filenames)
         temp_filename = filenames{i};
         temp_filename = strrep(temp_filename, '\', '/');
-        if strcmp(temp_filename, filename_to_compare)
+        if strcmp(temp_filename, filename_to_compare) || strcmp([HdrPath '/' temp_filename],filename_to_compare)
             file_match = 1;
             break
         end

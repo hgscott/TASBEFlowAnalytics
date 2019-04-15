@@ -30,19 +30,16 @@ switch(mode)
             which = find(selection);
             counts(i) = numel(which);
 
-            for j=1:ncol
-%                 % to exclude outliers, drop top and bottom 0.1% of data
-%                 sorted = sort(data(which,j));
-%                 dropsize = ceil(numel(sorted)*0.001);
-%                 if(numel(sorted)-2*dropsize > 0)
-%                     trimmed = sorted(dropsize:(numel(sorted)-dropsize));
-%                 else
-%                     trimmed = sorted;
-%                 end
-                trimmed = data(which,j);
+            if counts(i)==0,
+                means(i,:) = NaN;
+                stds(i,:) = NaN;
+            else
+                for j=1:ncol
+                    trimmed = data(which,j);
 
-                means(i,j) = geomean(trimmed);
-                stds(i,j) = geostd(trimmed);
+                    means(i,j) = geomean(trimmed);
+                    stds(i,j) = geostd(trimmed);
+                end
             end
         end
       
@@ -51,19 +48,16 @@ switch(mode)
             which = find(data(:,selector)>bedges(i) & data(:,selector)<=bedges(i+1));
             counts(i) = numel(which);
             
-            for j=1:ncol
-%                 % to exclude outliers, drop top and bottom 0.1% of data
-%                 sorted = sort(data(which,j));
-%                 dropsize = ceil(numel(sorted)*0.001);
-%                 if(numel(sorted)-2*dropsize > 0)
-%                     trimmed = sorted(dropsize:(numel(sorted)-dropsize));
-%                 else
-%                     trimmed = sorted;
-%                 end
-                trimmed = data(which,j);
+            if counts(i)==0,
+                means(i,:) = NaN;
+                stds(i,:) = NaN;
+            else
+                for j=1:ncol
+                    trimmed = data(which,j);
 
-                means(i,j) = mean(trimmed);
-                stds(i,j) = std(trimmed);
+                    means(i,j) = mean(trimmed);
+                    stds(i,j) = std(trimmed);
+                end
             end
         end
         

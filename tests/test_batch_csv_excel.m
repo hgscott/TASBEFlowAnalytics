@@ -42,7 +42,7 @@ function test_batch_csv_excel_endtoend
     
     % Compare JSON headers (esp channel struct)
     real_header = 'LacI-CAGop.json';
-    test_header = '/tmp/CSV/LacI-CAGop.json';
+    test_header = '/tmp/CSV/LacI Transfer Curve.json';
 
     fid1 = fopen(real_header); 
     raw1 = fread(fid1,inf); 

@@ -10,7 +10,7 @@
 % package distribution's top directory.
 
 function C = setUnits(C,name)
-    allowed_pattern = {'a\.u\.','ERF','Eum','M\w*'};
+    allowed_pattern = {'a\.u\.','ERF','Eum','M\w*','Boolean'};
     % check for pattern matches
     for i=1:numel(allowed_pattern)
         matches = regexp(name,allowed_pattern{i},'match');

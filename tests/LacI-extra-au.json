@@ -3,21 +3,26 @@
 		{
 			"name": "FITC-A",
 			"print_name": "EYFP",
-			"unit": "MEFL"
+			"unit": "a.u."
 		},
 		{
 			"name": "PE-Tx-Red-YG-A",
 			"print_name": "mKate",
-			"unit": "MEFL"
+			"unit": "a.u."
 		},
 		{
 			"name": "Pacific Blue-A",
 			"print_name": "EBFP2",
-			"unit": "MEFL"
+			"unit": "a.u."
+		},
+		{
+			"name": "Derived_Value",
+			"print_name": "Derived",
+			"unit": "Boolean"
 		}
 	],
 	"filenames": [
-    "../TASBEFlowAnalytics-Tutorial/template_analysis/csv/LacI-CAGop_Dox01_PointCloud.csv"
+	"LacI-extra-column.csv"
 	]
 }
 

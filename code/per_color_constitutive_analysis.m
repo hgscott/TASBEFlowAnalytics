@@ -78,18 +78,30 @@ for i=1:n_conditions
     results{i}.condition = batch_description{i,1};
     results{i}.bincenters = bincenters;
     for j=1:numel(colors)
+        % kludge needs generalization
+        derived_channel = strcmp(getUnits(getChannel(colorModel,j)),'Boolean');
         ER = rawresults{j}{i,1};
         SR = rawresults{j}{i,2};
         rawbincounts = getBinCounts(ER);
         results{i}.bincounts(:,j) = rawbincounts;
-        results{i}.means(j) = geomean(bincenters',rawbincounts);
-        results{i}.stds(j) =  geostd(bincenters',rawbincounts);
+        if(~derived_channel)
+            results{i}.means(j) = geomean(bincenters',rawbincounts);
+            results{i}.stds(j) =  geostd(bincenters',rawbincounts);
+        else
+            results{i}.means(j) = log10(get_bin_widths(getBins(AP)))/2+wmean(log10(bincenters'),rawbincounts); % KLUDGE FOR BOOLEAN
+            results{i}.stds(j) =  wstd(log10(bincenters'),rawbincounts);
+        end
         [results{i}.gmm_means(:,j), results{i}.gmm_stds(:,j), results{i}.gmm_weights(:,j)] = get_channel_gmm_results(rawresults{j}{i,1},'constitutive');
         % per-sample histograms
         for k=1:replicatecounts
             samplebincounts{k}(:,j) = SR{k}.BinCounts;
-            samplemeans(k,j) = geomean(bincenters',SR{k}.BinCounts);
-            samplestds(k,j) = geostd(bincenters',SR{k}.BinCounts);
+            if(~derived_channel)
+                samplemeans(k,j) = geomean(bincenters',SR{k}.BinCounts);
+                samplestds(k,j) = geostd(bincenters',SR{k}.BinCounts);
+            else
+                samplemeans(k,j) = log10(get_bin_widths(getBins(AP)))/2+wmean(log10(bincenters'),SR{k}.BinCounts);
+                samplestds(k,j) = wstd(log10(bincenters'),SR{k}.BinCounts);
+            end
             color_column = find(colorModel,channel_named(colorModel,colors{j}));
             sample_gmm_means{k}(:,j) = SR{k}.PopComponentMeans(:,color_column);
             sample_gmm_stds{k}(:,j) = SR{k}.PopComponentStandardDevs(:,color_column);
@@ -97,7 +109,11 @@ for i=1:n_conditions
             results{i}.n_events_used(k,j) = sum(SR{k}.BinCounts);
             results{i}.n_events_outofrange(k,j) = SR{k}.OutOfRange;
         end
-        results{i}.stdofmeans(j) = geostd(samplemeans(:,j));
+        if(~derived_channel)
+            results{i}.stdofmeans(j) = geostd(samplemeans(:,j));
+        else
+            results{i}.stdofmeans(j) = std(samplemeans(:,j));
+        end
         results{i}.stdofstds(j) = mean(samplestds(:,j));
     end
     on_fracs = {};
