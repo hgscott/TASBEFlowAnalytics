@@ -12,6 +12,8 @@ function plot_batch_histograms(results,sampleresults,CM,linespecs)
 % Elements of linespecs can either be LineSpecs, or ColorSpecs (e.g. three-element
 % 0..1 vectors representing RGB color values); currently, only single-letter 
 % color linespecs are properly handled.
+figsize = TASBEConfig.get('OutputSettings.FigureSize');
+
 
 % Obtain channel names in order to generate linespecs
 channels = getChannelNames(sampleresults{1}{1}.AnalysisParameters); % channel names are same across conditions and replicates
@@ -57,7 +59,7 @@ maxcount = 1e1;
 for i=1:n_conditions
     lines = [];
     % TODO: this should really be using a standard number
-    h = figure('PaperPosition',[1 1 5 3.66]);
+    h = figure('PaperPosition',[1 1 figsize]);
     set(h,'visible','off');
     bin_centers = results{i}.bincenters;
     for k=1:n_colors

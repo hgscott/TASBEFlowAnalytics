@@ -17,6 +17,7 @@ step = TASBEConfig.get('OutputSettings.PlotEveryN');
 ticks = TASBEConfig.get('OutputSettings.PlotTickMarks');
 stemName = TASBEConfig.get('OutputSettings.StemName');
 directory = TASBEConfig.get('plots.plotPath');
+figsize = TASBEConfig.get('OutputSettings.FigureSize');
 
 AP = getAnalysisParameters(results);
 n_bins = get_n_bins(getBins(AP));
@@ -30,7 +31,7 @@ out_units = getChannelUnits(AP,out_channel);
 
 %%% I/O plots:
 % Plain I/O plot:
-h = figure('PaperPosition',[1 1 5 3.66]);
+h = figure('PaperPosition',[1 1 figsize]);
 set(h,'visible','off');
 for i=1:step:n_bins
     which = fa(i,:)>getMinFractionActive(AP);

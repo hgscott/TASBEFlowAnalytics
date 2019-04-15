@@ -16,6 +16,8 @@ if nargin < 7, largeoutliers = false; end;
 if nargin < 8 || isempty(linear), linear = [0 0]; end;
 if nargin < 9, filters = {}; end;
 
+plotSize = TASBEConfig.get('plots.heatmapPlotSize');
+
 datafile = ensureDataFile(datafile);
 
 [fcsraw,fcshdr,fcsdat] = fca_read(datafile);
@@ -33,13 +35,13 @@ if linear(2), yv = yc; else yv = log10(yc(pos)); end;
 
 if nargin >= 4 && density
     smoothing = 10;
-    h = figure('PaperPosition',[1 1 5 5]);
+    h = figure('PaperPosition',[1 1 plotSize]);
     if ~visible, set(h,'visible','off'); end;
     if nargin < 5, range = []; end;
     if density >= 1, type = 'image'; else type = 'contour'; end
     smoothhist2D([xv yv],smoothing,[200, 200],[],type,range,largeoutliers);
 else
-    h = figure('PaperPosition',[1 1 5 5]);
+    h = figure('PaperPosition',[1 1 plotSize]);
     if ~visible, set(h,'visible','off'); end;
     plot(xv,yv,'.','MarkerSize',1);
     if (nargin >= 5 && ~isempty(range)), xlim(range(:,1)); ylim(range(:,2)); end;

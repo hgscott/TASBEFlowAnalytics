@@ -62,8 +62,9 @@ if b>0.1
 end
 
 % Optional plot
-if CM.compensation_plot
-    h = figure('PaperPosition',[1 1 6 4]);
+if TASBEConfig.get('compensation.plot')
+    figsize = TASBEConfig.get('compensation.plotSize');
+    h = figure('PaperPosition',[1 1 figsize]);
     set(h,'visible','off');
     pos = no_AF_data(:,driven)>1 & no_AF_data(:,passive)>1;
     smoothhist2D(log10([no_AF_data(pos,driven) no_AF_data(pos,passive)]),10,[200, 200],[], [],[flowMin flowMin; flowMax flowMax]); hold on;
