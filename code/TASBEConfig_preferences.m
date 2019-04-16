@@ -31,7 +31,15 @@ function TASBEConfig_preferences(filename, sheet_num)
             sub_name = doc_names{j};
             note = getfield(doc_section, doc_names{j});
             value = getfield(set_section, doc_names{j});
-            row = {[name '.' char(sub_name)], char(note), num2str(value)};
+            if iscell(value)
+                value = strjoin(value);
+                row = {[name '.' char(sub_name)], char(note), value};
+            elseif ischar(value)
+                row = {[name '.' char(sub_name)], char(note), value};
+            else
+                row = {[name '.' char(sub_name)], char(note), num2str(value)};
+            end
+            
             preferences = [preferences; row];
         end
     end

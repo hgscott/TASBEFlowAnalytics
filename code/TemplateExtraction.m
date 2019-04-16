@@ -157,9 +157,13 @@ classdef TemplateExtraction
                 % Set the TASBEConfig if value column not empty for given
                 % row
                 if ~isnan(cell2mat(raw(i,val_col)))
-                    if ~isempty(strfind(char(cell2mat(raw(i,name_col))), 'Size'))
+                    if ~isempty(strfind(char(cell2mat(raw(i,val_col))), ','))
                         bounds = strtrim(strsplit(char(cell2mat(raw(i,val_col))), ','));
-                        TASBEConfig.set(char(cell2mat(raw(i,name_col))), [str2double(bounds{1}), str2double(bounds{2})]);
+                        if ~isempty(strfind(char(cell2mat(raw(i,name_col))), 'Size'))
+                            TASBEConfig.set(char(cell2mat(raw(i,name_col))), [str2double(bounds{1}), str2double(bounds{2})]);
+                        else
+                            TASBEConfig.set(char(cell2mat(raw(i,name_col))), bounds);
+                        end
                     elseif ~isempty(strfind(char(cell2mat(raw(i,val_col))), '^'))
                         val = str2num(char(cell2mat(raw(i,val_col))));
                         TASBEConfig.set(char(cell2mat(raw(i,name_col))), val);
