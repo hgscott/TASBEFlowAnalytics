@@ -8,10 +8,12 @@ function test_suite = test_colormodel_csv
 
 function test_colormodel_csv_endtoend
 
-header = 'tests/colormodel_csv/colormodel_csv.json';
+stem = 'tests/colormodel_csv/';
 
-beadfile = DataFile('csv', 'colormodel_csv/Beads_PointCloud.csv', header);
-blankfile = DataFile('csv', 'colormodel_csv/blank_PointCloud.csv', header);
+header = [stem 'colormodel_csv.json'];
+
+beadfile = DataFile('csv', [stem 'Beads_PointCloud.csv'], header);
+blankfile = DataFile('csv', [stem 'blank_PointCloud.csv'], header);
 
 % Autodetect gating with an N-dimensional gaussian-mixture-model
 autogate = GMMGating(blankfile);
@@ -23,17 +25,17 @@ channels = {}; colorfiles = {};
 channels{1} = Channel('FITC-A', 488, 515, 20);
 channels{1} = setPrintName(channels{1}, 'EYFP'); % Name to print on charts
 channels{1} = setLineSpec(channels{1}, 'y'); % Color for lines, when needed
-colorfiles{1} = DataFile('csv', 'colormodel_csv/EYFP_PointCloud.csv', header);
+colorfiles{1} = DataFile('csv', [ stem 'EYFP_PointCloud.csv'], header);
 
 channels{2} = Channel('PE-Tx-Red-YG-A', 561, 610, 20);
 channels{2} = setPrintName(channels{2}, 'mKate');
 channels{2} = setLineSpec(channels{2}, 'r');
-colorfiles{2} = DataFile('csv', 'colormodel_csv/mkate_PointCloud.csv', header);
+colorfiles{2} = DataFile('csv', [stem 'mkate_PointCloud.csv'], header);
 
 channels{3} = Channel('Pacific Blue-A', 405, 450, 50);
 channels{3} = setPrintName(channels{3}, 'EBFP2');
 channels{3} = setLineSpec(channels{3}, 'b');
-colorfiles{3} = DataFile('csv', 'colormodel_csv/ebfp2_PointCloud.csv', header);
+colorfiles{3} = DataFile('csv', [stem 'ebfp2_PointCloud.csv'], header);
 
 % Multi-color controls are used for converting other colors into ERF units
 % Any channel without a control mapping it to ERF will be left in arbirary units.
@@ -41,8 +43,8 @@ colorpairfiles = {};
 % Entries are: channel1, channel2, constitutive channel, filename
 % This allows channel1 and channel2 to be converted into one another.
 % If you only have two colors, you can set consitutive-channel to equal channel1 or channel2
-colorpairfiles{1} = {channels{1}, channels{2}, channels{3}, DataFile('csv', 'colormodel_csv/mkate_EBFP2_EYFP_PointCloud.csv', header)};
-colorpairfiles{2} = {channels{1}, channels{3}, channels{2}, DataFile('csv', 'colormodel_csv/mkate_EBFP2_EYFP_PointCloud.csv', header)};
+colorpairfiles{1} = {channels{1}, channels{2}, channels{3}, DataFile('csv', [stem 'mkate_EBFP2_EYFP_PointCloud.csv'], header)};
+colorpairfiles{2} = {channels{1}, channels{3}, channels{2}, DataFile('csv', [stem 'mkate_EBFP2_EYFP_PointCloud.csv'], header)};
 
 CM = ColorModel(beadfile, blankfile, channels, colorfiles, colorpairfiles);
 
@@ -109,10 +111,12 @@ assertElementsAlmostEqual(CTM.scales,       expected_scales, 'absolute', 0.02);
 
 function test_colormodel_warnings
 
-header = 'tests/colormodel_csv/colormodel_csv.json';
+stem = 'tests/colormodel_csv/';
 
-beadfile = DataFile('csv', 'colormodel_csv/Beads_PointCloud.csv', header);
-blankfile = DataFile('csv', 'colormodel_csv/blank_PointCloud.csv', header);
+header = [stem 'colormodel_csv.json'];
+
+beadfile = DataFile('csv', [stem 'Beads_PointCloud.csv'], header);
+blankfile = DataFile('csv', [stem 'blank_PointCloud.csv'], header);
 
 % Autodetect gating with an N-dimensional gaussian-mixture-model
 autogate = GMMGating(blankfile);
@@ -124,17 +128,17 @@ channels = {}; colorfiles = {};
 channels{1} = Channel('FITC-A', 488, 515, 20);
 channels{1} = setPrintName(channels{1}, 'EYFP'); % Name to print on charts
 channels{1} = setLineSpec(channels{1}, 'y'); % Color for lines, when needed
-colorfiles{1} = DataFile('csv', 'colormodel_csv/EYFP_PointCloud.csv', header);
+colorfiles{1} = DataFile('csv', [ stem 'EYFP_PointCloud.csv'], header);
 
 channels{2} = Channel('PE-Tx-Red-YG-A', 561, 610, 20);
 channels{2} = setPrintName(channels{2}, 'mKate');
 channels{2} = setLineSpec(channels{2}, 'r');
-colorfiles{2} = DataFile('csv', 'colormodel_csv/mkate_PointCloud.csv', header);
+colorfiles{2} = DataFile('csv', [stem 'mkate_PointCloud.csv'], header);
 
 channels{3} = Channel('Pacific Blue-A', 405, 450, 50);
 channels{3} = setPrintName(channels{3}, 'EBFP2');
 channels{3} = setLineSpec(channels{3}, 'b');
-colorfiles{3} = DataFile('csv', 'colormodel_csv/ebfp2_PointCloud.csv', header);
+colorfiles{3} = DataFile('csv', [stem 'ebfp2_PointCloud.csv'], header);
 
 % Multi-color controls are used for converting other colors into ERF units
 % Any channel without a control mapping it to ERF will be left in arbirary units.
@@ -142,8 +146,8 @@ colorpairfiles = {};
 % Entries are: channel1, channel2, constitutive channel, filename
 % This allows channel1 and channel2 to be converted into one another.
 % If you only have two colors, you can set consitutive-channel to equal channel1 or channel2
-colorpairfiles{1} = {channels{1}, channels{2}, channels{3}, DataFile('csv', 'colormodel_csv/mkate_EBFP2_EYFP_PointCloud.csv', header)};
-colorpairfiles{2} = {channels{1}, channels{3}, channels{2}, DataFile('csv', 'colormodel_csv/mkate_EBFP2_EYFP_PointCloud.csv', header)};
+colorpairfiles{1} = {channels{1}, channels{2}, channels{3}, DataFile('csv', [stem 'mkate_EBFP2_EYFP_PointCloud.csv'], header)};
+colorpairfiles{2} = {channels{1}, channels{3}, channels{2}, DataFile('csv', [stem 'mkate_EBFP2_EYFP_PointCloud.csv'], header)};
 
 CM = ColorModel(beadfile, blankfile, channels, colorfiles, colorpairfiles);
 
@@ -176,17 +180,19 @@ assertEqual(log{end-1}.contents{7}.name, 'PotentialBeadClump');
 
 function test_colormodel_singlered
 
-header = 'tests/colormodel_csv/colormodel_csv.json';
+stem = 'tests/colormodel_csv/';
 
-beadfile = DataFile('csv', 'colormodel_csv/Beads_PointCloud.csv', header);
-blankfile = DataFile('csv', 'colormodel_csv/blank_PointCloud.csv', header);
+header = [stem 'colormodel_csv.json'];
+
+beadfile = DataFile('csv', [stem 'Beads_PointCloud.csv'], header);
+blankfile = DataFile('csv', [stem 'blank_PointCloud.csv'], header);
 
 % Create one channel / colorfile pair for each color
 channels = {}; colorfiles = {};
 channels{1} = Channel('PE-Tx-Red-YG-A', 561, 610, 20);
 channels{1} = setPrintName(channels{1}, 'mKate');
 channels{1} = setLineSpec(channels{1}, 'r');
-colorfiles{1} = DataFile('csv', 'colormodel_csv/mkate_PointCloud.csv', header);
+colorfiles{1} = DataFile('csv', [stem 'mkate_PointCloud.csv'], header);
 
 % Multi-color controls are used for converting other colors into ERF units
 % Any channel without a control mapping it to ERF will be left in arbirary units.
@@ -236,10 +242,12 @@ assertElementsAlmostEqual(CTM.scales,   NaN);
 
 function test_colormodel_singlered_nocolorfile
 
-header = 'tests/colormodel_csv/colormodel_csv.json';
+stem = 'tests/colormodel_csv/';
 
-beadfile = DataFile('csv', 'colormodel_csv/Beads_PointCloud.csv', header);
-blankfile = DataFile('csv', 'colormodel_csv/blank_PointCloud.csv', header);
+header = [stem 'colormodel_csv.json'];
+
+beadfile = DataFile('csv', [stem 'Beads_PointCloud.csv'], header);
+blankfile = DataFile('csv', [stem 'blank_PointCloud.csv'], header);
 
 % Create one channel / colorfile pair for each color
 channels = {}; colorfiles = {};
@@ -293,17 +301,19 @@ assertElementsAlmostEqual(CTM.scales,   NaN);
 
 function test_colormodel_fsc_ssc
 
-header = 'tests/colormodel_csv/colormodel_csv.json';
+stem = 'tests/colormodel_csv/';
 
-beadfile = DataFile('csv', 'colormodel_csv/Beads_PointCloud.csv', header);
-blankfile = DataFile('csv', 'colormodel_csv/blank_PointCloud.csv', header);
+header = [stem 'colormodel_csv.json'];
+
+beadfile = DataFile('csv', [stem 'Beads_PointCloud.csv'], header);
+blankfile = DataFile('csv', [stem 'blank_PointCloud.csv'], header);
 
 % Create one channel / colorfile pair for each color
 channels = {}; colorfiles = {};
 channels{1} = Channel('PE-Tx-Red-YG-A', 561, 610, 20);
 channels{1} = setPrintName(channels{1}, 'mKate');
 channels{1} = setLineSpec(channels{1}, 'r');
-colorfiles{1} = DataFile('csv', 'colormodel_csv/mkate_PointCloud.csv', header);
+colorfiles{1} = DataFile('csv', [stem 'mkate_PointCloud.csv'], header);
 
 channels{2} = Channel('FSC-A', 488, 488, 10);
 channels{2} = setPrintName(channels{2}, 'FSC');
@@ -361,10 +371,12 @@ assertElementsAlmostEqual(CTM.scales,   [NaN NaN NaN; NaN NaN NaN; NaN NaN NaN])
 
 function test_colormodel_fsc_ssc_nocolorfile
 
-header = 'tests/colormodel_csv/colormodel_csv.json';
+stem = 'tests/colormodel_csv/';
 
-beadfile = DataFile('csv', 'colormodel_csv/Beads_PointCloud.csv', header);
-blankfile = DataFile('csv', 'colormodel_csv/blank_PointCloud.csv', header);
+header = [stem 'colormodel_csv.json'];
+
+beadfile = DataFile('csv', [stem 'Beads_PointCloud.csv'], header);
+blankfile = DataFile('csv', [stem 'blank_PointCloud.csv'], header);
 
 % Create one channel / colorfile pair for each color
 channels = {}; colorfiles = {};
@@ -429,10 +441,12 @@ assertElementsAlmostEqual(CTM.scales,   [NaN NaN NaN; NaN NaN NaN; NaN NaN NaN])
 
 function test_colormodel_error_missing_colorfiles
 
-header = 'tests/colormodel_csv/colormodel_csv.json';
+stem = 'tests/colormodel_csv/';
 
-beadfile = DataFile('csv', 'colormodel_csv/Beads_PointCloud.csv', header);
-blankfile = DataFile('csv', 'colormodel_csv/blank_PointCloud.csv', header);
+header = [stem 'colormodel_csv.json'];
+
+beadfile = DataFile('csv', [stem 'Beads_PointCloud.csv'], header);
+blankfile = DataFile('csv', [stem 'blank_PointCloud.csv'], header);
 
 % Create one channel / colorfile pair for each color
 channels = {}; colorfiles = {};
@@ -443,7 +457,7 @@ channels{1} = setLineSpec(channels{1}, 'y'); % Color for lines, when needed
 channels{2} = Channel('PE-Tx-Red-YG-A', 561, 610, 20);
 channels{2} = setPrintName(channels{2}, 'mKate');
 channels{2} = setLineSpec(channels{2}, 'r');
-colorfiles{2} = DataFile('csv', 'colormodel_csv/mkate_PointCloud.csv', header);
+colorfiles{2} = DataFile('csv', [stem 'mkate_PointCloud.csv'], header);
 
 % Multi-color controls are used for converting other colors into ERF units
 % Any channel without a control mapping it to ERF will be left in arbirary units.
@@ -458,10 +472,12 @@ function test_colormodel_channeltemplate
 
 TASBEConfig.checkpoint('test');
 
-header = 'tests/colormodel_csv/colormodel_csv.json';
+stem = 'tests/colormodel_csv/';
 
-beadfile = DataFile('csv', 'colormodel_csv/Beads_PointCloud.csv', header);
-blankfile = DataFile('csv', 'colormodel_csv/blank_PointCloud.csv', header);
+header = [stem 'colormodel_csv.json'];
+
+beadfile = DataFile('csv', [stem 'Beads_PointCloud.csv'], header);
+blankfile = DataFile('csv', [stem 'blank_PointCloud.csv'], header);
 TASBEConfig.set('flow.channel_template_file',beadfile);
 
 % Create one channel / colorfile pair for each color
@@ -469,7 +485,7 @@ channels = {}; colorfiles = {};
 channels{1} = Channel('PE-Tx-Red-YG-A', 561, 610, 20);
 channels{1} = setPrintName(channels{1}, 'mKate');
 channels{1} = setLineSpec(channels{1}, 'r');
-colorfiles{1} = DataFile('csv', 'colormodel_csv/mkate_PointCloud.csv', header);
+colorfiles{1} = DataFile('csv', [stem 'mkate_PointCloud.csv'], header);
 
 % Multi-color controls are used for converting other colors into ERF units
 % Any channel without a control mapping it to ERF will be left in arbirary units.
