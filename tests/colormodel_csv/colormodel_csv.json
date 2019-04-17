@@ -77,12 +77,12 @@
 		}
 	],
 	"filenames": [
-	"colormodel_csv/Beads_PointCloud.csv",
-	"colormodel_csv/blank_PointCloud.csv",
-	"colormodel_csv/EYFP_PointCloud.csv",
-	"colormodel_csv/mkate_PointCloud.csv",
-	"colormodel_csv/ebfp2_PointCloud.csv",
-	"colormodel_csv/mkate_EBFP2_EYFP_PointCloud.csv"
+	"tests/colormodel_csv/Beads_PointCloud.csv",
+	"tests/colormodel_csv/blank_PointCloud.csv",
+	"tests/colormodel_csv/EYFP_PointCloud.csv",
+	"tests/colormodel_csv/mkate_PointCloud.csv",
+	"tests/colormodel_csv/ebfp2_PointCloud.csv",
+	"tests/colormodel_csv/mkate_EBFP2_EYFP_PointCloud.csv"
 	]
 }
 
