@@ -147,3 +147,20 @@ function test_cm_extracolumn_used
     % there is a non-a.u. channel, so it should all be treated as calibrated
     assertElementsAlmostEqual(data(1,:),[4.2471e4 4.0352e4 3.7367e4 1],'absolute',1e0);
 
+function test_cm_extrafiltered
+    CM = load_or_make_testing_colormodel();
+    CM = add_derived_channel(CM,'Derived_Value','Derived','Boolean');
+    filter = RangeFilter('Derived_Value',[1 1]);
+    CM = add_postfilter(CM,filter);
+
+    f1 = 'tests/LacI-extra-column.csv';
+    header = 'tests/LacI-extra.json';
+    datafile = DataFile('csv', f1, header);
+    
+    data = readfcs_compensated_ERF(CM,datafile,false,true);
+    NUM_CHANNELS = 4;
+    assert(all(size(data) == [15 NUM_CHANNELS]));
+    % there is a non-a.u. channel, so it should all be treated as calibrated
+    assertElementsAlmostEqual(data(1,:),[4.2471e4 4.0352e4 3.7367e4 1],'absolute',1e0);
+    assertElementsAlmostEqual(data(4,:),[0.2249e4 7.2319e4 0.1156e4 1],'absolute',1e0);
+    

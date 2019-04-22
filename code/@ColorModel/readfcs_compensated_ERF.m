@@ -39,17 +39,17 @@ function [data,n_removed] = readfcs_compensated_ERF(CM,datafile,with_AF,floor)
             i_um = find(CM, CM.um_channel);
             data(:,i_um) = um_channel_AU_to_um(CM.size_unit_translation,data(:,i_um));
         end
-
-        % optional discarding of filtered data (e.g., poorly transfected cells)
-        for i=1:numel(CM.postfilters)
-            data = applyFilter(CM.postfilters{i},CM.Channels,data);
-        end
-        % make sure we didn't throw away huge amounts...
-        if numel(data)<numel(audata)*TASBEConfig.get('flow.postGateDiscardsWarning')
-            TASBESession.warn('TASBE:ReadFCS','TooMuchDataDiscarded','ERF (post)filters may be discarding too much data: only %d%% retained in %s',numel(data)/numel(audata)*100,getFile(datafile));
-        end
-        n_removed = n_preremoved + (size(audata,1)-size(data,1));
     else
         data = audata;
-        n_removed = n_preremoved;
     end
+    
+    % apply post-filters
+    % optional discarding of filtered data (e.g., poorly transfected cells)
+    for i=1:numel(CM.postfilters)
+        data = applyFilter(CM.postfilters{i},CM.Channels,data);
+    end
+    % make sure we didn't throw away huge amounts...
+    if numel(data)<numel(audata)*TASBEConfig.get('flow.postGateDiscardsWarning')
+        TASBESession.warn('TASBE:ReadFCS','TooMuchDataDiscarded','ERF (post)filters may be discarding too much data: only %d%% retained in %s',numel(data)/numel(audata)*100,getFile(datafile));
+    end
+    n_removed = n_preremoved + (size(audata,1)-size(data,1));
