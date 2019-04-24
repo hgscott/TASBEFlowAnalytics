@@ -446,3 +446,44 @@ TASBEConfig.set('OutputSettings.FixedInputAxis',[1e4 1e10]);
 plot_batch_histograms(results,sampleresults,CM);
 
 save('/tmp/LacI-CAGop-batch-single.mat','AP','bins','file_pairs','results','sampleresults');
+
+
+function test_dataless_batch_analysis
+
+CM = load_or_make_testing_colormodel();
+stem1011 = '../TASBEFlowAnalytics-Tutorial/example_assay/LacI-CAGop_';
+
+% configure to discard all data from bins
+bins = BinSequence(14,0.1,20,'log_bins');
+
+AP = AnalysisParameters(bins,{});
+AP=setMinValidCount(AP,100');
+AP=setPemDropThreshold(AP,5');
+AP=setUseAutoFluorescence(AP,false');
+
+% Make a map of condition names to file sets
+file_pairs = {...
+  'Dox 0.1',    {[stem1011 'B3_P3.fcs']};
+  };
+
+% Execute the actual analysis
+TASBEConfig.set('OutputSettings.StemName','LacI-CAGop');
+[results, sampleresults] = per_color_constitutive_analysis(CM,file_pairs,{'EBFP2','EYFP','mKate'},AP);
+
+% Make output plots
+TASBEConfig.set('plots.plotPath','/tmp/plots');
+TASBEConfig.set('OutputSettings.FixedInputAxis',[1e4 1e10]);
+plot_batch_histograms(results,sampleresults,CM,{'b','g','r'});
+
+save('/tmp/LacI-dataless-batch.mat','AP','bins','file_pairs','results','sampleresults');
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Check results in results:
+
+assertEqual(numel(results), 1);
+
+% see that counts are all zeros
+assertElementsAlmostEqual(results{1}.bincounts, zeros(size(results{1}.bincounts)),     'relative', 1e-2);
+
+assertElementsAlmostEqual(results{1}.means, nan(1,3), 'relative', 1e-2);
+assertElementsAlmostEqual(results{1}.stds,  nan(1,3),  'relative', 1e-2);
