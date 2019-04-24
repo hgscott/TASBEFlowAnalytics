@@ -85,15 +85,15 @@ function test_batch_excel_endtoend
         2.5920    4.2576    0.2214
         2.5773    4.2344    0.2217
         2.6618    4.4116    0.2201
-        2.6768    4.4791    0.2193
-        2.5979    4.4447    0.2202
-        2.5794    4.4459    0.2230
-        2.6410    4.3857    0.2246
-        2.6600    4.5635    0.2489
-        2.5019    4.7657    0.3723
-        2.3962    4.8756    0.4765
-        2.1736    4.8155    0.6809
-        1.8055    5.8724    1.0768
+%         2.6768    4.4791    0.2193
+%         2.5979    4.4447    0.2202
+%         2.5794    4.4459    0.2230
+%         2.6410    4.3857    0.2246
+%         2.6600    4.5635    0.2489
+%         2.5019    4.7657    0.3723
+%         2.3962    4.8756    0.4765
+%         2.1736    4.8155    0.6809
+%         1.8055    5.8724    1.0768
         1.5830    6.9178    1.5798
         1.4546    7.6877    1.9350
         ];
@@ -102,15 +102,15 @@ function test_batch_excel_endtoend
         6.5596    7.8289    1.5964
         6.6127    7.8521    1.5955
         6.6173    7.8504    1.5856
-        6.6379    7.8693    1.5881
-        6.5152    7.7858    1.5876
-        6.5557    7.9894    1.6027
-        6.5152    7.7879    1.6348
-        6.5316    7.9963    1.8831
-        6.2255    8.0919    2.9448
-        5.9371    8.1359    3.5238
-        5.6446    7.9458    4.3923
-        5.0904    8.4391    5.1748
+%         6.6379    7.8693    1.5881
+%         6.5152    7.7858    1.5876
+%         6.5557    7.9894    1.6027
+%         6.5152    7.7879    1.6348
+%         6.5316    7.9963    1.8831
+%         6.2255    8.0919    2.9448
+%         5.9371    8.1359    3.5238
+%         5.6446    7.9458    4.3923
+%         5.0904    8.4391    5.1748
         4.5412    8.2867    5.5515
         4.2440    8.2005    5.5330
         ];
@@ -141,17 +141,17 @@ function test_batch_excel_endtoend
         0.5789    0.7544    0.6514    
         ];
 
-    assertEqual(numel(results), 14);
+    assertEqual(numel(results), 5);
 
     % spot-check name, bincenter, bin-count
     assertEqual(results{1}.condition, 'Dox 0.1');
     assertElementsAlmostEqual(log10(results{1}.bincenters([1 10 40 end])), [4.0500    4.9500    7.9500    9.9500], 'relative', 1e-2);
     assertElementsAlmostEqual(results{1}.bincounts, result1_expected_bincounts,     'relative', 1e-2, 50);
 
-    assertEqual(results{14}.condition, 'Dox 2000');
-    assertElementsAlmostEqual(log10(results{14}.bincenters([1 10 40 end])), [4.0500    4.9500    7.9500    9.9500], 'relative', 1e-2);
+    assertEqual(results{5}.condition, 'Dox 2000');
+    assertElementsAlmostEqual(log10(results{5}.bincenters([1 10 40 end])), [4.0500    4.9500    7.9500    9.9500], 'relative', 1e-2);
 
-    for i=1:14
+    for i=1:5
         assertElementsAlmostEqual(results{i}.means, result_expected_means(i,:), 'relative', 1e-2);
         assertElementsAlmostEqual(results{i}.stds,  result_expected_stds(i,:),  'relative', 1e-2);
     end
@@ -159,7 +159,7 @@ function test_batch_excel_endtoend
     assertElementsAlmostEqual(results{1}.gmm_means,  result_expected1_gmm_means,  'relative', 1e-2);
     assertElementsAlmostEqual(results{1}.gmm_stds,  result_expected1_gmm_stds,  'relative', 1e-2);
     assertElementsAlmostEqual(results{1}.gmm_weights,  result_expected1_gmm_weights,  'relative', 1e-2);
-    assertElementsAlmostEqual(results{14}.gmm_means,  result_expected14_gmm_means,  'relative', 1e-2);
-    assertElementsAlmostEqual(results{14}.gmm_stds,  result_expected14_gmm_stds,  'relative', 1e-2);
-    assertElementsAlmostEqual(results{14}.gmm_weights,  result_expected14_gmm_weights,  'relative', 1e-2);
+    assertElementsAlmostEqual(results{5}.gmm_means,  result_expected14_gmm_means,  'relative', 1e-2);
+    assertElementsAlmostEqual(results{5}.gmm_stds,  result_expected14_gmm_stds,  'relative', 1e-2);
+    assertElementsAlmostEqual(results{5}.gmm_weights,  result_expected14_gmm_weights,  'relative', 1e-2);
     
