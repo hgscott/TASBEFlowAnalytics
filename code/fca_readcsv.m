@@ -136,7 +136,7 @@ if nargin > 1
     for i=1:numel(filenames)
         temp_filename = filenames{i};
         temp_filename = strrep(temp_filename, '\', '/');
-        if strcmp(temp_filename, filename_to_compare) || strcmp([HdrPath '/' temp_filename],filename_to_compare)
+        if strcmp(temp_filename, filename_to_compare) || strcmp(strcat(HdrPath, '/', temp_filename),filename_to_compare)
             file_match = 1;
             break
         end
