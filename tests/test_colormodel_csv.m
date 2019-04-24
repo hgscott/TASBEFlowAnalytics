@@ -7,6 +7,7 @@ function test_suite = test_colormodel_csv
     initTestSuite;
 
 function test_colormodel_csv_endtoend
+TASBEConfig.checkpoint('test');
 
 stem = 'tests/colormodel_csv/';
 
@@ -107,7 +108,9 @@ expected_scales = [...
 
 assertElementsAlmostEqual(CTM.scales,       expected_scales, 'absolute', 0.02);
 
+
 function test_colormodel_singlered
+TASBEConfig.checkpoint('test');
 
 stem = 'tests/colormodel_csv/';
 
@@ -168,8 +171,8 @@ CTM = struct(CMS.color_translation_model);
 assertElementsAlmostEqual(CTM.scales,   NaN);
 
 
-
 function test_colormodel_singlered_nocolorfile
+TASBEConfig.checkpoint('test');
 
 stem = 'tests/colormodel_csv/';
 
@@ -229,6 +232,7 @@ assertElementsAlmostEqual(CTM.scales,   NaN);
 
 
 function test_colormodel_fsc_ssc
+TASBEConfig.checkpoint('test');
 
 stem = 'tests/colormodel_csv/';
 
@@ -299,6 +303,7 @@ assertElementsAlmostEqual(CTM.scales,   [NaN NaN NaN; NaN NaN NaN; NaN NaN NaN])
 
 
 function test_colormodel_fsc_ssc_nocolorfile
+TASBEConfig.checkpoint('test');
 
 stem = 'tests/colormodel_csv/';
 
@@ -367,8 +372,8 @@ CTM = struct(CMS.color_translation_model);
 assertElementsAlmostEqual(CTM.scales,   [NaN NaN NaN; NaN NaN NaN; NaN NaN NaN]);
 
 
-
 function test_colormodel_error_missing_colorfiles
+TASBEConfig.checkpoint('test');
 
 stem = 'tests/colormodel_csv/';
 
@@ -398,7 +403,6 @@ assertExceptionThrown(@()(ColorModel(beadfile, blankfile, channels, colorfiles, 
 
 % Make sure manual setting of template file converts to datafile correctly
 function test_colormodel_channeltemplate
-
 TASBEConfig.checkpoint('test');
 
 stem = 'tests/colormodel_csv/';
