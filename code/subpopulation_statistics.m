@@ -19,8 +19,9 @@ ncol = size(data,2);
 
 nbins = get_n_bins(BSeq);
 
-
-counts = zeros(nbins,1); means = counts; stds = counts; % create zero sets
+% create zero sets
+counts = zeros(nbins,1); 
+means = zeros(nbins,ncol); stds = means;
 
 switch(mode)
     case 'geometric'
