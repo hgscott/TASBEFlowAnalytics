@@ -124,6 +124,7 @@ function [scale, CM] = compute_two_color_translation_scale(CM,data,i,j)
     binIncrement = TASBEConfig.get('colortranslation.binIncrement');
     minSamples = TASBEConfig.get('colortranslation.minSamples');
     channelMinimum = TASBEConfig.getexact('colortranslation.channelMinimum',{});
+    channelMaximum = TASBEConfig.getexact('colortranslation.channelMaximum',{});
     
     % Average subpopulations, then find the ratio between them.
     bins = BinSequence(rangeMin,binIncrement,rangeMax,'log_bins');
@@ -139,10 +140,6 @@ function [scale, CM] = compute_two_color_translation_scale(CM,data,i,j)
     % If maximums have been set, filter data to exclude any point that
     % doesn't meet them.
     if(~isempty(channelMaximum))
-        which = data(:,i)<=10^channelMaximum(i) & ...
-                data(:,j)<=10^channelMaximum(j) & ...
-                data(:,ctrl)<=10^channelMaximum(ctrl);
-        data = data(which,:);
         maxbin_i = 10^channelMaximum(i);
         maxbin_j = 10^channelMaximum(j);
     else
