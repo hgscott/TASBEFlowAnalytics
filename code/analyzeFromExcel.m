@@ -50,7 +50,7 @@ function analyzeFromExcel(file, type)
             if is_octave()
                 msg = exception.message;
             else
-                msg = strrep(sprintf(getReport(exception, 'extended', 'hyperlinks', 'off')), newline, '');
+                msg = strrep(sprintf(getReport(exception, 'extended', 'hyperlinks', 'off')), '\n', '');
             end
             id = exception.identifier;
             id_parts = strtrim(strsplit(id, ':'));
