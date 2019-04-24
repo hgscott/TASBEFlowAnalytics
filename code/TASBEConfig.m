@@ -406,7 +406,7 @@ classdef TASBEConfig
                 return
             end
             
-            % Otherwise, go 
+            % Otherwise, go on to setting or getting
             if nargin<3, force = false; end
             
             keyseq = regexp(key, '\.', 'split');
@@ -426,6 +426,11 @@ classdef TASBEConfig
             end
             
             if ~isempty(value) || force
+                % warn if the key is not already in the field names
+                if ~ismember(keyseq{end},fieldnames(nest{end}))
+                    TASBESession.warn('TASBEConfig','UnknownSetting','Setting previously unknown configuration "%s"',key);
+                end
+                % set the value
                 nest{end}.(keyseq{end}) = value;
                 % propagate up the chain
                 for i=1:(numel(keyseq)-1)
@@ -457,7 +462,7 @@ classdef TASBEConfig
             out = TASBEConfig.setget(key,value);
         end
         
-        % Get a value for this key, not following its default chain. If not value is set, try to use the 2nd argument
+        % Get a value for this key, not following its default chain. If no value is set, try to use the 2nd argument
         function out = getexact(key,default)
             % try a get
             out = TASBEConfig.setget(key,[]);
@@ -466,7 +471,7 @@ classdef TASBEConfig
                 if nargin>=2
                     out = TASBEConfig.setget(key,default);
                 else
-                    error('TASBEConfig', 'NoDefault', 'Requested non-existing setting without default: %s',key);
+                    error('TASBEConfig', 'NoDefault', 'Requested non-existant setting without default: %s',key);
                 end
             end
         end
