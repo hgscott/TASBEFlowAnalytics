@@ -207,6 +207,8 @@ classdef TASBEConfig
             s.colortranslation.minSamples = 100;
             doc.colortranslation.channelMinimum = 'If set to [M1, M2, ...] trims channel i values below 10^Mi; otherwise drops those below 10^3';
             s.colortranslation.channelMinimum = {};
+            doc.colortranslation.channelMaximum = 'If set to [M1, M2, ...] trims channel i values above 10^Mi; otherwise drops those above 10^5';
+            s.colortranslation.channelMaximum = {};
             doc.colortranslation.plot = 'Determines whether color translation plots should be created';
             s.colortranslation.plot = [];
             defaults('colortranslation.plot') = 'calibration.plot';

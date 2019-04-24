@@ -73,6 +73,7 @@ function [scale, CM] = compute_translation_scale(CM,data,i,j,ctrl)
     binIncrement = TASBEConfig.get('colortranslation.binIncrement');
     minSamples = TASBEConfig.get('colortranslation.minSamples');
     channelMinimum = TASBEConfig.getexact('colortranslation.channelMinimum',{});
+    channelMaximum = TASBEConfig.getexact('colortranslation.channelMaximum',{});
     
     % Average subpopulations, then find the ratio between them.
     bins = BinSequence(rangeMin,binIncrement,rangeMax,'log_bins');
@@ -89,9 +90,22 @@ function [scale, CM] = compute_translation_scale(CM,data,i,j,ctrl)
         minbin_i = 1e3; minbin_j = 1e3;
     end
     
+    % If maximums have been set, filter data to exclude any point that
+    % doesn't meet them.
+    if(~isempty(channelMaximum))
+        which = data(:,i)<=10^channelMaximum(i) & ...
+                data(:,j)<=10^channelMaximum(j) & ...
+                data(:,ctrl)<=10^channelMaximum(ctrl);
+        data = data(which,:);
+        maxbin_i = 10^channelMaximum(i);
+        maxbin_j = 10^channelMaximum(j);
+    else
+        maxbin_i = 1e5; maxbin_j = 1e5;
+    end
+    
     [counts, means, stds] = subpopulation_statistics(bins,data,ctrl,'geometric');
-    nearMax = 10^(rangeMax-0.5);
-    which = find(counts(:)>minSamples & means(:,i)>minbin_i & means(:,j)>minbin_j & means(:,i)<nearMax & means(:,j)<nearMax); % ignore points without significant support or that are near saturation
+    % nearMax = 10^(rangeMax-0.5);
+    which = find(counts(:)>minSamples & means(:,i)>minbin_i & means(:,j)>minbin_j & means(:,i)<maxbin_i & means(:,j)<maxbin_j); % ignore points without significant support or that are near saturation
     scale = means(which,i) \ means(which,j); % find ratio of j/i
     
     % ERFize channel if possible
@@ -122,13 +136,26 @@ function [scale, CM] = compute_two_color_translation_scale(CM,data,i,j)
         minbin_i = 1e3; minbin_j = 1e3;
     end
     
+    % If maximums have been set, filter data to exclude any point that
+    % doesn't meet them.
+    if(~isempty(channelMaximum))
+        which = data(:,i)<=10^channelMaximum(i) & ...
+                data(:,j)<=10^channelMaximum(j) & ...
+                data(:,ctrl)<=10^channelMaximum(ctrl);
+        data = data(which,:);
+        maxbin_i = 10^channelMaximum(i);
+        maxbin_j = 10^channelMaximum(j);
+    else
+        maxbin_i = 1e5; maxbin_j = 1e5;
+    end
+    
     spine = sqrt(data(:,i).*data(:,j));
     num_rows = size(data,2);
     data(:,num_rows+1) = spine;
     
     [counts, means, stds] = subpopulation_statistics(bins,data,num_rows+1,'geometric');
-    nearMax = 10^(rangeMax-0.5);
-    which = find(counts(:)>minSamples & means(:,i)>minbin_i & means(:,j)>minbin_j & means(:,i)<nearMax & means(:,j)<nearMax); % ignore points without significant support or that are near saturation
+    % nearMax = 10^(rangeMax-0.5);
+    which = find(counts(:)>minSamples & means(:,i)>minbin_i & means(:,j)>minbin_j & means(:,i)<maxbin_i & means(:,j)<maxbin_j); % ignore points without significant support or that are near saturation
     scale = means(which,i) \ means(which,j); % find ratio of j/i
     
     % ERFize channel if possible
