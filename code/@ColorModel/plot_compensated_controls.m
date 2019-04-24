@@ -10,6 +10,8 @@
 % package distribution's top directory.
 
 function plot_compensated_controls(CM)
+figsize = TASBEConfig.get('compensation.plotSize');
+
 n = numel(CM.Channels);
 
 n_processed = 0;
@@ -23,7 +25,7 @@ for driven=1:n
     for passive=1:n,
         if (passive == driven || isUnprocessed(CM.Channels{passive})), continue; end;
             
-        h = figure('PaperPosition',[1 1 6 4]);
+        h = figure('PaperPosition',[1 1 figsize]);
         set(h,'visible','off');
         pos = data(:,driven)>1;
         if sum(pos)==0, 

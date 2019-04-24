@@ -39,8 +39,6 @@ classdef TASBEConfig
             s.flow.pointCloudPath = 'CSV/';
             doc.flow.pointCloudFileType = 'what type of pathname to write to point-cloud JSON header file. 0 stands for absolute, 1 stands for relative.';
             s.flow.pointCloudFileType = 0;
-            doc.flow.defaultCSVReadHeader = 'what is absolute filename for the JSON header file needed to read in CSV files';
-            s.flow.defaultCSVReadHeader = '';
             doc.flow.dataCSVPath = 'location for data summary CSVs';
             s.flow.dataCSVPath = 'CSV/';
             doc.flow.outputHistogramFile = 'if true, output histogram file for batch analysis';
@@ -113,41 +111,68 @@ classdef TASBEConfig
             
             % Gating
             s.gating = struct(); doc.gating = struct();
-            doc.gating.about = 'General settings for GMM Gating';
+            doc.gating.about = 'Settings for GMM Gating';
             doc.gating.fixedSeed = 'When true, controls the random seed for GMM Gating';
             s.gating.fixedSeed = true;
-            
-%             s.gating.fractionFromExtrema = 0.95;    % Fraction of range considered not-saturated and thus included in gating
+            % gating control parameters
+            doc.gating.deviations = 'Number of standard deviations within which gate selects data';
+            s.gating.deviations = 2.0;
+            doc.gating.tightening = 'Amount that selected gate components are further tightened (range: [0,1])';
+            s.gating.tightening = 0.0;
+            doc.gating.kComponents = 'Number of gaussian components in a gate';
+            s.gating.kComponents = 2;
+            doc.gating.channelNames = 'Channels to use for gating'; % used to also include 'FSC-H','FSC-W','SSC-H','SSC-W'
+            s.gating.channelNames = {'FSC-A','SSC-A'}; 
 %             s.gating.saturationWarning = 0.3;       % Warn about saturation distorting gates if fraction non-extrema less than this level
-%             s.gating.numComponents = 2;             % number of gaussian components searched for
-%             s.gating.rankedComponents = 1;          % Array of which components will be selected, in order of tightness
-%             s.gating.deviations = 2.0;              % number of standard deviations out the gaussian that will be allowed
-%             s.gating.tightening = [];               % If set, amount that selected components are further tightened (range: [0,1])
-%             s.gating.plot = [];                     % Should a gating plot be created?
-%             s.gating.showNonselected = true;        % Should plot show only the selected component(s), or all of them?
-%             defaults('gating.plot') = 'calibration.plot';
-%             s.gating.visiblePlots = [];             % should gating plot be visible, or just created?
-%             defaults('gating.visiblePlots') = 'calibration.visiblePlots';
-%             s.gating.plotPath = [];                 % where should gating plot go?
-%             defaults('gating.plotPath') = 'calibration.plotPath';
-%             s.gating.plotSize = [];                 % What size (in inches) should gating plot be?
-%             defaults('gating.plotSize') = 'calibration.heatmapPlotSize';
+            doc.gating.fraction = 'Fraction of range considered saturated and thus excluded from computation';
+            s.gating.fraction = 0.95;
+            doc.gating.selectedComponents = 'Set to force selection of particular components';
+            s.gating.selectedComponents = [];
+            % gating custom plotting parameters
+            doc.gating.showNonselected = 'When true, show all gate components; when false, selected components only.';
+            s.gating.showNonselected = true;
+            doc.gating.largeOutliers = 'When true, plot gate outliers with large dots';
+            s.gating.largeOutliers = true;
+            doc.gating.range = 'Force gate heatmap plotting range of [x_min y_min; x_max y_max]';
+            s.gating.range = [];
+            doc.gating.density = 'Gate heatmap style: set to 1 for image, 0 for contour';
+            s.gating.density = 1;
+            % gating standard plotting parameters
+            doc.gating.plot = 'Determines whether gating plots should be created';
+            s.gating.plot = [];
+            defaults('gating.plot') = 'calibration.plot';
+            doc.gating.visiblePlots = 'If true, gating plots are visible; otherwise, they are hidden for later saving';
+            s.gating.visiblePlots = [];
+            defaults('gating.visiblePlots') = 'calibration.visiblePlots';
+            doc.gating.plotPath = 'Location for gating plots';
+            s.gating.plotPath = [];                 % where should gating plot go?
+            defaults('gating.plotPath') = 'calibration.plotPath';
+            doc.gating.plotSize = 'Size (in inches) [X Y] for gating figures';
+            s.gating.plotSize = [];                 % What size (in inches) should gating plot be?
+            defaults('gating.plotSize') = 'calibration.heatmapPlotSize';
+            
             
             % Autofluorescence removal
-%             s.autofluorescence = struct();
-%             s.autofluorescence.dropFractions = 0.025;   % What fraction of the extrema should be dropped before computing autofluorescence?
-%             s.autofluorescence.plot = [];               % Should an autofluorescence plot be created?
-%             defaults('autofluorescence.plot') = 'calibration.plot';
-%             s.autofluorescence.visiblePlots = [];       % should autofluorescence plot be visible, or just created?
-%             defaults('autofluorescence.visiblePlots') = 'calibration.visiblePlots';
-%             s.autofluorescence.plotPath = [];           % where should autofluorescence plot go?
-%             defaults('autofluorescence.plotPath') = 'calibration.plotPath';
-%             s.autofluorescence.plotSize = [];           % What size (in inches) should autofluorescence plot be?
-%             defaults('autofluorescence.plotSize') = 'calibration.graphPlotSize';
+            s.autofluorescence = struct(); doc.autofluorescence = struct();
+            doc.autofluorescence.about = 'Settings for autofluorescence models';
+            doc.autofluorescence.dropFraction = 'Fraction of extrema (high and low) to drop before computing autofluorescence';
+            s.autofluorescence.dropFraction = 0.025;
+            doc.autofluorescence.plot = 'Determines whether autofluorescence plots should be created';
+            s.autofluorescence.plot = [];
+            defaults('autofluorescence.plot') = 'calibration.plot';
+            doc.autofluorescence.visiblePlots = 'If true, autofluorescence plots are visible; otherwise, they are hidden for later saving';
+            s.autofluorescence.visiblePlots = [];
+            defaults('autofluorescence.visiblePlots') = 'calibration.visiblePlots';
+            doc.autofluorescence.plotPath = 'Location for autofluorescence plots';
+            s.autofluorescence.plotPath = [];
+            defaults('autofluorescence.plotPath') = 'calibration.plotPath';
+            doc.autofluorescence.plotSize = 'Size (in inches) [X Y] for autofluorescence figures';
+            s.autofluorescence.plotSize = [];
+            defaults('autofluorescence.plotSize') = 'calibration.graphPlotSize';
             
             % Spectral bleed compensation
-            s.compensation = struct();doc.compensation = struct();
-            doc.compensation.about = 'General settings for spectral bleed compensation plots';
+            s.compensation = struct(); doc.compensation = struct();
+            doc.compensation.about = 'Settings for spectral bleed compensation';
             doc.compensation.minimumDrivenLevel = 'Uniformly ignores all less than this level of a.u.';
             s.compensation.minimumDrivenLevel = 1e2;    % uniformly ignore all less than this level of a.u. 
             doc.compensation.maximumDrivenLevel = 'Uniformly ignores all greater than this level of a.u.';
@@ -162,13 +187,39 @@ classdef TASBEConfig
             doc.compensation.visiblePlots = 'If true, compensation plots are visible; otherwise, they are hidden for later saving';
             s.compensation.visiblePlots = [];           % should compensation plot be visible, or just created?
             defaults('compensation.visiblePlots') = 'calibration.visiblePlots';
-            doc.compensation.plotPath = 'Default location for compensation plots';
+            doc.compensation.plotPath = 'Location for compensation plots';
             s.compensation.plotPath = [];               % where should compensation plot go?
             defaults('compensation.plotPath') = 'calibration.plotPath';
-            doc.compensation.plotSize = 'Default size (in inches) [X Y] for compensation figures';
-            s.compensation.plotSize = [];               % What size (in inches) should compensation figure be?
+            doc.compensation.plotSize = 'Size (in inches) [X Y] for compensation figures';
+            s.compensation.plotSize = [6 4];
             defaults('compensation.plotSize') = 'calibration.heatmapPlotSize';
             
+            % Color translation
+            s.colortranslation = struct();
+            doc.colortranslation.about = 'Settings for color translation models';
+            doc.colortranslation.rangeMin = 'Minimum for color translation histogram range (log10 scale)';
+            s.colortranslation.rangeMin = 1;
+            doc.colortranslation.rangeMax = 'Maximum in histogram for computing color translation (log10 scale)';
+            s.colortranslation.rangeMax = 5.5;
+            doc.colortranslation.binIncrement = 'Resolution of histogram bins used for computing color translation (log10 scale)';
+            s.colortranslation.binIncrement = 0.1;
+            doc.colortranslation.minSamples = 'Minimum number of samples in a histogram bin for use in computing color translation';
+            s.colortranslation.minSamples = 100;
+            doc.colortranslation.channelMinimum = 'If set to [M1, M2, ...] trims channel i values below 10^Mi; otherwise drops those below 10^3';
+            s.colortranslation.channelMinimum = {};
+            doc.colortranslation.plot = 'Determines whether color translation plots should be created';
+            s.colortranslation.plot = [];
+            defaults('colortranslation.plot') = 'calibration.plot';
+            doc.colortranslation.visiblePlots = 'If true, color translation plots are visible; otherwise, they are hidden for later saving';
+            s.colortranslation.visiblePlots = [];
+            defaults('colortranslation.visiblePlots') = 'calibration.visiblePlots';
+            doc.colortranslation.plotPath = 'Location for color translation plots';
+            s.colortranslation.plotPath = [];
+            defaults('colortranslation.plotPath') = 'calibration.plotPath';
+            doc.colortranslation.plotSize = 'Size (in inches) [X Y] for color translation figures';
+            s.colortranslation.plotSize = [6 4];
+            defaults('colortranslation.plotSize') = 'calibration.heatmapPlotSize';
+
             % Beads
             s.beads = struct(); doc.beads = struct();
             doc.beads.about = 'Settings controlling the interpretation of color calibration beads';
@@ -182,7 +233,7 @@ classdef TASBEConfig
             s.beads.rangeMin = 2;
             doc.beads.rangeMax = 'Maximum value considered for bead peaks (log scale: 10^rangeMax)';
             s.beads.rangeMax = 7;
-            doc.beads.binIncrement = 'Resolution of histogram bins used for finding bead peaks';
+            doc.beads.binIncrement = 'Resolution of histogram bins used for finding bead peaks (log10 scale)';
             s.beads.binIncrement = 0.02;
             doc.beads.beadModel = 'Model of beads that are being used. Should match an option in BeadCatalog.xlsx';
             s.beads.beadModel = 'SpheroTech RCP-30-5A';
@@ -216,7 +267,7 @@ classdef TASBEConfig
             s.sizebeads.rangeMin = 2;
             doc.beads.rangeMax = 'Maximum value considered for size bead peaks (log scale: 10^rangeMax)';
             s.sizebeads.rangeMax = 7;
-            doc.sizebeads.binIncrement = 'Resolution of histogram bins used for finding size bead peaks';
+            doc.sizebeads.binIncrement = 'Resolution of histogram bins used for finding size bead peaks (log10 scale)';
             s.sizebeads.binIncrement = 0.02;
             doc.sizebeads.beadModel = 'Model of size beads that are being used. Should match an option in BeadCatalog.xlsx';
             s.sizebeads.beadModel = 'SpheroTech PPS-6K';
@@ -283,7 +334,7 @@ classdef TASBEConfig
             doc.OutputSettings.PlotTickMarks = 'If true, displays tick marks';
             s.OutputSettings.PlotTickMarks = false;
             doc.OutputSettings.FigureSize = 'Size (in inches) [X Y] for figures';
-            s.OutputSettings.FigureSize = [];
+            s.OutputSettings.FigureSize = [5 3.66];
             doc.OutputSettings.csvfile = 'May be either a fid (file identifier) or a string';
             s.OutputSettings.csvfile = []; 
             
@@ -308,22 +359,6 @@ classdef TASBEConfig
             doc.template.displayErrors = 'If true, will display ALL of the TASBE warnings and errors from TemplateExtraction';
             s.template.displayErrors = false;
             
-            % Color translation
-%             s.colortranslation = struct();
-%             s.colortranslation.rangeMin = 3;                % bin minimum (log10 scale), universal minimum trim
-%             s.colortranslation.rangeMax = 5.5;              % bin maximum (log10 scale)
-%             s.colortranslation.binIncrement = 0.1;          % resolution of binning
-%             s.colortranslation.minSamples = 100;            % How many samples are needed for a bin's data to be used?
-%             s.colortranslation.trimMinimum = {};            % If set, trims individual channels via {{Channel,log10(min)} ...}
-%             s.colortranslation.plot = [];                   % Should an autofluorescence plot be created?
-%             defaults('colortranslation.plot') = 'calibration.plot';
-%             s.colortranslation.visiblePlots = [];           % should autofluorescence plot be visible, or just created?
-%             defaults('colortranslation.visiblePlots') = 'calibration.visiblePlots';
-%             s.colortranslation.plotPath = [];               % where should autofluorescence plot go?
-%             defaults('colortranslation.plotPath') = 'calibration.plotPath';
-%             s.colortranslation.plotSize = [];               % What size (in inches) should autofluorescence plot be?
-%             defaults('colortranslation.plotSize') = 'calibration.heatmapPlotSize';
-
             % Last of all, bundle it in a cell array to return
             state = {s defaults doc};
         end

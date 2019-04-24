@@ -15,6 +15,7 @@ ticks = TASBEConfig.get('OutputSettings.PlotTickMarks');
 stemName = TASBEConfig.get('OutputSettings.StemName');
 deviceName = TASBEConfig.get('OutputSettings.DeviceName');
 directory = TASBEConfig.get('plots.plotPath');
+figsize = TASBEConfig.get('OutputSettings.FigureSize');
 
 AP = getAnalysisParameters(results);
 n_bins = get_n_bins(getBins(AP));
@@ -40,7 +41,7 @@ fa = getFractionActive(results);
 
 %%%% Inducer plots
 % Plain inducer plot:
-h = figure('PaperPosition',[1 1 5 3.66]);
+h = figure('PaperPosition',[1 1 figsize]);
 set(h,'visible','off');
 for i=1:step:n_bins
     which = fa(i,:)>getMinFractionActive(AP);
@@ -71,7 +72,7 @@ outputfig(h,[clean_for_latex(stemName),'-',clean_for_latex(deviceName),'-mean'],
 % Plasmid system is disabled, due to uncertainty about correctness
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % % Normalized inducer plot:
-% h = figure('PaperPosition',[1 1 5 3.66]);
+% h = figure('PaperPosition',[1 1 figsize]);
 % set(h,'visible','off');
 % for i=1:step:n_bins
 %     which = fa(i,:)>0.9;

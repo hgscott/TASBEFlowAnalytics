@@ -48,7 +48,7 @@ for i=1:batch_size
                 TASBESession.error('TASBE:Analysis','MissingFile','Could not find file: %s',char(fileset{k,2}));
             end
         end
-    end
+    end 
 end
 
 pm_results = cell(batch_size,1);

@@ -30,19 +30,19 @@ AP=setUseAutoFluorescence(AP,false');
 % Make a map of condition names to file sets
 file_pairs = {...
   'Dox 0.1',    {[stem1011 'B3_P3.fcs']}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
-  'Dox 0.2',    {[stem1011 'B4_P3.fcs']};
-  'Dox 0.5',    {[stem1011 'B5_P3.fcs']};
-  'Dox 1.0',    {[stem1011 'B6_P3.fcs']};
-  'Dox 2.0',    {[stem1011 'B7_P3.fcs']};
-  'Dox 5.0',    {[stem1011 'B8_P3.fcs']};
-  'Dox 10.0',   {[stem1011 'B9_P3.fcs']};
-  'Dox 20.0',   {[stem1011 'B10_P3.fcs']};
-  'Dox 50.0',   {[stem1011 'B11_P3.fcs']};
-  'Dox 100.0',  {[stem1011 'B12_P3.fcs']};
-  'Dox 200.0',  {[stem1011 'C1_P3.fcs']};
-  'Dox 500.0',  {[stem1011 'C2_P3.fcs']};
-  'Dox 1000.0', {[stem1011 'C3_P3.fcs']};
-  'Dox 2000.0', {[stem1011 'C4_P3.fcs']};
+  'Dox 0.2',    {[stem1011 'B4_P3.fcs']}; % first couple are just strings to test implicit conversion
+  'Dox 0.5',    {DataFile('fcs', [stem1011 'B5_P3.fcs'])};
+  'Dox 1.0',    {DataFile('fcs', [stem1011 'B6_P3.fcs'])};
+  'Dox 2.0',    {DataFile('fcs', [stem1011 'B7_P3.fcs'])};
+  'Dox 5.0',    {DataFile('fcs', [stem1011 'B8_P3.fcs'])};
+  'Dox 10.0',   {DataFile('fcs', [stem1011 'B9_P3.fcs'])};
+  'Dox 20.0',   {DataFile('fcs', [stem1011 'B10_P3.fcs'])};
+  'Dox 50.0',   {DataFile('fcs', [stem1011 'B11_P3.fcs'])};
+  'Dox 100.0',  {DataFile('fcs', [stem1011 'B12_P3.fcs'])};
+  'Dox 200.0',  {DataFile('fcs', [stem1011 'C1_P3.fcs'])};
+  'Dox 500.0',  {DataFile('fcs', [stem1011 'C2_P3.fcs'])};
+  'Dox 1000.0', {DataFile('fcs', [stem1011 'C3_P3.fcs'])};
+  'Dox 2000.0', {DataFile('fcs', [stem1011 'C4_P3.fcs'])};
   };
 
 n_conditions = size(file_pairs,1);
@@ -240,8 +240,8 @@ AP=setUseAutoFluorescence(AP,false');
 
 % Make a map of condition names to file sets
 file_pairs = {...
-  'Dox 0.1',    {[stem1011 'B3_P3.fcs']};
-  'Dox 2000.0', {[stem1011 'C4_P3.fcs']};
+  'Dox 0.1',    {DataFile([stem1011 'B3_P3.fcs'])};
+  'Dox 2000.0', {DataFile([stem1011 'C4_P3.fcs'])};
   };
 
 % Execute the actual analysis
@@ -350,20 +350,20 @@ AP=setUseAutoFluorescence(AP,false');
 
 % Make a map of condition names to file sets
 file_pairs = {...
-  'Dox 0.1',    {[stem1011 'B3_P3.fcs']}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
-  'Dox 0.2',    {[stem1011 'B4_P3.fcs']};
-  'Dox 0.5',    {[stem1011 'B5_P3.fcs']};
-  'Dox 1.0',    {[stem1011 'B6_P3.fcs']};
-  'Dox 2.0',    {[stem1011 'B7_P3.fcs']};
-  'Dox 5.0',    {[stem1011 'B8_P3.fcs']};
-  'Dox 10.0',   {[stem1011 'B9_P3.fcs']};
-  'Dox 20.0',   {[stem1011 'B10_P3.fcs']};
-  'Dox 50.0',   {[stem1011 'B11_P3.fcs']};
-  'Dox 100.0',  {[stem1011 'B12_P3.fcs']};
-  'Dox 200.0',  {[stem1011 'C1_P3.fcs']};
-  'Dox 500.0',  {[stem1011 'C2_P3.fcs']};
-  'Dox 1000.0', {[stem1011 'C3_P3.fcs']};
-  'Dox 2000.0', {[stem1011 'C4_P3.fcs']};
+  'Dox 0.1',    {DataFile('fcs', [stem1011 'B3_P3.fcs'])}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
+  'Dox 0.2',    {DataFile('fcs', [stem1011 'B4_P3.fcs'])};
+  'Dox 0.5',    {DataFile('fcs', [stem1011 'B5_P3.fcs'])};
+  'Dox 1.0',    {DataFile('fcs', [stem1011 'B6_P3.fcs'])};
+  'Dox 2.0',    {DataFile('fcs', [stem1011 'B7_P3.fcs'])};
+  'Dox 5.0',    {DataFile('fcs', [stem1011 'B8_P3.fcs'])};
+  'Dox 10.0',   {DataFile('fcs', [stem1011 'B9_P3.fcs'])};
+  'Dox 20.0',   {DataFile('fcs', [stem1011 'B10_P3.fcs'])};
+  'Dox 50.0',   {DataFile('fcs', [stem1011 'B11_P3.fcs'])};
+  'Dox 100.0',  {DataFile('fcs', [stem1011 'B12_P3.fcs'])};
+  'Dox 200.0',  {DataFile('fcs', [stem1011 'C1_P3.fcs'])};
+  'Dox 500.0',  {DataFile('fcs', [stem1011 'C2_P3.fcs'])};
+  'Dox 1000.0', {DataFile('fcs', [stem1011 'C3_P3.fcs'])};
+  'Dox 2000.0', {DataFile('fcs', [stem1011 'C4_P3.fcs'])};
   };
 
 n_conditions = size(file_pairs,1);
@@ -432,8 +432,8 @@ AP=setUseAutoFluorescence(AP,false');
 
 % Make a map of condition names to file sets
 file_pairs = {...
-  'Dox 0.1',    {[stem1011 'B3_P3.fcs']};
-  'Dox 0.2',    {[stem1011 'B4_P3.fcs']};
+  'Dox 0.1',    {DataFile([stem1011 'B3_P3.fcs'])};
+  'Dox 0.2',    {DataFile([stem1011 'B4_P3.fcs'])};
   };
 
 % Execute the actual analysis
@@ -446,3 +446,44 @@ TASBEConfig.set('OutputSettings.FixedInputAxis',[1e4 1e10]);
 plot_batch_histograms(results,sampleresults,CM);
 
 save('/tmp/LacI-CAGop-batch-single.mat','AP','bins','file_pairs','results','sampleresults');
+
+
+function test_dataless_batch_analysis
+
+CM = load_or_make_testing_colormodel();
+stem1011 = '../TASBEFlowAnalytics-Tutorial/example_assay/LacI-CAGop_';
+
+% configure to discard all data from bins
+bins = BinSequence(14,0.1,20,'log_bins');
+
+AP = AnalysisParameters(bins,{});
+AP=setMinValidCount(AP,100');
+AP=setPemDropThreshold(AP,5');
+AP=setUseAutoFluorescence(AP,false');
+
+% Make a map of condition names to file sets
+file_pairs = {...
+  'Dox 0.1',    {[stem1011 'B3_P3.fcs']};
+  };
+
+% Execute the actual analysis
+TASBEConfig.set('OutputSettings.StemName','LacI-CAGop');
+[results, sampleresults] = per_color_constitutive_analysis(CM,file_pairs,{'EBFP2','EYFP','mKate'},AP);
+
+% Make output plots
+TASBEConfig.set('plots.plotPath','/tmp/plots');
+TASBEConfig.set('OutputSettings.FixedInputAxis',[1e4 1e10]);
+plot_batch_histograms(results,sampleresults,CM,{'b','g','r'});
+
+save('/tmp/LacI-dataless-batch.mat','AP','bins','file_pairs','results','sampleresults');
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Check results in results:
+
+assertEqual(numel(results), 1);
+
+% see that counts are all zeros
+assertElementsAlmostEqual(results{1}.bincounts, zeros(size(results{1}.bincounts)),     'relative', 1e-2);
+
+assertElementsAlmostEqual(results{1}.means, nan(1,3), 'relative', 1e-2);
+assertElementsAlmostEqual(results{1}.stds,  nan(1,3),  'relative', 1e-2);

@@ -25,7 +25,8 @@ strongonly = find(~isnan(in1) & ~isnan(in2) & (in1>1e5 | 1e2>1e5));
 mean_indiff_strong = geomean(in1(strongonly)./in2(strongonly))
 mean_outdiff_strong = geomean(out1(strongonly)./out2(strongonly))
 
-figure('PaperPosition',[1 1 5 3.66]);
+figsize = TASBEConfig.get('OutputSettings.FigureSize');
+figure('PaperPosition',[1 1 figsize]);
 loglog(in1(both),out1(both),'b.'); hold on;
 loglog(in2(both),out2(both),'g.');
 loglog(in1(one_only),out1(one_only),'k.');

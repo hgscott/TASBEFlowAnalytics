@@ -40,8 +40,8 @@ function beadfiles = getBeadFile(extractor)
         end
         ind = find(ismember(bead_name, name), 1);
         if ~isempty(ind)
-            file = getExcelFilename(extractor, i);
-            beadfiles{ind} = file{1};
+            datafile = getExcelFilename(extractor, i);
+            beadfiles{ind} = datafile{1};
         end
     end
 end

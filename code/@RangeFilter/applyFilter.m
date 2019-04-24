@@ -42,7 +42,7 @@ for i=1:numel(RF.channels)
         end
     end
     if(~found), 
-        TASBESession.error('TASBE:RangeFilter',['Could not find range filter channel: ' RF.channel]); 
+        TASBESession.error('TASBE:RangeFilter','MissingChannel','Could not find range filter channel: %s',RF.channels{i}); 
     else
         pass_values = channeldata >= RF.ranges(i,1) & channeldata <= RF.ranges(i,2);
         switch RF.mode

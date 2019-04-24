@@ -17,6 +17,7 @@ cfp_units = '';
 
 stemName = TASBEConfig.get('OutputSettings.StemName');
 directory = TASBEConfig.get('plots.plotPath');
+figsize = TASBEConfig.get('OutputSettings.FigureSize');
 
 % Create legendentries
 legendentries = cell(0);
@@ -28,7 +29,7 @@ end
 %%% Bin count plots:
 % Counts by CFP level:
 maxcount = 1e1;
-h = figure('PaperPosition',[1 1 5 3.66]);
+h = figure('PaperPosition',[1 1 figsize]);
 set(h,'visible','off');
 lines = [];
 legendentries2 = legendentries;
@@ -103,7 +104,7 @@ else
 end
 
 % Fraction active per bin:
-h = figure('PaperPosition',[1 1 5 3.66]);
+h = figure('PaperPosition',[1 1 figsize]);
 set(h,'visible','off');
 lines = [];
 for i=1:n_var
@@ -140,7 +141,7 @@ end
 % Plasmid system is disabled, due to uncertainty about correctness
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Counts by estimated plasmid count:
-% h = figure('PaperPosition',[1 1 5 3.66]);
+% h = figure('PaperPosition',[1 1 figsize]);
 % set(h,'visible','off');
 % for i=1:n_inductions
 %     replicates = sampleresults{i};

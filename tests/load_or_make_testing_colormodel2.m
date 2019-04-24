@@ -16,16 +16,7 @@ beadfile = [stem0312 'Beads_P3.fcs'];
 blankfile = [stem0312 'blank_P3.fcs'];
 
 % Autodetect gating with an N-dimensional gaussian-mixture-model
-AGP = AutogateParameters();
-% Adjust AGP values if needed.  The most common adjustments are below:
-% These are the most common values to adjust:
-% Match t
-%AGP.channel_names = {'FSC-A','SSC-A','FSC-H','FSC-W','SSC-H','SSC-W'};
-% Typically two components: one tight single-cell component, one diffuse 
-% non-cell or clump component.  More complex distributions may need more.
-%AGP.k_components = 2;
-%AGP.selected_components = [1];
-autogate = GMMGating(blankfile,AGP,TASBEConfig.get('plots.plotPath'));
+autogate = GMMGating(blankfile);
 
 % Create one channel / colorfile pair for each color
 channels = {}; colorfiles = {};
@@ -56,8 +47,6 @@ colorpairfiles{1} = {channels{1}, channels{2}, channels{3}, [stem0312 'mkate_EBF
 colorpairfiles{2} = {channels{1}, channels{3}, channels{2}, [stem0312 'mkate_EBFP2_EYFP_P3.fcs']};
 
 CM = ColorModel(beadfile, blankfile, channels, colorfiles, colorpairfiles);
-CM=set_translation_plot(CM, true);
-CM=set_noise_plot(CM, true);
 
 TASBEConfig.set('beads.beadModel','SpheroTech RCP-30-5A'); % Entry from BeadCatalog.xls matching your beads
 TASBEConfig.set('beads.beadBatch','Lot AA01, AA02, AA03, AA04, AB01, AB02, AC01, GAA01-R'); % Entry from BeadCatalog.xls containing your lot
@@ -72,7 +61,7 @@ TASBEConfig.set('beads.rangeMin', 2);
 %TASBEConfig.set('beads.peakThreshold', 200);
 CM=set_ERF_channel_name(CM, 'FITC-A');
 % Ignore channel data for ith channel if below 10^[value(i)]
-CM=set_translation_channel_min(CM,[2,2,2]);
+TASBEConfig.set('colortranslation.channelMinimum',[2,2,2]);
 
 % When dealing with very strong fluorescence, use secondary channel to segment
 % TASBEConfig.set('beads.secondaryBeadChannel','PE-Tx-Red-YG-A');

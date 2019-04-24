@@ -9,12 +9,11 @@ function test_suite = test_autogating
 function test_autogate
 
 stem0312 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_';
-blankfile = [stem0312 'blank_P3.fcs'];
+blankfile = DataFile('fcs', [stem0312 'blank_P3.fcs']);
 
 % Autodetect gating with an N-dimensional gaussian-mixture-model
-AGP = AutogateParameters();
-AGP.channel_names = {'FSC-A','SSC-A'};
-gate = GMMGating(blankfile,AGP,'/tmp/plots');
+TASBEConfig.set('gating.channelNames',{'FSC-A','SSC-A'});
+gate = GMMGating(blankfile);
 
 gate = struct(gate);
 
@@ -32,12 +31,11 @@ assertElementsAlmostEqual(GDS.Sigma,expected_sigma,'absolute',0.01);
 function test_6D_autogate
 
 stem0312 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_';
-blankfile = [stem0312 'blank_P3.fcs'];
+blankfile = DataFile('fcs', [stem0312 'blank_P3.fcs']);
 
 % Autodetect gating with an N-dimensional gaussian-mixture-model
-AGP = AutogateParameters();
-AGP.channel_names = {'FSC-A','SSC-A','FSC-H','SSC-H','FSC-W','SSC-W'};
-gate = GMMGating(blankfile,AGP,'/tmp/plots');
+TASBEConfig.set('gating.channelNames',{'FSC-A','SSC-A','FSC-H','SSC-H','FSC-W','SSC-W'});
+gate = GMMGating(blankfile);
 
 [~,fcshdr,data] = fca_readfcs([stem0312 'EYFP_P3.fcs']);
 % make sure it can apply properly, without errors

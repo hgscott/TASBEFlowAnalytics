@@ -15,6 +15,7 @@ step = TASBEConfig.get('OutputSettings.PlotEveryN');
 ticks = TASBEConfig.get('OutputSettings.PlotTickMarks');
 directory = TASBEConfig.get('plots.plotPath');
 stemName = TASBEConfig.get('OutputSettings.StemName');
+figsize = TASBEConfig.get('OutputSettings.FigureSize');
 
 % Setting up additional plot features 
 variable = getInducerLevelsToFiles(getExperiment(all_pm_results{1}.PlusResults),1);
@@ -70,7 +71,7 @@ comlegendentries = legendentries(1:end-1);
 
 %%% I/O plots:
 % Plain I/O plot:
-h = figure('PaperPosition',[1 1 5 3.66]);
+h = figure('PaperPosition',[1 1 figsize]);
 set(h,'visible','off');
 lines = [];
 add_lines = true;
@@ -141,7 +142,7 @@ else
 end
 
 % normalized I/O plot
-h = figure('PaperPosition',[1 1 5 3.66]);
+h = figure('PaperPosition',[1 1 figsize]);
 set(h,'visible','off');
 lines = [];
 add_lines = true;
@@ -211,7 +212,7 @@ else
 end
 
 % IFP vs. CFP
-h = figure('PaperPosition',[1 1 5 3.66]);
+h = figure('PaperPosition',[1 1 figsize]);
 set(h,'visible','off');
 lines = [];
 add_lines = true;
@@ -282,7 +283,7 @@ else
 end
 
 % OFP vs. CFP
-h = figure('PaperPosition',[1 1 5 3.66]);
+h = figure('PaperPosition',[1 1 figsize]);
 set(h,'visible','off');
 lines = [];
 add_lines = true;
@@ -354,7 +355,7 @@ end
 
 % % Relative change in OFP vs. CFP
 % Removed because it wasn't ever useful
-% h = figure('PaperPosition',[1 1 5 3.66]);
+% h = figure('PaperPosition',[1 1 figsize]);
 % set(h,'visible','off');
 % for i=1:step:n_var
 %     which = find(pm_results.Valid(1:(end-1),i,1) & pm_results.Valid(1:(end-1),i,2) & ...
@@ -384,7 +385,7 @@ end
 % 
 
 % ratio plot
-h = figure('PaperPosition',[1 1 5 3.66]);
+h = figure('PaperPosition',[1 1 figsize]);
 set(h,'visible','off');
 lines = [];
 for i=1:numel(all_pm_results)
@@ -423,7 +424,7 @@ for i=1:numel(legendentries)
     legendentries2{i} = [legendentries{i} ' output SNR'];
 end
 legendentries2{end} = 'input SNR';
-h = figure('PaperPosition',[1 1 5 3.66]);
+h = figure('PaperPosition',[1 1 figsize]);
 set(h,'visible','off');
 lines = [];
 for i=1:numel(all_pm_results)
@@ -471,7 +472,7 @@ else
 end
 
 % Delta SNR plots
-h = figure('PaperPosition',[1 1 5 3.66]);
+h = figure('PaperPosition',[1 1 figsize]);
 set(h,'visible','off');
 lines = [];
 for i=1:numel(all_pm_results)

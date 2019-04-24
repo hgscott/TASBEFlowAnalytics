@@ -9,17 +9,17 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function [data,fcshdr,n_removed] = read_filtered_au(CM,filename)
+function [data,fcshdr,n_removed] = read_filtered_au(CM,datafile)
     % Get read FCS file and select channels of interest
-    [~,fcshdr,rawfcs] = fca_read(filename);
+    [~,fcshdr,rawfcs] = fca_read(datafile);
     if (isempty(fcshdr))
-        TASBESession.error('TASBE:ReadFCS','CannotReadFile','Could not process FCS file %s', filename);
+        TASBESession.error('TASBE:ReadFCS','CannotReadFile','Could not process FCS file %s', getFile(datafile));
     end
     
     data = rawfcs;
     n_raw_events = size(data,1);
     if n_raw_events<TASBEConfig.get('flow.smallFileWarning')
-        TASBESession.warn('TASBE:ReadFCS','UnusuallySmallFile','FCS file "%s" is unusually small: only %i events', filename, n_raw_events);
+        TASBESession.warn('TASBE:ReadFCS','UnusuallySmallFile','FCS file "%s" is unusually small: only %i events', getFile(datafile), n_raw_events);
     end
     
     try
@@ -35,7 +35,7 @@ function [data,fcshdr,n_removed] = read_filtered_au(CM,filename)
         end
         % make sure we didn't throw away huge amounts...
         if numel(data)<numel(rawfcs)*TASBEConfig.get('flow.preGateDiscardsWarning')
-            TASBESession.warn('TASBE:ReadFCS','TooMuchDataDiscarded','a.u. (pre)filters may be discarding too much data: only %d%% retained in %s',numel(data)/numel(rawfcs)*100,filename);
+            TASBESession.warn('TASBE:ReadFCS','TooMuchDataDiscarded','a.u. (pre)filters may be discarding too much data: only %d%% retained in %s',numel(data)/numel(rawfcs)*100,getFile(datafile));
         end
     end
     
