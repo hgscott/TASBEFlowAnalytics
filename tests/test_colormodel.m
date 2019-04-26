@@ -58,6 +58,9 @@ CM=set_ERF_channel_name(CM, 'FITC-A');
 % Ignore channel data for ith channel if below 10^[value(i)]
 TASBEConfig.set('colortranslation.channelMinimum',[2,2,2]);
 
+% Ignore channel data for ith channel if above 10^[value(i)]
+TASBEConfig.set('colortranslation.channelMaximum',[6,6,6]);
+
 TASBEConfig.set('plots.plotPath', '/tmp/plots');
 CM = add_prefilter(CM,autogate);
 
@@ -158,6 +161,9 @@ TASBEConfig.set('beads.rangeMin', 2);
 CM=set_ERF_channel_name(CM, 'FITC-A');
 % Ignore channel data for ith channel if below 10^[value(i)]
 TASBEConfig.set('colortranslation.channelMinimum',[2,2,2]);
+
+% Ignore channel data for ith channel if above 10^[value(i)]
+TASBEConfig.set('colortranslation.channelMaximum',[6,6,6]);
 
 TASBEConfig.set('plots.plotPath', '/tmp/plots');
 CM = add_prefilter(CM,autogate);
