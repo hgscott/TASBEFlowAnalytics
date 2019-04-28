@@ -128,6 +128,8 @@ classdef TASBEConfig
             s.gating.fraction = 0.95;
             doc.gating.selectedComponents = 'Set to force selection of particular components';
             s.gating.selectedComponents = [];
+            doc.gating.selectedComponentLocations = 'Set to NxK array (N channels, K components) to force selection of unique components specified by each row';
+            s.gating.selectedComponentLocations = [];
             % gating custom plotting parameters
             doc.gating.showNonselected = 'When true, show all gate components; when false, selected components only.';
             s.gating.showNonselected = true;
