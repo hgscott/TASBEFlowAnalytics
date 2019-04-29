@@ -28,7 +28,6 @@ end
 % Is header already a struct, or is it a filename to be read?
 if isstruct(header) 
     fcshdr = header;
-    filenames = fcshdr.filename;
     hdrfilename = fcshdr.filepath;
 else % assume it's a file name
     hdrfilename = header;
@@ -39,8 +38,13 @@ else % assume it's a file name
         return;
     end
     % Read in header info
-    [fcshdr,filenames] = fca_readcsv_header(header);
+    fcshdr = fca_readcsv_header(header);
 end
+% check if header lists csv
+if ~header_lists_csv(fcshdr,filename),
+    TASBESession.warn('fca_readcsv','FilenameMismatch','CSV file %s is not listed in JSON header %s',filename,hdrfilename);
+end
+
 
 % If filename arg. only contain PATH, set the default dir to this
 % before issuing the uigetfile command. This is an option for the "fca"
@@ -63,24 +67,6 @@ end
 % add the name and path for this particular file to the filename
 fcshdr.filename = FileName;
 fcshdr.filepath = FilePath;
-
-% consider both absolute and relative in comparing with filenames
-HdrPath = fileparts(hdrfilename);
-% Check if file is in the set covered by the header
-file_match = 0;
-filename_to_compare = strrep(filename, '\', '/');
-for i=1:numel(filenames)
-    temp_filename = filenames{i};
-    temp_filename = strrep(temp_filename, '\', '/');
-    if strcmp(temp_filename, filename_to_compare) || strcmp(strcat(HdrPath, '/', temp_filename),filename_to_compare)
-        file_match = 1;
-        break
-    end
-end
-if file_match ~= 1
-    TASBESession.warn('fca_readcsv','FilenameMismatch','CSV file %s is not listed in JSON header %s',filename,hdrfilename);
-end
-
 
 % Read in the data
 if is_octave()

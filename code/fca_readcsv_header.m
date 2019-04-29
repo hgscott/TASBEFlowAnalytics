@@ -15,7 +15,7 @@ end
 fcshdr = struct();
 
 fcshdr.fcstype = 'CSV1.0';
- 
+
 % Read in JSON header info to get fcshdr names
 fid = fopen(headername); 
 raw = fread(fid,inf); 
@@ -26,7 +26,7 @@ channels = header.channels;
 fcshdr.NumOfPar = numel(channels);
 filenames = header.filenames;
 fcshdr.filename = filenames; % also just put the set in here, to be weeded later when used
-fcshdr.filepath = header; % store the location of this header, to be used and replaced later
+fcshdr.filepath = headername; % store the location of this header, to be used and replaced later
 
 units = cell(fcshdr.NumOfPar,1);
 % parse all channels into header parameter ("par") fields
