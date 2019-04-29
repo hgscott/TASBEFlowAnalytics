@@ -8,14 +8,17 @@
 		},
 		{
 			"name": "PE-Tx-Red-YG-A",
-			"print_name": "mKate"
+			"print_name": "mKate",
+			"unit": "a.u."
 		},
 		{
+			"name": "Pacific Blue-A",
 			"print_name": "EBFP2",
 			"unit": "a.u."
 		},
 		{
 			"name": "NoChannel",
+			"print_name": "NoChannel",
 			"unit": "a.u."
 		}
 	],
