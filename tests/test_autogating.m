@@ -7,6 +7,8 @@ function test_suite = test_autogating
     initTestSuite;
 
 function test_autogate
+TASBEConfig.checkpoint('test');
+TASBEConfig.set('gating.plotPath','/tmp/plots');
 
 stem0312 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_';
 blankfile = DataFile('fcs', [stem0312 'blank_P3.fcs']);
@@ -28,7 +30,34 @@ expected_sigma(:,:,2) = [0.2053    0.0548;    0.0548    0.0515];
 assertElementsAlmostEqual(GDS.Sigma,expected_sigma,'absolute',0.01);
 
 
+function test_autogate_forcing
+TASBEConfig.checkpoint('test');
+TASBEConfig.set('gating.plotPath','/tmp/plots');
+
+stem0312 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_';
+blankfile = DataFile('fcs', [stem0312 'blank_P3.fcs']);
+
+% Autodetect gating with an N-dimensional gaussian-mixture-model
+TASBEConfig.set('gating.channelNames',{'FSC-A','SSC-A'});
+TASBEConfig.set('gating.selectedComponentLocations',[4.5 3.3]);
+gate = GMMGating(blankfile);
+
+gate = struct(gate);
+
+assertEqual(gate.selected_components, 2);
+
+expected_mu = [5.1117    3.4087;    4.5555    3.3427];
+GDS = struct(gate.distribution);
+assertElementsAlmostEqual(GDS.mu,expected_mu,'absolute',0.01);
+
+expected_sigma(:,:,1) = [0.0130    0.0149;    0.0149    0.0328];
+expected_sigma(:,:,2) = [0.2053    0.0548;    0.0548    0.0515];
+assertElementsAlmostEqual(GDS.Sigma,expected_sigma,'absolute',0.01);
+
+
 function test_6D_autogate
+TASBEConfig.checkpoint('test');
+TASBEConfig.set('gating.plotPath','/tmp/plots');
 
 stem0312 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_';
 blankfile = DataFile('fcs', [stem0312 'blank_P3.fcs']);
