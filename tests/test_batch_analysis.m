@@ -264,18 +264,28 @@ assertEqual(log{end}.contents{end-1}.name, 'HighGatingVariation');
 warning1 = log{end}.contents{end-1}.message;
 warning2 = log{end}.contents{end}.message;
 
-expected_median = 'median=0.31836';
-expected_frac1 = 'frac=0.366929';
-expected_frac2 = 'frac=0.293213';
+display(warning1);
+display(warning2);
+
+expected_median = 0.31836;
+% expected_frac1 = 0.366929;
+expected_frac1 = 0.366971;
+expected_frac2 = 0.293213;
 expected_condition1 = 'Dox 0.1';
 expected_condition2 = 'Dox 0.2';
 
 assertEqual(~isempty(strfind(warning1,expected_condition1)), true);
 assertEqual(~isempty(strfind(warning2,expected_condition2)), true);
-assertEqual(~isempty(strfind(warning1,expected_frac1)), true);
-assertEqual(~isempty(strfind(warning2,expected_frac2)), true);
-assertEqual(~isempty(strfind(warning1,expected_median)), true);
-assertEqual(~isempty(strfind(warning2,expected_median)), true);
+
+index_frac1 = strfind(warning1,'frac=');
+index_frac2 = strfind(warning2,'frac=');
+index_median1 = strfind(warning1,'median=');
+index_median2 = strfind(warning2,'median=');
+
+assertElementsAlmostEqual(str2double(warning1(index_frac1+5:index_frac1+12)), expected_frac1, 'relative', 1e-3);
+assertElementsAlmostEqual(str2double(warning2(index_frac2+5:index_frac2+12)), expected_frac2, 'relative', 1e-3);
+assertElementsAlmostEqual(str2double(warning1(index_median1+7:end)), expected_median, 'relative', 1e-3);
+assertElementsAlmostEqual(str2double(warning2(index_median2+7:end)), expected_median, 'relative', 1e-3);
 
 
 function test_batch_analysis_nodrops
