@@ -220,8 +220,48 @@ assertElementsAlmostEqual(results{14}.n_events_used, firstlast_events_used(2,:),
 assertElementsAlmostEqual(results{1}.n_events_outofrange,  firstlast_events_outofrange(1,:),  'relative', 1e-2);
 assertElementsAlmostEqual(results{14}.n_events_outofrange, firstlast_events_outofrange(2,:),  'relative', 1e-2);
 
-function test_batch_analysis_nodrops
 
+function test_batch_frac_gated_warning_endtoend
+TASBEConfig.checkpoint('test');
+CM = load_or_make_testing_colormodel();
+stem1011 = '../TASBEFlowAnalytics-Tutorial/example_assay/LacI-CAGop_';
+
+% Configure the analysis
+% Analyze on a histogram of 10^[first] to 10^[third] ERF, with bins every 10^[second]
+bins = BinSequence(4,0.1,10,'log_bins');
+
+% Designate which channels have which roles
+AP = AnalysisParameters(bins,{});
+% Ignore any bins with less than valid count as noise
+AP=setMinValidCount(AP,100');
+% Ignore any raw fluorescence values less than this threshold as too contaminated by instrument noise
+AP=setPemDropThreshold(AP,5');
+% Add autofluorescence back in after removing for compensation?
+AP=setUseAutoFluorescence(AP,false');
+
+% Make a map of condition names to file sets
+file_pairs = {...
+  'Dox 0.1',    {[stem1011 'B3_P3.fcs']}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
+  'Dox 0.2',    {[stem1011 'B4_P3.fcs']}; % first couple are just strings to test implicit conversion
+  'Dox 0.5',    {DataFile('fcs', [stem1011 'B5_P3.fcs'])};
+  'Dox 1.0',    {DataFile('fcs', [stem1011 'B6_P3.fcs'])};
+  'Dox 2.0',    {DataFile('fcs', [stem1011 'B7_P3.fcs'])};
+  'Dox 5.0',    {DataFile('fcs', [stem1011 'B8_P3.fcs'])};
+  };
+
+TASBEConfig.set('flow.conditionFracGatedWarning', 0.01);
+
+% Execute the actual analysis
+TASBEConfig.set('OutputSettings.StemName','LacI-CAGop');
+[results, sampleresults] = per_color_constitutive_analysis(CM,file_pairs,{'EBFP2','EYFP','mKate'},AP);
+
+% check for warning
+log = TASBESession.list();
+assertEqual(log{end}.contents{end}.name, 'HighGatingVariation');
+
+
+function test_batch_analysis_nodrops
+TASBEConfig.checkpoint('test');
 CM = load_or_make_testing_colormodel();
 stem1011 = '../TASBEFlowAnalytics-Tutorial/example_assay/LacI-CAGop_';
 
@@ -328,6 +368,7 @@ assertElementsAlmostEqual(results{1}.bincounts, result1_expected_bincounts,     
 
 
 function test_batch_analysis_plot_warnings
+TASBEConfig.checkpoint('test');
 % Test for warnings in plot_batch_histograms
 CM2 = load_or_make_testing_colormodel2();
 stem1011 = '../TASBEFlowAnalytics-Tutorial/example_assay/LacI-CAGop_';
@@ -394,7 +435,7 @@ assertEqual(log{end}.contents{end}.name, 'NoLineSpecs');
 
 
 function test_singlecolor_batch_analysis
-
+TASBEConfig.checkpoint('test');
 stem0312 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_';
 
 beadfile = [stem0312 'Beads_P3.fcs'];
@@ -449,7 +490,7 @@ save('/tmp/LacI-CAGop-batch-single.mat','AP','bins','file_pairs','results','samp
 
 
 function test_dataless_batch_analysis
-
+TASBEConfig.checkpoint('test');
 CM = load_or_make_testing_colormodel();
 stem1011 = '../TASBEFlowAnalytics-Tutorial/example_assay/LacI-CAGop_';
 

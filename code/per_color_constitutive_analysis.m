@@ -31,7 +31,7 @@ for i = 1:n_conditions
     experiment = Experiment(condition_name,'', {0,fileset});
     [data{i},n_removed_sub] = read_data(colorModel, experiment, AP);
     n_removed{i} = [n_removed_sub{1}{:}];
-    for j=1:numel(fileset), n_events{i}(j) = size(data{i}{1}{j},1); end;
+    for j=1:numel(fileset), n_events{i}(j) = size(data{i}{1}{j},1); end
     if exist('cloudNames', 'var')
         filenames = {cloudNames{i}};
     else
@@ -70,6 +70,7 @@ bincenters = get_bin_centers(getBins(AP));
 
 results = cell(n_conditions,1); sampleresults = results;
 threshold = TASBEConfig.get('flow.onThreshold');
+fracs_removed = {};
 for i=1:n_conditions
     replicatecounts = numel(rawresults{1}{i,2});
     samplebincounts = cell(replicatecounts,1);
@@ -136,6 +137,9 @@ for i=1:n_conditions
     results{i}.off_fracStd = std(cell2mat(off_fracs));
     results{i}.n_events = n_events{i};
     results{i}.n_events_removed = n_removed{i};
+    frac = n_removed{i}/n_events{i};
+    fracs_removed{end+1} = frac;
+    results{i}.frac_removed = frac;
 end
 
 %%%%%%%%%%%%%%%%%%
@@ -153,3 +157,20 @@ for i=1:n_conditions
             max_events, results{i}.condition, cur_events);
     end
 end
+
+% warn when some samples have a fraction of gated particles that is very
+% different 
+median_fracs_removed = median(cell2mat(fracs_removed));
+lower_bound = (1-TASBEConfig.get('flow.conditionFracGatedWarning'))*median_fracs_removed;
+upper_bound = (1+TASBEConfig.get('flow.conditionFracGatedWarning'))*median_fracs_removed;
+for i=1:n_conditions
+   frac = results{i}.frac_removed;
+   if frac <= lower_bound
+       TASBESession.warn('TASBE:Analysis', 'HighGatingVariation', 'Fraction of gated particles in condition "%s" is much lower than the median', results{i}.condition);
+   elseif frac >= upper_bound
+       TASBESession.warn('TASBE:Analysis', 'HighGatingVariation', 'Fraction of gated particles in condition "%s" is much higher than the median', results{i}.condition);
+   end
+end
+
+
+
