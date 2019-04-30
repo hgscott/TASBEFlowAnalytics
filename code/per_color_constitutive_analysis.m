@@ -166,9 +166,9 @@ upper_bound = (1+TASBEConfig.get('flow.conditionFracGatedWarning'))*median_fracs
 for i=1:n_conditions
    frac = results{i}.frac_removed;
    if frac <= lower_bound
-       TASBESession.warn('TASBE:Analysis', 'HighGatingVariation', 'Fraction of gated particles in condition "%s" is much lower than the median', results{i}.condition);
+       TASBESession.warn('TASBE:Analysis', 'HighGatingVariation', 'Fraction of gated particles in condition "%s" is significantly lower than the median: frac=%i, median=%i', results{i}.condition, frac, median_fracs_removed);
    elseif frac >= upper_bound
-       TASBESession.warn('TASBE:Analysis', 'HighGatingVariation', 'Fraction of gated particles in condition "%s" is much higher than the median', results{i}.condition);
+       TASBESession.warn('TASBE:Analysis', 'HighGatingVariation', 'Fraction of gated particles in condition "%s" is significantly higher than the median: frac=%i, median=%i', results{i}.condition, frac, median_fracs_removed);
    end
 end
 

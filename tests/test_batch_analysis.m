@@ -244,20 +244,38 @@ file_pairs = {...
   'Dox 0.1',    {[stem1011 'B3_P3.fcs']}; % Replicates go here, e.g., {[rep1], [rep2], [rep3]}
   'Dox 0.2',    {[stem1011 'B4_P3.fcs']}; % first couple are just strings to test implicit conversion
   'Dox 0.5',    {DataFile('fcs', [stem1011 'B5_P3.fcs'])};
-  'Dox 1.0',    {DataFile('fcs', [stem1011 'B6_P3.fcs'])};
-  'Dox 2.0',    {DataFile('fcs', [stem1011 'B7_P3.fcs'])};
-  'Dox 5.0',    {DataFile('fcs', [stem1011 'B8_P3.fcs'])};
+%   'Dox 1.0',    {DataFile('fcs', [stem1011 'B6_P3.fcs'])};
+%   'Dox 2.0',    {DataFile('fcs', [stem1011 'B7_P3.fcs'])};
+%   'Dox 5.0',    {DataFile('fcs', [stem1011 'B8_P3.fcs'])};
   };
 
 TASBEConfig.set('flow.conditionFracGatedWarning', 0.01);
 
 % Execute the actual analysis
 TASBEConfig.set('OutputSettings.StemName','LacI-CAGop');
-[results, sampleresults] = per_color_constitutive_analysis(CM,file_pairs,{'EBFP2','EYFP','mKate'},AP);
+[~, ~] = per_color_constitutive_analysis(CM,file_pairs,{'EBFP2','EYFP','mKate'},AP);
 
-% check for warning
+% check for warning, expect the last two to be both HighGatingVariation
+% warnings
 log = TASBESession.list();
 assertEqual(log{end}.contents{end}.name, 'HighGatingVariation');
+assertEqual(log{end}.contents{end-1}.name, 'HighGatingVariation');
+
+warning1 = log{end}.contents{end-1}.message;
+warning2 = log{end}.contents{end}.message;
+
+expected_median = 'median=0.31836';
+expected_frac1 = 'frac=0.366929';
+expected_frac2 = 'frac=0.293213';
+expected_condition1 = 'Dox 0.1';
+expected_condition2 = 'Dox 0.2';
+
+assertEqual(~isempty(strfind(warning1,expected_condition1)), true);
+assertEqual(~isempty(strfind(warning2,expected_condition2)), true);
+assertEqual(~isempty(strfind(warning1,expected_frac1)), true);
+assertEqual(~isempty(strfind(warning2,expected_frac2)), true);
+assertEqual(~isempty(strfind(warning1,expected_median)), true);
+assertEqual(~isempty(strfind(warning2,expected_median)), true);
 
 
 function test_batch_analysis_nodrops

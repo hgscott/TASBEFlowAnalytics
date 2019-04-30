@@ -66,7 +66,7 @@ classdef TASBEConfig
             doc.flow.conditionEventRatioWarning = 'Threshold to warn on variation in condition event counts.';
             s.flow.conditionEventRatioWarning = [];
             defaults('flow.conditionEventRatioWarning') = 'flow.eventRatioWarning';
-            doc.flow.conditionFracGatedWarning = 'Threshold to warn on variation in fraction of gated particles. Value should be in percent from 0 to 1.';
+            doc.flow.conditionFracGatedWarning = 'Threshold to warn on variation in fraction of gated particles. Value should be from 0 to 1.';
             s.flow.conditionFracGatedWarning = 0.1;
             
             % generic plots
