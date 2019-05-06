@@ -66,6 +66,10 @@ classdef TASBEConfig
             doc.flow.conditionEventRatioWarning = 'Threshold to warn on variation in condition event counts.';
             s.flow.conditionEventRatioWarning = [];
             defaults('flow.conditionEventRatioWarning') = 'flow.eventRatioWarning';
+            doc.flow.saturationWarning = 'Threshold for warning when detector is saturated';
+            s.flow.saturationWarning = 0.1;
+            doc.flow.saturationMinValidCount = 'Threshold for peak value warning when detector is saturated';
+            s.flow.saturationMinValidCount = 100;
 
             % generic plots
             s.plots = struct(); doc.plots = struct();
