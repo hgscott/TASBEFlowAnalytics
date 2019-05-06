@@ -70,7 +70,9 @@ classdef TASBEConfig
             s.flow.saturationWarning = 0.1;
             doc.flow.saturationMinValidCount = 'Threshold for peak value warning when detector is saturated';
             s.flow.saturationMinValidCount = 100;
-
+            doc.flow.conditionFracGatedWarning = 'Threshold to warn on variation in fraction of gated particles. Value should be from 0 to 1.';
+            s.flow.conditionFracGatedWarning = 0.1;
+            
             % generic plots
             s.plots = struct(); doc.plots = struct();
             doc.plots.about = 'General settings for plotting figures';
@@ -132,6 +134,8 @@ classdef TASBEConfig
             s.gating.fraction = 0.95;
             doc.gating.selectedComponents = 'Set to force selection of particular components';
             s.gating.selectedComponents = [];
+            doc.gating.selectedComponentLocations = 'Set to NxK array (N channels, K components) to force selection of unique components specified by each row';
+            s.gating.selectedComponentLocations = [];
             % gating custom plotting parameters
             doc.gating.showNonselected = 'When true, show all gate components; when false, selected components only.';
             s.gating.showNonselected = true;
@@ -211,6 +215,8 @@ classdef TASBEConfig
             s.colortranslation.minSamples = 100;
             doc.colortranslation.channelMinimum = 'If set to [M1, M2, ...] trims channel i values below 10^Mi; otherwise drops those below 10^3';
             s.colortranslation.channelMinimum = {};
+            doc.colortranslation.channelMaximum = 'If set to [M1, M2, ...] trims channel i values above 10^Mi; otherwise drops those above 10^5';
+            s.colortranslation.channelMaximum = {};
             doc.colortranslation.plot = 'Determines whether color translation plots should be created';
             s.colortranslation.plot = [];
             defaults('colortranslation.plot') = 'calibration.plot';
@@ -410,7 +416,7 @@ classdef TASBEConfig
                 return
             end
             
-            % Otherwise, go 
+            % Otherwise, go on to setting or getting
             if nargin<3, force = false; end
             
             keyseq = regexp(key, '\.', 'split');
@@ -430,6 +436,11 @@ classdef TASBEConfig
             end
             
             if ~isempty(value) || force
+                % warn if the key is not already in the field names
+                if ~ismember(keyseq{end},fieldnames(nest{end}))
+                    TASBESession.warn('TASBEConfig','UnknownSetting','Setting previously unknown configuration "%s"',key);
+                end
+                % set the value
                 nest{end}.(keyseq{end}) = value;
                 % propagate up the chain
                 for i=1:(numel(keyseq)-1)
@@ -461,7 +472,7 @@ classdef TASBEConfig
             out = TASBEConfig.setget(key,value);
         end
         
-        % Get a value for this key, not following its default chain. If not value is set, try to use the 2nd argument
+        % Get a value for this key, not following its default chain. If no value is set, try to use the 2nd argument
         function out = getexact(key,default)
             % try a get
             out = TASBEConfig.setget(key,[]);
@@ -470,7 +481,7 @@ classdef TASBEConfig
                 if nargin>=2
                     out = TASBEConfig.setget(key,default);
                 else
-                    error('TASBEConfig', 'NoDefault', 'Requested non-existing setting without default: %s',key);
+                    error('TASBEConfig', 'NoDefault', 'Requested non-existant setting without default: %s',key);
                 end
             end
         end

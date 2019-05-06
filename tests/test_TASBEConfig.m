@@ -19,6 +19,8 @@ end
 if missingError, error('Should have failed on missing preference'); end;
 
 assert(TASBEConfig.getexact('foo.bar.baz.qux',1) == 1);
+log = TASBESession.list();
+assertEqual(log{end}.contents{end}.name, 'UnknownSetting');
 assert(TASBEConfig.getexact('foo.bar.baz.qux') == 1);
 
 assert(TASBEConfig.getexact('foo.bar.baz.qux',2) == 1);

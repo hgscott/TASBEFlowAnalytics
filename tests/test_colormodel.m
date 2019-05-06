@@ -7,6 +7,7 @@ function test_suite = test_colormodel
     initTestSuite;
 
 function test_colormodel_endtoend
+TASBEConfig.checkpoint('test');
 
 stem0312 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_';
 
@@ -58,6 +59,9 @@ CM=set_ERF_channel_name(CM, 'FITC-A');
 % Ignore channel data for ith channel if below 10^[value(i)]
 TASBEConfig.set('colortranslation.channelMinimum',[2,2,2]);
 
+% Ignore channel data for ith channel if above 10^[value(i)]
+TASBEConfig.set('colortranslation.channelMaximum',[6,6,6]);
+
 TASBEConfig.set('plots.plotPath', '/tmp/plots');
 CM = add_prefilter(CM,autogate);
 
@@ -108,6 +112,7 @@ assertElementsAlmostEqual(CTM.scales,       expected_scales, 'absolute', 0.02);
 
 
 function test_colormodel_warnings
+TASBEConfig.checkpoint('test');
 
 stem0312 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_';
 
@@ -159,6 +164,9 @@ CM=set_ERF_channel_name(CM, 'FITC-A');
 % Ignore channel data for ith channel if below 10^[value(i)]
 TASBEConfig.set('colortranslation.channelMinimum',[2,2,2]);
 
+% Ignore channel data for ith channel if above 10^[value(i)]
+TASBEConfig.set('colortranslation.channelMaximum',[6,6,6]);
+
 TASBEConfig.set('plots.plotPath', '/tmp/plots');
 CM = add_prefilter(CM,autogate);
 
@@ -175,6 +183,7 @@ assertEqual(log{end-1}.contents{7}.name, 'PotentialBeadClump');
 
 
 function test_colormodel_singlered
+TASBEConfig.checkpoint('test');
 
 stem0312 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_';
 
@@ -235,6 +244,7 @@ assertElementsAlmostEqual(CTM.scales,   NaN);
 
 
 function test_colormodel_singlered_nocolorfile
+TASBEConfig.checkpoint('test');
 
 stem0312 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_';
 
@@ -291,7 +301,9 @@ CTM = struct(CMS.color_translation_model);
 assertElementsAlmostEqual(CTM.scales,   NaN);
 
 
+
 function test_colormodel_fsc_ssc
+TASBEConfig.checkpoint('test');
 
 stem0312 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_';
 
@@ -359,7 +371,9 @@ CTM = struct(CMS.color_translation_model);
 assertElementsAlmostEqual(CTM.scales,   [NaN NaN NaN; NaN NaN NaN; NaN NaN NaN]);
 
 
+
 function test_colormodel_fsc_ssc_nocolorfile
+TASBEConfig.checkpoint('test');
 
 stem0312 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_';
 
@@ -428,6 +442,7 @@ assertElementsAlmostEqual(CTM.scales,   [NaN NaN NaN; NaN NaN NaN; NaN NaN NaN])
 
 
 function test_colormodel_error_missing_colorfiles
+TASBEConfig.checkpoint('test');
 
 stem0312 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_';
 
@@ -455,7 +470,6 @@ assertExceptionThrown(@()(ColorModel(beadfile, blankfile, channels, colorfiles, 
 
 % Make sure manual setting of template file converts to datafile correctly
 function test_colormodel_channeltemplate
-
 TASBEConfig.checkpoint('test');
 
 stem0312 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_';
