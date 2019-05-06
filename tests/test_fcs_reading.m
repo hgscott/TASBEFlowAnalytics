@@ -74,3 +74,32 @@ log = TASBESession.list();
 assertEqual(log{end}.contents{end}.name, 'TooManyEvents');
 
 TASBEConfig.checkpoint('in_test');
+
+function test_saturation_detection
+TASBEConfig.checkpoint('in_test');
+
+stem = '../TASBEFlowAnalytics-Tutorial/example_controls/';
+datafile = DataFile('fcs', [stem '171221_E1_p1_AJ02.fcs']);
+[data, hdr] = fca_read(datafile);
+bins = BinSequence(4,0.02,10,'log_bins');
+TASBEConfig.set('flow.saturationWarning', 0.2);
+
+% Call subpopulation_statistics on each channel and check to make sure
+% saturation warning only appears for channel 3
+num_channels = numel(hdr.par);
+for i=1:num_channels
+    TASBESession.reset();
+    subpopulation_statistics(bins, data, i, 'geometric');
+    % Check latest warning
+    log = TASBESession.list();
+    warning_name = log{end}.contents{end}.name;
+    if i == 3
+        assertEqual(warning_name, 'SaturationDetected');
+    else
+        assertFalse(strcmp(warning_name, 'SaturationDetected'))
+    end
+end
+
+
+
+
