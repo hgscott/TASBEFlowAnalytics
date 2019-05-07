@@ -73,16 +73,9 @@ saturation_threshold = TASBEConfig.get('flow.saturationWarning');
 min_valid_count = TASBEConfig.get('flow.saturationMinValidCount');
 for i=5:nbins
     avg_counts = mean(counts(i-4:i-2));
-    if avg_counts < (saturation_threshold*counts(i))
-        no_saturation = 0;
-        for j=i+2:nbins
-            if counts(j) ~= 0
-                no_saturation = 1;
-                break
-            end
-        end
-        if (no_saturation == 0) && (counts(i) >= min_valid_count)
-           TASBESession.warn('TASBE:Analysis','SaturationDetected','Detector saturation sensed in channel %i', selector); 
+    if (avg_counts < (saturation_threshold*counts(i))) && (counts(i) >= min_valid_count)
+        if isempty(find(counts(i+2:nbins) ~= 0))
+            TASBESession.warn('TASBE:Analysis','SaturationDetected','Detector saturation sensed in channel %i', selector); 
         end
     end
 end
