@@ -17,7 +17,7 @@ n_channels = numel(getChannels(colorModel));
 
 % Get the constitutive
 constitutive_channel = getChannel(analysisParams, 'constitutive');
-if isempty(constitutive_channel), TASBESession.error('TASBE:Analysis','NoConstitutiveChannel','A constitutive channel is required!'); end;
+if isempty(constitutive_channel), TASBESession.error('TASBE:Analysis','NoConstitutiveChannel','A constitutive channel is required!'); end
 c_index = find(colorModel,constitutive_channel); % Determine data column from ColorModel
 
 % Lookup distribution models
@@ -78,9 +78,9 @@ for k=1:n_channels
 
     % For now, disable k-component gaussian statisics computation:
     % Needs to be rebuilt as a multi-dimensional gaussian mixture model
-    if k~=c_index, popcmeans(:,k) = NaN; popcstds(:,k) = NaN; popcweights(:,k) = NaN; continue; end;
+    if k~=c_index, popcmeans(:,k) = NaN; popcstds(:,k) = NaN; popcweights(:,k) = NaN; continue; end
     % find model fit:
-    if numel(data),
+    if numel(data)
         tmp_PEM = PlasmidExpressionModel(data(:,k),CFP_af,CFP_noise,getERFPerPlasmid(analysisParams),drop_threshold,n_components);
         dist = get_fp_dist(tmp_PEM);
         if ~isempty(dist)
@@ -89,7 +89,7 @@ for k=1:n_channels
             sortrows(sortable);
             popcmeans(:,k) = sortable(:,1); popcstds(:,k) = sortable(:,2);  popcweights(:,k) = sortable(:,3);
         end
-        if k==c_index, PEM = tmp_PEM; end;
+        if k==c_index, PEM = tmp_PEM; end
     end
 end
 nonexpressing = sum(nonexpressing_set);
@@ -97,10 +97,10 @@ nonexpressing = sum(nonexpressing_set);
 % Horrible kludge: needs to be repaired for release 9.0
 analysis_mode = 'geometric';
 bins = getBins(analysisParams);
-if(strcmp(getUnits(getChannel(colorModel,c_index)),'Boolean')), 
+if(strcmp(getUnits(getChannel(colorModel,c_index)),'Boolean')) 
     analysis_mode = 'arithmetic'; 
     bins = BinSequence(log10(min(get_bin_edges(bins))),log10(get_bin_widths(bins)),log10(max(get_bin_edges(bins))),'arithmetic');
-end;
+end
 
 % Create (possibly filtered) subpopulation statistics [note: ignore excluded, as already calculated above]
 [counts,means,stds] = subpopulation_statistics(bins, data, c_index, analysis_mode, drop_thresholds);

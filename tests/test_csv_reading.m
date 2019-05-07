@@ -60,7 +60,7 @@ header = 'tests/LacI-CAGop-broken.json';
 
 datafile = DataFile('csv', f1, header);
 
-assertExceptionThrown(@()fca_read(datafile), 'fca_readcsv:NumParameterMismatch', 'No error was raised.');
+assertExceptionThrown(@()fca_read(datafile), 'fca_readcsv:NumParameterMismatch', 'No error or incorrect error was raised.');
 
 
 function test_cm_read_broken_csv2
@@ -70,7 +70,7 @@ header = 'tests/LacI-CAGop-broken2.json';
 
 datafile = DataFile('csv', f1, header);
 
-assertExceptionThrown(@()fca_read(datafile), 'fca_readcsv:MissingRequiredHeaderField', 'No error was raised.');
+assertExceptionThrown(@()fca_read(datafile), 'fca_readcsv:MissingRequiredHeaderField', 'No error or incorrect error was raised.');
 log = TASBESession.list();
 assertEqual(log{end}.contents{end-1}.name, 'UnknownHeaderField');
 

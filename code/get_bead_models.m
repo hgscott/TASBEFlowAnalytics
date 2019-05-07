@@ -9,8 +9,9 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function [models] = get_bead_models()
-    catalog = getBeadCatalog();
+function [models] = get_bead_models(forceReload)
+    if nargin<1, forceReload=false; end;
+    catalog = getBeadCatalog(forceReload);
     models = cell(numel(catalog), 1);
     % go through all of the models and add to indices list
     for i=1:numel(catalog)
@@ -26,8 +27,8 @@ function returned = getBeadCatalog(forceReload)
     persistent catalog;
     if nargin<1, forceReload=false; end;
     if isempty(catalog) || forceReload,
-        % ISSUE-81: The cell range of the spreadsheet must be updated whenever BeadCatalog.xlsx is updated.
-        [nums txts combo] = xlsread(TASBEConfig.get('beads.catalogFileName'), 1, 'A1:M114');
+        % Get the first sheet in the catalog , across the whole filled range
+        [nums txts combo] = xlsread(TASBEConfig.get('beads.catalogFileName'), 1);
         catalog = parseCatalog(combo);
     end
     returned = catalog;
