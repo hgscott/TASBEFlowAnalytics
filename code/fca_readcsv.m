@@ -41,7 +41,7 @@ else % assume it's a file name
     fcshdr = fca_readcsv_header(header);
 end
 % check if header lists csv
-if ~header_lists_csv(fcshdr,filename),
+if ~header_lists_csv(fcshdr,filename)
     TASBESession.warn('fca_readcsv','FilenameMismatch','CSV file %s is not listed in JSON header %s',filename,hdrfilename);
 end
 
@@ -80,9 +80,12 @@ else
     % TotalEvents is number of rows
     fcshdr.TotalEvents = height(T);
 end
+
+% Throw mismatch error if number of columns in CSV is less than number of
+% channels in header
 n_channels = size(VarNames,2);
-if n_channels ~= fcshdr.NumOfPar
-    TASBESession.error('fca_readcsv', 'NumParameterMismatch', 'Number of columns in CSV %s not equal to number of channels specified in JSON header file %s',filename,hdrfilename);
+if n_channels < fcshdr.NumOfPar
+    TASBESession.error('fca_readcsv', 'NumParameterMismatch', 'Number of columns in CSV %s is less than the number of channels specified in JSON header file %s',filename,hdrfilename);
 end
 
 % Optionally truncate events to avoid memory problems with extremely large FCS files -JSB
@@ -91,12 +94,30 @@ if fcshdr.TotalEvents>clip_events
     fcshdr.TotalEvents = clip_events;
 end
 
+% Go through print names in header and see if they are in any of the CSV
+% column headers
+columns = {};
+for i = 1:fcshdr.NumOfPar
+    print_name = fcshdr.par(i).print_name;
+    index = ~cellfun('isempty',strfind(VarNames,print_name));
+    if ~any(index)
+        % Throw error
+        TASBESession.error('fca_readcsv', 'MissingChannel', 'Channel %s is missing from column header in csv file', print_name);
+    elseif sum(index) > 1
+        % Throw error if there are more than one matches
+        TASBESession.error('fca_readcsv', 'DuplicateChannel', 'Channel %s matches with multiple column headers in csv file', print_name);
+    else
+        % Add index of 1 to columns array
+        columns{end+1} = find(index);
+    end
+end
+
 % Reading the events by setting fcsdat
 if is_octave()
-    T2 = cell2mat(T(2:end,:));
+    T2 = cell2mat(T(2:end,cell2mat(columns)));
     fcsdat = double(T2);
 else
-    fcsdat = double(table2array(T));
+    fcsdat = double(table2array(T(1:end,cell2mat(columns))));
 end
 
 % I don't believe we need fcsdatscaled because we don't have any log scales
