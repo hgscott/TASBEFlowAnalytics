@@ -2,77 +2,77 @@
 	"channels": [
 		{
 			"name": "FSC-A",
-			"print_name": "",
+			"print_name": "FSC-A",
 			"unit": "a.u."
 		},
 		{
 			"name": "FSC-H",
-			"print_name": "",
+			"print_name": "FSC-H",
 			"unit": "a.u."
 		},
 		{
 			"name": "FSC-W",
-			"print_name": "",
+			"print_name": "FSC-W",
 			"unit": "a.u."
 		},
 
 		{
 			"name": "SSC-A",
-			"print_name": "",
+			"print_name": "SSC-A",
 			"unit": "a.u."
 		},
 
 		{
 			"name": "SSC-H",
-			"print_name": "",
+			"print_name": "SSC-H",
 			"unit": "a.u."
 		},
 
 		{
 			"name": "SSC-W",
-			"print_name": "",
+			"print_name": "SSC-W",
 			"unit": "a.u."
 		},
 
 		{
 			"name": "FITC-A",
-			"print_name": "",
+			"print_name": "FITC-A",
 			"unit": "a.u."
 		},
 
 		{
 			"name": "PerCP-Cy5-5-A",
-			"print_name": "",
+			"print_name": "PerCP-Cy5-5-A",
 			"unit": "a.u."
 		},
 
 		{
 			"name": "PE-YG-A",
-			"print_name": "",
+			"print_name": "PE-YG-A",
 			"unit": "a.u."
 		},
 
 		{
 			"name": "PE-Tx-Red-YG-A",
-			"print_name": "",
+			"print_name": "PE-Tx-Red-YG-A",
 			"unit": "a.u."
 		},
 
 		{
 			"name": "Pacific Blue-A",
-			"print_name": "",
+			"print_name": "Pacific Blue-A",
 			"unit": "a.u."
 		},
 
 		{
 			"name": "AmCyan-A",
-			"print_name": "",
+			"print_name": "AmCyan-A",
 			"unit": "a.u."
 		},
 
 		{
 			"name": "Time",
-			"print_name": "",
+			"print_name": "Time",
 			"unit": "a.u."
 		}
 	],
