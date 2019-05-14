@@ -20,6 +20,22 @@ assert(strcmp(hdr.par(PACIFIC_BLUE_CHANNEL).name,'Pacific Blue-A'));
 assert(all(size(data) == [161608 NUM_CHANNELS]));
 assertElementsAlmostEqual(data(1,:),[4.2471e4 4.0352e4 3.7367e4],'absolute',1e0);
 
+function test_fca_readcsv_error1
+f1 = '../TASBEFlowAnalytics-Tutorial/template_analysis/csv/LacI-CAGop_Dox01_PointCloud.csv';
+header = 'tests/LacI-CAGop-error1.json';
+
+datafile = DataFile('csv', f1, header);
+
+assertExceptionThrown(@()fca_read(datafile), 'fca_readcsv:NumParameterMismatch', 'No error or incorrect error was raised.');
+
+function test_fca_readcsv_error2
+f1 = '../TASBEFlowAnalytics-Tutorial/template_analysis/csv/LacI-CAGop_Dox01_PointCloud.csv';
+header = 'tests/LacI-CAGop-error2.json';
+
+datafile = DataFile('csv', f1, header);
+
+assertExceptionThrown(@()fca_read(datafile), 'fca_readcsv:MissingChannel', 'No error or incorrect error was raised.');
+
 function test_cm_read_csv
 
 CM = load_or_make_testing_colormodel();
