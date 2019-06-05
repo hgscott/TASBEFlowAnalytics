@@ -75,8 +75,9 @@ if is_octave()
     % TotalEvents is number of rows
     fcshdr.TotalEvents = size(T(2:end,:),1);
 else
-    T = readtable(filename);
-    VarNames = T.Properties.VariableNames;
+    T = readtable(filename,'ReadVariableNames',false);
+    VarNames = table2cell(T(1,:));
+    T = readtable(filename,'ReadVariableNames',false,'HeaderLines',1);
     % TotalEvents is number of rows
     fcshdr.TotalEvents = height(T);
 end
@@ -104,8 +105,13 @@ for i = 1:fcshdr.NumOfPar
         % Throw error
         TASBESession.error('fca_readcsv', 'MissingChannel', 'Channel %s is missing from column header in csv file', print_name);
     elseif sum(index) > 1
-        % Throw error if there are more than one matches
-        TASBESession.error('fca_readcsv', 'DuplicateChannel', 'Channel %s matches with multiple column headers in csv file', print_name);
+        eq_index = strcmp(VarNames,print_name);
+        if(sum(eq_index) == 1), % if precisely one is equal, then use that one
+            columns{end+1} = find(eq_index);
+        else
+            % Throw error if there is more than one match and there is not precisely one exact
+            TASBESession.error('fca_readcsv', 'DuplicateChannel', 'Channel %s matches with multiple column headers in csv file', print_name);
+        end
     else
         % Add index of 1 to columns array
         columns{end+1} = find(index);
