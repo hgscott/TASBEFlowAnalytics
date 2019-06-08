@@ -100,21 +100,35 @@ end
 columns = {};
 for i = 1:fcshdr.NumOfPar
     print_name = fcshdr.par(i).print_name;
-    index = ~cellfun('isempty',strfind(VarNames,print_name));
-    if ~any(index)
+    name = fcshdr.par(i).name;
+    index_print_name = ~cellfun('isempty',strfind(VarNames,print_name));
+    index_name = ~cellfun('isempty',strfind(VarNames,name));
+    if ~any([index_print_name index_name])
         % Throw error
         TASBESession.error('fca_readcsv', 'MissingChannel', 'Channel %s is missing from column header in csv file', print_name);
-    elseif sum(index) > 1
-        eq_index = strcmp(VarNames,print_name);
-        if(sum(eq_index) == 1), % if precisely one is equal, then use that one
-            columns{end+1} = find(eq_index);
-        else
-            % Throw error if there is more than one match and there is not precisely one exact
-            TASBESession.error('fca_readcsv', 'DuplicateChannel', 'Channel %s matches with multiple column headers in csv file', print_name);
-        end
+    % There is at least one match, check if either index_print_name or
+    % index_name has exactly one match
+    elseif sum(index_print_name) == 1
+        columns{end+1} = find(index_print_name);
+    elseif sum(index_name) == 1
+        columns{end+1} = find(index_name);
     else
-        % Add index of 1 to columns array
-        columns{end+1} = find(index);
+        % Look for precise matching in either index_print_name or
+        % index_name
+        eq_index_print_name = strcmp(VarNames,print_name);
+        eq_index_name = strcmp(VarNames,name);
+        if sum(eq_index_print_name) == 1
+            columns{end+1} = find(eq_index_print_name);
+        elseif sum(eq_index_name) == 1
+            columns{end+1} = find(eq_index_name);
+        % If no precise match found, then error
+        elseif sum(eq_index_print_name) > 1 || sum(eq_index_name) > 1
+            % Error if more than one precise match found
+            TASBESession.error('fca_readcsv', 'DuplicateChannel', 'Channel %s matches with multiple column headers in csv file', print_name);
+        else
+            % Error if no precise match found
+            TASBESession.error('fca_readcsv', 'NoMatch', 'Channel %s does not precisely match with any column headers in csv file', print_name);
+        end
     end
 end
 
