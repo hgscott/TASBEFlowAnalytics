@@ -2,7 +2,7 @@
 	"channels": [
 		{
 			"name": "FSC-A",
-			"print_name": "FSC-A",
+			"print_name": "FSC",
 			"unit": "a.u."
 		},
 		{
@@ -18,7 +18,7 @@
 
 		{
 			"name": "SSC-A",
-			"print_name": "SSC-A",
+			"print_name": "SSC",
 			"unit": "a.u."
 		},
 
@@ -36,7 +36,7 @@
 
 		{
 			"name": "FITC-A",
-			"print_name": "FITC-A",
+			"print_name": "EYFP",
 			"unit": "a.u."
 		},
 
@@ -54,19 +54,19 @@
 
 		{
 			"name": "PE-Tx-Red-YG-A",
-			"print_name": "PE-Tx-Red-YG-A",
+			"print_name": "mKate",
 			"unit": "a.u."
 		},
 
 		{
 			"name": "Pacific Blue-A",
-			"print_name": "Pacific Blue-A",
+			"print_name": "EBFP2",
 			"unit": "a.u."
 		},
 
 		{
 			"name": "AmCyan-A",
-			"print_name": "AmCyan-A",
+			"print_name": "EBFP2 Alternate",
 			"unit": "a.u."
 		},
 
