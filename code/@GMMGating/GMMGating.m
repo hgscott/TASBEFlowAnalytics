@@ -38,6 +38,15 @@ n_channels = numel(channel_names);
 gate_fraction = TASBEConfig.get('gating.fraction');
 k_components = TASBEConfig.get('gating.kComponents');
 selected_components = TASBEConfig.getexact('gating.selectedComponents',[]);
+selected_component_locations = TASBEConfig.getexact('gating.selectedComponentLocations',[]);
+if ~isempty(selected_components) && ~isempty(selected_component_locations)
+    TASBESession.warn('TASBE:Gating','ConflictingSelection','Cannot force selection gate components by both ID and location simultaneously; defaulting to ID');
+    selected_component_locations = [];
+end
+if ~isempty(selected_component_locations) && size(selected_component_locations,2)~=n_channels,
+    TASBESession.warn('TASBE:Gating','SelectionSizeMismatch','When forcing component locations, number of columns must equal number of channels');
+end
+
 gate_deviations = TASBEConfig.get('gating.deviations');
 gate_tightening = TASBEConfig.get('gating.tightening');
 
@@ -93,7 +102,22 @@ sorted_eigs = sortrows([maxeigs'; 1:k_components]');
 eigsort = sorted_eigs(:,2);
 
 if isempty(selected_components)
-    selected_components = 1;
+    if ~isempty(selected_component_locations)
+        selected_components = zeros(size(selected_component_locations,1),1);
+        % find locations of selection points with respect to distribution
+        clustered = cluster(dist,selected_component_locations);
+        mh_dist_sq = mahal(dist,selected_component_locations);
+        % check if each has fallen into one
+        for i=1:numel(selected_components)
+            if mh_dist_sq(i,clustered)<gate_deviations^2;
+                selected_components(i) = clustered(i);
+            else
+                TASBESession.warn('TASBE:Gating','SelectionFailed','Could not force %ith gate location: no suitable component found.',i);
+            end
+        end
+    else
+        selected_components = 1;
+    end
 end
 GMMG.selected_components = eigsort(selected_components);
 

@@ -20,7 +20,7 @@ function DF = DataFile(type, file, header)
         DF.file = '';
         DF.header = '';
     elseif nargin==1 % file name only
-            %Create obj with one arguement if file has an extension of 'fcs'
+            %Create obj with one argument if file has an extension of 'fcs'
             DF.type = 'fcs';
             DF.file = type;
             DF.header = '';

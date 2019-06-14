@@ -10,7 +10,7 @@
 % package distribution's top directory.
 
 function [counts, means, stds, excluded] = subpopulation_statistics(BSeq,data,selector,mode,drop_thresholds)
-if nargin<5, drop_thresholds = []; end;
+if nargin<5, drop_thresholds = []; end
 
 bedges = get_bin_edges(BSeq);
 
@@ -27,11 +27,11 @@ switch(mode)
     case 'geometric'
         for i=1:n
             selection = data(:,selector)>bedges(i) & data(:,selector)<=bedges(i+1);
-            if ~isempty(drop_thresholds), selection = selection & data(:,selector)>drop_thresholds(selector); end;
+            if ~isempty(drop_thresholds), selection = selection & data(:,selector)>drop_thresholds(selector); end
             which = find(selection);
             counts(i) = numel(which);
 
-            if counts(i)==0,
+            if counts(i)==0
                 means(i,:) = NaN;
                 stds(i,:) = NaN;
             else
@@ -49,7 +49,7 @@ switch(mode)
             which = find(data(:,selector)>bedges(i) & data(:,selector)<=bedges(i+1));
             counts(i) = numel(which);
             
-            if counts(i)==0,
+            if counts(i)==0
                 means(i,:) = NaN;
                 stds(i,:) = NaN;
             else
@@ -67,5 +67,17 @@ switch(mode)
 end
 
 excluded = size(data,1) - sum(counts);
+
+% Iterate through bins and counts to see if detector is saturated
+saturation_threshold = TASBEConfig.get('flow.saturationWarning');
+min_valid_count = TASBEConfig.get('flow.saturationMinValidCount');
+for i=5:nbins
+    avg_counts = mean(counts(i-4:i-2));
+    if (avg_counts < (saturation_threshold*counts(i))) && (counts(i) >= min_valid_count)
+        if isempty(find(counts(i+2:nbins) ~= 0))
+            TASBESession.warn('TASBE:Analysis','SaturationDetected','Detector saturation sensed in channel %i', selector); 
+        end
+    end
+end
 
 end
