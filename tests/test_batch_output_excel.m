@@ -13,12 +13,15 @@ function test_batch_output_excel_endtoend
     CM = load_or_make_testing_colormodel();
     [results, statisticsFile, histogramFile] = batch_analysis_excel(extractor, CM);
     
-    % Read the files into matlab tables
+    % Read the files into matlab tables (including batchResults.csv)
     if (is_octave)
         statsTable = csv2cell(statisticsFile);
         histTable = csv2cell(histogramFile);
+        batchResultsTable = csv2cell('test_templates/batchResults.csv');
         statsCell = statsTable(2:end,:);
         histCell = histTable(2:end,:);
+        batchResultsCell = batchResultsTable(2:end,:);
+        
     else
         statsTable = readtable(statisticsFile);
         histTable = readtable(histogramFile);
@@ -34,6 +37,15 @@ function test_batch_output_excel_endtoend
     gmmWeights = statsCell(:,23:28);
     onFracs = statsCell(:,29);
     offFracs = statsCell(:,30);
+    
+    % Do the same for batchResults
+    geoMeans2 = batchResultsCell(:,5:7);
+    geoStdDevs2 = batchResultsCell(:,8:10);
+    gmmMeans2 = batchResultsCell(:,11:16);
+    gmmStds2 = batchResultsCell(:,17:22);
+    gmmWeights2 = batchResultsCell(:,23:28);
+    onFracs2 = batchResultsCell(:,29);
+    offFracs2 = batchResultsCell(:,30);
     
     % Check on/off frac mean and std values
     assertElementsAlmostEqual(round(results{1}.on_fracMean.*10000)./10000, 0.5791, 'relative', 1e-2);
@@ -142,6 +154,8 @@ function test_batch_output_excel_endtoend
     for i=1:6, % was 7
         assertElementsAlmostEqual(cell2mat(geoMeans(i,:)), expected_means(i,:), 'relative', 1e-2);
         assertElementsAlmostEqual(cell2mat(geoStdDevs(i,:)), expected_stds(i,:),  'relative', 1e-2);
+        assertElementsAlmostEqual(cell2mat(geoMeans2(i,:)), expected_means(i,:), 'relative', 1e-2);
+        assertElementsAlmostEqual(cell2mat(geoStdDevs2(i,:)), expected_stds(i,:),  'relative', 1e-2);
     end
 
     % spot check Gaussian Mixture Model materials:
@@ -150,6 +164,12 @@ function test_batch_output_excel_endtoend
     assertElementsAlmostEqual(cell2mat(gmmWeights(1,:)), expected_gmm_weights, 'relative', 1e-2);
     assertElementsAlmostEqual(cell2mat(onFracs), expected_on_fracs, 'relative', 1e-2);
     assertElementsAlmostEqual(cell2mat(offFracs), expected_off_fracs, 'relative', 1e-2);
+    
+    assertElementsAlmostEqual(cell2mat(gmmMeans2(1,:)), expected_gmm_means, 'relative', 1e-2);
+    assertElementsAlmostEqual(cell2mat(gmmStds2(1,:)), expected_gmm_stds, 'relative', 1e-2);
+    assertElementsAlmostEqual(cell2mat(gmmWeights2(1,:)), expected_gmm_weights, 'relative', 1e-2);
+    assertElementsAlmostEqual(cell2mat(onFracs2), expected_on_fracs, 'relative', 1e-2);
+    assertElementsAlmostEqual(cell2mat(offFracs2), expected_off_fracs, 'relative', 1e-2);
     
     % Check the first five rows of the first point cloud file
     expected_pointCloud = [...
