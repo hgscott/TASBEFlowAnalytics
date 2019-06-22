@@ -11,7 +11,7 @@ function test_batch_excel_endtoend
     [filepath, ~, ~] = fileparts(mfilename('fullpath'));
     extractor = TemplateExtraction('test_templates/test_batch_template1.xlsx', [end_with_slash(filepath) '../']);
     CM = load_or_make_testing_colormodel();
-    [results, statisticsFile, histogramFile] = batch_analysis_excel(extractor, CM);
+    [results, statisticsFile, histogramFile, ~] = batch_analysis_excel(extractor, CM);
     
     % Make sure statistics and histogram files are 'none'
     assertEqual(statisticsFile, 'none');
