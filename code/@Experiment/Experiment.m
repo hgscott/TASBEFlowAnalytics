@@ -44,8 +44,8 @@
             
             % Make sure that none of the levels are the same
             levels = {};
-            for i=1:size(InducerLevelsToFiles,1)
-                level = sanitize_filename(num2str(InducerLevelsToFiles{i,1}));
+            for i=1:size(E.InducerLevelsToFiles,1)
+                level = sanitize_filename(num2str(E.InducerLevelsToFiles{i,1}));
                 if ~any(strcmp(levels,level))
                     levels{end+1} = level;
                 else
