@@ -312,6 +312,8 @@ function [results, statisticsFile, histogramFile] = batch_analysis_excel(extract
             TASBESession.notify('OutputFig','MakeDirectory','Directory does not exist, attempting to create it: %s',sanitized_path);
             mkdir(outputPath);
         end
+        
+        writeBatchResults(file_pairs, CM, sampleresults, path);
 
         save([outputPath outputName],'AP','bins','file_pairs','results','sampleresults');
     end

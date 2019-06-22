@@ -376,7 +376,7 @@ function all_results = transfercurve_analysis_excel(extractor, CM)
                 TASBESession.notify('OutputFig','MakeDirectory','Directory does not exist, attempting to create it: %s',sanitized_path);
                 mkdir(outputPath);
             end
-
+            
             % Save the results of computation
             save('-V7',[outputPath outputName],'experiment','AP','sampleresults','results');
         end
