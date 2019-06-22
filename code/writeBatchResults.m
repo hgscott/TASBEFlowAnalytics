@@ -9,7 +9,7 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function resultsFile = writeBatchResults(file_pairs, colorModel, sampleresults, path)
+function statsTable = writeBatchResults(file_pairs, colorModel, sampleresults)
     channel_names = getChannelNames(sampleresults{1}{1}.AnalysisParameters); % channel names are same across conditions and replicates
     channels = cell(numel(channel_names),1);
     for i=1:numel(channel_names)
@@ -19,8 +19,6 @@ function resultsFile = writeBatchResults(file_pairs, colorModel, sampleresults, 
     
     % baseName = sanitize_filename(TASBEConfig.get('OutputSettings.StemName'));
 
-    % First create the default output filename.
-    resultsFile = [end_with_slash(path) 'batchResults.csv'];
     % Then get the data
     numConditions = numel(sampleIds);
     numComponents = size(sampleresults{1}{1}.PopComponentMeans,1);
@@ -72,17 +70,6 @@ function resultsFile = writeBatchResults(file_pairs, colorModel, sampleresults, 
         startingRow = endingRow + 1;
         endingRow = startingRow + replicates(i) - 1;
         statsTable(startingRow:endingRow,1:numColumns) = formatDataPerSampleIndivdualColumns(numel(channels), sampleIds{i}, totalCounts{i}, geoMeans{i}, geoStdDev{i}, gmmMeans{i}, gmmStds{i}, gmmWeights{i}, onFracs{i}, offFracs{i});
-    end
-
-    % Needed to add column names when I created the tables due to conflicts
-    % with the default names.  For a table, the column names must be valid
-    % matlab variable names so I filtered out spaces and hypens and
-    % replaced them with underscores.
-    if (is_octave)
-        cell2csv(resultsFile, statsTable);
-    else
-        t = table(statsTable);
-        writetable(t, resultsFile, 'WriteVariableNames', false);
     end
 end
 

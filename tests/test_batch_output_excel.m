@@ -11,16 +11,14 @@ function test_batch_output_excel_endtoend
     [filepath, ~, ~] = fileparts(mfilename('fullpath'));
     extractor = TemplateExtraction('test_templates/test_batch_template4.xlsx', [end_with_slash(filepath) '../']);
     CM = load_or_make_testing_colormodel();
-    [results, statisticsFile, histogramFile] = batch_analysis_excel(extractor, CM);
+    [results, statisticsFile, histogramFile, resultsData] = batch_analysis_excel(extractor, CM);
     
     % Read the files into matlab tables (including batchResults.csv)
     if (is_octave)
         statsTable = csv2cell(statisticsFile);
         histTable = csv2cell(histogramFile);
-        batchResultsTable = csv2cell('test_templates/batchResults.csv');
         statsCell = statsTable(2:end,:);
         histCell = histTable(2:end,:);
-        batchResultsCell = batchResultsTable(2:end,:);
         
     else
         statsTable = readtable(statisticsFile);
@@ -28,6 +26,8 @@ function test_batch_output_excel_endtoend
         statsCell = table2cell(statsTable);
         histCell = table2cell(histTable);
     end
+    
+    batchResultsCell = resultsData(2:end,:);
 
     % Split the stats table
     geoMeans = statsCell(:,5:7);

@@ -9,7 +9,7 @@
 % under the terms of the GNU General Public License, with a linking
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
-function [results, statisticsFile, histogramFile] = batch_analysis_excel(extractor, CM)
+function [results, statisticsFile, histogramFile, resultsData] = batch_analysis_excel(extractor, CM)
     % Reset and update TASBEConfig and obtain experiment name
     extractor.TASBEConfig_updates();
     TASBEConfig.set('template.displayErrors', 1);
@@ -313,7 +313,14 @@ function [results, statisticsFile, histogramFile] = batch_analysis_excel(extract
             mkdir(outputPath);
         end
         
-        writeBatchResults(file_pairs, CM, sampleresults, path);
+        resultsData = writeBatchResults(file_pairs, CM, sampleresults);
+        resultsFile = [end_with_slash(path) 'batchResults.csv'];
+        if (is_octave)
+            cell2csv(resultsFile, resultsData);
+        else
+            t = table(resultsData);
+            writetable(t, resultsFile, 'WriteVariableNames', false);
+        end
 
         save([outputPath outputName],'AP','bins','file_pairs','results','sampleresults');
     end
