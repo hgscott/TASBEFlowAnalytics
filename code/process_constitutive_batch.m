@@ -15,8 +15,21 @@ batch_size = size(batch_description,1);
 
 % Begin by scanning to make sure all expected files are present
 fprintf('Confirming files are present...\n');
+condition_names = {};
 for i = 1:batch_size
     fileset = batch_description{i,2};
+    condition_name = sanitize_filename(batch_description{i,1});
+    if ~any(strcmp(condition_names,condition_name))
+        condition_names{end+1} = condition_name;
+    else
+        if TASBEConfig.get('flow.duplicateConditionWarning') == 1
+            % error
+            TASBESession.error('TASBE:Analysis','DuplicateCondition','Duplicate condition for %s', condition_name);
+        else
+            % warn
+            TASBESession.warn('TASBE:Analysis','DuplicateCondition','Duplicate condition for %s', condition_name);
+        end
+    end
     for j=1:numel(fileset),
         file = getFile(fileset{j});
         if ~exist(file,'file'),

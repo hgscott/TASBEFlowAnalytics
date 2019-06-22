@@ -41,6 +41,23 @@
             if size(E.InducerLevelsToFiles, 2) ~= 2 && size(E.InducerLevelsToFiles, 2) ~= 0
                 TASBESession.error('TASBE:Experiment', 'DimensionMismatch', 'Transfer Curve analysis invoked with incorrect number of columns. Make sure InducerLevelsToFiles is a n X 2 matrix.');
             end  
+            
+            % Make sure that none of the levels are the same
+            levels = {};
+            for i=1:size(E.InducerLevelsToFiles,1)
+                level = sanitize_filename(num2str(E.InducerLevelsToFiles{i,1}));
+                if ~any(strcmp(levels,level))
+                    levels{end+1} = level;
+                else
+                    if TASBEConfig.get('flow.duplicateConditionWarning') == 1
+                        % error
+                        TASBESession.error('TASBE:Experiment','DuplicateCondition','Duplicate level for %s', level);
+                    else
+                        % warn
+                        TASBESession.warn('TASBE:Experiment','DuplicateCondition','Duplicate level for %s', level);
+                    end
+                end
+            end
            
             
 % C1 = Channel('red','TxRed','r')
