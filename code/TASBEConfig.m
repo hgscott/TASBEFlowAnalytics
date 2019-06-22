@@ -72,6 +72,8 @@ classdef TASBEConfig
             s.flow.saturationMinValidCount = 100;
             doc.flow.conditionFracGatedWarning = 'Threshold to warn on variation in fraction of gated particles. Value should be from 0 to 1.';
             s.flow.conditionFracGatedWarning = 0.1;
+            doc.flow.duplicateConditionWarning = 'If true, error when duplicate condition ids found. If false, warn.';
+            s.flow.duplicateConditionWarning = 0;
             
             % generic plots
             s.plots = struct(); doc.plots = struct();
