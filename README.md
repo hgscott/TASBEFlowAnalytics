@@ -23,16 +23,11 @@ Documentation, templates, and the Excel user interface are stored in the [TASBE 
 - Distributed under a permissive free and open license
 
 **If you make use of the TASBE Flow Analytics package, please cite
-the following two publications:**
+the following publication:**
 
-* Jacob Beal, "Bridging the Gap: A Roadmap to Breaking the Biological
-  Design Barrier," Frontiers in Bioengineering and Biotechnology,
-  2:87. doi:10.3389/fbioe.2014.00087, January 2015.
-
-* Jacob Beal, Ron Weiss, Fusun Yaman, Noah Davidsohn, and Aaron Adler,
-  "A Method for Fast, High- Precision Characterization of Synthetic
-  Biology Devices," MIT CSAIL Tech Report 2012-008, April 2012. 
-  http://hdl.handle.net/1721.1/69973
+* Jacob Beal, Cassandra Overney, Aaron Adler, Fusun Yaman, Lisa Tiberio, and Meher Samineni,
+  "TASBE Flow Analytics: A Package for Calibrated Flow Cytometry Analysis,"
+  ACS Synthetic Biology, online May 2019.
 
 ## Installation
 
