@@ -35,11 +35,26 @@ end
 % verify that all files exist
 % Begin by scanning to make sure all expected files are present
 fprintf('Confirming files are present...\n');
+exp_names = {};
 for i=1:batch_size
     batch_names_size = numel(batch_description{i}{3});
     level_file_pairs = cell(batch_names_size);
+    condition_name = batch_description{i}{1};
+    inducer_name = batch_description{i}{2}; 
     for j=1:batch_names_size
         level_file_pairs{j} = batch_description{i}{j+3};
+        exp_name = sanitize_filename([condition_name ': ' inducer_name ' ' batch_description{i}{3}{j}]);
+        if ~any(strcmp(exp_names,exp_name))
+            exp_names{end+1} = exp_name;
+        else
+            if TASBEConfig.get('flow.duplicateConditionWarning') == 1
+                % error
+                TASBESession.error('TASBE:Analysis','DuplicateCondition','Duplicate condition for %s', exp_name);
+            else
+                % warn
+                TASBESession.warn('TASBE:Analysis','DuplicateCondition','Duplicate condition for %s', exp_name);
+            end
+        end
     end
     for j=1:size(level_file_pairs,1)
         fileset = level_file_pairs{j,2};

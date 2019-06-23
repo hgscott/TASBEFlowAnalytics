@@ -8,7 +8,7 @@ function test_suite = test_batch_csv_excel
 
 function test_batch_csv_excel_endtoend
     % Create TemplateExtraction object
-    [filepath, ~, ~] = fileparts(mfilename('fullpath'));
+    [filepath, ~, ~, ~] = fileparts(mfilename('fullpath'));
     extractor = TemplateExtraction('test_templates/test_batch_template_csv.xlsx', [end_with_slash(filepath) '../']);
     CM = load_or_make_testing_colormodel();
     [~, ~, ~] = batch_analysis_excel(extractor, CM);

@@ -29,6 +29,8 @@ fcshdr.filename = filenames; % also just put the set in here, to be weeded later
 fcshdr.filepath = headername; % store the location of this header, to be used and replaced later
 
 units = cell(fcshdr.NumOfPar,1);
+names = cell(fcshdr.NumOfPar,1);
+print_names = cell(fcshdr.NumOfPar,1);
 % parse all channels into header parameter ("par") fields
 for i=1:fcshdr.NumOfPar
     channel = channels{i};
@@ -54,8 +56,17 @@ for i=1:fcshdr.NumOfPar
     end
     % TODO: consider just using the values in the hdr.par fields?
     units{i} = channel.unit;
+    names{i} = channel.name;
+    print_names{i} = channel.print_name;
 end
 
+% Check to make sure there are no duplicates in names and print_names
+if size(unique(names), 1) < size(names, 1)
+    TASBESession.error('fca_readcsv','DuplicateName','Channel names should be unique');
+elseif size(unique(print_names), 1) < size(print_names, 1)
+    TASBESession.error('fca_readcsv','DuplicatePrintName','Channel print names should be unique');
+end
+    
 % Double check units
 allowed_pattern = {'a\.u\.','ERF','Eum','M\w*','Boolean'};
 calibrated_unit_pattern = {'ERF','Eum','M\w*'};

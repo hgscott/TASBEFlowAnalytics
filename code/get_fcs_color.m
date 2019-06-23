@@ -9,8 +9,8 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function [data hdr] = get_fcs_color(fcsdat,fcshdr,color,suppress_errors)
-if nargin<4, suppress_errors = 0; end;
+function [data, hdr] = get_fcs_color(fcsdat,fcshdr,color,suppress_errors)
+if nargin<4, suppress_errors = 0; end
 
 data = []; hdr = [];
 for i=1:size(fcshdr.par,2)
@@ -22,9 +22,19 @@ for i=1:size(fcshdr.par,2)
       data = fcsdat(:,i); 
       hdr = fcshdr.par(i);
       return;
-  end;
-end;
+  end
+end
+
+% Get channel names
+channel_names = '';
+for i=1:size(fcshdr.par,2)
+    if i == 1
+        channel_names = fcshdr.par(i).name;
+    else
+        channel_names = [channel_names ', ' fcshdr.par(i).name];
+    end
+end
 
 if ~suppress_errors
-    TASBESession.error('FCS:Select','MissingColor','Could not find color %s in FCS data',color);
+    TASBESession.error('FCS:Select','MissingColor','Could not find color %s in FCS data. The channel options are %s',color,channel_names);
 end
