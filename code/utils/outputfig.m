@@ -64,3 +64,10 @@ saveas(h,[path shortname '.fig']);
 if(strcmp(get(h,'visible'),'off'))
     close(h);
 end
+
+% Update session log
+if TASBEConfig.get('plots.showPlotLocation') == 1
+    TASBESession.succeed('outputfig', 'PlotLocation', ['Plot saved at "' path shortname '.png"']);
+end
+
+end
