@@ -114,7 +114,7 @@ output = TASBEConfig.to_json();
 splitout = strsplit(output,'\n');
 
 targets = {
-    '"heatmapPlotType": "image"';
+    '"heatmapPlotType": "image",';
     '"beadChannel": "FITC",';
     };
 
@@ -122,7 +122,7 @@ for i=1:numel(targets),
     found = false;
     for j=1:numel(splitout)
         if(strcmp(strtrim(splitout{j}),targets{i})), 
-            %fprintf('Found target: %s\n',targets{i});
+            % fprintf('Found target: %s\n',targets{i});
             found = true; 
             break; 
         end;
