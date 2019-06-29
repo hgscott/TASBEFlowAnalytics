@@ -17,6 +17,8 @@ function all_results = transfercurve_analysis_excel(extractor, CM)
     experimentName = extractor.getExcelValue('experimentName', 'char');
     TASBEConfig.set('template.displayErrors', 0);
     
+    TASBEConfig.set('plots.showPlotLocation', 1);
+    
     % Determine the number of transfer curve analysis to run
     sh_num3 = extractor.getSheetNum('first_compGroup_TC');
     sh_num2 = extractor.getSheetNum('first_sample_num');
@@ -381,6 +383,7 @@ function all_results = transfercurve_analysis_excel(extractor, CM)
             save('-V7',[outputPath outputName],'experiment','AP','sampleresults','results');
         end
     end
+    TASBEConfig.set('plots.showPlotLocation', 0);
 end
 
 % Helper function that returns cell array of sample column names and their corresponding values

@@ -90,6 +90,8 @@ classdef TASBEConfig
             s.plots.largeOutliers = false;
             doc.plots.heatmapPlotType = 'Set to ''image'', ''contour'', or ''surf'' to determine type of heatmap images';
             s.plots.heatmapPlotType = 'image';
+            doc.plots.showPlotLocation = 'If true, use TASBESession to report plot locations';
+            s.plots.showPlotLocation = 0;
             
             % calibration plots, i.e., those supporting the transformation of raw data into processed data, like autofluorescence, compensation, units
             s.calibration = struct(); doc.calibration = struct();

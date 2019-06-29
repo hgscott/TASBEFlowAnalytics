@@ -15,6 +15,9 @@ function [all_results, all_batch_descrips] = plusminus_analysis_excel(extractor,
     TASBEConfig.set('template.displayErrors', 1);
     experimentName = extractor.getExcelValue('experimentName', 'char'); 
     TASBEConfig.set('template.displayErrors', 0);
+    
+    TASBEConfig.set('plots.showPlotLocation', 1);
+    
     % Find preference_row
     preference_row = 0;
     col_num = extractor.getColNum('first_compGroup_PM');
@@ -555,6 +558,7 @@ function [all_results, all_batch_descrips] = plusminus_analysis_excel(extractor,
             save('-V7',[outputPath outputName],'batch_description','AP','results');
         end
     end
+    TASBEConfig.set('plots.showPlotLocation', 0);
 end
 
 % Helper function that returns cell array of sample column names and their corresponding values
