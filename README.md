@@ -3,6 +3,11 @@
 TASBE Flow Analytics is a flow cytometry analysis package. 
 Documentation, templates, and the Excel user interface are stored in the [TASBE Tutorial project](https://github.com/TASBE/TASBEFlowAnalytics-tutorial) and in the [TASBE project website](https://tasbe.github.io/).
 
+**If you make use of the TASBE Flow Analytics package, please cite
+the following publication:**
+
+* Jacob Beal, Cassandra Overney, Aaron Adler, Fusun Yaman, Lisa Tiberio, and Meher Samineni. "TASBE Flow Analytics: A Package for Calibrated Flow Cytometry Analysis," ACS Synthetic Biology, 8(7), pp 1524--1529, May 2019
+
 ## Build status:
 [![Build Status](https://travis-ci.org/TASBE/TASBEFlowAnalytics.svg?branch=master)](https://travis-ci.org/TASBE/TASBEFlowAnalytics) for this project
 
