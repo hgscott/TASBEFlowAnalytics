@@ -17,6 +17,8 @@ function [results, statisticsFile, histogramFile, resultsData] = batch_analysis_
     preference_row = extractor.getRowNum('last_sample_num') + 5;
     TASBEConfig.set('template.displayErrors', 0);
     
+    TASBEConfig.set('plots.showPlotLocation', 1);
+    
     path = extractor.path;
     
     % Double checking the preference_row
@@ -324,4 +326,5 @@ function [results, statisticsFile, histogramFile, resultsData] = batch_analysis_
 
         save([outputPath outputName],'AP','bins','file_pairs','results','sampleresults');
     end
+    TASBEConfig.set('plots.showPlotLocation', 0);
 end

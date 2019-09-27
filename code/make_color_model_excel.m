@@ -16,6 +16,9 @@ function [CM] = make_color_model_excel(extractor)
     TASBEConfig.set('template.displayErrors', 1);
     experimentName = extractor.getExcelValue('experimentName', 'char');
     TASBEConfig.set('template.displayErrors', 0);
+    
+    TASBEConfig.set('plots.showPlotLocation', 1);
+    
     try
         outputName = extractor.getExcelValue('outputName_CM', 'char');
         [~, name, ~] = fileparts(outputName);
@@ -294,4 +297,5 @@ function [CM] = make_color_model_excel(extractor)
             end
         end
     end
+    TASBEConfig.set('plots.showPlotLocation', 0);
 end

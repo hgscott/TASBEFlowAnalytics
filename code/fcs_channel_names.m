@@ -1,5 +1,5 @@
-function [names, hdr] = fcs_channel_names(filename)
-% [names, hdr] = fcs_channel_names(filename): 
+function [names, hdr] = fcs_channel_names(datafile)
+% [names, hdr] = fcs_channel_names(datafile): 
 %   Returns a cell-array of channel names in an FCS file
 %   The second return is the set of headers that these names have been extracted from 
 
@@ -11,6 +11,8 @@ function [names, hdr] = fcs_channel_names(filename)
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-[~, hdr] = fca_read(filename);
+if ischar(datafile), datafile = DataFile(filename); end;
+
+[~, hdr] = fca_read(datafile);
 names = {hdr.par(:).name};
 
