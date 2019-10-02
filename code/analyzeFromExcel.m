@@ -1,5 +1,11 @@
-% ANALYZEFROMEXCEL: wrapper function that creates a TemplateExtraction object and calls the correct analysis. 
-% The only needed inputs are the template file path and type of analysis that needs to be run.
+% ANALYZEFROMEXCEL: wrapper function that creates a TemplateExtraction object and calls the correct analysis 
+% Run with analyzeFromExcel(file, type)
+% There are two inputs: (1) path to excel interface and (2) type of analysis
+% 
+% Possible types to make colormodel: 'colormodel', 'CM', 'Colormodel', 'cm'
+% Possible types to run batch analysis: 'batch', 'BA', 'Batch', 'ba'
+% Possible types to run comparative analysis: 'plusminus', 'PM', 'Plusminus', 'comparativeanalysis', 'companalysis', 'comparative', 'pm'
+% Possible types to run transfer curve analysis: 'transfercurve', 'TC', 'Transfercurve', 'tc'
 %
 % Copyright (C) 2010-2018, Raytheon BBN Technologies and contributors listed
 % in the AUTHORS file in TASBE analytics package distribution's top directory.
@@ -27,16 +33,16 @@ function analyzeFromExcel(file, type)
         
         % Running the actual analysis
         switch type
-            case {'colormodel', 'CM', 'Colormodel'}
+            case {'colormodel', 'CM', 'Colormodel', 'cm'}
                 % Make color model
                 make_color_model_excel(extractor);
-            case {'batch', 'BA', 'Batch'}
+            case {'batch', 'BA', 'Batch', 'ba'}
                 % Run batch analysis
                 batch_analysis_excel(extractor);
-            case {'plusminus', 'PM', 'Plusminus', 'comparativeanalysis', 'companalysis', 'comparative'}
+            case {'plusminus', 'PM', 'Plusminus', 'comparativeanalysis', 'companalysis', 'comparative', 'pm'}
                 % Run plus minus analysis
                 plusminus_analysis_excel(extractor);
-            case {'transfercurve', 'TC', 'Transfercurve'}
+            case {'transfercurve', 'TC', 'Transfercurve', 'tc'}
                 % Run transfer curve analysis 
                 transfercurve_analysis_excel(extractor);
             otherwise

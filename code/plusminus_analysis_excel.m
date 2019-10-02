@@ -399,7 +399,7 @@ function [all_results, all_batch_descrips] = plusminus_analysis_excel(extractor,
                     ind = find(ismember(keys{1}, value), 1);
                     if ~isempty(ind)
                         try 
-                            isempty(sets{ind})
+                            temp = isempty(sets{ind});
                             sets{ind}{end+1} = batch_description{k}{4}{j};
                         catch
                             sets{ind} = {batch_description{k}{4}{j}};
