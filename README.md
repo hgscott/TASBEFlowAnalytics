@@ -16,7 +16,7 @@ the following publication:**
 ## Features
 
 - Runs on both Matlab and Octave, and from Python/Jupyter via oct2py
-- User-friendly Excel interface
+- User-friendly Excel interface, which currently only works on Windows
 - Flow cytometry analysis
 - Plotting and comparison templates for many experiments, including comparative analysis and parametric analysis
 - Output of "point clouds", histograms, and key statistics
