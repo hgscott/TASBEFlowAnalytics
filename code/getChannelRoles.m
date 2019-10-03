@@ -37,7 +37,7 @@ function [channel_roles, print_names] = getChannelRoles(CM, extractor)
         if ~isempty(ind)
             num_channels = num_channels + 1;
             try 
-                isempty(outputs{ind})
+                temp = isempty(outputs{ind});
                 outputs{ind}{end+1} = channel_named(CM, print_name);
             catch
                 outputs{ind} = {channel_named(CM, print_name)};

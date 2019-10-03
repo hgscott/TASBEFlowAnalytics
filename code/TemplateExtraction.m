@@ -498,7 +498,7 @@ classdef TemplateExtraction
             end
             
             try
-                TASBEConfig.isSet(name)
+                temp = TASBEConfig.isSet(name);
             catch
                 TASBESession.error('TemplateExtraction', 'NotTASBEConfig', 'Could not get any preference for: %s', name);
             end
