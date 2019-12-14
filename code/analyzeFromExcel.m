@@ -14,7 +14,10 @@
 % under the terms of the GNU General Public License, with a linking
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
-function analyzeFromExcel(file, type)
+function analyzeFromExcel(file, type, csvPath)
+    if exist('csvPath','var')
+        TASBEConfig.set('template.csvFile', csvPath);
+    end
     try
         % Setting up TASBESession log key
         TASBESession.warn('analyzeFromExcel', 'ExampleWarning', 'This is what a warning looks like.');
@@ -75,4 +78,5 @@ function analyzeFromExcel(file, type)
             end
         end
     end
+    TASBESession.succeed('analyzeFromExcel', 'End', 'Analysis either completed or errored.');
 end
