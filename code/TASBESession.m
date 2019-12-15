@@ -132,6 +132,24 @@ classdef TASBESession
             end
         end
         
+        function out = error_silent(classname,name,message,varargin)
+            % check if previous event is an abort, if so keep aborting
+            log = TASBESession.list();
+            if strcmp(log{end}.contents{end}.name, 'Abort')
+                abort();
+            else
+                event.name = name;
+                event.classname = classname;
+                event.type = 'error';
+                event.message = sprintf(message,varargin{:});
+                out = TASBESession.access('insert',classname,event);
+                try
+                    TASBESession.to_csv_excel(TASBEConfig.get('template.csvFile'));
+                catch
+                end
+            end
+        end
+        
         function out = abort()
             event.name = 'Abort';
             event.classname = 'TASBESession';
