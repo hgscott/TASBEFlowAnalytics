@@ -18,8 +18,8 @@ function analyzeFromExcel(file, type, csvPath, show_errors)
     if exist('csvPath','var')
         TASBEConfig.set('template.csvFile', csvPath);
     end
-    if exist('show_errors','var')
-        TASBEConfig.set('template.error', show_errors);
+    if ~exist('show_errors','var')
+        show_errors = 0;
     end
     try
         % Setting up TASBESession log key
@@ -57,7 +57,7 @@ function analyzeFromExcel(file, type, csvPath, show_errors)
     catch exception
         % Turn MATLAB error into a TASBESession error
         if isempty(exception.identifier)
-            if TASBEConfig.get('template.error') == 0
+            if show_errors == 0
                 TASBESession.error_silent('analyzeFromExcel', 'NoIdentifier', exception.message);
             else
                 TASBESession.error('analyzeFromExcel', 'NoIdentifier', exception.message);
@@ -79,13 +79,13 @@ function analyzeFromExcel(file, type, csvPath, show_errors)
                         name = id_parts{i};
                     end
                 end
-                if TASBEConfig.get('template.error') == 0
+                if show_errors == 0
                     TASBESession.error_silent(id_parts{1}, name, msg);
                 else
                     TASBESession.error(id_parts{1}, name, msg);
                 end
             else
-                if TASBEConfig.get('template.error') == 0
+                if show_errors == 0
                     TASBESession.error_silent('analyzeFromExcel', exception.identifier, msg);
                 else
                     TASBESession.error('analyzeFromExcel', exception.identifier, msg);

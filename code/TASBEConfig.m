@@ -374,8 +374,6 @@ classdef TASBEConfig
             s.template.displayErrors = false;
             doc.template.csvFile = 'Location of TASBESession';
             s.template.csvFile = '';
-            doc.template.error = 'If true, throw error when error is encountered. Else use the error_silent function';
-            s.template.error = 0;
             
             % Last of all, bundle it in a cell array to return
             state = {s defaults doc};
