@@ -54,7 +54,11 @@ function analyzeFromExcel(file, type, csvPath)
     catch exception
         % Turn MATLAB error into a TASBESession error
         if isempty(exception.identifier)
-            TASBESession.error_silent('analyzeFromExcel', 'NoIdentifier', exception.message);
+            if TASBEConfig.get('template.error') == 0
+                TASBESession.error_silent('analyzeFromExcel', 'NoIdentifier', exception.message);
+            else
+                TASBESession.error('analyzeFromExcel', 'NoIdentifier', exception.message);
+            end
         else
             if is_octave()
                 msg = exception.message;
@@ -72,9 +76,17 @@ function analyzeFromExcel(file, type, csvPath)
                         name = id_parts{i};
                     end
                 end
-                TASBESession.error_silent(id_parts{1}, name, msg);
+                if TASBEConfig.get('template.error') == 0
+                    TASBESession.error_silent(id_parts{1}, name, msg);
+                else
+                    TASBESession.error(id_parts{1}, name, msg);
+                end
             else
-                TASBESession.error_silent('analyzeFromExcel', exception.identifier, msg);
+                if TASBEConfig.get('template.error') == 0
+                    TASBESession.error_silent('analyzeFromExcel', exception.identifier, msg);
+                else
+                    TASBESession.error('analyzeFromExcel', exception.identifier, msg);
+                end
             end
         end
     end
