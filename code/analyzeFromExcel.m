@@ -14,7 +14,13 @@
 % under the terms of the GNU General Public License, with a linking
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
-function analyzeFromExcel(file, type)
+function analyzeFromExcel(file, type, csvPath, show_errors)
+    if exist('csvPath','var')
+        TASBEConfig.set('template.csvFile', csvPath);
+    end
+    if ~exist('show_errors','var')
+        show_errors = 0;
+    end
     try
         % Setting up TASBESession log key
         TASBESession.warn('analyzeFromExcel', 'ExampleWarning', 'This is what a warning looks like.');
@@ -51,7 +57,11 @@ function analyzeFromExcel(file, type)
     catch exception
         % Turn MATLAB error into a TASBESession error
         if isempty(exception.identifier)
-            TASBESession.error('analyzeFromExcel', 'NoIdentifier', exception.message);
+            if show_errors == 0
+                TASBESession.error_silent('analyzeFromExcel', 'NoIdentifier', exception.message);
+            else
+                TASBESession.error('analyzeFromExcel', 'NoIdentifier', exception.message);
+            end
         else
             if is_octave()
                 msg = exception.message;
@@ -69,10 +79,19 @@ function analyzeFromExcel(file, type)
                         name = id_parts{i};
                     end
                 end
-                TASBESession.error(id_parts{1}, name, msg);
+                if show_errors == 0
+                    TASBESession.error_silent(id_parts{1}, name, msg);
+                else
+                    TASBESession.error(id_parts{1}, name, msg);
+                end
             else
-                TASBESession.error('analyzeFromExcel', exception.identifier, msg);
+                if show_errors == 0
+                    TASBESession.error_silent('analyzeFromExcel', exception.identifier, msg);
+                else
+                    TASBESession.error('analyzeFromExcel', exception.identifier, msg);
+                end
             end
         end
     end
+    TASBESession.succeed('analyzeFromExcel', 'End', 'Analysis either completed or errored.');
 end

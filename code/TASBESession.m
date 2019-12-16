@@ -125,6 +125,28 @@ classdef TASBESession
                 errorStruct.message = strrep(event.message,'%','%%');
                 errorStruct.identifier = [classname ':' name];
                 error(errorStruct);
+                try
+                    TASBESession.to_csv_excel(TASBEConfig.get('template.csvFile'));
+                catch
+                end
+            end
+        end
+        
+        function out = error_silent(classname,name,message,varargin)
+            % check if previous event is an abort, if so keep aborting
+            log = TASBESession.list();
+            if strcmp(log{end}.contents{end}.name, 'Abort')
+                abort();
+            else
+                event.name = name;
+                event.classname = classname;
+                event.type = 'error';
+                event.message = sprintf(message,varargin{:});
+                out = TASBESession.access('insert',classname,event);
+                try
+                    TASBESession.to_csv_excel(TASBEConfig.get('template.csvFile'));
+                catch
+                end
             end
         end
         
@@ -137,6 +159,10 @@ classdef TASBESession
             errorStruct.message = strrep(event.message,'%','%%');
             errorStruct.identifier = [event.classname ':' event.name];
             error(errorStruct);
+            try
+                TASBESession.to_csv_excel(TASBEConfig.get('template.csvFile'));
+            catch
+            end
         end
         
         function out = warn(classname,name,message,varargin)
@@ -154,6 +180,10 @@ classdef TASBESession
                 event.message = sprintf(message,varargin{:});
                 out = TASBESession.access('insert',classname,event);
                 warning([classname ':' name],strrep(event.message,'%','%%'));
+                try
+                    TASBESession.to_csv_excel(TASBEConfig.get('template.csvFile'));
+                catch
+                end
             end
         end
         
@@ -171,6 +201,10 @@ classdef TASBESession
                 event.type = 'skip';
                 event.message = sprintf(message,varargin{:});
                 out = TASBESession.access('insert',classname,event);
+                try
+                    TASBESession.to_csv_excel(TASBEConfig.get('template.csvFile'));
+                catch
+                end
             end
         end
         
@@ -189,6 +223,10 @@ classdef TASBESession
                 event.message = sprintf(message,varargin{:});
                 out = TASBESession.access('insert',classname,event);
                 fprintf([strrep(event.message,'%','%%') '\n']);
+                try
+                    TASBESession.to_csv_excel(TASBEConfig.get('template.csvFile'));
+                catch
+                end
             end
         end
         
@@ -207,6 +245,10 @@ classdef TASBESession
                 event.message = sprintf(message,varargin{:});
                 out = TASBESession.access('insert',classname,event);
                 fprintf(['Note: ' strrep(event.message,'%','%%') '\n']);
+                try
+                    TASBESession.to_csv_excel(TASBEConfig.get('template.csvFile'));
+                catch
+                end
             end
         end
         
@@ -263,6 +305,38 @@ classdef TASBESession
             if nargin>0
                 fid = fopen(filename,'w');
                 fprintf(fid,out);
+                fclose(fid);
+            end
+        end
+        
+        function to_csv_excel(filename)
+            contents = TASBESession.list();
+            % Overwrite if TASBESession just reset
+            if numel(contents) == 2 % 2 to include the TASBESession set up message
+                [fid, ~] = fopen(filename, 'w');
+                % Write column headers
+                fprintf(fid, 'Class Name,Name,Time,error,failure,skip,success\n');
+                for i=1:numel(contents)
+                    suite = contents{i};
+                    for j=1:numel(suite.contents)
+                        event = suite.contents{j};
+                        message = regexprep(event.message, ',', '');
+                        event_strs = {'%s,%s,%s,%s,,,\n','%s,%s,%s,,%s,,\n','%s,%s,%s,,,%s,\n','%s,%s,%s,,,,%s\n'};
+                        index = strcmp({'error','failure','skip','success'}, event.type);
+                        fprintf(fid, event_strs{index}, event.classname,event.name,datestr(now,'dd-mm-yyyy HH:MM:SS'),message);
+                    end
+                end
+                fclose(fid);
+            else
+                % Print the latest message
+                [fid, ~] = fopen(filename, 'a');
+                suite = contents{numel(contents)};
+                event = suite.contents{numel(suite.contents)};
+                message = regexprep(event.message, ',', '');
+                message = regexprep(message, '\n', '');
+                event_strs = {'%s,%s,%s,%s,,,\n','%s,%s,%s,,%s,,\n','%s,%s,%s,,,%s,\n','%s,%s,%s,,,,%s\n'};
+                index = strcmp({'error','failure','skip','success'}, event.type);
+                fprintf(fid, event_strs{index}, event.classname,event.name,datestr(now,'dd-mm-yyyy HH:MM:SS'),message);
                 fclose(fid);
             end
         end
