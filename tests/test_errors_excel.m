@@ -1,6 +1,5 @@
 function test_suite = test_errors_excel
     TASBEConfig.checkpoint('test');
-    TASBEConfig.set('template.error', 1);
     try % assignment of 'localfunctions' is necessary in Matlab >= 2016
         test_functions=localfunctions();
     catch % no problem; early Matlab versions can use initTestSuite fine
@@ -22,16 +21,16 @@ function test_errors_excel_conditions
 
 function test_errors_excel_session
     if is_octave()
-        assertExceptionThrown(@()analyzeFromExcel('', ''), 'Octave:invalid-index', 'No error was raised');   
+        assertExceptionThrown(@()analyzeFromExcel('', '', '', 1), 'Octave:invalid-index', 'No error was raised');   
     else
-        assertExceptionThrown(@()analyzeFromExcel('', ''), 'MATLAB:badsubscript', 'No error was raised'); 
+        assertExceptionThrown(@()analyzeFromExcel('', '', '', 1), 'MATLAB:badsubscript', 'No error was raised'); 
     end
     try
-        assertExceptionThrown(@()analyzeFromExcel('test_templates/faulty_batch_template1.xlsx', 'comparative'), 'TASBE:Analysis:ColumnDimensionMismatch', 'No error was raised');
+        assertExceptionThrown(@()analyzeFromExcel('test_templates/faulty_batch_template1.xlsx', 'comparative', '', 1), 'TASBE:Analysis:ColumnDimensionMismatch', 'No error was raised');
     catch
-        assertExceptionThrown(@()analyzeFromExcel('test_templates/faulty_batch_template1.xlsx', 'comparative'), 'TASBE:ColorModel:MissingChannel', 'No error was raised');
+        assertExceptionThrown(@()analyzeFromExcel('test_templates/faulty_batch_template1.xlsx', 'comparative', '', 1), 'TASBE:ColorModel:MissingChannel', 'No error was raised');
     end
-    assertExceptionThrown(@()analyzeFromExcel('test_templates/faulty_batch_template1.xlsx', 'none'), 'analyzeFromExcel:InvalidType', 'No error was raised');
+    assertExceptionThrown(@()analyzeFromExcel('test_templates/faulty_batch_template1.xlsx', 'none', '', 1), 'analyzeFromExcel:InvalidType', 'No error was raised');
     
 function test_errors_excel_channel_roles
     CM = load_or_make_testing_colormodel();
