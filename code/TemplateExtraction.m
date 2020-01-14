@@ -149,6 +149,11 @@ classdef TemplateExtraction
         function TASBEConfig_updates(obj)
         % Update any relevant TASBEConfig preferences from the Optional Settings sheet in the
         % template spreadsheet
+            try
+                csvPath = TASBEConfig.get('template.csvFile');
+            catch
+                csvPath = '';
+            end
             TASBEConfig.checkpoint(TASBEConfig.checkpoints());
             raw = obj.sheets{obj.getSheetNum('first_preference_name')};
             name_col = obj.getColNum('first_preference_name');
@@ -171,6 +176,9 @@ classdef TemplateExtraction
                         TASBEConfig.set(char(cell2mat(raw(i,name_col))), cell2mat(raw(i,val_col)));
                     end
                 end
+            end
+            if ~isempty(csvPath)
+                TASBEConfig.set('template.csvFile', csvPath);
             end
         end
         
@@ -498,7 +506,7 @@ classdef TemplateExtraction
             end
             
             try
-                TASBEConfig.isSet(name)
+                temp = TASBEConfig.isSet(name);
             catch
                 TASBESession.error('TemplateExtraction', 'NotTASBEConfig', 'Could not get any preference for: %s', name);
             end

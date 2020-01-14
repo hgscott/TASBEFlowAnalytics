@@ -128,7 +128,7 @@ function all_results = transfercurve_analysis_excel(extractor, CM)
 
     % Designate which channels have which roles
     [channel_roles, ~] = getChannelRoles(CM, extractor);
-    
+
     if isempty(channel_roles)
         TASBESession.warn('transfercurve_analysis_excel', 'MissingPreference', 'Missing constitutive, input, output in "Calibration" sheet');
         APs = {AnalysisParameters(bins,{})};

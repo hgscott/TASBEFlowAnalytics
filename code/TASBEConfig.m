@@ -372,6 +372,8 @@ classdef TASBEConfig
             doc.template.about = 'Settings controlling excel wrapper preferences';
             doc.template.displayErrors = 'If true, will display ALL of the TASBE warnings and errors from TemplateExtraction';
             s.template.displayErrors = false;
+            doc.template.csvFile = 'Location of TASBESession';
+            s.template.csvFile = '';
             
             % Last of all, bundle it in a cell array to return
             state = {s defaults doc};
