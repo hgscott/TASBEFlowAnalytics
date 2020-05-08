@@ -18,6 +18,7 @@ flowMin = TASBEConfig.get('flow.rangeMin');
 flowMax = TASBEConfig.get('flow.rangeMax');
 minDrivenThreshold = TASBEConfig.get('compensation.minimumDrivenLevel');
 maxDrivenThreshold = TASBEConfig.get('compensation.maximumDrivenLevel');
+minimumBinCount = TASBEConfig.get('compensation.minimumBinCount');
 
 % Get read FCS file and select channels of interest
 [rawfcs fcshdr] = read_filtered_au(CM,filename);
@@ -37,7 +38,7 @@ if maxDrivenThreshold>max(max(no_AF_data)), maxDrivenThreshold = ceil(max(max(no
 bins = BinSequence(log10(minDrivenThreshold),0.2,log10(maxDrivenThreshold),'log_bins');
 [counts means stds] = subpopulation_statistics(bins,no_AF_data,driven,'geometric');
 
-min_significant = find(means(:,passive)>(2*getStd(CM.autofluorescence_model{passive})) & counts(:)>10,1);
+min_significant = find(means(:,passive)>(2*getStd(CM.autofluorescence_model{passive})) & counts(:)>=minimumBinCount,1);
 
 if size(min_significant,1) > 0
     binEdges = get_bin_edges(bins);
