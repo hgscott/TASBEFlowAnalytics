@@ -86,10 +86,15 @@ else
     segmentName = erfChannelName;
 end
 
-[fcsraw fcshdr fcsdat] = fca_read(beadfile);
+[~, fcshdr, fcsdat] = fca_read(beadfile);
 if(isempty(fcshdr)), TASBESession.error('TASBE:Beads','MissingBeadFile','Cannot calibrate without beads'); end;
 bead_data = get_fcs_color(fcsdat,fcshdr,erfChannelName);
 segment_data = get_fcs_color(fcsdat,fcshdr,segmentName);
+
+% warn if file is unusually small:
+if numel(bead_data)<TASBEConfig.get('flow.smallFileWarning')
+    TASBESession.warn('TASBE:Beads','UnusuallySmallFile','FCS file "%s" is unusually small: only %i events', getFile(beadfile), numel(bead_data));
+end
 
 TASBESession.succeed('TASBE:Beads','ObtainBeadData','Successfully read bead data');
 

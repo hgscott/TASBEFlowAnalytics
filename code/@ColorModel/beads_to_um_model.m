@@ -78,6 +78,11 @@ if(isempty(fcshdr)), TASBESession.error('TASBE:SizeBeads','MissingBeadFile','Can
 bead_data = get_fcs_color(fcsdat,fcshdr,umChannelName);
 segment_data = get_fcs_color(fcsdat,fcshdr,segmentName);
 
+% warn if file is unusually small:
+if numel(bead_data)<TASBEConfig.get('flow.smallFileWarning')
+    TASBESession.warn('TASBE:SizeBeads','UnusuallySmallFile','FCS file "%s" is unusually small: only %i events', getFile(beadfile), numel(bead_data));
+end
+
 TASBESession.succeed('TASBE:SizeBeads','ObtainBeadData','Successfully read size bead data');
 
 % The full range of bins (for plotting purposes) covers everything from 1 to the max value (rounded up)

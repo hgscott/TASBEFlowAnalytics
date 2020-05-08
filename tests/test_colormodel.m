@@ -501,3 +501,49 @@ TASBEConfig.set('plots.plotPath', '/tmp/plots');
 CM=resolve(CM);
 save('-V7','/tmp/CM120312.mat','CM');
 
+
+function test_colormodel_insufficient_beads
+TASBEConfig.checkpoint('test');
+TASBEConfig.set('flow.smallFileWarning',10001)
+stem0312 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_';
+beadfile = '../TASBEFlowAnalytics-Tutorial/example_controls/171201_BadBeads.fcs';
+
+channels = {}; 
+channels{1} = Channel('GFP - Area', 488, 515, 20);
+channels{2} = Channel('FSC - Area', 488, 488, 10);
+channels{2} = setIsUnprocessed(channels{2},true);
+
+CM = ColorModel(beadfile, {}, channels, {}, {}, beadfile);
+TASBEConfig.set('beads.beadModel','SpheroTech RCP-30-5A'); % Entry from BeadCatalog.xls matching your beads
+TASBEConfig.set('beads.beadBatch','Lot AA01, AA02, AA03, AA04, AB01, AB02, AC01, GAA01-R'); % Entry from BeadCatalog.xls containing your lot
+CM=set_ERF_channel_name(CM, 'GFP - Area');
+
+TASBEConfig.set('sizebeads.beadModel','SpheroTech PPS-6K'); % Entry from BeadCatalog.xls matching your beads
+CM=set_um_channel_name(CM, 'FSC - Area');
+
+TASBEConfig.set('plots.plotPath', '/tmp/plots');
+TASBEConfig.set('calibration.overrideAutofluorescence',0)
+
+% Execute and save the model
+CM=resolve(CM);
+save('-V7','/tmp/CM120312.mat','CM');
+
+log = TASBESession.list();
+% check that the warnings are as expected
+assertEqual(log{end-4}.contents{2}.name, 'UnusuallySmallFile');
+assertEqual(log{end-4}.contents{4}.name, 'PeaksNotAscending');
+assertEqual(log{end-4}.contents{5}.name, 'PotentialBeadClump');
+assertEqual(log{end-4}.contents{6}.name, 'QuestionableFirstPeak');
+assertEqual(log{end-4}.contents{7}.name, 'PeaksNotAscending');
+assertEqual(log{end-4}.contents{8}.name, 'PotentialBeadClump');
+assertEqual(log{end-4}.contents{9}.name, 'PeakDetection');
+assertEqual(log{end-4}.contents{11}.name, 'PeakFitQuality');
+assertEqual(log{end-3}.contents{2}.name, 'UnusuallySmallFile');
+assertEqual(log{end-3}.contents{5}.name, 'SinglePeak');
+assertEqual(log{end-2}.contents{1}.name, 'OverrideAutofluorescence');
+assertEqual(log{end-1}.contents{1}.name, 'UnprocessedChannel');
+assertEqual(log{end}.contents{1}.name, 'NoColorMappings');
+assertEqual(log{end}.contents{2}.name, 'NoColorMappings');
+
+
+
