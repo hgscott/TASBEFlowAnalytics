@@ -3,6 +3,8 @@
 TASBE Flow Analytics is a flow cytometry analysis package. 
 Documentation, templates, and the Excel user interface are stored in the [TASBE Tutorial project](https://github.com/TASBE/TASBEFlowAnalytics-tutorial) and in the [TASBE project website](https://tasbe.github.io/).
 
+An introductory tutorial on flow cytometry, calibration, and data interpretation can be found in the [iGEM Fluorescence Tutorials](https://github.com/iGEM-Measurement-Tools/Fluorescence-Tutorials).
+
 **If you make use of the TASBE Flow Analytics package, please cite
 the following publication:**
 
