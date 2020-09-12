@@ -179,11 +179,6 @@ elseif  strcmp(fcsheader_type,'FCS2.0') || strcmp(fcsheader_type,'FCS3.0') || st
         return;
     end
     fcshdr.TotalEvents = str2num(get_mnemonic_value('$TOT',fcsheader_main, mnemonic_separator));
-    if fcshdr.TotalEvents == 0
-        fcsdat = 0;
-        fcsdatscaled = 0;
-        return
-    end
     fcshdr.NumOfPar = str2num(get_mnemonic_value('$PAR',fcsheader_main, mnemonic_separator));
 %     if strcmp(mnemonic_separator,'LF')
 %         fcshdr.NumOfPar = fcshdr.NumOfPar + 1;
@@ -495,6 +490,14 @@ if nargout>3 && ~isempty(fcshdr.CompLabels)
     fcsdatcomp = fcsdatscaled;
     fcsdatcomp(:,compcols) = fcsdatcomp(:,compcols)/fcshdr.CompMat;
 else fcsdatcomp=[];
+end
+
+% Finally, if there are no events, add one of all zeros to simplify handling
+if fcshdr.TotalEvents == 0
+    TASBESession.warn('FCS:Read','EmptyFCS',[FileName ' has no events; adding one event of all zeros']);
+    fcsdat = zeros(1,fcshdr.NumOfPar);
+    fcsdatscaled = zeros(1,fcshdr.NumOfPar);
+    % return % JSB changed: report the full header, even if there are no events, for purpose of batch processing.
 end
 
 

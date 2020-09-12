@@ -31,8 +31,13 @@ function AFM = AutoFluorescenceModel(channel,data)
         dropsize = ceil(numel(sorted)*dropFraction);
         trimmed = sorted(dropsize:(numel(sorted)-dropsize));
         % compute statistics
-        AFM.af_mean = mean(trimmed);
-        AFM.af_std = std(trimmed);
+        if numel(trimmed)
+            AFM.af_mean = mean(trimmed);
+            AFM.af_std = std(trimmed);
+        else
+            AFM.af_mean = NaN;
+            AFM.af_std = NaN;
+        end
         AFM.n = numel(trimmed);
     else
         TASBESession.error('AutoFluorescence','MissingArgument','Autofluorescence Model constructor requires two arguments');
