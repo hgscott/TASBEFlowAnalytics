@@ -101,3 +101,35 @@ assertEqual(numel(results), 2);
 assertElementsAlmostEqual(results{1}.n_events, [0 0 0],1e-2);
 assertElementsAlmostEqual(results{2}.n_events, [2 0],1e-2);
 
+
+function test_complex_small_files_premade_colormodel
+
+% Color model = 'cm'
+load('../TASBEFlowAnalytics-Tutorial/tests/additional_test_files/ColorModel.mat');
+
+% Configure the analysis
+bins = BinSequence(0,0.1,10,'log_bins');
+AP = AnalysisParameters(bins,{});
+
+% Make a map of condition names to file sets
+stem = '../TASBEFlowAnalytics-Tutorial/tests/additional_test_files/';
+file_pairs = {...
+    'A', {[stem 'aq1endun4pam9wj.fcs'], [stem 'aq1endun4pbrg2h.fcs'], [stem 'aq1endun4p9g3sk.fcs']}; 
+    'B', {[stem 'aq1endun4pcvp6p.fcs'], [stem 'aq1endun4pf63em.fcs'], [stem 'aq1endun4pf63eq.fcs']}; 
+    'C', {[stem 'aq1endun4p77phf.fcs']};
+    'D', {[stem 'aq1endun4pjjntq.fcs']};
+    'E', {[stem 'aq1endunfvwse75.fcs']};
+    'F', {[stem 'aq1endun4p3t45d.fcs'], [stem 'aq1endun4p4xa9e.fcs']}; 
+    'G', {[stem 'aq1endun4nw54g9.fcs'], [stem 'aq1endun4nx9am8.fcs']}; 
+    'H', {[stem 'aq1endun4nzhpvb.fcs'], [stem 'aq1endun4p3t45a.fcs']}; 
+    };
+
+[results, sampleresults] = per_color_constitutive_analysis(cm,file_pairs,{'FSC-A','SSC-A','BL1-A','FSC-H','SSC-H','FSC-W','SSC-W'},AP);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Check results:
+
+assertEqual(numel(results), 8);
+assertElementsAlmostEqual(results{1}.n_events, [0 0 0],1e-2);
+assertElementsAlmostEqual(results{2}.n_events, [0 0 25],1e-2);
+
