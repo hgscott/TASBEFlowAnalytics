@@ -98,6 +98,6 @@ file_pairs = {...
 % Check results:
 
 assertEqual(numel(results), 2);
-assertElementsAlmostEqual(results{1}.n_events, [1 1 79 2],1e-2);
-assertElementsAlmostEqual(results{2}.n_events, [79 2],1e-2);
+assertElementsAlmostEqual(results{1}.n_events, [0 0 0],1e-2);
+assertElementsAlmostEqual(results{2}.n_events, [2 0],1e-2);
 
