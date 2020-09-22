@@ -66,8 +66,14 @@ for i=1:n_conditions,
     sample_popcmeans = reshape([sampleset.PopComponentMeans],n_components,n_channels,numel(sampleset));
     sample_popcstds = reshape([sampleset.PopComponentStandardDevs],n_components,n_channels,numel(sampleset));
     sample_popcweights = reshape([sampleset.PopComponentWeights],n_components,n_channels,numel(sampleset));
-    sample_plas = [sampleset.PlasmidEstimates];
-    sample_active = [sampleset.FractionActive];
+    
+    % Kludge to deal with empty analyses
+    n_samples = numel(sampleset);
+    if n_samples>0, sample_plas = zeros(numel(sampleset(1).BinCounts),n_samples); sample_active = sample_plas; end;
+    for j=1:n_samples,
+        if ~isempty(sampleset(j).PlasmidEstimates), sample_plas(:,j) = sampleset(j).PlasmidEstimates; end;
+        if ~isempty(sampleset(j).FractionActive), sample_active(:,j) = sampleset(j).FractionActive; end;
+    end
     
     % track min/max total number of events in a sample
     for j=1:numel(sampleset)
@@ -97,11 +103,9 @@ for i=1:n_conditions,
                 tmp_expt_stdofmeans(j,i,:) = 0;
                 tmp_expt_stds(j,i,:) = sample_stds(j,:,valid(j,:));
                 tmp_expt_stdofstds(j,i,:) = 0;
-                % kludge until we refactor out the plasmid estimates
-                if size(sample_plas,2)>1, vi = valid(j,:); else vi = 1; end;
-                expt_plasmids(j,i) = sample_plas(j,vi);
+                expt_plasmids(j,i) = sample_plas(j,valid(j,:));
                 expt_stdofplasmids(j,i) = 0;
-                expt_activity(j,i) = sample_active(j,vi);
+                expt_activity(j,i) = sample_active(j,valid(j,:));
                 expt_stdofactivity(j,i) = 0;
             else
                 for k=1:n_channels,
@@ -110,12 +114,10 @@ for i=1:n_conditions,
                     tmp_expt_stds(j,i,k) = geomean(sample_stds(j,k,valid(j,:)));
                     tmp_expt_stdofstds(j,i,k) = geostd(sample_stds(j,k,valid(j,:)));
                 end
-                % kludge until we refactor out the plasmid estimates
-                if size(sample_plas,2)==numel(valid(j,:)), vi = valid(j,:); else vi = 1:size(sample_plas,2); end;
-                expt_plasmids(j,i) = geomean(sample_plas(j,vi));
-                expt_stdofplasmids(j,i) = geostd(sample_plas(j,vi));
-                expt_activity(j,i) = geomean(sample_active(j,vi));
-                expt_stdofactivity(j,i) = geostd(sample_active(j,vi));
+                expt_plasmids(j,i) = geomean(sample_plas(j,valid(j,:)));
+                expt_stdofplasmids(j,i) = geostd(sample_plas(j,valid(j,:)));
+                expt_activity(j,i) = geomean(sample_active(j,valid(j,:)));
+                expt_stdofactivity(j,i) = geostd(sample_active(j,valid(j,:)));
             end
         end
     end
