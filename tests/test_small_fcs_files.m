@@ -86,6 +86,8 @@ CM = add_prefilter(CM,RF);
 bins = BinSequence(0,0.1,10,'log_bins');
 AP = AnalysisParameters(bins,{});
 
+AP=setMinValidCount(AP,1');
+
 % Make a map of condition names to file sets
 file_pairs = {...
     'small1', {fcs0events, fcs1events, fcs2events};
@@ -110,6 +112,8 @@ load('../TASBEFlowAnalytics-Tutorial/tests/additional_test_files/ColorModel.mat'
 % Configure the analysis
 bins = BinSequence(0,0.1,10,'log_bins');
 AP = AnalysisParameters(bins,{});
+
+AP=setMinValidCount(AP,1');
 
 % Make a map of condition names to file sets
 stem = '../TASBEFlowAnalytics-Tutorial/tests/additional_test_files/';

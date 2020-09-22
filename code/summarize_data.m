@@ -97,9 +97,11 @@ for i=1:n_conditions,
                 tmp_expt_stdofmeans(j,i,:) = 0;
                 tmp_expt_stds(j,i,:) = sample_stds(j,:,valid(j,:));
                 tmp_expt_stdofstds(j,i,:) = 0;
-                expt_plasmids(j,i) = sample_plas(j,valid(j,:));
+                % kludge until we refactor out the plasmid estimates
+                if size(sample_plas,2)>1, vi = valid(j,:); else vi = 1; end;
+                expt_plasmids(j,i) = sample_plas(j,vi);
                 expt_stdofplasmids(j,i) = 0;
-                expt_activity(j,i) = sample_active(j,valid(j,:));
+                expt_activity(j,i) = sample_active(j,vi);
                 expt_stdofactivity(j,i) = 0;
             else
                 for k=1:n_channels,
