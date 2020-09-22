@@ -110,10 +110,12 @@ for i=1:n_conditions,
                     tmp_expt_stds(j,i,k) = geomean(sample_stds(j,k,valid(j,:)));
                     tmp_expt_stdofstds(j,i,k) = geostd(sample_stds(j,k,valid(j,:)));
                 end
-                expt_plasmids(j,i) = geomean(sample_plas(j,valid(j,:)));
-                expt_stdofplasmids(j,i) = geostd(sample_plas(j,valid(j,:)));
-                expt_activity(j,i) = geomean(sample_active(j,valid(j,:)));
-                expt_stdofactivity(j,i) = geostd(sample_active(j,valid(j,:)));
+                % kludge until we refactor out the plasmid estimates
+                if size(sample_plas,2)==numel(valid(j,:)), vi = valid(j,:); else vi = 1:size(sample_plas,2); end;
+                expt_plasmids(j,i) = geomean(sample_plas(j,vi));
+                expt_stdofplasmids(j,i) = geostd(sample_plas(j,vi));
+                expt_activity(j,i) = geomean(sample_active(j,vi));
+                expt_stdofactivity(j,i) = geostd(sample_active(j,vi));
             end
         end
     end

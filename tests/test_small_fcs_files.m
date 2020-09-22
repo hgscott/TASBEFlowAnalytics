@@ -120,6 +120,7 @@ stem = '../TASBEFlowAnalytics-Tutorial/tests/additional_test_files/';
 file_pairs = {...
     'A', {[stem 'aq1endun4pam9wj.fcs'], [stem 'aq1endun4pbrg2h.fcs'], [stem 'aq1endun4p9g3sk.fcs']}; 
     'B', {[stem 'aq1endun4pcvp6p.fcs'], [stem 'aq1endun4pf63em.fcs'], [stem 'aq1endun4pf63eq.fcs']}; 
+    'B2', {[stem 'aq1endun4pcvp6p.fcs'], [stem 'aq1endun4pf63eq.fcs'], [stem 'aq1endun4pf63eq.fcs']}; 
     'C', {[stem 'aq1endun4p77phf.fcs']};
     'D', {[stem 'aq1endun4pjjntq.fcs']};
     'E', {[stem 'aq1endunfvwse75.fcs']};
@@ -133,7 +134,7 @@ file_pairs = {...
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Check results:
 
-assertEqual(numel(results), 8);
+assertEqual(numel(results), 9);
 assertElementsAlmostEqual(results{1}.n_events, [0 0 0],1e-2);
 assertElementsAlmostEqual(results{2}.n_events, [0 0 25],1e-2);
 
