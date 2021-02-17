@@ -10,5 +10,6 @@
 
 function value = percentile(data,n)
 sorted = sort(data(~isnan(data))); % sort low to high
+if isempty(sorted), value = NaN; return; end; % no numbers in --> NaN out
 index = ceil((n/100)*numel(sorted));
 value = sorted(index);
