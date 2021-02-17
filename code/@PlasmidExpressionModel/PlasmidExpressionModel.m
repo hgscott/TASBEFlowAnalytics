@@ -78,9 +78,11 @@
 
             if (numel(PEM.fp_dist.mu) == 1 || max(PEM.fp_dist.weight)>0.999) && n_components>1, % failure to separate -> duplicate
                 TASBESession.warn('Model:CFPDistributionSeparation','CannotSeparateDistribution','Distribution could not be separated');
-                PEM.fp_dist.mu(2) = PEM.fp_dist.mu(1);
-                PEM.fp_dist.Sigma(:,:,2) = PEM.fp_dist.Sigma(:,:,1); % This Sigma is a *variance*, and not a std. dev.
-                PEM.fp_dist.weight = [0.5 0.5];
+                for i=2:n_components
+                    PEM.fp_dist.mu(i) = PEM.fp_dist.mu(1);
+                    PEM.fp_dist.Sigma(:,:,i) = PEM.fp_dist.Sigma(:,:,1); % This Sigma is a *variance*, and not a std. dev.
+                end
+                PEM.fp_dist.weight = ones(1,n_components)/n_components;
             else if numel(PEM.fp_dist.mu) < n_components
                 TASBESession.warn('Model:CFPDistributionSeparation','NotEnoughComponents','Less components than expected: %i vs. %i',numel(PEM.fp_dist.mu),n_components);
                 % add zero-weight components
