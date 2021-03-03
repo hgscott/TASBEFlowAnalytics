@@ -365,6 +365,8 @@ classdef TASBEConfig
             doc.histogram.about = 'Settings controlling histogram plotting preferences';
             doc.histogram.displayLegend = 'If true, displays legend in bin statistics graphs';
             s.histogram.displayLegend = true;
+            doc.histogram.plotGMM = 'If true, plots gaussian mixture model in bin statistics graphs';
+            s.histogram.plotGMM = false;
             
             % Excel wrapper preferences
             s.template = struct();
