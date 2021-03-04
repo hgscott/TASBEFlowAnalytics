@@ -84,7 +84,6 @@ for i=1:n_conditions
         maxcount = max(maxcount,max(max(counts)));
     end
     
-    
     for j=1:numReplicates
         for k=1:n_colors
             ls = linespecs{k};
@@ -92,6 +91,36 @@ for i=1:n_conditions
                 loglog([results{i}.means(k) results{i}.means(k)],[1 maxcount],[ls '--']); hold on;
             else
                 loglog([results{i}.means(k) results{i}.means(k)],[1 maxcount], 'Color', ls, 'LineStyle', '--'); hold on;
+            end
+        end
+    end
+    
+    % add the plot of the GMM fit if it's available
+    if TASBEConfig.get('histogram.plotGMM')
+        for k=1:n_colors
+            replicates = sampleresults{i};
+            numReplicates = numel(replicates);
+            for j=1:numReplicates
+                fp_dist.mu = replicates{j}.PopComponentMeans;
+                fp_dist.Sigma(1,1,:) = replicates{j}.PopComponentStandardDevs;
+                fp_dist.weight = replicates{j}.PopComponentWeights;
+                bin_widths = get_bin_widths(getBins(replicates{j}.AnalysisParameters));
+                counts = replicates{j}.BinCounts;
+                multiplier = sum(counts)*log10(bin_widths);
+
+                model = gmm_pdf(fp_dist, log10(bin_centers)')*multiplier;
+                ls = linespecs{k};
+                if(ischar(ls) && length(ls)==1 && length(findstr(ls, 'rgbcmykw')) == 1)
+                    plot(bin_centers,model,[ls '--']); hold on;
+                    for l=1:numel(fp_dist.mu)
+                        loglog([10^fp_dist.mu(l) 10^fp_dist.mu(l)],[1 maxcount],[ls ':']);
+                    end
+                else
+                    plot(bin_centers,model,'Color', ls, 'LineStyle', '--'); hold on;
+                    for l=1:numel(fp_dist.mu)
+                        loglog([10^fp_dist.mu(l) 10^fp_dist.mu(l)],[1 maxcount],'Color', ls, 'LineStyle', ':');
+                    end
+                end
             end
         end
     end
