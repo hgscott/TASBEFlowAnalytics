@@ -13,7 +13,6 @@ jobs:
         with:
           repository: TASBE/TASBEFlowAnalytics-Tutorial
       - uses: actions/checkout@v2
-        with:
       - uses: joergbrech/moxunit-action@master
         with:
           tests: tests
