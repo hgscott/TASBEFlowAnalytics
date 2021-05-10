@@ -12,10 +12,8 @@ jobs:
       - uses: actions/checkout@v2
         with:
           repository: TASBE/TASBEFlowAnalytics-Tutorial
-          path: TASBEFlowAnalytics-Tutorial
       - uses: actions/checkout@v2
         with:
-          path: TASBEFlowAnalytics
       - uses: joergbrech/moxunit-action@master
         with:
           tests: tests
