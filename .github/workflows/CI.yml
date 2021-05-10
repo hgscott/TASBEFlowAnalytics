@@ -19,11 +19,10 @@ jobs:
       - uses: actions/checkout@v2
         with:
           path: TASBEFlowAnalytics
-      - name: goto run directory
-        run: |
-          cd /home/runner/work/TASBEFlowAnalytics/TASBEFlowAnalytics/TASBEFlowAnalytics-Tutorial
-      - uses: joergbrech/moxunit-action@master
-        with:
-          tests: tests
-          src: code code/utils library_code library_code/jsonlab test_templates gmdistribution matlab_compat
-          pkg: io
+      - run: |
+          sudo apt-get -y -qq install octave liboctave-dev
+          octave --no-gui --quiet --eval "pkg install matlab_compat/io-2.4.10.tar.gz"
+          git clone https://github.com/MOxUnit/MOxUnit.git
+          make -C MOxUnit install
+          cd /home/runner/work/TASBEFlowAnalytics/TASBEFlowAnalytics
+          make test          
