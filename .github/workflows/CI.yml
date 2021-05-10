@@ -8,11 +8,19 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./TASBEFlowAnalytics
     steps:
       - uses: actions/checkout@v2
         with:
           repository: TASBE/TASBEFlowAnalytics-Tutorial
+          path: TASBEFlowAnalytics-Tutorial
       - uses: actions/checkout@v2
+        with:
+          path: TASBEFlowAnalytics
+      - name: go to flow directory
+        
       - uses: joergbrech/moxunit-action@master
         with:
           tests: tests
