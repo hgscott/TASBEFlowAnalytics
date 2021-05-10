@@ -19,6 +19,7 @@ jobs:
       - name: Setup octave
         run: |
           sudo apt-get -y -qq install octave liboctave-dev
+          cd /home/runner/work/TASBEFlowAnalytics/TASBEFlowAnalytics/TASBEFlowAnalytics
           octave --no-gui --quiet --eval "pkg install matlab_compat/io-2.4.10.tar.gz"
           git clone https://github.com/MOxUnit/MOxUnit.git
           make -C MOxUnit install
