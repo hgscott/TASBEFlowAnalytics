@@ -467,7 +467,7 @@ if numel(fcsdat)>0 && nargout>2
         Xlogdecade = fcshdr.par(i).decade;
         XChannelMax = fcshdr.par(i).range;
         Xlogvalatzero = fcshdr.par(i).logzero;
-        if fcshdr.par(i).gain~=1
+        if fcshdr.par(i).gain~=1 && fcshdr.par(i).gain~=0
             fcsdatscaled(:,i)  = double(fcsdat(:,i))./fcshdr.par(i).gain;
             
         elseif fcshdr.par(i).log
