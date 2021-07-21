@@ -11,7 +11,7 @@ function [names, hdr] = fcs_channel_names(datafile)
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-if ischar(datafile), datafile = DataFile(filename); end;
+if ischar(datafile), datafile = DataFile(datafile); end;
 
 [~, hdr] = fca_read(datafile);
 names = {hdr.par(:).name};

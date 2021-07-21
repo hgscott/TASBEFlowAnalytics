@@ -27,8 +27,9 @@ clustered = cluster(GMMG.distribution,channel_data);
 mh_dist_sq = mahal(GMMG.distribution,channel_data);
 
 near = zeros(size(rawfcs,1),1);
+batch = near;
 for i=1:numel(GMMG.selected_components),
-    batch = clustered==GMMG.selected_components(i);
+    batch = batch | clustered==GMMG.selected_components(i);
     near = near | mh_dist_sq(:,GMMG.selected_components(i))<GMMG.deviations^2;
 end
 
