@@ -96,9 +96,7 @@ if makePlots
         hold on;
         
         % Get the bottom left corner and the lengths
-        % These magic numbers assume that your filter is in the same
-        % format as: {'FSC-A', [0 9999], 'SSC-A', [0 9999]}
-        filter_pos = [RF.ranges(i, 1) RF.ranges(i+1, 1) RF.ranges(i, 2)-RF.ranges(i, 1) RF.ranges(i+1, 2)-RF.ranges(i+1, 1)];
+        filter_pos = [log10(RF.ranges(i, 1)) log10(RF.ranges(i+1, 1)) log10(RF.ranges(i, 2)/RF.ranges(i, 1)) log10(RF.ranges(i+1, 2)/RF.ranges(i+1, 1))];
         % Plot a rectangle
         rectangle('Position',filter_pos,'EdgeColor','r','LineWidth',2)
 
