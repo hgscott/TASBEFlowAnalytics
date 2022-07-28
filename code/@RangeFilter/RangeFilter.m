@@ -1,6 +1,6 @@
 % Constructor of RangeFilter class
 % Optional discarding of data outside of a certain range
-% Specified as a sequence of 'ChannelA',[minA maxA],'ChannelB',[minB maxB]
+% Specified as a sequence of file,'ChannelA',[minA maxA],'ChannelB',[minB maxB]
 % Also, argument 'Mode' can be 'And' (a value is excluded if any channel is outside), or 'Or' (a value is excluded if all are outside
 % The default mode is 'And'
 %
@@ -17,7 +17,11 @@ RF.mode = 'And';
 RF.channels = {};
 RF.ranges = [];
 
-for i=1:2:numel(varargin),
+% Set the first argument as the data file
+file = varargin{1};
+
+% Get the filter information from the remaining arguments
+for i=2:2:numel(varargin)
     arg = varargin{i};
     value = varargin{i+1};
     if ~ischar(arg), TASBESession.error('TASBE:RangeFilter','BadRangeFilterArgument','Range filter argument %i was not a string',i); end;
@@ -34,3 +38,69 @@ for i=1:2:numel(varargin),
 end
 
 RF = class(RF,'RangeFilter',Filter());
+
+%% Open file
+file = ensureDataFile(file);
+[~, fcshdr, rawfcs] = fca_read(file);
+
+%% Obtain and pre-filter data
+gate_fraction = TASBEConfig.get('gating.fraction');
+channel_names = TASBEConfig.get('gating.channelNames');
+n_channels = numel(channel_names);
+
+% gather channel data
+unfiltered_channel_data = cell(n_channels,1);
+unfiltered_channel_data_arith = unfiltered_channel_data;
+for i=1:n_channels 
+    unfiltered_channel_data_arith{i} = get_fcs_color(rawfcs,fcshdr,channel_names{i});
+    unfiltered_channel_data{i} = log10(unfiltered_channel_data_arith{i});
+end
+
+% filter channel data away from saturation points
+which = ones(numel(unfiltered_channel_data{1}),1);
+for i=1:n_channels
+    valid = ~isinf(unfiltered_channel_data{i}) & ~isnan(unfiltered_channel_data{i}) & (unfiltered_channel_data_arith{i}>0);
+    bound = [min(unfiltered_channel_data{i}(valid)) max(unfiltered_channel_data{i}(valid))];
+    span = bound(2)-bound(1);
+    range = [mean(bound)-span*gate_fraction/2 mean(bound)+span*gate_fraction/2];
+    which = which & valid & unfiltered_channel_data{i}>range(1) & unfiltered_channel_data{i}<range(2);
+end
+channel_data = zeros(sum(which),n_channels);
+for i=1:n_channels 
+    channel_data(:,i) = unfiltered_channel_data{i}(which);
+end
+
+%% Make Plots
+makePlots = TASBEConfig.get('gating.plot');
+plotPath = TASBEConfig.get('gating.plotPath');
+plotSize = TASBEConfig.get('gating.plotSize');
+largeOutliers = TASBEConfig.get('gating.largeOutliers');
+range = TASBEConfig.getexact('gating.range',[]);
+density = TASBEConfig.get('gating.density');
+
+if makePlots
+    if density >= 1, type = 'image'; else type = 'contour'; end
+    
+    for i=1:2:n_channels
+        % handle odd number of channels by decrementing last:
+        if i==n_channels, i=i-1; end
+
+        % Show background
+        h = figure('PaperPosition',[1 1 plotSize]);
+        smoothhist2D([channel_data(:,i) channel_data(:,i+1)],5,[500, 500],[],type,range,largeOutliers);
+        xlabel([clean_for_latex(channel_names{i}) ' a.u.']); 
+        ylabel([clean_for_latex(channel_names{i+1}) ' a.u.']);
+        title('Range Filtering Gate');
+        hold on;
+        
+        % Get the bottom left corner and the lengths
+        % These magic numbers assume that your filter is in the same
+        % format as: {'FSC-A', [0 9999], 'SSC-A', [0 9999]}
+        filter_pos = [RF.ranges(i, 1) RF.ranges(i+1, 1) RF.ranges(i, 2)-RF.ranges(i, 1) RF.ranges(i+1, 2)-RF.ranges(i+1, 1)];
+        % Plot a rectangle
+        rectangle('Position',filter_pos,'EdgeColor','r','LineWidth',2)
+
+        % Save
+        outputfig(h,clean_for_latex(sprintf('RangeFilter-%s-vs-%s',channel_names{i},channel_names{i+1})), plotPath);
+    end
+end
