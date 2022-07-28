@@ -72,6 +72,7 @@ end
 
 %% Make Plots
 makePlots = TASBEConfig.get('gating.plot');
+visiblePlots = TASBEConfig.get('gating.visiblePlots');
 plotPath = TASBEConfig.get('gating.plotPath');
 plotSize = TASBEConfig.get('gating.plotSize');
 largeOutliers = TASBEConfig.get('gating.largeOutliers');
@@ -87,6 +88,7 @@ if makePlots
 
         % Show background
         h = figure('PaperPosition',[1 1 plotSize]);
+        if(~visiblePlots), set(h,'visible','off'); end;
         smoothhist2D([channel_data(:,i) channel_data(:,i+1)],5,[500, 500],[],type,range,largeOutliers);
         xlabel([clean_for_latex(channel_names{i}) ' a.u.']); 
         ylabel([clean_for_latex(channel_names{i+1}) ' a.u.']);
