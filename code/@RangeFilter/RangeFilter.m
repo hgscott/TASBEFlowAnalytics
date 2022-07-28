@@ -1,6 +1,6 @@
 % Constructor of RangeFilter class
 % Optional discarding of data outside of a certain range
-% Specified as a sequence of file,'ChannelA',[minA maxA],'ChannelB',[minB maxB]
+% Specified as a sequence of blankfile,'ChannelA',[minA maxA],'ChannelB',[minB maxB]
 % Also, argument 'Mode' can be 'And' (a value is excluded if any channel is outside), or 'Or' (a value is excluded if all are outside
 % The default mode is 'And'
 %
@@ -17,8 +17,10 @@ RF.mode = 'And';
 RF.channels = {};
 RF.ranges = [];
 
-% Set the first argument as the data file
+% Set the first argument as the blankfilefile
 file = varargin{1};
+file = ensureDataFile(file);
+[~, fcshdr, rawfcs] = fca_read(file);
 
 % Get the filter information from the remaining arguments
 for i=2:2:numel(varargin)
@@ -38,10 +40,6 @@ for i=2:2:numel(varargin)
 end
 
 RF = class(RF,'RangeFilter',Filter());
-
-%% Open file
-file = ensureDataFile(file);
-[~, fcshdr, rawfcs] = fca_read(file);
 
 %% Obtain and pre-filter data
 gate_fraction = TASBEConfig.get('gating.fraction');
