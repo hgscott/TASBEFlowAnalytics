@@ -45,6 +45,12 @@ RF = class(RF,'RangeFilter',Filter());
 makePlots = TASBEConfig.get('gating.plot');
 
 if makePlots
+    % Check that a blankfile was passed in, if not throw warning and exit
+    if exist('file', 'var') == 0
+       TASBESession.warn('TASBE:RangeFilter','BadRangeFilterFile','No argument was specified as Blankfile, cannot make plot.');
+       return
+    end
+
     % Pull settings from configuration
     visiblePlots = TASBEConfig.get('gating.visiblePlots');
     plotPath = TASBEConfig.get('gating.plotPath');
