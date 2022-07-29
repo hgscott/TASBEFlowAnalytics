@@ -18,19 +18,18 @@ RF.mode = 'And';
 RF.channels = {};
 RF.ranges = [];
 
-% Set the first argument as the blankfilefile
-file = varargin{1};
-file = ensureDataFile(file);
-[~, fcshdr, rawfcs] = fca_read(file);
-
 % Get the filter information from the remaining arguments
-for i=2:2:numel(varargin)
+for i=1:2:numel(varargin)
     arg = varargin{i};
     value = varargin{i+1};
     if ~ischar(arg), TASBESession.error('TASBE:RangeFilter','BadRangeFilterArgument','Range filter argument %i was not a string',i); end;
     
-    % Either 'Mode' or a channel name
-    if strcmp(arg,'Mode')
+    % Either a datafile, 'Mode' or a channel name
+    if strcmp(arg,'Blankfile')
+        file = value;
+        file = ensureDataFile(file);
+        [~, fcshdr, rawfcs] = fca_read(file);
+    elseif strcmp(arg,'Mode')
         if ~(strcmp(value,'And') || strcmp(value,'Or')), TASBESession.error('TASBE:RangeFilter','BadRangeFilterMode','Unrecognized range filter mode: %s',value); end;
         RF.mode = value;
     else
