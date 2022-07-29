@@ -1,7 +1,8 @@
 % Constructor of RangeFilter class
 % Optional discarding of data outside of a certain range
-% Specified as a sequence of blankfile,'ChannelA',[minA maxA],'ChannelB',[minB maxB]
-%   blankfile: a datafile or string for the data to be used for gating
+% Specified as a sequence of 'ChannelA',[minA maxA],'ChannelB',[minB maxB]
+% Optional argument 'Blankfile': A datafile for the  blank file be used for
+% gating, allows for plotting of selected region of gated channels
 % Also, argument 'Mode' can be 'And' (a value is excluded if any channel is outside), or 'Or' (a value is excluded if all are outside
 % The default mode is 'And'
 %
