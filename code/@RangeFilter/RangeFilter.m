@@ -42,43 +42,44 @@ end
 
 RF = class(RF,'RangeFilter',Filter());
 
-%% Obtain and pre-filter data
-gate_fraction = TASBEConfig.get('gating.fraction');
-channel_names = TASBEConfig.get('gating.channelNames');
-n_channels = numel(channel_names);
-
-% gather channel data
-unfiltered_channel_data = cell(n_channels,1);
-unfiltered_channel_data_arith = unfiltered_channel_data;
-for i=1:n_channels 
-    unfiltered_channel_data_arith{i} = get_fcs_color(rawfcs,fcshdr,channel_names{i});
-    unfiltered_channel_data{i} = log10(unfiltered_channel_data_arith{i});
-end
-
-% filter channel data away from saturation points
-which = ones(numel(unfiltered_channel_data{1}),1);
-for i=1:n_channels
-    valid = ~isinf(unfiltered_channel_data{i}) & ~isnan(unfiltered_channel_data{i}) & (unfiltered_channel_data_arith{i}>0);
-    bound = [min(unfiltered_channel_data{i}(valid)) max(unfiltered_channel_data{i}(valid))];
-    span = bound(2)-bound(1);
-    range = [mean(bound)-span*gate_fraction/2 mean(bound)+span*gate_fraction/2];
-    which = which & valid & unfiltered_channel_data{i}>range(1) & unfiltered_channel_data{i}<range(2);
-end
-channel_data = zeros(sum(which),n_channels);
-for i=1:n_channels 
-    channel_data(:,i) = unfiltered_channel_data{i}(which);
-end
-
-%% Make Plots
+%% Obtain data and make plots
 makePlots = TASBEConfig.get('gating.plot');
-visiblePlots = TASBEConfig.get('gating.visiblePlots');
-plotPath = TASBEConfig.get('gating.plotPath');
-plotSize = TASBEConfig.get('gating.plotSize');
-largeOutliers = TASBEConfig.get('gating.largeOutliers');
-range = TASBEConfig.getexact('gating.range',[]);
-density = TASBEConfig.get('gating.density');
 
 if makePlots
+    % Pull settings from configuration
+    visiblePlots = TASBEConfig.get('gating.visiblePlots');
+    plotPath = TASBEConfig.get('gating.plotPath');
+    plotSize = TASBEConfig.get('gating.plotSize');
+    largeOutliers = TASBEConfig.get('gating.largeOutliers');
+    range = TASBEConfig.getexact('gating.range',[]);
+    density = TASBEConfig.get('gating.density');
+    gate_fraction = TASBEConfig.get('gating.fraction');
+    channel_names = TASBEConfig.get('gating.channelNames');
+    
+    n_channels = numel(channel_names);
+
+    % gather channel data
+    unfiltered_channel_data = cell(n_channels,1);
+    unfiltered_channel_data_arith = unfiltered_channel_data;
+    for i=1:n_channels 
+        unfiltered_channel_data_arith{i} = get_fcs_color(rawfcs,fcshdr,channel_names{i});
+        unfiltered_channel_data{i} = log10(unfiltered_channel_data_arith{i});
+    end
+
+    % filter channel data away from saturation points
+    which = ones(numel(unfiltered_channel_data{1}),1);
+    for i=1:n_channels
+        valid = ~isinf(unfiltered_channel_data{i}) & ~isnan(unfiltered_channel_data{i}) & (unfiltered_channel_data_arith{i}>0);
+        bound = [min(unfiltered_channel_data{i}(valid)) max(unfiltered_channel_data{i}(valid))];
+        span = bound(2)-bound(1);
+        range = [mean(bound)-span*gate_fraction/2 mean(bound)+span*gate_fraction/2];
+        which = which & valid & unfiltered_channel_data{i}>range(1) & unfiltered_channel_data{i}<range(2);
+    end
+    channel_data = zeros(sum(which),n_channels);
+    for i=1:n_channels 
+        channel_data(:,i) = unfiltered_channel_data{i}(which);
+    end
+
     if density >= 1, type = 'image'; else type = 'contour'; end
     
     for i=1:2:n_channels
