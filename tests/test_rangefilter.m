@@ -97,3 +97,7 @@ assert(min(rawdat(:,1))<1e4);
 assert(min(filtdat(:,1))>=1e5);
 assert(min(rawdat(:,3))<1e4);
 assert(min(filtdat(:,3))<1e4);
+
+% Pass the blankfile to RangeFilter to make the gating plot
+RF = RangeFilter('Blankfile', blankfile, 'FSC-A',[2 9], 'SSC-A', [2 9]);
+% TODO: Assert that figure was made?
