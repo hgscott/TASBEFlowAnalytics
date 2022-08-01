@@ -104,5 +104,7 @@ expected_sigma(:,:,2) = [...
 assertElementsAlmostEqual(GDS.Sigma,expected_sigma,'absolute',0.01);
 
 % Return the plot handle and check it is the expected type
+% This type check passes on Octave but fails on MATLAB
+% For MATLAB the type is matlab.ui.Figure
 [gate, plot_handle] = GMMGating(blankfile);
 assertTrue(isa(plot_handle, 'double'));
