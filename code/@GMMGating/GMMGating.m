@@ -1,4 +1,4 @@
-% function GMMG = GMMGating(file)
+% function [GMMG, h] = GMMGating(file)
 %   Constructor of GMMGating class, which is a subclass of Filter
 %   file: a datafile or string for the data to be used for gating
 %
