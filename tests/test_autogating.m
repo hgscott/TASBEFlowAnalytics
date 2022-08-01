@@ -105,4 +105,4 @@ assertElementsAlmostEqual(GDS.Sigma,expected_sigma,'absolute',0.01);
 
 % Return the plot handle and check it is the expected type
 [gate, plot_handle] = GMMGating(blankfile);
-assert(isa(plot_handle, 'matlab.ui.Figure'));
+assertTrue(isa(plot_handle, 'matlab.ui.Figure'));
