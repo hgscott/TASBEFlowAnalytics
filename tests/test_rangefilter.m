@@ -105,3 +105,7 @@ Dnew = applyFilter(RF,hdr,data);
 assert(all(Dnew(:,1) == (5:7)'));
 assert(all(Dnew(:,2) == (8:2:12)'));
 assert(all(Dnew(:,3) == (12:3:18)'));
+
+% Return the plot handle and make sure that it is the expected type
+[RF, plot_handle] = RangeFilter('Blankfile', blankfile, 'Pacific Blue-A',[10 99],'PE-Tx-Red-YG-A',[1 12]);
+assert(isgraphics(plot_handle) == 1);
