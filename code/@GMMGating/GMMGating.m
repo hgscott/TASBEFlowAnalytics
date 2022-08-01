@@ -1,4 +1,4 @@
-% function GMMG = GMMGating(file)
+% function [GMMG, h] = GMMGating(file)
 %   Constructor of GMMGating class, which is a subclass of Filter
 %   file: a datafile or string for the data to be used for gating
 %
@@ -10,7 +10,7 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function GMMG = GMMGating(file)
+function varargout = GMMGating(file)
 
 GMMG.selected_components = [];
 GMMG.channel_names = {};
@@ -137,6 +137,9 @@ GMMG.channel_names = channel_names;
 GMMG.distribution = gmdistribution(dss.mu,dss.Sigma,reweight);
 GMMG.deviations = gate_deviations;
 
+% Always return GMMG
+varargout{1} = GMMG;
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Make the plots
 %%%%
@@ -202,5 +205,8 @@ if makePlots
         plot(gated_sub(which,1),gated_sub(which,2),'r-','LineWidth',2);
 
         outputfig(h,clean_for_latex(sprintf('AutomaticGate-%s-vs-%s',channel_names{i},channel_names{i+1})), plotPath);
+
+        % Return plot handle
+        varargout{2} = h;
     end
 end

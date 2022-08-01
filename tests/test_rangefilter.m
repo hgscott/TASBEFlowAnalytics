@@ -105,3 +105,9 @@ Dnew = applyFilter(RF,hdr,data);
 assert(all(Dnew(:,1) == (5:7)'));
 assert(all(Dnew(:,2) == (8:2:12)'));
 assert(all(Dnew(:,3) == (12:3:18)'));
+
+% Return the plot handle and make sure that it is the expected type
+% This type check passes on Octave but fails on MATLAB
+% For MATLAB the type is matlab.ui.Figure
+[RF, plot_handle] = RangeFilter('Blankfile', blankfile, 'Pacific Blue-A',[10 99],'PE-Tx-Red-YG-A',[1 12]);
+assertTrue(isa(plot_handle, 'double'));
