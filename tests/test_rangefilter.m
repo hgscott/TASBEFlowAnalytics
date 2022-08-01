@@ -108,4 +108,4 @@ assert(all(Dnew(:,3) == (12:3:18)'));
 
 % Return the plot handle and make sure that it is the expected type
 [RF, plot_handle] = RangeFilter('Blankfile', blankfile, 'Pacific Blue-A',[10 99],'PE-Tx-Red-YG-A',[1 12]);
-assertTrue(isa(plot_handle, 'matlab.ui.Figure'));
+assertTrue(isa(plot_handle, 'double'));
