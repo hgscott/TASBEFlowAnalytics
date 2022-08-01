@@ -103,3 +103,6 @@ expected_sigma(:,:,2) = [...
     ];
 assertElementsAlmostEqual(GDS.Sigma,expected_sigma,'absolute',0.01);
 
+% Return the plot handle and check it is the expected type
+[gate, plot_handle] = GMMGating(blankfile);
+assert(isgraphics(plot_handle) == 1);
