@@ -52,13 +52,7 @@ if makePlots
        return
     end
 
-    % Pull settings from configuration
-    visiblePlots = TASBEConfig.get('gating.visiblePlots');
-    plotPath = TASBEConfig.get('gating.plotPath');
-    plotSize = TASBEConfig.get('gating.plotSize');
-    largeOutliers = TASBEConfig.get('gating.largeOutliers');
-    range = TASBEConfig.getexact('gating.range',[]);
-    density = TASBEConfig.get('gating.density');
+    % Pull settings needed for collecting the channel data
     gate_fraction = TASBEConfig.get('gating.fraction');
     channel_names = TASBEConfig.get('gating.channelNames');
     
@@ -86,6 +80,16 @@ if makePlots
         channel_data(:,i) = unfiltered_channel_data{i}(which);
     end
 
+    % Pull settings needed for making plots
+    visiblePlots = TASBEConfig.get('gating.visiblePlots');
+    plotPath = TASBEConfig.get('gating.plotPath');
+    plotSize = TASBEConfig.get('gating.plotSize');
+    channel_names = TASBEConfig.get('gating.channelNames');
+    largeOutliers = TASBEConfig.get('gating.largeOutliers');
+    range = TASBEConfig.getexact('gating.range',[]);
+    density = TASBEConfig.get('gating.density');
+
+    % Make Plots
     if density >= 1, type = 'image'; else type = 'contour'; end
     
     for i=1:2:n_channels
