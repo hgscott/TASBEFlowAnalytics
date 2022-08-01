@@ -14,7 +14,7 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function RF = RangeFilter(varargin)
+function varargout = RangeFilter(varargin)
 RF.mode = 'And';
 RF.channels = {};
 RF.ranges = [];
@@ -41,6 +41,7 @@ for i=1:2:numel(varargin)
 end
 
 RF = class(RF,'RangeFilter',Filter());
+varargout{1} = RF; % Always return RF
 
 %% Obtain data and make plots
 makePlots = TASBEConfig.get('gating.plot');
@@ -112,5 +113,8 @@ if makePlots
 
         % Save
         outputfig(h,clean_for_latex(sprintf('RangeFilter-%s-vs-%s',channel_names{i},channel_names{i+1})), plotPath);
+
+        % Also return the plot handle
+        varargout{2} = h;
     end
 end
